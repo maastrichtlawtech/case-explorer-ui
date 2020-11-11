@@ -1,14 +1,15 @@
 import React from 'react'
 import * as R from 'unitx/ramda'
 import mingo from 'unitx/mingo'
-import { ApplicationProvider, Button, Surface,useTheme} from 'unitx-ui'
+import { ApplicationProvider, Button, Layout,useTheme} from 'unitx-ui'
 import { 
   DarkTheme,
   DefaultTheme,
 } from 'unitx-ui'
-import GraphEditor, {GraphEditorProps} from 'perfect-graph/editor/components/GraphEditor'
+import  { GraphEditorProps, GraphEditor } from 'perfect-graph/components/GraphEditor'
 import { Graph } from 'perfect-graph/components'
-import {drawLine} from 'perfect-graph/components/components/Graphics'
+import { useController } from 'perfect-graph/plugins/controller'
+import {drawLine} from 'perfect-graph/components/Graphics'
 import data from './data'
 import * as C from 'unitx/color'
 import { FILTER_SCHEMA,  } from './constants'
@@ -60,16 +61,14 @@ const AppContainer = ({
     )
   }, [])
   const graphRef = React.useRef(null)
-  const containerRef = React.useRef(null)
   const theme = useTheme()
-  // const controller = useController({ nodes: [], edges: []}, {
-  //   onAdd: () => {
-  //     console.log()
-  //     sync()
-  //   }
-  // })
+  const [controllerProps,] = useController(state.filteredData, {
+    onEvent: (eventInfo) => {
+      // console.log('h', eventInfo)
+    }
+  })
   return (
-      <Surface style={{ width: '100%', height: '100%'}}>
+    <Layout style={{ width: '100%', height: '100%'}}>
       <GraphEditor
         ref={graphRef}
         // controller={controller}
@@ -79,38 +78,18 @@ const AppContainer = ({
           // layout: Graph.Layouts.breadthfirst,
           zoom: 0.5
         }}
-        configExtractor={({ item, element }) => R.ifElse(
-          R.isNil,
-          () => ({
-            filter: {
-              onChange: onFilterChangeCallback,
-              formData: state.filterData,
-              ...FILTER_SCHEMA
-            },
-            action: {
-              // renderMoreAction: () => (
-              //     // <Menu.Item value="Show Clusters" title="Show Clusters"/>
-              //     <Button onPress={() => setTimeout(() => changeTheme('dark'))}>Change Theme</Button>
-              // )
-            }
-          }),
-          () => {
-            const schemaInfo = FILTER_SCHEMA
-            // const schemaInfo = item.data.community === '27' 
-            // ? FILTER_SCHEMA
-            // : SECOND_FILTER_SCHEMA
-            return {
-              filter: {
-                onChange: onFilterChangeCallback,
-                formData: state.filterData,
-                ...schemaInfo
-              },
-              data: {
-                data: item.data
-              }
-            }
-          }
-          )(item)}
+        {...controllerProps}
+        filterBar={{
+          ...controllerProps.filterBar,
+          onChange: onFilterChangeCallback,
+          formData: state.filterData,
+          ...FILTER_SCHEMA
+        }}
+        dataBar={{
+            ...controllerProps.dataBar, 
+            editable: false
+          }}
+          actionBar={undefined}
         drawLine={({ graphics, to, from }) => {
           drawLine({
             graphics,
@@ -158,19 +137,11 @@ const AppContainer = ({
             </Graph.HoverContainer>
           )
         }}
-        {...state.filteredData}
-        onFilterChange={onFilterChangeCallback}
         {...rest}
       />
-      </Surface>
+      </Layout>
   )
 }
-
-export const mergeDeepAll = (list: Record<string, any>[]) => R.reduce(
-  R.mergeDeepRight,
-  // @ts-ignore
-  {},
-)(list)
 
 
 
