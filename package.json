@@ -9,13 +9,13 @@
   },
   "dependencies": {
     "expo": "~39.0.2",
-    "perfect-graph": "^0.0.39",
+    "perfect-graph": "^0.0.45",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
     "react-native-web": "~0.13.12",
     "unitx": "^0.0.433",
-    "unitx-ui": "^0.0.329"
+    "unitx-ui": "^0.0.331"
   },
   "devDependencies": {
     "@babel/core": "7.11.4",

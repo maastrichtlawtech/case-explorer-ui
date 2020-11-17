@@ -12,8 +12,8 @@ import { useController } from 'perfect-graph/plugins/controller'
 import {drawLine} from 'perfect-graph/components/Graphics'
 import data from './data'
 import * as C from 'unitx/color'
-import { FILTER_SCHEMA,  } from './constants'
-
+import { FILTER_SCHEMA, FILTER_SCHEMA_FETCH_EXAMPLE } from './constants'
+import { requestData } from './requestData'
 type Props = Partial<GraphEditorProps>
 
 const NODE_SIZE = {
@@ -31,32 +31,41 @@ const AppContainer = ({
     data,
     filteredData: data,
     filterData: { 
-      'in_degree': [0, 20]
+      // 'in_degree': [0, 20]
     }
 })
   const onFilterChangeCallback = React.useCallback((filterData) => {
     setTimeout(
-      () => {
-        const processedFilterData = R.toMongoQuery({
-          data: filterData,
-        }, {
-          processItem: (value, path) => R.cond([
-            [R.equals(['data', 'in_degree']), () => ({ 
-              $gte: value[0], $lte: value[1]
-            })]
-          ])(path)
-        })
+      async () => {
+        // const processedFilterData = R.toMongoQuery({
+        //   data: filterData,
+        // }, {
+        //   processItem: (value, path) => R.cond([
+        //     [R.equals(['data', 'in_degree']), () => ({ 
+        //       $gte: value[0], $lte: value[1]
+        //     })]
+        //   ])(path)
+        // })
+        // const cursor = mingo.find(state.data.nodes, processedFilterData)
+        // const filteredData = cursor.all()
 
-        const cursor = mingo.find(state.data.nodes, processedFilterData)
-        const filteredData = cursor.all()
+        // setState({
+        //   ...state,
+        //   filterData,
+        //   filteredData: {
+        //     edges: filterEdges(filteredData)(state.filteredData.edges),
+        //     nodes: filteredData
+        //   },
+        // })
+        console.log('filter', )
+        const filteredData = await requestData(filterData)
+        console.log('filter', filteredData)
         setState({
           ...state,
           filterData,
-          filteredData: {
-            edges: filterEdges(filteredData)(state.filteredData.edges),
-            nodes: filteredData
-          },
+          filteredData,
         })
+
       }
     )
   }, [])
@@ -81,9 +90,11 @@ const AppContainer = ({
         {...controllerProps}
         filterBar={{
           ...controllerProps.filterBar,
-          onChange: onFilterChangeCallback,
+          onSubmit: onFilterChangeCallback,
           formData: state.filterData,
-          ...FILTER_SCHEMA
+          // ...FILTER_SCHEMA
+          children: null,
+          ...FILTER_SCHEMA_FETCH_EXAMPLE
         }}
         dataBar={{
             ...controllerProps.dataBar, 
@@ -104,7 +115,7 @@ const AppContainer = ({
             // type: 'bezier'
           })
         }}
-        renderNode={({ item: { id, data } }) => {
+        renderNode={({ item: { id,  } }) => {
           return (
             <Graph.HoverContainer
               style={{
@@ -116,23 +127,26 @@ const AppContainer = ({
                 renderHoverElement={() => (
                   <Graph.View
                     style={{
-                      width: NODE_SIZE.width * 2,
-                      height: 20,
+                      width: NODE_SIZE.width,
+                      height: 30,
                       position: 'absolute',
                       left: 0,
+                      alignItems: 'center'
                     }}
                   >
                     <Graph.Text style={{
-                      fontSize: 20,
+                      fontSize: 30,
                        textAlign: 'center',
                       }}>
-                      {R.replace('ECLI:NL:', '')(data.ecli)}
+                        {id}
+                      {/* {R.replace('ECLI:NL:', '')(data.ecli)} */}
                     </Graph.Text>
                   </Graph.View>
                 )}
             >
               <Graph.Text style={{fontSize: 10}}>
-                {R.replace('ECLI:NL:', '')(data.ecli)}
+                {/* {R.replace('ECLI:NL:', '')(data.ecli)} */}
+                {id}
               </Graph.Text>
             </Graph.HoverContainer>
           )

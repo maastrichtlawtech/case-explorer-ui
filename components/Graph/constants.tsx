@@ -70,6 +70,43 @@ export const FILTER_SCHEMA = {
     },
   }
 }
+export const FILTER_SCHEMA_FETCH_EXAMPLE = {
+  schema: {
+    title: 'Filter',
+    type: 'object',
+    required: [
+      '_limit',
+      '_page',
+      '_start',
+      // 'adjustLayout',
+    ],
+    additionalProperties: false,
+    properties: {
+      '_limit': {
+          type: 'number',
+        minimum: 5,
+        maximum: 30,
+      },
+      _page: {
+        type: 'number',
+      minimum: 1,
+      maximum: 10,
+    },
+    _start: {
+      type: 'number',
+    minimum: 1,
+    maximum: 100,
+  },
+      // adjustLayout: {
+      //   title: 'boolean',
+      //   type: 'boolean',
+      //   extendTypeAnnotation: '',
+      //   extendAnnotation: '',
+      //   extendProperties: {},
+      // },
+    },
+  },
+}
 export const SECOND_FILTER_SCHEMA = {
   schema: {
     title: 'Filter',
