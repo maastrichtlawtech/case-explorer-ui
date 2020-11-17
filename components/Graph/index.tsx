@@ -1,11 +1,18 @@
 import React from 'react'
 import * as R from 'unitx/ramda'
-import mingo from 'unitx/mingo'
-import { ApplicationProvider, Button, Layout,useTheme} from 'unitx-ui'
+// import mingo from 'unitx/mingo'
 import { 
   DarkTheme,
   DefaultTheme,
+  ApplicationProvider,
+   Button, 
+  Layout,
+  useTheme,
+  Modal,
+  Spinner,
+  useData,
 } from 'unitx-ui'
+import { ActivityIndicator } from 'react-native'
 import  { GraphEditorProps, GraphEditor } from 'perfect-graph/components/GraphEditor'
 import { Graph } from 'perfect-graph/components'
 import { useController } from 'perfect-graph/plugins/controller'
@@ -25,20 +32,22 @@ const AppContainer = ({
   changeTheme,
   ...rest
 }) => {
-  const modalRef = React.useRef(null)
-  const [state, setState] = React.useState({
+  const [state, update] = useData({
     visible: false, 
+    loading: false,
     data,
     filteredData: data,
-    filterData: { 
-      // 'in_degree': [0, 20]
+    formData: { 
+      _page: 1,
+      _limit: 10,
+      // _start: 1
     }
 })
-  const onFilterChangeCallback = React.useCallback((filterData) => {
+  const onFilterChangeCallback = React.useCallback((formData) => {
     setTimeout(
       async () => {
-        // const processedFilterData = R.toMongoQuery({
-        //   data: filterData,
+        // const processedformData = R.toMongoQuery({
+        //   data: formData,
         // }, {
         //   processItem: (value, path) => R.cond([
         //     [R.equals(['data', 'in_degree']), () => ({ 
@@ -46,24 +55,29 @@ const AppContainer = ({
         //     })]
         //   ])(path)
         // })
-        // const cursor = mingo.find(state.data.nodes, processedFilterData)
+        // const cursor = mingo.find(state.data.nodes, processedformData)
         // const filteredData = cursor.all()
 
         // setState({
         //   ...state,
-        //   filterData,
+        //   formData,
         //   filteredData: {
         //     edges: filterEdges(filteredData)(state.filteredData.edges),
         //     nodes: filteredData
         //   },
         // })
-        console.log('filter', )
-        const filteredData = await requestData(filterData)
-        console.log('filter', filteredData)
-        setState({
-          ...state,
-          filterData,
-          filteredData,
+        update((draft) => {
+          draft.loading = true
+        })
+        const filteredData = await requestData(formData)
+        update((draft)=>{
+          draft.formData = formData
+          draft.filteredData = filteredData
+          draft.graphConfig =  {
+            layout: Graph.Layouts.cose,
+            zoom: 0.5
+          }
+          draft.loading = false
         })
 
       }
@@ -76,22 +90,21 @@ const AppContainer = ({
       // console.log('h', eventInfo)
     }
   })
+  console.log('data', state.filteredData)
   return (
     <Layout style={{ width: '100%', height: '100%'}}>
+
       <GraphEditor
         ref={graphRef}
         // controller={controller}
         extraData={{ theme }}
         style={{ width: '100%', height: '100%', }}
-        graphConfig={{
-          // layout: Graph.Layouts.breadthfirst,
-          zoom: 0.5
-        }}
+        graphConfig={state.graphConfig}
         {...controllerProps}
         filterBar={{
           ...controllerProps.filterBar,
           onSubmit: onFilterChangeCallback,
-          formData: state.filterData,
+          formData: state.formData,
           // ...FILTER_SCHEMA
           children: null,
           ...FILTER_SCHEMA_FETCH_EXAMPLE
@@ -153,6 +166,12 @@ const AppContainer = ({
         }}
         {...rest}
       />
+      <Modal 
+        visible={state.loading} 
+        backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', }}
+      >
+        <ActivityIndicator />
+      </Modal>
       </Layout>
   )
 }

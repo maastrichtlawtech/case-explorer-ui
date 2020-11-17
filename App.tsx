@@ -20,6 +20,6 @@ export default function MyGraph() {
        ],
   })
   return (
-    <GraphEditor {...data} />
+    <GraphEditor />
   )
  }

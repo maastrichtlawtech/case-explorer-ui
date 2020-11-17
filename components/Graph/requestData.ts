@@ -19,8 +19,8 @@ export const requestData = async (filters: Filters) => {
     })),
     edges: authors.map((item, index) => ({
       id: `edge:${item.id}`,
-      source: `${item.id}`,
-      target: `${books[index].id}`
+      source: `${index}`,
+      target: `${authors.length + index}`
     }))
   }
   
