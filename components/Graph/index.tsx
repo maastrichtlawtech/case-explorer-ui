@@ -16,7 +16,7 @@ import { ActivityIndicator } from 'react-native'
 import  { GraphEditorProps, GraphEditor } from 'perfect-graph/components/GraphEditor'
 import { Graph } from 'perfect-graph/components'
 import { useController } from 'perfect-graph/plugins/controller'
-import {drawLine} from 'perfect-graph/components/Graphics'
+import { drawLine } from 'perfect-graph/components/Graphics'
 import data from './data'
 import * as C from 'unitx/color'
 import { FILTER_SCHEMA, FILTER_SCHEMA_FETCH_EXAMPLE } from './constants'
@@ -74,7 +74,7 @@ const AppContainer = ({
           draft.formData = formData
           draft.filteredData = filteredData
           draft.graphConfig =  {
-            layout: Graph.Layouts.cose,
+            layout: Graph.Layouts.circle,
             zoom: 0.5
           }
           draft.loading = false
@@ -93,7 +93,6 @@ const AppContainer = ({
   console.log('data', state.filteredData)
   return (
     <Layout style={{ width: '100%', height: '100%'}}>
-
       <GraphEditor
         ref={graphRef}
         // controller={controller}
@@ -111,7 +110,7 @@ const AppContainer = ({
         }}
         dataBar={{
             ...controllerProps.dataBar, 
-            editable: false
+            editable: false,
           }}
           actionBar={undefined}
         drawLine={({ graphics, to, from }) => {
@@ -128,7 +127,7 @@ const AppContainer = ({
             // type: 'bezier'
           })
         }}
-        renderNode={({ item: { id,  } }) => {
+        renderNode={({ item: { id, } }) => {
           return (
             <Graph.HoverContainer
               style={{
