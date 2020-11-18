@@ -13,10 +13,8 @@ import {
   useData,
 } from 'unitx-ui'
 import { ActivityIndicator } from 'react-native'
-import  { GraphEditorProps, GraphEditor } from 'perfect-graph/components/GraphEditor'
-import { Graph } from 'perfect-graph/components'
+import  { GraphEditorProps, GraphEditor, Graph, drawLine } from 'perfect-graph'
 import { useController } from 'perfect-graph/plugins/controller'
-import { drawLine } from 'perfect-graph/components/Graphics'
 import data from './data'
 import * as C from 'unitx/color'
 import { FILTER_SCHEMA, FILTER_SCHEMA_FETCH_EXAMPLE } from './constants'
