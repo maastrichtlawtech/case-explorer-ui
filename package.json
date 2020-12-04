@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "expo": "~39.0.2",
-    "perfect-graph": "^0.0.52",
+    "perfect-graph": "^0.0.54",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",

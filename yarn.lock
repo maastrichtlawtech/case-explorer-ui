@@ -7423,10 +7423,10 @@ penner@^0.1.3:
   resolved "https://registry.yarnpkg.com/penner/-/penner-0.1.3.tgz#0b8b482d4e9b39af2f3d7c37592229b8acc29705"
   integrity sha1-C4tILU6bOa8vPXw3WSIpuKzClwU=
 
-perfect-graph@^0.0.52:
-  version "0.0.52"
-  resolved "https://registry.yarnpkg.com/perfect-graph/-/perfect-graph-0.0.52.tgz#b304ba45efa014cef04b3e83da27591d2a6a1be6"
-  integrity sha512-rJo9QWdpCdEwZlmVwmu3PL7b4mn6m3ILzZyW+wKe4Aqo40TtuOBDvqv5/jynZ8JfMrqxjgNZeM2QN0QMpZ10vA==
+perfect-graph@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/perfect-graph/-/perfect-graph-0.0.54.tgz#fffd6e60378d80b596a7e51c5de07a35bfbb6247"
+  integrity sha512-JdCPPLrMoXBazg9dh0FpHEhHyPMS1D3MFdWNE7OrPvASbcmcOia3ME85xBicImJswj9C59e3kwkqN1IKErrj9g==
   dependencies:
     "@inlet/react-pixi" "5.2.0"
     cytoscape "3.17.0"
