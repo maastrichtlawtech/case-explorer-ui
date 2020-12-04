@@ -5935,6 +5935,11 @@ jsonpath-plus@^3.0.0:
   resolved "https://registry.yarnpkg.com/jsonpath-plus/-/jsonpath-plus-3.0.0.tgz#194ab4792a5e9b4ed27bf442188c8eb7e697a04b"
   integrity sha512-WQwgWEBgn+SJU1tlDa/GiY5/ngRpa9yrSj8n4BYPHcwoxTDaMEaYCHMOn42hIHHDd3CrUoRr3+HpsK0hCKoxzA==
 
+jsonpath-plus@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jsonpath-plus/-/jsonpath-plus-4.0.0.tgz#954b69faa3d8b07f30ae2f9e601176a4b0d2806e"
+  integrity sha512-e0Jtg4KAzDJKKwzbLaUtinCn0RZseWBVRTRGihSpvFlM3wTR7ExSp+PTdeTsDrLNJUe7L7JYJe8mblHX5SCT6A==
+
 jsonpointer@^4.0.0, jsonpointer@^4.0.1:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.1.0.tgz#501fb89986a2389765ba09e6053299ceb4f2c2cc"
@@ -7418,10 +7423,10 @@ penner@^0.1.3:
   resolved "https://registry.yarnpkg.com/penner/-/penner-0.1.3.tgz#0b8b482d4e9b39af2f3d7c37592229b8acc29705"
   integrity sha1-C4tILU6bOa8vPXw3WSIpuKzClwU=
 
-perfect-graph@^0.0.49:
-  version "0.0.49"
-  resolved "https://registry.yarnpkg.com/perfect-graph/-/perfect-graph-0.0.49.tgz#65fe28e33c795160f0847aa43be06c03357eb6e0"
-  integrity sha512-Pq9UlycRSSrGncJ5A2Fl60Jy+ACa/JLZKlywwAIAn6FhErKLt3dL5KghyH93Br8/wTEms59+wJnsClvwsiq7Fw==
+perfect-graph@^0.0.52:
+  version "0.0.52"
+  resolved "https://registry.yarnpkg.com/perfect-graph/-/perfect-graph-0.0.52.tgz#b304ba45efa014cef04b3e83da27591d2a6a1be6"
+  integrity sha512-rJo9QWdpCdEwZlmVwmu3PL7b4mn6m3ILzZyW+wKe4Aqo40TtuOBDvqv5/jynZ8JfMrqxjgNZeM2QN0QMpZ10vA==
   dependencies:
     "@inlet/react-pixi" "5.2.0"
     cytoscape "3.17.0"
@@ -10110,10 +10115,10 @@ union-value@^1.0.0:
     is-extendable "^0.1.1"
     set-value "^2.0.1"
 
-unitx-ui@^0.0.332:
-  version "0.0.332"
-  resolved "https://registry.yarnpkg.com/unitx-ui/-/unitx-ui-0.0.332.tgz#bdc1bebf4da3f0268b09a184c42d727790969462"
-  integrity sha512-jRBOK7q+0lXZUKvUWjokWY9OIW3ZErvThU225shD/K6I9M+xNnKX0hJtPGQRMHRbUsC/DU4ofnD0t/nZKM2Fiw==
+unitx-ui@^0.0.335:
+  version "0.0.335"
+  resolved "https://registry.yarnpkg.com/unitx-ui/-/unitx-ui-0.0.335.tgz#ab480558b3d90331737d07aebd31946cd11f1ecf"
+  integrity sha512-spNaSPua7noVwtMLqq17EnucbTtf57IUSFhxg2+hEMTqkOekUDut6Z60gKaItFd6bXvf+LJeh/X3tT71J3+lmg==
   dependencies:
     "@eva-design/eva" "^2.0.0"
     "@eva-design/material" "^2.0.0"
@@ -10298,10 +10303,10 @@ unitx@^0.0.361:
     victor "^1.1.0"
     xstate "^4.9.1"
 
-unitx@^0.0.433:
-  version "0.0.433"
-  resolved "https://registry.yarnpkg.com/unitx/-/unitx-0.0.433.tgz#df714b0d51b8bea2876ae9b797793b00de1b502e"
-  integrity sha512-dbkH5chiTHd/A3x7Eqkj4ItOH+a3OAr78zFKjlUzc+FsPk59Wiy++oT1ijUEXRZPti6mgP9QBGvRMscJSISPtQ==
+unitx@^0.0.438:
+  version "0.0.438"
+  resolved "https://registry.yarnpkg.com/unitx/-/unitx-0.0.438.tgz#a60268e3bdec62b2c892343b603e0e297bbcb4e1"
+  integrity sha512-Jp9jszCLUpL1ZOE/OzQry9fvARD+R3fykJxD/Veyc1n7+PwxfPcu1QzUSLVkHc5K2mfsSys4egdcoibQTgKjTQ==
   dependencies:
     "@xstate/test" "^0.3.0"
     ajv "^6.12.0"
@@ -10316,6 +10321,7 @@ unitx@^0.0.433:
     flatted "^2.0.2"
     immer "^7.0.8"
     json-schema-faker "^0.5.0-rcv.24"
+    jsonpath-plus "^4.0.0"
     jsonwebtoken "8.5.1"
     mingo "^3.0.6"
     ncp "^2.0.0"
