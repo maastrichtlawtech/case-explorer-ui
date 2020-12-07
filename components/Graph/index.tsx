@@ -1,24 +1,21 @@
+// @ts-nocheck
 import React from 'react'
 import * as R from 'unitx/ramda'
-// import mingo from 'unitx/mingo'
+import mingo from 'unitx/mingo'
+import { ApplicationProvider, Button, Layout,useTheme, } from 'unitx-ui'
 import { 
   DarkTheme,
   DefaultTheme,
-  ApplicationProvider,
-   Button, 
-  Layout,
-  useTheme,
-  Modal,
-  Spinner,
-  useData,
 } from 'unitx-ui'
-import { ActivityIndicator } from 'react-native'
-import { Graph , drawLine, GraphEditorProps, GraphEditor} from 'perfect-graph'
-import { useController } from 'perfect-graph/plugins/controller'
+import  { GraphEditorProps,GraphEditor } from 'perfect-graph/components/GraphEditor'
+import { Graph } from 'perfect-graph/components'
+import {drawLine} from 'perfect-graph/components/Graphics'
 import data from './data'
 import * as C from 'unitx/color'
-import { FILTER_SCHEMA, FILTER_SCHEMA_FETCH_EXAMPLE } from './constants'
-import { requestData } from './requestData'
+import { getFilterSchema, VIEW_CONFIG_SCHEMA  } from './constants'
+import { EVENT } from 'perfect-graph/utils/constants'
+import {useController} from 'perfect-graph/plugins/controller'
+
 type Props = Partial<GraphEditorProps>
 
 const NODE_SIZE = {
@@ -26,152 +23,187 @@ const NODE_SIZE = {
   height: 80,
 }
 
+const NODE_SIZE_RANGE_MAP = {
+  size: [100, 300],
+  community: [0, 10],
+  in_degree: [0, 10],
+  out_degree: [0, 10],
+  degree: [0, 20],
+  year: [
+    1969,
+    2015
+  ],
+}
+const calculateNodeSize = (data: object, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
+  if (!fieldName) {
+    return NODE_SIZE_RANGE_MAP.size[0]
+  }
+  const fieldRange = NODE_SIZE_RANGE_MAP[fieldName]
+  const sizeRangeGap = NODE_SIZE_RANGE_MAP.size[1] - NODE_SIZE_RANGE_MAP.size[0]
+  const fieldRangeGap = fieldRange[1] - fieldRange[0]
+  const fieldRangeValue = (data[fieldName] ?? fieldRange[0]) - fieldRange[0]
+  return  ((fieldRangeValue / fieldRangeGap) * sizeRangeGap) + NODE_SIZE_RANGE_MAP.size[0]
+}
+const calculateColor = (data: object, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
+  if (!fieldName) {
+    return perc2color(0)
+  }
+  const fieldRange = NODE_SIZE_RANGE_MAP[fieldName]
+  const sizeRangeGap = NODE_SIZE_RANGE_MAP.size[1] - NODE_SIZE_RANGE_MAP.size[0]
+  const fieldRangeGap = fieldRange[1] - fieldRange[0]
+  const fieldRangeValue = (data[fieldName] ?? fieldRange[0]) - fieldRange[0]
+  return  perc2color((fieldRangeValue / fieldRangeGap) * 100)
+}
+const perc2color = (
+  perc: number,
+  min = 20, 
+  max = 80
+) => {
+  var base = (max - min);
+
+  if (base === 0) { perc = 100; }
+  else {
+      perc = (perc - min) / base * 100; 
+  }
+  var r, g, b = 0;
+  if (perc < 50) {
+      r = 255;
+      g = Math.round(5.1 * perc);
+  }
+  else {
+      g = 255;
+      r = Math.round(510 - 5.10 * perc);
+  }
+  var h = r * 0x10000 + g * 0x100 + b * 0x1;
+  return '#' + ('000000' + h.toString(16)).slice(-6);
+}
+
 const AppContainer = ({
   changeTheme,
   ...rest
 }) => {
-  const [state, update] = useData({
-    visible: false, 
-    loading: false,
-    data,
-    filteredData: data,
-    formData: { 
-      _page: 1,
-      _limit: 10,
-      // _start: 1
-    }
-})
-  const onFilterChangeCallback = React.useCallback((formData) => {
-    setTimeout(
-      async () => {
-        // const processedformData = R.toMongoQuery({
-        //   data: formData,
-        // }, {
-        //   processItem: (value, path) => R.cond([
-        //     [R.equals(['data', 'in_degree']), () => ({ 
-        //       $gte: value[0], $lte: value[1]
-        //     })]
-        //   ])(path)
-        // })
-        // const cursor = mingo.find(state.data.nodes, processedformData)
-        // const filteredData = cursor.all()
-
-        // setState({
-        //   ...state,
-        //   formData,
-        //   filteredData: {
-        //     edges: filterEdges(filteredData)(state.filteredData.edges),
-        //     nodes: filteredData
-        //   },
-        // })
-        update((draft) => {
-          draft.loading = true
-        })
-        const filteredData = await requestData(formData)
-        update((draft)=>{
-          draft.formData = formData
-          draft.filteredData = filteredData
-          draft.graphConfig =  {
-            layout: Graph.Layouts.circle,
-            zoom: 0.5
-          }
-          draft.loading = false
-        })
-
+  const configRef = React.useRef({
+    visualization: {
+      nodeSize: null,
+      nodeColor: null
+    },
+  })
+  const FILTER_SCHEMA = React.useMemo(() => getFilterSchema({
+    onPopupPress: () => console.log('popup')
+  }), [])
+  const [controllerProps] = useController({
+    ...data,
+    graphConfig: {
+      layout: Graph.Layouts.grid,
+      zoom: 0.2
+    },
+    settingsBar: {
+      opened: true,
+      forms: [FILTER_SCHEMA, VIEW_CONFIG_SCHEMA]
+    },
+    dataBar: {
+      editable: false,
+    },
+    actionBar: {
+      actions: {
+        add: { visible: false },
+        delete: { visible: false },
       }
-    )
-  }, [])
+    },
+    onEvent: ({
+      type,
+      extraData,
+      element
+    }) => {
+      switch (type) {
+        
+        case EVENT.SETTINGS_FORM_CHANGED:{
+          if (extraData.form.schema.title === FILTER_SCHEMA.schema.title) {
+
+          } else {
+            configRef.current.visualization = extraData.value
+          }
+          break
+        }
+      
+        default:
+          break;
+      }
+      return null
+    }
+  },)
   const graphRef = React.useRef(null)
   const theme = useTheme()
-  const [controllerProps,] = useController(state.filteredData, {
-    onEvent: (eventInfo) => {
-      // console.log('h', eventInfo)
-    }
-  })
-  console.log('data', state.filteredData)
   return (
-    <Layout style={{ width: '100%', height: '100%'}}>
+      <Layout style={{ width: '100%', height: '100%'}}>
       <GraphEditor
         ref={graphRef}
-        // controller={controller}
-        extraData={{ theme }}
-        style={{ width: '100%', height: '100%', }}
-        graphConfig={state.graphConfig}
         {...controllerProps}
-        filterBar={{
-          ...controllerProps.filterBar,
-          onSubmit: onFilterChangeCallback,
-          formData: state.formData,
-          // ...FILTER_SCHEMA
-          children: null,
-          ...FILTER_SCHEMA_FETCH_EXAMPLE
-        }}
-        dataBar={{
-            ...controllerProps.dataBar, 
-            editable: false,
-          }}
-          actionBar={undefined}
+        extraData={[configRef.current.visualization]}
+        style={{ width: '100%', height: '100%', }}
+        // graphConfig={{
+        //   // layout: Graph.Layouts.breadthfirst,
+        //   zoom: 0.5
+        // }}
         drawLine={({ graphics, to, from }) => {
           drawLine({
             graphics,
             to,
             from,
             directed: true,
-            box: {
-              width: NODE_SIZE.width + 10,
-              height: NODE_SIZE.height + 10
-            },
             fill:C.rgbNumber(theme.colors.text)
             // type: 'bezier'
           })
         }}
-        renderNode={({ item: { id, } }) => {
+        renderNode={({ item: { id, data } }) => {
+          const size = calculateNodeSize(data, configRef.current.visualization.nodeSize)
+          const color = calculateColor(data, configRef.current.visualization.nodeColor)
           return (
             <Graph.HoverContainer
               style={{
-                ...NODE_SIZE,
+                width: size,
+                height: size,
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: 25
+                borderRadius: 25,//(size/2 )+10,
+                backgroundColor: color
                 }}
                 renderHoverElement={() => (
                   <Graph.View
                     style={{
-                      width: NODE_SIZE.width,
-                      height: 30,
+                      width: size,
+                      height: 20,
                       position: 'absolute',
                       left: 0,
-                      alignItems: 'center'
+                      backgroundColor: color
                     }}
                   >
                     <Graph.Text style={{
-                      fontSize: 30,
+                      fontSize: 20,
                        textAlign: 'center',
                       }}>
-                        {id}
-                      {/* {R.replace('ECLI:NL:', '')(data.ecli)} */}
+                      {R.replace('ECLI:NL:', '')(data.ecli)}
                     </Graph.Text>
                   </Graph.View>
                 )}
             >
               <Graph.Text style={{fontSize: 10}}>
-                {/* {R.replace('ECLI:NL:', '')(data.ecli)} */}
-                {id}
+                {R.replace('ECLI:NL:', '')(data.ecli)}
               </Graph.Text>
             </Graph.HoverContainer>
           )
         }}
         {...rest}
       />
-      <Modal 
-        visible={state.loading} 
-        backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', }}
-      >
-        <ActivityIndicator />
-      </Modal>
       </Layout>
   )
 }
+
+export const mergeDeepAll = (list: Record<string, any>[]) => R.reduce(
+  R.mergeDeepRight,
+  // @ts-ignore
+  {},
+)(list)
 
 
 

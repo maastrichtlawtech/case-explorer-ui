@@ -1,161 +1,96 @@
 import React from 'react'
 import RangeSlider from 'unitx-ui/components/RangeSlider'
-export const FILTER_SCHEMA = {
-  schema: {
-    title: 'Filter',
-    type: 'object',
-    required: [
-      // 'inDegree',
-      'degree',
-      // 'rechtsgebied',
-      // 'adjustLayout',
-    ],
-    additionalProperties: false,
-    extendTypeAnnotation: '',
-    extendAnnotation: '',
-    extendProperties: {},
-    properties: {
-      'in_degree': {
-        type: 'array',
-        items: {
-          type: 'number',
+import {Button} from 'unitx-ui'
+
+export const getFilterSchema  = (props: {onPopupPress: () => void}) => {
+  const {
+     onPopupPress
+  } = props
+  return {
+    schema: {
+      title: 'Filter',
+      type: 'object',
+      required: [
+        // 'title',
+        // 'year',
+        // 'rechtsgebied',
+        // 'adjustLayout',
+      ],
+      additionalProperties: false,
+      properties: {
+        title: {
+          type: 'boolean',
         },
-        minimum: 0,
-        maximum: 6,
-      },
-      degree: {
-        title: 'degree',
-        type: 'number',
-        extendTypeAnnotation: '',
-        extendAnnotation: '{min: 0, max: 6}',
-        minimum: 0,
-        maximum: 6,
-        extendProperties: {
-          min: 0,
-          max: 6,
+        year: {
+          type: 'array',
+          items: {
+            type: 'number',
+          },
+          minimum: 1969,
+          maximum: 2015,
         },
-      },
-      rechtsgebied: {
-        title: 'civielRecht',
-        type: 'string',
-        enum: [
-          'civielRecht',
-        ],
-        extendTypeAnnotation: '',
-        extendAnnotation: '',
-        extendProperties: {},
-      },
-      // adjustLayout: {
-      //   title: 'boolean',
-      //   type: 'boolean',
-      //   extendTypeAnnotation: '',
-      //   extendAnnotation: '',
-      //   extendProperties: {},
-      // },
-    },
-  },
-  uiSchema: {
-    'in_degree': {
-      'ui:field': ({ formData, schema, onChange}) => {
-        return (
-          <RangeSlider
-            style={{ width: '90%', height: 100 }}
-            min={schema.minimum}
-            max={schema.maximum}
-            value={formData}
-            onValueChange={onChange}
-          />
-        )
+        live: {
+          title: 'boolean',
+          type: 'boolean',
+        },
+        popup: {
+          title: 'More Settings',
+          type: 'boolean',
+        },
       },
     },
+    uiSchema: {
+      'year': {
+        'ui:field': ({ formData, schema, onChange}) => {
+          return (
+            <RangeSlider
+              style={{ width: '90%', height: 40 }}
+              min={schema.minimum}
+              max={schema.maximum}
+              value={formData}
+              onValueChange={onChange}
+            />
+          )
+        },
+      },
+      'popup': {
+        'ui:field': ({ formData, schema, onChange}) => {
+          return (
+            <Button onPress={onPopupPress}>Open</Button>
+          )
+        },
+      },
+    }
   }
 }
-export const FILTER_SCHEMA_FETCH_EXAMPLE = {
+export const VIEW_CONFIG_SCHEMA = {
   schema: {
-    title: 'Filter',
+    title: 'Visualisation',
     type: 'object',
-    required: [
-      '_limit',
-      '_page',
-      '_start',
-      // 'adjustLayout',
-    ],
+    required: [],
     additionalProperties: false,
     properties: {
-      '_limit': {
-          type: 'number',
-        minimum: 5,
-        maximum: 30,
+      nodeSize: {
+        "type": "string",
+        "title": "Node Size",
+        "enum": [
+          "degree",
+          "out_degree",
+          "in_degree",
+          "year",
+        ]
       },
-      _page: {
-        type: 'number',
-      minimum: 1,
-      maximum: 10,
-    },
-    _start: {
-      type: 'number',
-    minimum: 1,
-    maximum: 100,
-  },
-      // adjustLayout: {
-      //   title: 'boolean',
-      //   type: 'boolean',
-      //   extendTypeAnnotation: '',
-      //   extendAnnotation: '',
-      //   extendProperties: {},
-      // },
+      nodeColor: {
+        "type": "string",
+        "title": "Node Color",
+        "enum": [
+          "community",
+          "degree",
+          "out_degree",
+          "in_degree",
+          "year",
+        ]
+      },
     },
   },
 }
-export const SECOND_FILTER_SCHEMA = {
-  schema: {
-    title: 'Filter',
-    type: 'object',
-    required: [
-      // 'title',
-      // 'year',
-      // 'rechtsgebied',
-      // 'adjustLayout',
-    ],
-    additionalProperties: false,
-    extendTypeAnnotation: '',
-    extendAnnotation: '',
-    extendProperties: {},
-    properties: {
-      title: {
-        type: 'string',
-      },
-      year: {
-        type: 'array',
-        items: {
-          type: 'number',
-        },
-        minimum: 1969,
-        maximum: 2015,
-      },
-      live: {
-        title: 'boolean',
-        type: 'boolean',
-        extendTypeAnnotation: '',
-        extendAnnotation: '',
-        extendProperties: {},
-      },
-    },
-  },
-  uiSchema: {
-    'year': {
-      'ui:field': ({ formData, schema, onChange}) => {
-        return (
-          <RangeSlider
-            style={{ width: '90%', height: 100 }}
-            min={schema.minimum}
-            max={schema.maximum}
-            value={formData}
-            onValueChange={onChange}
-          />
-        )
-      },
-    },
-  }
-}
-// export FILTER_SCHEMA = {}
