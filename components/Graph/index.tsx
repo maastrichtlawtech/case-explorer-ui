@@ -37,7 +37,6 @@ const prepareData = (data) =>  {
   }
 }
 const data = prepareData(defaultData)
-console.log(data)
 type Props = Partial<GraphEditorProps>
 
 const NODE_SIZE = {
@@ -137,14 +136,16 @@ const AppContainer = ({
       extraData,
       element
     }) => {
+      console.log(type, extraData)
       switch (type) {
         
         case EVENT.SETTINGS_FORM_CHANGED:{
           if (extraData.form.schema.title === FILTER_SCHEMA.schema.title) {
 
           } else {
-            configRef.current.visualization = extraData.value
+            configRef.current.visualization = extraData.value.formData
           }
+          return false
           break
         }
       
