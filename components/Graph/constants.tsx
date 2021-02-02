@@ -43,13 +43,16 @@ export const getFilterSchema  = (props: {onPopupPress: () => void}) => {
         'ui:field': ({ formData, schema, onChange}) => {
           return (
             <Slider
-              value={formData}
-              onChange={onChange}
+              value={formData ?? [schema.minimum, schema.maximum ]}
+              onChange={(e) => {
+                console.log(formData,e.target.value)
+                onChange(e.target.value)
+              }}
               valueLabelDisplay="auto"
               aria-labelledby="range-slider"
               min={schema.minimum}
               max={schema.maximum}
-              // getAriaValueText={valuetext}
+              // getAriaValueText={(text)=> text}
             />
             // <RangeSlider
             //   style={{ width: '90%', height: 40 }}
