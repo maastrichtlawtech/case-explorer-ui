@@ -1,17 +1,19 @@
 // @ts-nocheck
 import React from 'react'
-import * as R from 'unitx/ramda'
-import mingo from 'unitx/mingo'
-import { ApplicationProvider, Button, Layout,useTheme, } from 'unitx-ui'
+import * as R from 'colay/ramda'
+// import { Button, } from '@material-ui/core'
+import { View, } from 'react-native'
 import { 
   DarkTheme,
   DefaultTheme,
-} from 'unitx-ui'
+  ThemeProvider,
+  useTheme
+} from 'perfect-graph/core/theme'
 import  { GraphEditorProps,GraphEditor } from 'perfect-graph/components/GraphEditor'
 import { Graph } from 'perfect-graph/components'
 import {drawLine} from 'perfect-graph/components/Graphics'
 import data from './data'
-import * as C from 'unitx/color'
+import * as C from 'colay/color'
 import { getFilterSchema, VIEW_CONFIG_SCHEMA  } from './constants'
 import { EVENT } from 'perfect-graph/utils/constants'
 import {useController} from 'perfect-graph/plugins/controller'
@@ -135,7 +137,7 @@ const AppContainer = ({
   const graphRef = React.useRef(null)
   const theme = useTheme()
   return (
-      <Layout style={{ width: '100%', height: '100%'}}>
+      <View style={{ width: '100%', height: '100%'}}>
       <GraphEditor
         ref={graphRef}
         {...controllerProps}
@@ -145,57 +147,57 @@ const AppContainer = ({
         //   // layout: Graph.Layouts.breadthfirst,
         //   zoom: 0.5
         // }}
-        drawLine={({ graphics, to, from }) => {
-          drawLine({
-            graphics,
-            to,
-            from,
-            directed: true,
-            fill:C.rgbNumber(theme.colors.text)
-            // type: 'bezier'
-          })
-        }}
-        renderNode={({ item: { id, data } }) => {
-          const size = calculateNodeSize(data, configRef.current.visualization.nodeSize)
-          const color = calculateColor(data, configRef.current.visualization.nodeColor)
-          return (
-            <Graph.HoverContainer
-              style={{
-                width: size,
-                height: size,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 25,//(size/2 )+10,
-                backgroundColor: color
-                }}
-                renderHoverElement={() => (
-                  <Graph.View
-                    style={{
-                      width: size,
-                      height: 20,
-                      position: 'absolute',
-                      left: 0,
-                      backgroundColor: color
-                    }}
-                  >
-                    <Graph.Text style={{
-                      fontSize: 20,
-                       textAlign: 'center',
-                      }}>
-                      {R.replace('ECLI:NL:', '')(data.ecli)}
-                    </Graph.Text>
-                  </Graph.View>
-                )}
-            >
-              <Graph.Text style={{fontSize: 10}}>
-                {R.replace('ECLI:NL:', '')(data.ecli)}
-              </Graph.Text>
-            </Graph.HoverContainer>
-          )
-        }}
+        // drawLine={({ graphics, to, from }) => {
+        //   drawLine({
+        //     graphics,
+        //     to,
+        //     from,
+        //     directed: true,
+        //     fill:C.rgbNumber(theme.colors.text)
+        //     // type: 'bezier'
+        //   })
+        // }}
+        // renderNode={({ item: { id, data } }) => {
+        //   const size = calculateNodeSize(data, configRef.current.visualization.nodeSize)
+        //   const color = calculateColor(data, configRef.current.visualization.nodeColor)
+        //   return (
+        //     <Graph.HoverContainer
+        //       style={{
+        //         width: size,
+        //         height: size,
+        //         alignItems: 'center',
+        //         justifyContent: 'center',
+        //         borderRadius: 25,//(size/2 )+10,
+        //         backgroundColor: color
+        //         }}
+        //         renderHoverElement={() => (
+        //           <Graph.View
+        //             style={{
+        //               width: size,
+        //               height: 20,
+        //               position: 'absolute',
+        //               left: 0,
+        //               backgroundColor: color
+        //             }}
+        //           >
+        //             <Graph.Text style={{
+        //               fontSize: 20,
+        //                textAlign: 'center',
+        //               }}>
+        //               {R.replace('ECLI:NL:', '')(data.ecli)}
+        //             </Graph.Text>
+        //           </Graph.View>
+        //         )}
+        //     >
+        //       <Graph.Text style={{fontSize: 10}}>
+        //         {R.replace('ECLI:NL:', '')(data.ecli)}
+        //       </Graph.Text>
+        //     </Graph.HoverContainer>
+        //   )
+        // }}
         {...rest}
       />
-      </Layout>
+      </View>
   )
 }
 
@@ -220,10 +222,10 @@ const changeTheme = () => {
 }
 
   return (
-    <ApplicationProvider 
-      theme={isDefault  ? DefaultTheme : DarkTheme}
+    <ThemeProvider 
+      value={isDefault  ? DefaultTheme : DarkTheme}
     >
       <AppContainer  changeTheme={changeTheme} {...props}/>
-    </ApplicationProvider>
+    </ThemeProvider>
   )
 }

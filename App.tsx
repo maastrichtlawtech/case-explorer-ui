@@ -1,7 +1,5 @@
 import React from 'react';
 import GraphEditor from "./components/Graph";
-import {Graph} from "perfect-graph";
-import queryString from "unitx/query-string";
 
 
 
