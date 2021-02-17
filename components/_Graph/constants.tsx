@@ -45,6 +45,7 @@ export const getFilterSchema  = (props: {onPopupPress: () => void}) => {
             <Slider
               value={formData ?? [schema.minimum, schema.maximum ]}
               onChange={(e) => {
+                console.log(formData,e.target.value)
                 onChange(e.target.value)
               }}
               valueLabelDisplay="auto"

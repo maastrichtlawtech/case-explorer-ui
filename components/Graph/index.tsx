@@ -1,35 +1,57 @@
+/* eslint-disable */
+// @ts-nocheck
 import React from 'react'
 import * as R from 'colay/ramda'
-// import { Button, } from '@material-ui/core'
-import { View, } from 'react-native'
+import { 
+  useTheme as useMuiTheme,
+   ThemeProvider as MuiThemeProvider,
+   createMuiTheme
+} from '@material-ui/core'
+import { Div, } from 'colay-ui'
 import { 
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
   useTheme
 } from 'perfect-graph/core/theme'
+import { GraphRef } from 'perfect-graph/type'
 import  { GraphEditorProps,GraphEditor } from 'perfect-graph/components/GraphEditor'
 import { Graph } from 'perfect-graph/components'
+import { UseEffect } from 'perfect-graph/components/UseEffect'
 import {drawLine} from 'perfect-graph/components/Graphics'
 import defaultData from './data'
 import * as C from 'colay/color'
 import { getFilterSchema, VIEW_CONFIG_SCHEMA  } from './constants'
 import { EVENT } from 'perfect-graph/utils/constants'
 import {useController} from 'perfect-graph/plugins/controller'
+import {calculateStatistics} from './utils/networkStatistics'
+import {RenderNode} from './RenderNode'
+import {listCases} from './API'
+// import { Data } from '../../components/Graph/Default'
 
+const MUIDarkTheme = createMuiTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+const MUILightTheme = createMuiTheme({
+  palette: {
+    mode: 'light',
+  },
+});
 const filterEdges = (nodes: {id: string}[]) => (edges: {source:string;target:string}[]) => {
   const nodeMap = R.groupBy(R.prop('id'))(nodes)
   return R.filter(
     (edge) => nodeMap[edge.source] && nodeMap[edge.target]
   )(edges)
 }
-
+const CHUNK_COUNT = 3
 const prepareData = (data) =>  {
   const {
     nodes,
     edges
   } = data
-  const preNodes = R.splitEvery(Math.ceil(nodes.length/2))(nodes)[0]
+  const preNodes = R.splitEvery(Math.ceil(nodes.length/CHUNK_COUNT))(nodes)[0]
   const preEdges = filterEdges(preNodes)(edges)
   return {
     nodes: preNodes,
@@ -39,13 +61,14 @@ const prepareData = (data) =>  {
 const data = prepareData(defaultData)
 type Props = Partial<GraphEditorProps>
 
+// console.log('statistics', calculateStatistics(data))
 const NODE_SIZE = {
   width: 80,
   height: 80,
 }
 
 const NODE_SIZE_RANGE_MAP = {
-  size: [100, 300],
+  size: [60, 250],
   community: [0, 10],
   in_degree: [0, 10],
   out_degree: [0, 10],
@@ -100,7 +123,7 @@ const perc2color = (
 }
 
 const AppContainer = ({
-  changeTheme,
+  changeMUITheme,
   ...rest
 }) => {
   const configRef = React.useRef({
@@ -108,15 +131,23 @@ const AppContainer = ({
       nodeSize: null,
       nodeColor: null
     },
+    filtering: {
+      year: [1960, 2021]
+    }
   })
   const FILTER_SCHEMA = React.useMemo(() => getFilterSchema({
     onPopupPress: () => console.log('popup')
   }), [])
-  const [controllerProps] = useController({
+  const THEMES = {
+    Dark: DarkTheme,
+    Default: DefaultTheme
+  }
+  const NODE_ID = 'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
+  const [controllerProps, controller] = useController({
     ...data,
     graphConfig: {
       layout: Graph.Layouts.grid,
-      zoom: 0.2
+      zoom: 0.2,
     },
     settingsBar: {
       opened: true,
@@ -126,6 +157,7 @@ const AppContainer = ({
       editable: false,
     },
     actionBar: {
+      opened: false,
       actions: {
         add: { visible: false },
         delete: { visible: false },
@@ -134,20 +166,69 @@ const AppContainer = ({
     onEvent: ({
       type,
       extraData,
-      element
-    }) => {
-      console.log(type, extraData)
+      element,
+      graphRef
+    },draft) => {
       switch (type) {
-        
         case EVENT.SETTINGS_FORM_CHANGED:{
+          draft.settingsBar.forms[extraData.index].formData = extraData.value
           if (extraData.form.schema.title === FILTER_SCHEMA.schema.title) {
-
+            console.log('updateExtraDat',)
+            configRef.current = {
+              ...configRef.current,
+              filtering: extraData.value
+            }
           } else {
-            configRef.current.visualization = extraData.value.formData
+            configRef.current = {
+              ...configRef.current,
+              visualization: extraData.value
+            }
           }
           return false
           break
         }
+      
+        case EVENT.CHANGE_THEME:{
+          draft.graphConfig.theme = THEMES[extraData]
+          changeMUITheme(extraData)
+          return false
+          break
+        }
+        // case EVENT.ELEMENT_SELECTED: {
+        //   console.log('ELEMENT_SELECTED', element.isNode(), graphRef)
+        //   if (element.isNode()) {
+        //     // const TARGET_SIZE = 700
+        //     // const {
+        //     //   viewport
+        //     // } = graphRef.current
+        //     // const currentBoundingBox = {
+        //     //   x1: viewport.hitArea.x,
+        //     //   y1: viewport.hitArea.y,
+        //     //   w: viewport.hitArea.width,
+        //     //   h: viewport.hitArea.height,
+        //     // }
+        //     // const zoom = (currentBoundingBox.w / TARGET_SIZE ) * graphRef.current.viewport.scale.x
+        //     // const position = element.position()
+        //     // graphRef.current.viewport.snapZoom({
+        //     //   center: position, 
+        //     //   width: TARGET_SIZE,
+        //     //   height: TARGET_SIZE,
+        //     //   time: Graph.Layouts.grid.animationDuration
+        //     // })
+        //     // element.connectedEdges().connectedNodes().layout({
+        //     //   ...Graph.Layouts.random,
+        //     //   boundingBox: {
+        //     //     ...currentBoundingBox,
+        //     //     h: TARGET_SIZE,
+        //     //     w: TARGET_SIZE,
+        //     //     // x1: element.position().x,
+        //     //     // y1: element.position().y,
+        //     //   }
+        //     // }).start()
+        //   }
+        //   // return false
+        //   break
+        // }
       
         default:
           break;
@@ -155,66 +236,127 @@ const AppContainer = ({
       return null
     }
   },)
-  const graphRef = React.useRef(null)
-  const theme = useTheme()
+  // React.useEffect(() => {
+  //   const call = async () =>{
+  //     const results = await listCases()
+  //     console.log(results)
+  //     const nodes = results.map(({id, ...data}) => ({
+  //       id: `${data.doctype}:${id}`,
+  //       data
+  //     }))
+  //     controller.update((draft) => {
+  //       draft.nodes = nodes
+  //       draft.edges = []
+  //     })
+  //   }
+  //   call()
+  // }, [])
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //     controller.update((draft) => {
+  //       draft.graphConfig.clusters[0].visible = false
+  //     })
+  //   }, 7000)
+  // }, [])
+  // React.useEffect(() => {
+  //   setTimeout(() => {
+  //     controller.update((draft) => {
+  //       draft.graphConfig.clusters[0].visible = true
+  //     })
+  //   }, 9000)
+  // }, [])
+  const graphEditorRef = React.useRef(null)
   return (
-      <View style={{ width: '100%', height: '100%'}}>
+      <Div style={{ display: 'flex', flexDirection: 'column',width: '100%', height: '100%'}}>
       <GraphEditor
-        ref={graphRef}
+        ref={graphEditorRef}
         {...controllerProps}
-        extraData={[configRef.current.visualization]}
-        style={{ width: '100%', height: '100%', }}
-        // graphConfig={{
-        //   // layout: Graph.Layouts.breadthfirst,
-        //   zoom: 0.5
+        extraData={[configRef.current]}
+        style={{ width: '100%', height: 820, }}
+        renderNode={(props) => (
+          <RenderNode
+            {...props}
+            {...configRef.current}
+          />
+        )}
+        // renderNode={({ item, element, cy, theme }) => {
+        //   const size = calculateNodeSize(item.data, configRef.current.visualization.nodeSize)
+        //   const color = configRef.current.visualization.nodeColor ? calculateColor(
+        //     item.data,
+        //     configRef.current.visualization.nodeColor
+        //   ) : theme.palette.background.paper
+        //   const hasSelectedEdge = element.connectedEdges(':selected').length > 0
+        //   return (
+        //           <Graph.Pressable
+        //       style={{
+        //         width: size,
+        //         height: size,
+        //         justifyContent: 'center',
+        //         alignItems: 'center',
+        //         display: 'flex',
+        //         backgroundColor: hasSelectedEdge
+        //         ? theme.palette.secondary.main
+        //         : (element.selected()
+        //           ? theme.palette.primary.main
+        //           : color),
+        //         // hasSelectedEdge
+        //         //   ? theme.palette.secondary.main
+        //         //   : (element.selected()
+        //         //     ? theme.palette.primary.main
+        //         //     : theme.palette.background.paper),
+        //         borderRadius: size,
+        //       }}
+        //       onPress={() => {
+        //         cy.$(':selected').unselect()
+        //         element.select()
+        //       }}
+        //     >
+        //       <Graph.Text
+        //         style={{
+        //           position: 'absolute',
+        //           top: -size/1.5,
+        //           left: 20,
+        //         }}
+        //         isSprite
+        //       >
+        //         {R.takeLast(6, item.id)}
+        //       </Graph.Text>
+        //     </Graph.Pressable>
+        //   )
         // }}
-        // drawLine={({ graphics, to, from }) => {
-        //   drawLine({
-        //     graphics,
-        //     to,
-        //     from,
-        //     directed: true,
-        //     fill:C.rgbNumber(theme.colors.text)
-        //     // type: 'bezier'
-        //   })
-        // }}
-        renderNode={({ item, element, cy }) => {
-          const size = calculateNodeSize(item.data, configRef.current.visualization.nodeSize)
-          const color = calculateColor(item.data, configRef.current.visualization.nodeColor)
-          // const hasSelectedEdge = element.connectedEdges(':selected').length > 0
+        renderEdge={(props) => {
+          const {
+            cy,
+            item,
+            element,
+            theme
+          } = props
           return (
-            <Graph.Pressable
+            <Graph.View
+              interactive
               style={{
-                width: size,
-                height: size,
+                position: 'absolute',
                 justifyContent: 'center',
                 alignItems: 'center',
                 display: 'flex',
-                backgroundColor: color,
-                // hasSelectedEdge
-                //   ? theme.palette.secondary.main
-                //   : (element.selected()
-                //     ? theme.palette.primary.main
-                //     : theme.palette.background.paper),
-                borderRadius: size,
               }}
-              onPress={() => {
+              click={() => {
                 cy.$(':selected').unselect()
                 element.select()
               }}
             >
               <Graph.Text
                 style={{
-                  position: 'absolute',
-                  top: -40,
-                  color: 'black',
+                  // position: 'absolute',
+                  // top: -40,
+                  // backgroundColor: DefaultTheme.palette.background.paper,
+                  fontSize: 12,
                 }}
                 isSprite
               >
-                {item.id.substring(0, 5)}
-        
+                {R.takeLast(6, item.id)}
               </Graph.Text>
-            </Graph.Pressable>
+            </Graph.View>
           )
         }}
         // renderNode={({ item: { id, data } }) => {
@@ -257,7 +399,7 @@ const AppContainer = ({
         // }}
         {...rest}
       />
-      </View>
+      </Div>
   )
 }
 
@@ -270,17 +412,18 @@ export const mergeDeepAll = (list: Record<string, any>[]) => R.reduce(
 
 
 
-export default (props: Props) => {
-  const [isDefault, setIsDefault] = React.useState(true)
-const changeTheme = () => {
-  setIsDefault(!isDefault)
+const MUI_THEMES = {
+  Dark: MUIDarkTheme,
+  Light: MUILightTheme,
 }
-
+export default (props: Props) => {
+  const [theme, setTheme] = React.useState(MUI_THEMES.Light)
   return (
-    <ThemeProvider 
-      value={isDefault  ? DefaultTheme : DarkTheme}
-    >
-      <AppContainer  changeTheme={changeTheme} {...props}/>
-    </ThemeProvider>
+    <MuiThemeProvider theme={theme}>
+      <AppContainer
+        changeMUITheme={(name)=> setTheme(MUI_THEMES[name])}
+        {...props}
+      />
+    </MuiThemeProvider>
   )
 }
