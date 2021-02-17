@@ -26,6 +26,7 @@ import { EVENT } from 'perfect-graph/utils/constants'
 import {useController} from 'perfect-graph/plugins/controller'
 import {calculateStatistics} from './utils/networkStatistics'
 import {RenderNode} from './RenderNode'
+import {RenderEdge} from './RenderEdge'
 import {listCases} from './API'
 // import { Data } from '../../components/Graph/Default'
 
@@ -143,6 +144,7 @@ const AppContainer = ({
     Default: DefaultTheme
   }
   const NODE_ID = 'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
+  const filteredDataRef = React.useRef({})
   const [controllerProps, controller] = useController({
     ...data,
     graphConfig: {
@@ -173,11 +175,11 @@ const AppContainer = ({
         case EVENT.SETTINGS_FORM_CHANGED:{
           draft.settingsBar.forms[extraData.index].formData = extraData.value
           if (extraData.form.schema.title === FILTER_SCHEMA.schema.title) {
-            console.log('updateExtraDat',)
             configRef.current = {
               ...configRef.current,
               filtering: extraData.value
             }
+
           } else {
             configRef.current = {
               ...configRef.current,
@@ -324,41 +326,7 @@ const AppContainer = ({
         //     </Graph.Pressable>
         //   )
         // }}
-        renderEdge={(props) => {
-          const {
-            cy,
-            item,
-            element,
-            theme
-          } = props
-          return (
-            <Graph.View
-              interactive
-              style={{
-                position: 'absolute',
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-              }}
-              click={() => {
-                cy.$(':selected').unselect()
-                element.select()
-              }}
-            >
-              <Graph.Text
-                style={{
-                  // position: 'absolute',
-                  // top: -40,
-                  // backgroundColor: DefaultTheme.palette.background.paper,
-                  fontSize: 12,
-                }}
-                isSprite
-              >
-                {R.takeLast(6, item.id)}
-              </Graph.Text>
-            </Graph.View>
-          )
-        }}
+        renderEdge={RenderEdge}
         // renderNode={({ item: { id, data } }) => {
           // const size = calculateNodeSize(data, configRef.current.visualization.nodeSize)
           // const color = calculateColor(data, configRef.current.visualization.nodeColor)
