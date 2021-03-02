@@ -1,0 +1,3 @@
+type Query {
+    queryByEcli(ecli: String!, DocSourceId: ModelStringKeyConditionInput, sortDirection: ModelSortDirection, filter: ModelCaselawV4FilterInput, limit: Int, nextToken: String): ModelCaselawV4Connection
+}
