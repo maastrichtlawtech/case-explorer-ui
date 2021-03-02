@@ -1,0 +1,13 @@
+{ 
+    "DataSources": "RS",
+    "Articles": [],
+    "Eclis": [],
+    "DegreesSources": 1,
+    "DegreesTargets": 1,
+    "DateStart": "1900-01-01",
+    "DateEnd": "2021-01-01",
+    "Instances": "Raad van State",
+    "Domains": "Bestuursrecht",
+    "Doctypes": "DEC",
+    "LiPermission": false
+}
