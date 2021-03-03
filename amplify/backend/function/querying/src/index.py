@@ -1,8 +1,12 @@
 from GraphqlClient import GraphqlClient
 import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 
-API_ENDPOINT = os.getenv('GRAPHQL_API_URL')
-API_KEY = os.getenv('APPSYNC_API_KEY')
+load_dotenv(join(dirname(dirname(dirname(dirname(dirname(dirname(__file__)))))), '.env'))
+
+API_ENDPOINT = os.environ.get('GRAPHQL_API_URL')
+API_KEY = os.environ.get('GRAPHQL_API_KEY')
 
 def handler(event, context):
     gq_client = GraphqlClient(
