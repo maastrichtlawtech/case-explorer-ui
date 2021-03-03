@@ -201,6 +201,12 @@ export type ModelStringKeyConditionInput = {
   beginsWith?: string | null,
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelCaselawV4FilterInput = {
   DocSourceId?: ModelStringInput | null,
   SourceDocDate?: ModelStringInput | null,
@@ -238,12 +244,6 @@ export type ModelCaselawV4FilterInput = {
   or?: Array< ModelCaselawV4FilterInput | null > | null,
   not?: ModelCaselawV4FilterInput | null,
 };
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
 
 export type ModelCaselawV4Connection = {
   __typename: "ModelCaselawV4Connection",
@@ -383,6 +383,59 @@ export type DeleteCaselawV4Mutation = {
     url_publication?: string | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type QueryByEcliQueryVariables = {
+  ecli?: string,
+  DocSourceId?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelCaselawV4FilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type QueryByEcliQuery = {
+  queryByEcli?:  {
+    __typename: "ModelCaselawV4Connection",
+    items?:  Array< {
+      __typename: "CaselawV4",
+      DocSourceId: string,
+      SourceDocDate?: string | null,
+      ecli: string,
+      instance?: string | null,
+      alternative_publications?: string | null,
+      case_number?: string | null,
+      date_added?: string | null,
+      date_decision?: string | null,
+      date_publication?: string | null,
+      display_subtitle?: string | null,
+      display_title?: string | null,
+      document_id?: string | null,
+      document_type?: string | null,
+      domains?: string | null,
+      ecli_decision?: string | null,
+      full_text?: string | null,
+      info?: string | null,
+      issue_number?: string | null,
+      jurisdiction_city?: string | null,
+      jurisdiction_country?: string | null,
+      language?: string | null,
+      legal_provision?: string | null,
+      predecessor_successor_cases?: string | null,
+      procedure_type?: string | null,
+      publication_number?: string | null,
+      referenced_legislation_titles?: string | null,
+      source?: string | null,
+      summary?: string | null,
+      target_ecli?: string | null,
+      title?: string | null,
+      url_entry?: string | null,
+      url_publication?: string | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
   } | null,
 };
 

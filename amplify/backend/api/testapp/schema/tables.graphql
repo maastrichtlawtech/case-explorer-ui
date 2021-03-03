@@ -1,7 +1,8 @@
 type CaselawV4 @model 
   @key(fields: ["ecli", "DocSourceId"])
   @key(name: "GSI-DocSourceId", fields: ["DocSourceId"], queryField: "queryByDocSourceId")
-  @key(name: "GSI-Instance", fields: ["instance", "SourceDocDate"], queryField: "queryByInstance") {
+  @key(name: "GSI-Instance", fields: ["instance", "SourceDocDate"], queryField: "queryByInstance")
+  {
 	DocSourceId: String!
 	SourceDocDate: String
 	ecli: String!
