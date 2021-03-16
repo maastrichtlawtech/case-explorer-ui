@@ -7,63 +7,67 @@ page_limit=10
 
 def handler(event, context):
 
-    ### 1. retrieve all eclis matching to filters
-    projection_expression = '#DocSourceId'
-    expression_attribute_names = {
-        '#DocSourceId': 'DocSourceId',
-        '#instance': 'instance',
-        '#SourceDocDate': 'SourceDocDate',
-        '#domains': 'domains',
-        '#referenced_legislation_titles': 'referenced_legislation_titles' 
-    }
-    
-    # CASE 1: eclis given
-    if event["Eclis"] != [""]:
-        index_name = ''
-        key_condition_expression = '#ecli = :ecli AND #DocSourceId = :DocSourceId'
-        expression_attribute_names['#ecli'] = 'ecli'
-        filter_expression = '#instance = :instance AND \
-                             #SourceDocDate BETWEEN :DateStart AND :DateEnd AND \
-                             contains(#domains, :domain) AND \
-                             contains(#referenced_legislation_titles, :article)'
+    ### 1. RETRIEVE ALL ECLIS MATCHING TO SELECTED FILTERS
 
-    # CASE 2: instances given
-    elif event["Instances"] != [""]:
+    if event["Eclis"] != [""] or event["Instances"] != [""]:
+        
+        projection_expression = '#DocSourceId'
+        expression_attribute_names = {
+            '#DocSourceId': 'DocSourceId',
+            '#instance': 'instance',
+            '#SourceDocDate': 'SourceDocDate',
+            '#domains': 'domains',
+            '#referenced_legislation_titles': 'referenced_legislation_titles' 
+        }
+        
+        # CASE 1: eclis given
+        if event["Eclis"] != [""]:
+            index_name = ''
+            key_condition_expression = '#ecli = :ecli AND #DocSourceId = :DocSourceId'
+            expression_attribute_names['#ecli'] = 'ecli'
+            filter_expression = '#instance = :instance AND \
+                                #SourceDocDate BETWEEN :DateStart AND :DateEnd AND \
+                                contains(#domains, :domain) AND \
+                                contains(#referenced_legislation_titles, :article)'
 
-        index_name = 'GSI-instance'
-        key_condition_expression = '#instance = :instance AND #SourceDocDate BETWEEN :DateStart AND :DateEnd'
-        filter_expression = 'contains(#domains, :domain) AND contains(#referenced_legislation_titles, :article)'
+        # CASE 2: instances given
+        elif event["Instances"] != [""]:
+            index_name = 'GSI-instance'
+            key_condition_expression = '#instance = :instance AND #SourceDocDate BETWEEN :DateStart AND :DateEnd'
+            filter_expression = 'contains(#domains, :domain) AND contains(#referenced_legislation_titles, :article)'
 
-    decisions, opinions = query_by_instance(event, index_name, projection_expression, key_condition_expression, filter_expression, expression_attribute_names)
+        decisions, opinions = query_by_instance(event, index_name, projection_expression, key_condition_expression, filter_expression, expression_attribute_names)
 
-    # add li entries if permission given
-    if event["LiPermission"] == True:
-        index_name += '_li' if index_name == 'GSI-instance' else index_name
-        expression_attribute_names['#instance'] += '_li'
-        expression_attribute_names['#domains'] += '_li'
-        expression_attribute_names['#referenced_legislation_titles'] += '_li'
-
-        decisions_li, opinions_li = query_by_instance(event, index_name, projection_expression, key_condition_expression, filter_expression, expression_attribute_names)
-        decisions = decisions.union(decisions_li)
-        opinions = opinions.union(opinions_li)
-
-    # filter by legislation citation:
-    # @TODO decisions = query_by_l_citation(decisions, event["Articles"])
-
-    nodes = query_by_ecli(decisions.union(opinions))
-    edges = retrieve_edges(decisions.union(opinions), event["DegreesSources"], event["DegreesTargets"])
-
-    # CASE 3: neither eclis nor instances given:
-    if event["Eclis"] == [""] and event["Instances"] == [""]:
-        nodes = query_by_DocSourceId('DOM', event['DataSources'], event['Domains'])
-
+        # add li entries if permission given
         if event["LiPermission"] == True:
-            nodes = nodes.union(query_by_DocSourceId('DOM', event['DataSources'], event['Domains'], li_permission=True))
+            index_name += '_li' if index_name == 'GSI-instance' else index_name
+            expression_attribute_names['#instance'] += '_li'
+            expression_attribute_names['#domains'] += '_li'
+            expression_attribute_names['#referenced_legislation_titles'] += '_li'
+
+            decisions_li, opinions_li = query_by_instance(event, index_name, projection_expression, key_condition_expression, filter_expression, expression_attribute_names)
+            decisions = decisions.union(decisions_li)
+            opinions = opinions.union(opinions_li)
+
+        # filter by legislation citation:
+        # @TODO decisions = query_by_l_citation(decisions, event["Articles"])
+
+        nodes = query_by_ecli(decisions.union(opinions))
+        edges = retrieve_edges(decisions.union(opinions), event["DegreesSources"], event["DegreesTargets"])
+
+
+    # CASE 3: domains given:
+    # elif event['Domains'] != [""]:
+    #     nodes = query_by_DocSourceId('DOM', event['DataSources'], event['Domains'])
+
+    #     if event["LiPermission"] == True:
+    #         nodes = nodes.union(query_by_DocSourceId('DOM', event['DataSources'], event['Domains'], li_permission=True))
     
-        nodes = nodes.intersection(query_by_DocSourceId('L-CIT', event['DataSources'], event['Articles']))
+    #     #nodes = nodes.intersection(query_by_DocSourceId('L-CIT', event['DataSources'], event['Articles']))
 
 
-    return list(nodes), edges
+
+    return {'nodes': list(nodes), 'edges': edges}
 
 
 # use pagination to retrieve all results of a query
@@ -90,34 +94,45 @@ def full_query(kwargs):
 def retrieve_edges(doc_source_ids, degrees_sources, degrees_targets):
     edges = []
 
-    # sources:
+    # c_sources:
     targets = [doc_source_id.split('_')[2] for doc_source_id in doc_source_ids]
-    for degree_s in range(degrees_sources):
+    for _ in range(degrees_sources):
         next_targets = []
         for target in targets:
             response = full_query({
                 'IndexName': 'GSI-DocSourceId',
-                'KeyConditionExpression': '#DocSourceId = :DocSourceId',
-                'ExpressionAttributeNames': {'#DocSourceId': 'DocSourceId'},
-                'ExpressionAttributeValues': {':DocSourceId': f'C-CIT_RS_{target}'}
+                'KeyConditionExpression': '#DocSourceId = :DocSourceId AND #extracted_from = :extracted_from',
+                'ExpressionAttributeNames': {'#DocSourceId': 'DocSourceId', '#extracted_from': 'extracted_from'},
+                'ExpressionAttributeValues': {':DocSourceId': f'C-CIT_TEST_{target}', ':extracted_from': 'LIDO'}
             })
             next_targets.extend(item["ecli"] for item in response["Items"])
             edges.extend([{
-                    'id': f'{item["ecli"]}_{item["target_ecli"]}', 
-                    'source': item["ecli"], 
-                    'target': item["target_ecli"], 
-                    'data': item
-                } for item in response["Items"]])
+                'id': f'{item["ecli"]}_{item["target_ecli"]}', 
+                'source': item["ecli"], 
+                'target': item["target_ecli"], 
+                'data': item
+            } for item in response["Items"]])
         targets = next_targets
 
     # targets:
-    # sources = [doc_source_id.split('_')[2] for doc_source_id in doc_source_ids]
-    # for degree_t in range(degrees_targets):
-    #     next_sources = []
-    #     for source in sources:
-    #         response = full_query({
-    #             'KeyConditionExpression': '#ecli = :ecli, #DocSourceId = :DocSourceId'
-    #         })
+    c_sources = [doc_source_id.split('_')[2] for doc_source_id in doc_source_ids]
+    for _ in range(degrees_targets):
+        next_c_sources = []
+        for c_source in c_sources:
+            response = full_query({
+                'KeyConditionExpression': '#ecli = :ecli AND begins_with(#DocSourceId, :Doc)',
+                'FilterExpression': '#extracted_from = :extracted_from',
+                'ExpressionAttributeNames': {'#ecli': 'ecli', '#DocSourceId': 'DocSourceId', '#extracted_from': 'extracted_from'},
+                'ExpressionAttributeValues': {':ecli': c_source, ':Doc': 'C-CIT', ':extracted_from': 'LIDO'},
+            })
+            next_c_sources.extend(item["target_ecli"] for item in response["Items"])
+            edges.extend([{
+                'id': f'{item["ecli"]}_{item["target_ecli"]}', 
+                'source': item["ecli"], 
+                'target': item["target_ecli"], 
+                'data': item
+            } for item in response["Items"]])
+            c_sources = next_c_sources
 
     return edges
 
@@ -151,10 +166,11 @@ def query_by_instance(event, index_name, projection_expression, key_condition_ex
                             else:
                                 params['IndexName'] = index_name
                             response = full_query(params)
-                            #nodes.extend([{'id': item["ecli"], 'data': item} for item in response["Items"]])
                             if doc == 'DEC':
                                 decisions.extend([item["DocSourceId"] for item in response["Items"]])
                             elif doc == 'OPI':
+                                print("OPI")
+                                print(response)
                                 opinions.extend([item["DocSourceId"] for item in response["Items"]])
     return set(decisions), set(opinions)
 

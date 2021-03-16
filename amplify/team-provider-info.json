@@ -15,7 +15,7 @@
       "function": {
         "querying": {
           "deploymentBucketName": "amplify-testapp-dev-110639-deployment",
-          "s3Key": "amplify-builds/querying-4c62316b583557557a74-build.zip"
+          "s3Key": "amplify-builds/querying-5757624a565748344e55-build.zip"
         }
       }
     }
