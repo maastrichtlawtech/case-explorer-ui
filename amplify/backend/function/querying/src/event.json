@@ -1,14 +1,14 @@
 { 
-    "DataSources": ["RS"],
+    "DataSources": ["TEST"],
     "Keywords": [""],
     "Articles": [""],
-    "Eclis": [""],
-    "DegreesSources": 1,
-    "DegreesTargets": 1,
-    "DateStart": "1900-01-01",
-    "DateEnd": "2000-01-01",
-    "Instances": ["Raad van State"],
-    "Domains": ["Bestuursrecht"],
-    "Doctypes": ["DEC", "OPI"],
+    "Eclis": ["TEST:ECLI:001"],
+    "DegreesSources": 3,
+    "DegreesTargets": 3,
+    "DateStart": "1996-01-11",
+    "DateEnd": "2100-01-14",
+    "Instances": ["TEST_court001"],
+    "Domains": ["TEST_domain001"],
+    "Doctypes": ["OPI", "DEC"],
     "LiPermission": false
 }
