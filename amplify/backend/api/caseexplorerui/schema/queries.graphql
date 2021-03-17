@@ -1,8 +1,5 @@
 type Query {
-  giveMeAllTheData: SearchInput @function(name: "queryhandler-${env}")
-}
-
-type SearchInput {
+  giveMeAllTheData(
     DataSources: [String],
     Keywords: [String],
     Articles: [String],
@@ -15,4 +12,22 @@ type SearchInput {
     Domains: [String],
     Doctypes: [String],
     LiPermission: Boolean
+  ): Network @function(name: "queryhandler-${env}")
+}
+
+type Network {
+    nodes: [Node]
+    edges: [Edge]
+}
+
+type Node {
+    id: String
+    data: AWSJSON
+}
+
+type Edge {
+    id: String
+    source: String
+    target: String
+    data: AWSJSON
 }

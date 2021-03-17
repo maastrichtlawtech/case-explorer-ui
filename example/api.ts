@@ -2,12 +2,31 @@
 import Amplify, { API }  from "aws-amplify";
 import  { Position }  from "colay/type";
 import awsExports from "../../aws-exports";
+import * as queries from '../src/graphql/queries';
+
 
 const API_AUTH_MODE = {
   API_KEY: 'API_KEY'
 } as const
 
 Amplify.configure(awsExports);
+
+const EXAMPLE_GIVEMEALLTHEDATA = `
+  query {
+    giveMeAllTheData {
+      nodes {
+        id
+        data
+      }
+      edges {
+        id
+        source
+        target
+        data
+      }
+    }
+  }
+`
 
 const LIST_PROJECTS = `query ListProjects {
   listProjects(limit: 1) {
@@ -147,7 +166,21 @@ const convertJSONStringFields = (item) => {
 export async function listProjects() {
   try {
     const listProjectResult = await API.graphql({
-      query: LIST_PROJECTS,
+      query: queries.giveMeAllTheData,
+      variables: { 
+        DataSources: ["TEST"],
+        Keywords: [""],
+        Articles: [""],
+        Eclis: ["TEST:ECLI:001"],
+        DegreesSources: 3,
+        DegreesTargets: 3,
+        DateStart: "1996-01-11",
+        DateEnd: "2100-01-14",
+        Instances: ["TEST_court001"],
+        Domains: ["TEST_domain001"],
+        Doctypes: ["OPI", "DEC"],
+        LiPermission: false 
+      },
       authMode: API_AUTH_MODE.API_KEY,
     })
     const projectResults = listProjectResult.data.listProjects.items

@@ -87,6 +87,26 @@ export type DeleteCaselawV4Input = {
   DocSourceId: string,
 };
 
+export type Network = {
+  __typename: "Network",
+  nodes?:  Array<Node | null > | null,
+  edges?:  Array<Edge | null > | null,
+};
+
+export type Node = {
+  __typename: "Node",
+  id?: string | null,
+  data?: string | null,
+};
+
+export type Edge = {
+  __typename: "Edge",
+  id?: string | null,
+  source?: string | null,
+  target?: string | null,
+  data?: string | null,
+};
+
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -232,6 +252,39 @@ export type DeleteCaselawV4Mutation = {
     extracted_from?: string | null,
     createdAt: string,
     updatedAt: string,
+  } | null,
+};
+
+export type GiveMeAllTheDataQueryVariables = {
+  DataSources?: Array< string | null > | null,
+  Keywords?: Array< string | null > | null,
+  Articles?: Array< string | null > | null,
+  Eclis?: Array< string | null > | null,
+  DegreesSources?: number | null,
+  DegreesTargets?: number | null,
+  DateStart?: string | null,
+  DateEnd?: string | null,
+  Instances?: Array< string | null > | null,
+  Domains?: Array< string | null > | null,
+  Doctypes?: Array< string | null > | null,
+  LiPermission?: boolean | null,
+};
+
+export type GiveMeAllTheDataQuery = {
+  giveMeAllTheData?:  {
+    __typename: "Network",
+    nodes?:  Array< {
+      __typename: "Node",
+      id?: string | null,
+      data?: string | null,
+    } | null > | null,
+    edges?:  Array< {
+      __typename: "Edge",
+      id?: string | null,
+      source?: string | null,
+      target?: string | null,
+      data?: string | null,
+    } | null > | null,
   } | null,
 };
 

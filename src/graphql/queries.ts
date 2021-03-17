@@ -2,6 +2,48 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const giveMeAllTheData = /* GraphQL */ `
+  query GiveMeAllTheData(
+    $DataSources: [String]
+    $Keywords: [String]
+    $Articles: [String]
+    $Eclis: [String]
+    $DegreesSources: Int
+    $DegreesTargets: Int
+    $DateStart: String
+    $DateEnd: String
+    $Instances: [String]
+    $Domains: [String]
+    $Doctypes: [String]
+    $LiPermission: Boolean
+  ) {
+    giveMeAllTheData(
+      DataSources: $DataSources
+      Keywords: $Keywords
+      Articles: $Articles
+      Eclis: $Eclis
+      DegreesSources: $DegreesSources
+      DegreesTargets: $DegreesTargets
+      DateStart: $DateStart
+      DateEnd: $DateEnd
+      Instances: $Instances
+      Domains: $Domains
+      Doctypes: $Doctypes
+      LiPermission: $LiPermission
+    ) {
+      nodes {
+        id
+        data
+      }
+      edges {
+        id
+        source
+        target
+        data
+      }
+    }
+  }
+`;
 export const getCaselawV4 = /* GraphQL */ `
   query GetCaselawV4($ecli: String!, $DocSourceId: String!) {
     getCaselawV4(ecli: $ecli, DocSourceId: $DocSourceId) {
