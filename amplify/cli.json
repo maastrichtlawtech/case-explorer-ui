@@ -16,7 +16,9 @@
     "codegen": {
       "useappsyncmodelgenplugin": true,
       "usedocsgeneratorplugin": true,
-      "usetypesgeneratorplugin": true
+      "usetypesgeneratorplugin": true,
+      "cleangeneratedmodelsdirectory": true,
+      "retaincasestyle": true
     },
     "appsync": {
       "generategraphqlpermissions": true

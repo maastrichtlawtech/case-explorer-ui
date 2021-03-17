@@ -2,7 +2,7 @@ import boto3
 from boto3.dynamodb.conditions import Key, Attr
 
 resource = boto3.resource('dynamodb')
-table = resource.Table('CaselawV4-qpdyxd2cv5f25oyypekvcp23dy-dev')
+table = resource.Table('CaselawV4-hmq6fy5a6fcg7isx5lar3yewdy-dev')
 page_limit=10
 
 def handler(event, context):

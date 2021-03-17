@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "api": {
+      "caseexplorerui": [
+        "Query",
+        "Mutation",
+        "Subscription"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

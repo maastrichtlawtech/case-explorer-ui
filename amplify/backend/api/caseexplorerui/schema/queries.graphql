@@ -1,0 +1,18 @@
+type Query {
+  giveMeAllTheData: SearchInput @function(name: "queryhandler-${env}")
+}
+
+type SearchInput {
+    DataSources: [String],
+    Keywords: [String],
+    Articles: [String],
+    Eclis: [String],
+    DegreesSources: Int,
+    DegreesTargets: Int,
+    DateStart: String,
+    DateEnd: String,
+    Instances: [String],
+    Domains: [String],
+    Doctypes: [String],
+    LiPermission: Boolean
+}

@@ -12,34 +12,8 @@ export const createCaselawV4 = /* GraphQL */ `
       SourceDocDate
       ecli
       instance
-      alternative_publications
-      case_number
-      date_added
-      date_decision
-      date_publication
-      display_subtitle
-      display_title
-      document_id
-      document_type
-      domains
-      ecli_decision
-      full_text
-      info
-      issue_number
-      jurisdiction_city
-      jurisdiction_country
-      language
-      legal_provision
-      predecessor_successor_cases
-      procedure_type
-      publication_number
-      referenced_legislation_titles
-      source
-      summary
-      target_ecli
-      title
-      url_entry
-      url_publication
+      instance_li
+      extracted_from
       createdAt
       updatedAt
     }
@@ -55,34 +29,8 @@ export const updateCaselawV4 = /* GraphQL */ `
       SourceDocDate
       ecli
       instance
-      alternative_publications
-      case_number
-      date_added
-      date_decision
-      date_publication
-      display_subtitle
-      display_title
-      document_id
-      document_type
-      domains
-      ecli_decision
-      full_text
-      info
-      issue_number
-      jurisdiction_city
-      jurisdiction_country
-      language
-      legal_provision
-      predecessor_successor_cases
-      procedure_type
-      publication_number
-      referenced_legislation_titles
-      source
-      summary
-      target_ecli
-      title
-      url_entry
-      url_publication
+      instance_li
+      extracted_from
       createdAt
       updatedAt
     }
@@ -98,34 +46,8 @@ export const deleteCaselawV4 = /* GraphQL */ `
       SourceDocDate
       ecli
       instance
-      alternative_publications
-      case_number
-      date_added
-      date_decision
-      date_publication
-      display_subtitle
-      display_title
-      document_id
-      document_type
-      domains
-      ecli_decision
-      full_text
-      info
-      issue_number
-      jurisdiction_city
-      jurisdiction_country
-      language
-      legal_provision
-      predecessor_successor_cases
-      procedure_type
-      publication_number
-      referenced_legislation_titles
-      source
-      summary
-      target_ecli
-      title
-      url_entry
-      url_publication
+      instance_li
+      extracted_from
       createdAt
       updatedAt
     }

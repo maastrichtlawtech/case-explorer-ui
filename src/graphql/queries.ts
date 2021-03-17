@@ -2,63 +2,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const queryByEcli = /* GraphQL */ `
-  query QueryByEcli(
-    $ecli: String!
-    $DocSourceId: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelCaselawV4FilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    queryByEcli(
-      ecli: $ecli
-      DocSourceId: $DocSourceId
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        DocSourceId
-        SourceDocDate
-        ecli
-        instance
-        alternative_publications
-        case_number
-        date_added
-        date_decision
-        date_publication
-        display_subtitle
-        display_title
-        document_id
-        document_type
-        domains
-        ecli_decision
-        full_text
-        info
-        issue_number
-        jurisdiction_city
-        jurisdiction_country
-        language
-        legal_provision
-        predecessor_successor_cases
-        procedure_type
-        publication_number
-        referenced_legislation_titles
-        source
-        summary
-        target_ecli
-        title
-        url_entry
-        url_publication
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
 export const getCaselawV4 = /* GraphQL */ `
   query GetCaselawV4($ecli: String!, $DocSourceId: String!) {
     getCaselawV4(ecli: $ecli, DocSourceId: $DocSourceId) {
@@ -66,34 +9,8 @@ export const getCaselawV4 = /* GraphQL */ `
       SourceDocDate
       ecli
       instance
-      alternative_publications
-      case_number
-      date_added
-      date_decision
-      date_publication
-      display_subtitle
-      display_title
-      document_id
-      document_type
-      domains
-      ecli_decision
-      full_text
-      info
-      issue_number
-      jurisdiction_city
-      jurisdiction_country
-      language
-      legal_provision
-      predecessor_successor_cases
-      procedure_type
-      publication_number
-      referenced_legislation_titles
-      source
-      summary
-      target_ecli
-      title
-      url_entry
-      url_publication
+      instance_li
+      extracted_from
       createdAt
       updatedAt
     }
@@ -121,34 +38,8 @@ export const listCaselawV4s = /* GraphQL */ `
         SourceDocDate
         ecli
         instance
-        alternative_publications
-        case_number
-        date_added
-        date_decision
-        date_publication
-        display_subtitle
-        display_title
-        document_id
-        document_type
-        domains
-        ecli_decision
-        full_text
-        info
-        issue_number
-        jurisdiction_city
-        jurisdiction_country
-        language
-        legal_provision
-        predecessor_successor_cases
-        procedure_type
-        publication_number
-        referenced_legislation_titles
-        source
-        summary
-        target_ecli
-        title
-        url_entry
-        url_publication
+        instance_li
+        extracted_from
         createdAt
         updatedAt
       }
@@ -159,6 +50,7 @@ export const listCaselawV4s = /* GraphQL */ `
 export const queryByDocSourceId = /* GraphQL */ `
   query QueryByDocSourceId(
     $DocSourceId: String
+    $extracted_from: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelCaselawV4FilterInput
     $limit: Int
@@ -166,6 +58,7 @@ export const queryByDocSourceId = /* GraphQL */ `
   ) {
     queryByDocSourceId(
       DocSourceId: $DocSourceId
+      extracted_from: $extracted_from
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -176,34 +69,8 @@ export const queryByDocSourceId = /* GraphQL */ `
         SourceDocDate
         ecli
         instance
-        alternative_publications
-        case_number
-        date_added
-        date_decision
-        date_publication
-        display_subtitle
-        display_title
-        document_id
-        document_type
-        domains
-        ecli_decision
-        full_text
-        info
-        issue_number
-        jurisdiction_city
-        jurisdiction_country
-        language
-        legal_provision
-        predecessor_successor_cases
-        procedure_type
-        publication_number
-        referenced_legislation_titles
-        source
-        summary
-        target_ecli
-        title
-        url_entry
-        url_publication
+        instance_li
+        extracted_from
         createdAt
         updatedAt
       }
@@ -233,38 +100,73 @@ export const queryByInstance = /* GraphQL */ `
         SourceDocDate
         ecli
         instance
-        alternative_publications
-        case_number
-        date_added
-        date_decision
-        date_publication
-        display_subtitle
-        display_title
-        document_id
-        document_type
-        domains
-        ecli_decision
-        full_text
-        info
-        issue_number
-        jurisdiction_city
-        jurisdiction_country
-        language
-        legal_provision
-        predecessor_successor_cases
-        procedure_type
-        publication_number
-        referenced_legislation_titles
-        source
-        summary
-        target_ecli
-        title
-        url_entry
-        url_publication
+        instance_li
+        extracted_from
         createdAt
         updatedAt
       }
       nextToken
+    }
+  }
+`;
+export const queryByInstanceLi = /* GraphQL */ `
+  query QueryByInstanceLi(
+    $instance_li: String
+    $SourceDocDate: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelCaselawV4FilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    queryByInstanceLi(
+      instance_li: $instance_li
+      SourceDocDate: $SourceDocDate
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        DocSourceId
+        SourceDocDate
+        ecli
+        instance
+        instance_li
+        extracted_from
+        createdAt
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const searchCaselawV4s = /* GraphQL */ `
+  query SearchCaselawV4s(
+    $filter: SearchableCaselawV4FilterInput
+    $sort: SearchableCaselawV4SortInput
+    $limit: Int
+    $nextToken: String
+    $from: Int
+  ) {
+    searchCaselawV4s(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+    ) {
+      items {
+        DocSourceId
+        SourceDocDate
+        ecli
+        instance
+        instance_li
+        extracted_from
+        createdAt
+        updatedAt
+      }
+      nextToken
+      total
     }
   }
 `;

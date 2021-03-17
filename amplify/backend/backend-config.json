@@ -1,6 +1,6 @@
 {
   "api": {
-    "testapp": {
+    "caseexplorerui": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -17,12 +17,22 @@
       }
     }
   },
-  "storage": {},
   "function": {
-    "querying": {
+    "queryhandler": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda"
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "caseexplorerui",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        }
+      ]
     }
   }
 }

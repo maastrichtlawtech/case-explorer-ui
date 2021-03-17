@@ -1,18 +1,17 @@
 {
-  "providers": [
-    "awscloudformation"
-  ],
-  "projectName": "CaselawExplorer",
+  "projectName": "caseexplorerui",
   "version": "3.1",
   "frontend": "javascript",
   "javascript": {
-    "framework": "react-native",
+    "framework": "none",
     "config": {
       "SourceDir": "src",
-      "DistributionDir": "/",
+      "DistributionDir": "dist",
       "BuildCommand": "npm run-script build",
-      "StartCommand": "npm run-script start",
-      "ServerlessContainers": false
+      "StartCommand": "npm run-script start"
     }
-  }
+  },
+  "providers": [
+    "awscloudformation"
+  ]
 }
