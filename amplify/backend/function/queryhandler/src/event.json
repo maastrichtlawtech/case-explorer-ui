@@ -1,13 +1,13 @@
 { 
     "DataSources": ["TEST"],
-    "Keywords": [""],
-    "Articles": [""],
-    "Eclis": ["TEST:ECLI:001"],
+    "Keywords": "",
+    "Articles": "",
+    "Eclis": [""],
     "DegreesSources": 3,
     "DegreesTargets": 3,
     "DateStart": "1996-01-11",
     "DateEnd": "2100-01-14",
-    "Instances": ["TEST_court001"],
+    "Instances": [""],
     "Domains": ["TEST_domain001"],
     "Doctypes": ["OPI", "DEC"],
     "LiPermission": false
