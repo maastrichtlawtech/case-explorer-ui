@@ -2,13 +2,13 @@
     "DataSources": ["RS"],
     "Keywords": "",
     "Articles": "",
-    "Eclis": [""],
+    "Eclis": "",
     "DegreesSources": 1,
     "DegreesTargets": 1,
     "DateStart": "1900-01-01",
     "DateEnd": "3000-01-01",
     "Instances": [""],
     "Domains": [""],
-    "Doctypes": ["DEC"],
+    "Doctypes": [""],
     "LiPermission": false
 }

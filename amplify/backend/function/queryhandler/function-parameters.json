@@ -6,6 +6,14 @@
         "Mutation",
         "Subscription"
       ]
+    },
+    "storage": {
+      "CaselawV4:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
     }
   },
   "lambdaLayers": []

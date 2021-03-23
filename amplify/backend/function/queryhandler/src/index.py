@@ -2,13 +2,14 @@ import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
+import os
 
-host = 'https://search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com'
-region = 'eu-central-1'
+# set up Elasticsearch client
+host = 'search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com'
+region = os.getenv('REGION')
 
-service = 'es'
 credentials = boto3.Session().get_credentials()
-awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service, session_token=credentials.token)
+awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'es', session_token=credentials.token)
 
 es = Elasticsearch(
     hosts = [{'host': host, 'port': 443}],
@@ -18,19 +19,77 @@ es = Elasticsearch(
     connection_class = RequestsHttpConnection
 )
 
-resource = boto3.resource('dynamodb')
-table = resource.Table('CaselawV4-hmq6fy5a6fcg7isx5lar3yewdy-dev')
+""" result = es.search(
+    body={
+        'query': {
+            'simple_query_string': {
+                'query': 'sadkfuhoiawkjef ',
+                'fields': ['legal_provision'], 
+               'default_operator': 'OR',
+            }
+        }
+    }
+)
+
+print([item['_source']['ecli'] for item in result['hits']['hits']]) 
+
+print(result) """
+
+# set up DynamoDB client
+ddb = boto3.resource('dynamodb')
+table = ddb.Table(os.getenv('API_CASEEXPLORERUI_CASELAWV4TABLE_NAME'))
 page_limit=10
 
 def handler(event, context):
 
     search_params = event.copy()
 
-    ### 0. CHECK IF PARAMS FOR KEYWORD SEARCH GIVEN
-    #if search_params["Keywords"] != [""] or search_params["Articles"] != [""]:
+    eclis = set()
 
-    #    for keyword in search_params["Keywords"]:
-    #        for article in search_params["Articles"]:
+    ### 0. CHECK IF PARAMS FOR KEYWORD SEARCH GIVEN
+    if search_params["Keywords"] != "":
+        fields = [
+            'alternative_publications',
+            'summary',
+            'case_number',
+            'procedure_type',
+            'referenced_legislation_titles',
+            'full_text',
+            'info',
+            'predecessor_successor_cases',
+            'title']
+        if search_params["LiPermission"]:
+            fields += [
+                'summary_li',
+                'case_number_li',
+                'display_subtitle_li',
+                'title_li',
+                'alternative_publications_li',
+                'display_title_li',
+                'publication_number_li',
+                'issue_number_li']
+        hits = es.search(
+            body={
+                'query': {
+                    'simple_query_string': {
+                        'query': search_params["Keywords"],
+                        'fields': fields
+                    }
+                }
+            }
+        )['hits']['hits']
+        eclis = set([item['_source']['ecli'] for item in hits])
+            
+    if search_params["Articles"] != "":
+        if len(eclis) != 0:
+            eclis = eclis.intersection([])
+        else: eclis = set() # result
+
+    if search_params["Eclis"] == "":
+        search_params["Eclis"] = ' '.join(eclis)
+    else:
+        search_params["Eclis"] = ' '.join(set(search_params["Eclis"].split(' ')).intersection(eclis))
+
 
     ### 1. RETRIEVE ALL ECLIS MATCHING TO SELECTED FILTERS
 
@@ -54,8 +113,8 @@ def query(s_params, li_permission=False):
     decisions = []
     opinions = []
     
-    if s_params["Eclis"] == [""] and s_params["Instances"] == [""]:
-        eclis = []
+    if s_params["Eclis"] == "" and s_params["Instances"] == [""]:
+        eclis = ''
         for source in s_params['DataSources']:
             for domain in s_params['Domains']:
                 q_params = {
@@ -70,8 +129,8 @@ def query(s_params, li_permission=False):
                     q_params['ExpressionAttributeNames']['#extracted_from'] = 'extracted_from'
                     q_params['ExpressionAttributeValues'][':extracted_from'] = 'TEST'
                 response = full_query(q_params)
-                eclis.extend([item["ecli"] for item in response["Items"]])
-        s_params["Eclis"] = eclis
+                eclis += ' ' + ' '.join(item["ecli"] for item in response["Items"])
+        s_params["Eclis"] = eclis.strip()
 
     projection_expression = '#DocSourceId'
     expression_attribute_names = {
@@ -82,7 +141,7 @@ def query(s_params, li_permission=False):
     }
     
     # CASE 1: eclis given
-    if s_params["Eclis"] != [""]:
+    if s_params["Eclis"] != "":
         index_name = ''
         key_condition_expression = '#ecli = :ecli AND #DocSourceId = :DocSourceId'
         expression_attribute_names['#ecli'] = 'ecli'
@@ -96,12 +155,15 @@ def query(s_params, li_permission=False):
         key_condition_expression = '#instance = :instance AND #SourceDocDate BETWEEN :DateStart AND :DateEnd'
         filter_expression = 'contains(#domains, :domain)'
 
+    else:
+        return set(), set()
+
     if li_permission:
         index_name += '_li' if index_name == 'GSI-instance' else index_name
         expression_attribute_names['#instance'] += '_li'
         expression_attribute_names['#domains'] += '_li'
 
-    for ecli in s_params["Eclis"]:
+    for ecli in s_params["Eclis"].split(' '):
         for instance in s_params["Instances"]:
             for domain in s_params["Domains"]:
                 for source in s_params['DataSources']:

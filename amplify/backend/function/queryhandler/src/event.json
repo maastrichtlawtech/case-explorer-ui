@@ -1,14 +1,14 @@
 { 
     "DataSources": ["TEST"],
-    "Keywords": "",
+    "Keywords": "testsummary2 (testintelligence+testinfo) +-testthis",
     "Articles": "",
-    "Eclis": [""],
+    "Eclis": "",
     "DegreesSources": 3,
     "DegreesTargets": 3,
     "DateStart": "1996-01-11",
     "DateEnd": "2100-01-14",
     "Instances": [""],
-    "Domains": ["TEST_domain001"],
+    "Domains": [""],
     "Doctypes": ["OPI", "DEC"],
-    "LiPermission": false
+    "LiPermission": true
 }
