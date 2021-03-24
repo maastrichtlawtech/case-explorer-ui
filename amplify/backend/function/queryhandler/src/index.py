@@ -12,7 +12,7 @@ secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 token = os.getenv('AWS_SESSION_TOKEN')
 
 #credentials = boto3.Session().get_credentials()
-""" awsauth = AWS4Auth(access_key, secret_key, region, 'es', session_token=token)
+awsauth = AWS4Auth(access_key, secret_key, region, 'es', session_token=token)
 
 es = Elasticsearch(
     hosts = [{'host': host, 'port': 443}],
@@ -20,7 +20,7 @@ es = Elasticsearch(
     use_ssl = True,
     verify_certs = True,
     connection_class = RequestsHttpConnection
-) """
+)
 
 # set up DynamoDB client
 ddb = boto3.resource('dynamodb')
@@ -32,7 +32,7 @@ def handler(event, context):
     search_params = event['arguments'].copy()
 
     ### 0. CHECK IF PARAMS FOR KEYWORD SEARCH GIVEN
-    """     eclis = set()
+    eclis = set()
 
     if search_params['Keywords'] != '':
         fields = [
@@ -76,7 +76,7 @@ def handler(event, context):
         search_params['Eclis'] = ' '.join(eclis)
     else:
         search_params['Eclis'] = ' '.join(set(search_params['Eclis'].split(' ')).intersection(eclis))
-    """
+
 
     ### 1. RETRIEVE ALL ECLIS MATCHING TO SELECTED FILTERS
 
