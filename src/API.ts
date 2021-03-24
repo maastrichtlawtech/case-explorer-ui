@@ -257,9 +257,9 @@ export type DeleteCaselawV4Mutation = {
 
 export type GiveMeAllTheDataQueryVariables = {
   DataSources?: Array< string | null > | null,
-  Keywords?: Array< string | null > | null,
-  Articles?: Array< string | null > | null,
-  Eclis?: Array< string | null > | null,
+  Keywords?: string | null,
+  Articles?: string | null,
+  Eclis?: string | null,
   DegreesSources?: number | null,
   DegreesTargets?: number | null,
   DateStart?: string | null,

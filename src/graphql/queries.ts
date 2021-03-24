@@ -5,9 +5,9 @@
 export const giveMeAllTheData = /* GraphQL */ `
   query GiveMeAllTheData(
     $DataSources: [String]
-    $Keywords: [String]
-    $Articles: [String]
-    $Eclis: [String]
+    $Keywords: String
+    $Articles: String
+    $Eclis: String
     $DegreesSources: Int
     $DegreesTargets: Int
     $DateStart: String

@@ -7,9 +7,12 @@ import os
 # set up Elasticsearch client
 host = 'search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com'
 region = os.getenv('REGION')
+access_key = os.getenv('AWS_ACCESS_KEY_ID')
+secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
+token = os.getenv('AWS_SESSION_TOKEN')
 
-credentials = boto3.Session().get_credentials()
-awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, 'es', session_token=credentials.token)
+#credentials = boto3.Session().get_credentials()
+""" awsauth = AWS4Auth(access_key, secret_key, region, 'es', session_token=token)
 
 es = Elasticsearch(
     hosts = [{'host': host, 'port': 443}],
@@ -17,23 +20,7 @@ es = Elasticsearch(
     use_ssl = True,
     verify_certs = True,
     connection_class = RequestsHttpConnection
-)
-
-""" result = es.search(
-    body={
-        'query': {
-            'simple_query_string': {
-                'query': 'sadkfuhoiawkjef ',
-                'fields': ['legal_provision'], 
-               'default_operator': 'OR',
-            }
-        }
-    }
-)
-
-print([item['_source']['ecli'] for item in result['hits']['hits']]) 
-
-print(result) """
+) """
 
 # set up DynamoDB client
 ddb = boto3.resource('dynamodb')
@@ -42,12 +29,12 @@ page_limit=10
 
 def handler(event, context):
 
-    search_params = event.copy()
-
-    eclis = set()
+    search_params = event['arguments'].copy()
 
     ### 0. CHECK IF PARAMS FOR KEYWORD SEARCH GIVEN
-    if search_params["Keywords"] != "":
+    """     eclis = set()
+
+    if search_params['Keywords'] != '':
         fields = [
             'alternative_publications',
             'summary',
@@ -58,7 +45,7 @@ def handler(event, context):
             'info',
             'predecessor_successor_cases',
             'title']
-        if search_params["LiPermission"]:
+        if search_params['LiPermission']:
             fields += [
                 'summary_li',
                 'case_number_li',
@@ -72,7 +59,7 @@ def handler(event, context):
             body={
                 'query': {
                     'simple_query_string': {
-                        'query': search_params["Keywords"],
+                        'query': search_params['Keywords'],
                         'fields': fields
                     }
                 }
@@ -80,32 +67,31 @@ def handler(event, context):
         )['hits']['hits']
         eclis = set([item['_source']['ecli'] for item in hits])
             
-    if search_params["Articles"] != "":
+    if search_params['Articles'] != '':
         if len(eclis) != 0:
             eclis = eclis.intersection([])
         else: eclis = set() # result
 
-    if search_params["Eclis"] == "":
-        search_params["Eclis"] = ' '.join(eclis)
+    if search_params['Eclis'] == '':
+        search_params['Eclis'] = ' '.join(eclis)
     else:
-        search_params["Eclis"] = ' '.join(set(search_params["Eclis"].split(' ')).intersection(eclis))
-
+        search_params['Eclis'] = ' '.join(set(search_params['Eclis'].split(' ')).intersection(eclis))
+    """
 
     ### 1. RETRIEVE ALL ECLIS MATCHING TO SELECTED FILTERS
 
     decisions, opinions = query(search_params)
 
     # add li entries if permission given
-    if search_params["LiPermission"] == True:
+    if search_params['LiPermission'] == True:
         decisions_li, opinions_li = query(search_params, li_permission=True)
         decisions = decisions.union(decisions_li)
         opinions = opinions.union(opinions_li)
 
     nodes = fetch_nodes_data(decisions.union(opinions))
-    edges = fetch_edges_data(decisions.union(opinions), search_params["DegreesSources"], search_params["DegreesTargets"])
+    edges = fetch_edges_data(decisions.union(opinions), search_params['DegreesSources'], search_params['DegreesTargets'])
 
     return {'nodes': list(nodes), 'edges': edges}
-
 
 
 
@@ -113,7 +99,7 @@ def query(s_params, li_permission=False):
     decisions = []
     opinions = []
     
-    if s_params["Eclis"] == "" and s_params["Instances"] == [""]:
+    if s_params['Eclis'] == '' and s_params['Instances'] == ['']:
         eclis = ''
         for source in s_params['DataSources']:
             for domain in s_params['Domains']:
@@ -129,8 +115,8 @@ def query(s_params, li_permission=False):
                     q_params['ExpressionAttributeNames']['#extracted_from'] = 'extracted_from'
                     q_params['ExpressionAttributeValues'][':extracted_from'] = 'TEST'
                 response = full_query(q_params)
-                eclis += ' ' + ' '.join(item["ecli"] for item in response["Items"])
-        s_params["Eclis"] = eclis.strip()
+                eclis += ' ' + ' '.join(item['ecli'] for item in response['Items'])
+        s_params['Eclis'] = eclis.strip()
 
     projection_expression = '#DocSourceId'
     expression_attribute_names = {
@@ -141,7 +127,7 @@ def query(s_params, li_permission=False):
     }
     
     # CASE 1: eclis given
-    if s_params["Eclis"] != "":
+    if s_params['Eclis'] != '':
         index_name = ''
         key_condition_expression = '#ecli = :ecli AND #DocSourceId = :DocSourceId'
         expression_attribute_names['#ecli'] = 'ecli'
@@ -150,7 +136,7 @@ def query(s_params, li_permission=False):
                             contains(#domains, :domain)'
 
     # CASE 2: instances given
-    elif s_params["Instances"] != [""]:
+    elif s_params['Instances'] != ['']:
         index_name = 'GSI-instance'
         key_condition_expression = '#instance = :instance AND #SourceDocDate BETWEEN :DateStart AND :DateEnd'
         filter_expression = 'contains(#domains, :domain)'
@@ -163,16 +149,16 @@ def query(s_params, li_permission=False):
         expression_attribute_names['#instance'] += '_li'
         expression_attribute_names['#domains'] += '_li'
 
-    for ecli in s_params["Eclis"].split(' '):
-        for instance in s_params["Instances"]:
-            for domain in s_params["Domains"]:
+    for ecli in s_params['Eclis'].split(' '):
+        for instance in s_params['Instances']:
+            for domain in s_params['Domains']:
                 for source in s_params['DataSources']:
-                    for doc in s_params["Doctypes"]:
+                    for doc in s_params['Doctypes']:
                         expression_attribute_values = {
                             ':instance': instance,
                             ':domain': domain,
-                            ':DateStart': f'{source}_{doc}_{s_params["DateStart"]}',
-                            ':DateEnd': f'{source}_{doc}_{s_params["DateEnd"]}'
+                            ':DateStart': f"{source}_{doc}_{s_params['DateStart']}",
+                            ':DateEnd': f"{source}_{doc}_{s_params['DateEnd']}"
                         }
                         q_params = {
                             'ProjectionExpression': projection_expression,
@@ -188,11 +174,10 @@ def query(s_params, li_permission=False):
                             q_params['IndexName'] = index_name
                         response = full_query(q_params)
                         if doc == 'DEC':
-                            decisions.extend([item["DocSourceId"] for item in response["Items"]])
+                            decisions.extend([item['DocSourceId'] for item in response['Items']])
                         elif doc == 'OPI':
-                            opinions.extend([item["DocSourceId"] for item in response["Items"]])
+                            opinions.extend([item['DocSourceId'] for item in response['Items']])
     return set(decisions), set(opinions)
-
 
 # use pagination to retrieve all results of a query
 def full_query(kwargs):
@@ -226,7 +211,7 @@ def fetch_nodes_data(doc_source_eclis):
             'ExpressionAttributeValues': {':ecli': ecli, ':DocSourceId': f'{doc}_{source}_{ecli}'}
         }
         response = full_query(q_params)
-        nodes.extend([{'id': item["ecli"], 'data': item} for item in response["Items"]])
+        nodes.extend([{'id': item['ecli'], 'data': item} for item in response['Items']])
     return nodes
 
 
@@ -244,13 +229,13 @@ def fetch_edges_data(doc_source_ids, degrees_sources, degrees_targets):
                 'ExpressionAttributeNames': {'#DocSourceId': 'DocSourceId', '#extracted_from': 'extracted_from'},
                 'ExpressionAttributeValues': {':DocSourceId': f'C-CIT_TEST_{target}', ':extracted_from': 'LIDO'}
             })
-            next_targets.extend(item["ecli"] for item in response["Items"])
+            next_targets.extend(item['ecli'] for item in response['Items'])
             edges.extend([{
-                'id': f'{item["ecli"]}_{item["target_ecli"]}', 
-                'source': item["ecli"], 
-                'target': item["target_ecli"], 
+                'id': f"{item['ecli']}_{item['target_ecli']}", 
+                'source': item['ecli'], 
+                'target': item['target_ecli'], 
                 'data': item
-            } for item in response["Items"]])
+            } for item in response['Items']])
         targets = next_targets
 
     # targets:
@@ -264,13 +249,13 @@ def fetch_edges_data(doc_source_ids, degrees_sources, degrees_targets):
                 'ExpressionAttributeNames': {'#ecli': 'ecli', '#DocSourceId': 'DocSourceId', '#extracted_from': 'extracted_from'},
                 'ExpressionAttributeValues': {':ecli': c_source, ':Doc': 'C-CIT', ':extracted_from': 'LIDO'},
             })
-            next_c_sources.extend(item["target_ecli"] for item in response["Items"])
+            next_c_sources.extend(item['target_ecli'] for item in response['Items'])
             edges.extend([{
-                'id': f'{item["ecli"]}_{item["target_ecli"]}', 
-                'source': item["ecli"], 
-                'target': item["target_ecli"], 
+                'id': f"{item['ecli']}_{item['target_ecli']}", 
+                'source': item['ecli'], 
+                'target': item['target_ecli'], 
                 'data': item
-            } for item in response["Items"]])
+            } for item in response['Items']])
             c_sources = next_c_sources
 
     return edges

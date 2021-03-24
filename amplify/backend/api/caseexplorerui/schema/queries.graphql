@@ -1,9 +1,9 @@
 type Query {
   giveMeAllTheData(
     DataSources: [String],
-    Keywords: [String],
-    Articles: [String],
-    Eclis: [String],
+    Keywords: String,
+    Articles: String,
+    Eclis: String,
     DegreesSources: Int,
     DegreesTargets: Int,
     DateStart: String,
@@ -31,3 +31,4 @@ type Edge {
     target: String
     data: AWSJSON
 }
+
