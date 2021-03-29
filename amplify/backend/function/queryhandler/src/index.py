@@ -3,6 +3,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 import os
+import warnings
 
 # set up Elasticsearch client
 host = 'search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com'
@@ -27,9 +28,23 @@ ddb = boto3.resource('dynamodb')
 table = ddb.Table(os.getenv('API_CASEEXPLORERUI_CASELAWV4TABLE_NAME'))
 page_limit=10
 
+
 def handler(event, context):
 
     search_params = event['arguments'].copy()
+
+    # check if valid input given:
+    search_params["DataSources"] = verify_input_string_list(search_params, "DataSources")
+    search_params["Keywords"] = verify_input_string(search_params, "Keywords")
+    search_params["Articles"] = verify_input_string(search_params, "Articles")
+    search_params["Eclis"] = verify_input_string(search_params, "Eclis")
+    search_params["DegreesSources"] = verify_input_int(search_params, "DegreesSources")
+    search_params["DegreesTargets"] = verify_input_int(search_params, "DegreesTargets")
+    search_params["DateStart"] = verify_input_string(search_params, "DateStart")
+    search_params["DateEnd"] = verify_input_string(search_params, "DateEnd")
+    search_params["Instances"] = verify_input_string_list(search_params, "Instances")
+    search_params["Domains"] = verify_input_string_list(search_params, "Domains")
+    search_params["Doctypes"] = verify_input_string_list(search_params, "Doctypes")
 
     ### 0. CHECK IF PARAMS FOR KEYWORD SEARCH GIVEN
     eclis = set()
@@ -259,3 +274,30 @@ def fetch_edges_data(doc_source_ids, degrees_sources, degrees_targets):
             c_sources = next_c_sources
 
     return edges
+
+
+def verify_input_string(params, key):
+    val = params.get(key)
+    if val is None or not isinstance(val, str):
+        warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to ''.")
+        return ""
+    else:
+        return val
+
+
+def verify_input_string_list(params, key):
+    val = params.get(key)
+    if val is None or not isinstance(val, list) or not all(isinstance(elem, str) for elem in val) or len(val) < 1:
+        warnings.warn(f"Invalid input: argument '{key}' of type list of strings expected. Setting '{key}' to [''].")
+        return [""]
+    else:
+        return val
+
+
+def verify_input_int(params, key):
+    val = params.get(key)
+    if val is None or not isinstance(val, int) or val < 0:
+        warnings.warn(f"Invalid input: argument '{key}' of type int >= 0 expected. Setting '{key}' to 0.")
+        return 0
+    else:
+        return val
