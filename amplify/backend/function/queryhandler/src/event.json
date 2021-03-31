@@ -1,9 +1,9 @@
 {
     "arguments": {
-        "DataSources": ["TEST"],
-        "Keywords": "testsummary2 (testintelligence+testinfo)",
+        "DataSources": ["RS"],
+        "Keywords": "wet",
         "Articles": "",
-        "Eclis": "TEST:ECLI:001",
+        "Eclis": "",
         "DegreesSources": 3,
         "DegreesTargets": 3,
         "DateStart": "1996-01-11",

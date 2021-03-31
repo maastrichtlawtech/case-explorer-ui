@@ -4,6 +4,14 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 import os
 import warnings
+import time
+
+TESTING = False
+
+if TESTING:
+    data = 'TEST'
+else:
+    data ='RS'
 
 # set up Elasticsearch client
 host = 'search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com'
@@ -11,12 +19,14 @@ region = os.getenv('REGION')
 access_key = os.getenv('AWS_ACCESS_KEY_ID')
 secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
 token = os.getenv('AWS_SESSION_TOKEN')
+max_hits = 30
+timeout = 60
 
 #credentials = boto3.Session().get_credentials()
 awsauth = AWS4Auth(access_key, secret_key, region, 'es', session_token=token)
 
 es = Elasticsearch(
-    hosts = [{'host': host, 'port': 443}],
+    hosts = [{'host': host, 'port': 443, 'use_ssl': True}],
     http_auth = awsauth,
     use_ssl = True,
     verify_certs = True,
@@ -49,49 +59,35 @@ def handler(event, context):
     ### 0. CHECK IF PARAMS FOR KEYWORD SEARCH GIVEN
     eclis = set()
 
-    if search_params['Keywords'] != '':
-        fields = [
-            'alternative_publications',
-            'summary',
-            'case_number',
-            'procedure_type',
-            'referenced_legislation_titles',
-            'full_text',
-            'info',
-            'predecessor_successor_cases',
-            'title']
-        if search_params['LiPermission']:
-            fields += [
-                'summary_li',
-                'case_number_li',
-                'display_subtitle_li',
-                'title_li',
-                'alternative_publications_li',
-                'display_title_li',
-                'publication_number_li',
-                'issue_number_li']
+    if search_params['Keywords'] != '' or search_params['Articles'] != '':
         hits = es.search(
             body={
-                'query': {
-                    'simple_query_string': {
-                        'query': search_params['Keywords'],
-                        'fields': fields
-                    }
-                }
-            }
+                'size': max_hits,
+                'query': build_query_es(search_params)
+            },
+            request_timeout = timeout
         )['hits']['hits']
         eclis = set([item['_source']['ecli'] for item in hits])
             
-    if search_params['Articles'] != '':
+    """if search_params['Articles'] != '':
+        hits = es.search(
+            body={
+                'size': max_hits,
+                'query': build_query_es(search_params),
+            },
+            request_timeout = timeout
+        )['hits']['hits']
+        eclis_articles = set([item['_source']['ecli'] for item in hits])
         if len(eclis) != 0:
-            eclis = eclis.intersection([])
-        else: eclis = set() # result
+            eclis = eclis.intersection(eclis_articles)
+        else: eclis = eclis_articles"""
 
     if search_params['Eclis'] == '':
         search_params['Eclis'] = ' '.join(eclis)
-    else:
+    elif search_params['Eclis'] != '' and len(eclis) != 0:
         search_params['Eclis'] = ' '.join(set(search_params['Eclis'].split(' ')).intersection(eclis))
 
+    print(search_params['Eclis'])
 
     ### 1. RETRIEVE ALL ECLIS MATCHING TO SELECTED FILTERS
 
@@ -128,7 +124,7 @@ def query(s_params, li_permission=False):
                 if not li_permission:
                     q_params['KeyConditionExpression'] += ' AND #extracted_from = :extracted_from'
                     q_params['ExpressionAttributeNames']['#extracted_from'] = 'extracted_from'
-                    q_params['ExpressionAttributeValues'][':extracted_from'] = 'TEST'
+                    q_params['ExpressionAttributeValues'][':extracted_from'] = data
                 response = full_query(q_params)
                 eclis += ' ' + ' '.join(item['ecli'] for item in response['Items'])
         s_params['Eclis'] = eclis.strip()
@@ -226,7 +222,11 @@ def fetch_nodes_data(doc_source_eclis):
             'ExpressionAttributeValues': {':ecli': ecli, ':DocSourceId': f'{doc}_{source}_{ecli}'}
         }
         response = full_query(q_params)
-        nodes.extend([{'id': item['ecli'], 'data': item} for item in response['Items']])
+        for item in response['Items']:
+            if item.get('legal_provisions'):
+                item['legal_provisions'] = list(item.get('legal_provisions'))
+            nodes.extend([{'id': item['ecli'], 'data': item}])
+        #nodes.extend([{'id': item['ecli'], 'data': item} for item in response['Items']])
     return nodes
 
 
@@ -242,7 +242,7 @@ def fetch_edges_data(doc_source_ids, degrees_sources, degrees_targets):
                 'IndexName': 'GSI-DocSourceId',
                 'KeyConditionExpression': '#DocSourceId = :DocSourceId AND #extracted_from = :extracted_from',
                 'ExpressionAttributeNames': {'#DocSourceId': 'DocSourceId', '#extracted_from': 'extracted_from'},
-                'ExpressionAttributeValues': {':DocSourceId': f'C-CIT_TEST_{target}', ':extracted_from': 'LIDO'}
+                'ExpressionAttributeValues': {':DocSourceId': f'C-CIT_{data}_{target}', ':extracted_from': 'LIDO'}
             })
             next_targets.extend(item['ecli'] for item in response['Items'])
             edges.extend([{
@@ -301,3 +301,54 @@ def verify_input_int(params, key):
         return 0
     else:
         return val
+
+
+def build_query_es(params):
+    filters = [{
+        'range': {
+            'date_decision': {
+                    'gte': params['DateStart'],
+                    'lte': params['DateEnd']
+                }
+            }
+        }]
+    if params['Keywords'] != '': 
+        fields = [
+            'alternative_publications',
+            'summary',
+            'case_number',
+            'procedure_type',
+            'referenced_legislation_titles',
+            'full_text',
+            'info',
+            'predecessor_successor_cases',
+            'title']
+        if params['LiPermission']:
+            fields += [
+                'summary_li',
+                'case_number_li',
+                'display_subtitle_li',
+                'title_li',
+                'alternative_publications_li',
+                'display_title_li',
+                'publication_number_li',
+                'issue_number_li']
+        filters.append({
+                'simple_query_string': {
+                    'query': params['Keywords'],
+                    'fields': fields
+                },
+            })
+    if params['Articles'] != '': 
+        filters.append({
+                'simple_query_string': {
+                    'query': params['Articles'],
+                    'fields': ['legal_provisions']
+                },
+            })
+    if params['Instances'] != ['']:
+        filters.append({'terms': {'Instances': params['Instances']}})
+    if params['Domains'] != ['']:
+        filters.append({'terms': {'Domains': params['Domains']}})
+    
+    return {   'bool': {   'filter': filters    }   }
