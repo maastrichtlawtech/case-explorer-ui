@@ -1,8 +1,8 @@
 {
     "arguments": {
-        "DataSources": ["RS"],
-        "Keywords": "wet",
-        "Articles": "",
+        "DataSources": ["TEST"],
+        "Keywords": "test",
+        "Articles": "TEST_article+1",
         "Eclis": "",
         "DegreesSources": 3,
         "DegreesTargets": 3,
