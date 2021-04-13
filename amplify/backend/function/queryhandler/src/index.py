@@ -9,43 +9,34 @@ It handles the following tasks:
 4. fetch meta data (nodes) and citations (edges) of matching cases
 5. format output
 """
-import boto3
-from boto3.dynamodb.conditions import Key, Attr
-from elasticsearch import Elasticsearch, RequestsHttpConnection
-from requests_aws4auth import AWS4Auth
-import os
+
 import warnings
+from clients.elasticsearch_client import ElasticsearchClient
+from clients.dynamodb_client import DynamodbClient
+from attributes import NODE_ESSENTIAL, NODE_ESSENTIAL_LI
+import os
 import time
 
-TESTING = True
+TESTING = False
 if TESTING:
     data = 'TEST'
 else:
     data ='RS'
 
+
 # set up Elasticsearch client
-host = 'search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com'
-region = os.getenv('REGION')
-access_key = os.getenv('AWS_ACCESS_KEY_ID')
-secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
-token = os.getenv('AWS_SESSION_TOKEN')
-max_hits = 100
-timeout = 180
-
-awsauth = AWS4Auth(access_key, secret_key, region, 'es', session_token=token)
-
-es = Elasticsearch(
-    hosts = [{'host': host, 'port': 443, 'use_ssl': True}],
-    http_auth = awsauth,
-    use_ssl = True,
-    verify_certs = True,
-    connection_class = RequestsHttpConnection
+es_client = ElasticsearchClient(
+    endpoint='search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com',
+    max_hits=100,
+    timeout=180,
+    page_limit=100
 )
 
 # set up DynamoDB client
-ddb = boto3.resource('dynamodb')
-table = ddb.Table(os.getenv('API_CASEEXPLORERUI_CASELAWV4TABLE_NAME'))
-page_limit=10
+ddb_client = DynamodbClient(
+    table_name=os.getenv('API_CASEEXPLORERUI_CASELAWV4TABLE_NAME'),
+    page_limit=50
+)
 
 
 def handler(event, context):
@@ -55,7 +46,9 @@ def handler(event, context):
     :param context: dict containing context information of triggered event
     :return: dict of nodes (id, data) and edges (edge_id, source_node_id, target_node_id, data)
     """
+    start = time.time()
     search_params = event['arguments'].copy()
+    attributes = NODE_ESSENTIAL_LI
 
     ''' 1. CHECK AUTHORIZATION '''
     
@@ -82,73 +75,26 @@ def handler(event, context):
 
     # add li entries if permission given
     if search_params['LiPermission'] == True:
+        attributes = NODE_ESSENTIAL_LI
         doc_source_eclis_li, _ = query(search_params, li_permission=True)
         doc_source_eclis = doc_source_eclis.union(doc_source_eclis_li)
 
     ''' b. filter selected cases by keyword match '''
     if (search_params['Keywords'] != '' or search_params['Articles'] != '') and not (doc_source_eclis == set() and searched_dynamodb):
-        doc_source_eclis = query_elasticsearch(search_params['Keywords'], search_params['Articles'], doc_source_eclis, search_params['LiPermission'])
+    #if not (doc_source_eclis == set() and searched_dynamodb):
+        print('in ES')
+        es_query = build_query_elasticsearch(search_params['Keywords'], search_params['Articles'], doc_source_eclis, search_params['LiPermission'])
+        result = es_client.execute(es_query, ['DocSourceId'])
+        doc_source_eclis = set([item['_source']['DocSourceId'] for item in result])
 
     ''' 4. FETCH NODES AND EDGES DATA OF SELECTED CASES '''
-    nodes = fetch_nodes_data(doc_source_eclis)
+    nodes = batch_get(doc_source_eclis, attributes)
     edges = fetch_edges_data(doc_source_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
 
     ''' 5. FORMAT OUTPUT '''
-
-    return {'nodes': nodes, 'edges': edges}
-
-
-def query_elasticsearch(keywords, articles, doc_source_eclis, li_permission):
-    """
-    Queries Elasticsearch by keywords and articles and filters by doc_source_eclis if provided.
-    Hanldes timeout and pagination limits to retrieve full results.
-    :param keywords: string of keywords in simple query string syntax*
-    :param articles: string of legal provisions in simple query string syntax*
-    :param doc_source_eclis: list of doc_source_eclis
-    :param li_permission: boolean flag whether or not permission to access Legal Intelligence data is given
-    :return: set of doc_source_ids matching given keywords, articles, and filters
-    * simple query string syntax: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
-    """
-    total_hits = []
-    #pit_id = es.open_point_in_time(index='caselaw4', keep_alive= f'{timeout/60}m')
-    start = time.time()
-    result = es.search(
-        body={
-            'size': max_hits,
-            'query': build_query_elasticsearch(keywords, articles, doc_source_eclis, li_permission),
-            #'pit': {'id': pit_id}
-            'sort': [{"_doc": "asc"}]
-        },
-        request_timeout = timeout
-    )
-    hits = result['hits']['hits']
-    total_hits.extend(hits)
-
-    counter = 0
-    while len(hits) > 0 and counter < 100:
-        #pit_id = result['pit_id']
-        result = es.search(
-            body={
-                'size': max_hits,
-                'query': build_query_elasticsearch(keywords, articles, doc_source_eclis, li_permission),
-                #'pit': {'id': pit_id},
-                'sort': [{"_doc": "asc"}],
-                'search_after': hits[-1]['sort'],
-                'track_total_hits': False
-            },
-            request_timeout = timeout
-        )
-        hits = result['hits']['hits']
-        total_hits.extend(hits)
-        counter += 1
-        print(f'COUNTER: {counter}')
     
-    #es.close_point_in_time(body={'id': pit_id})
-
-    print(time.time() - start)
-    doc_source_eclis = set([item['_source']['DocSourceId'] for item in total_hits])
-
-    return doc_source_eclis
+    print('Duration total:', time.time()-start)
+    return {'nodes': nodes, 'edges': edges}
 
 
 def build_query_elasticsearch(keywords, articles, doc_source_eclis, li_permission):
@@ -215,6 +161,7 @@ def query(s_params, li_permission=False):
 
     # CASE 1: neither eclis, nor instances given --> fetch by domain:
     if s_params['Eclis'] == [''] and s_params['Instances'] == [''] and s_params['Domains'] != ['']:
+        print('IN DOMAINS')
         eclis = []
         for source in s_params['DataSources']:
             for domain in s_params['Domains']:
@@ -229,7 +176,7 @@ def query(s_params, li_permission=False):
                     q_params['KeyConditionExpression'] += ' AND #extracted_from = :extracted_from'
                     q_params['ExpressionAttributeNames']['#extracted_from'] = 'extracted_from'
                     q_params['ExpressionAttributeValues'][':extracted_from'] = data
-                response = full_query_dynamodb(q_params)
+                response = ddb_client.execute_query(q_params)
                 eclis.extend([item['ecli'] for item in response['Items']])
 
     projection_expression = '#DocSourceId'
@@ -242,6 +189,7 @@ def query(s_params, li_permission=False):
     
     # CASE 2: eclis given
     if eclis != ['']:
+        print('IN ECLIS')
         index_name = ''
         key_condition_expression = '#ecli = :ecli AND #DocSourceId = :DocSourceId'
         expression_attribute_names['#ecli'] = 'ecli'
@@ -251,15 +199,17 @@ def query(s_params, li_permission=False):
 
     # CASE 3: instances given
     elif s_params['Instances'] != ['']:
+        print('IN INSTANCES')
         index_name = 'GSI-instance'
         key_condition_expression = '#instance = :instance AND #SourceDocDate BETWEEN :DateStart AND :DateEnd'
         filter_expression = 'contains(#domains, :domain)'
 
     # CASE 4: neither eclis, nor instances, nor domains given --> only query Elasticsearch by keywords 
     else:
+        print('IN ELSE')
         return set(), False
 
-    # add li data if permission given
+    # search li data if permission given
     if li_permission:
         index_name += '_li' if index_name == 'GSI-instance' else index_name
         expression_attribute_names['#instance'] += '_li'
@@ -267,6 +217,8 @@ def query(s_params, li_permission=False):
 
     # query for all combinations of input filters
     doc_source_eclis = []
+    sources = []
+    targets = []
     for ecli in eclis:
         for instance in s_params['Instances']:
             for domain in s_params['Domains']:
@@ -290,55 +242,31 @@ def query(s_params, li_permission=False):
                             expression_attribute_values[':DocSourceId'] = f'{doc}_{source}_{ecli}'
                         else:
                             q_params['IndexName'] = index_name
-                        response = full_query_dynamodb(q_params)
+                        response = ddb_client.execute_query(q_params)
                         doc_source_eclis.extend([item['DocSourceId'] for item in response['Items']])
     
     return set(doc_source_eclis), True
 
 
-def full_query_dynamodb(kwargs):
+def batch_get(doc_source_eclis, return_attributes):
     """
-    use pagination to retrieve all results of a DynamoDB query
-    """
-    response = table.query(**kwargs)
-    count = response['Count']
-    items = response['Items']
-    scanned_count = response['ScannedCount']
-    pages = 1
-
-    while 'LastEvaluatedKey' in response and pages != page_limit:
-        response = table.query(**kwargs, ExclusiveStartKey=response['LastEvaluatedKey'])
-        count += response['Count']
-        items.extend(response['Items'])
-        scanned_count += response['ScannedCount']
-        pages += 1
-
-    response['Count'] = count
-    response['Items'] = items
-    response['ScannedCount'] = scanned_count
-
-    return response
-
-
-def fetch_nodes_data(doc_source_eclis):
-    """
-    Selects cases by doc_source_id from DynamoDB and returns corresponding meta data.
+    Selects cases by doc_source_id from DynamoDB and returns specified meta data.
     :param doc_source_eclis: set of doc_source_eclis
+    :param return_attributes: string of attributes to return, separated by comma
     :return: list of node dicts (containing id, data)
     """
-    nodes = []
+    keys_list = []
     for doc_source_ecli in doc_source_eclis:
-        doc, source, ecli = doc_source_ecli.split('_')
-        q_params = {
-            'KeyConditionExpression': '#ecli = :ecli AND #DocSourceId = :DocSourceId',
-            'ExpressionAttributeNames': {'#ecli': 'ecli', '#DocSourceId': 'DocSourceId'},
-            'ExpressionAttributeValues': {':ecli': ecli, ':DocSourceId': f'{doc}_{source}_{ecli}'}
-        }
-        response = full_query_dynamodb(q_params)
-        for item in response['Items']:
-            if item.get('legal_provisions'):
-                item['legal_provisions'] = list(item.get('legal_provisions'))
-            nodes.extend([{'id': item['ecli'], 'data': item}])
+        _, _, ecli = doc_source_ecli.split('_')
+        keys_list.append({'ecli': ecli, 'DocSourceId': doc_source_ecli})
+
+    items = ddb_client.execute_batch(keys_list, return_attributes)
+
+    nodes = []
+    for item in items:
+        if item.get('legal_provisions'):
+            item['legal_provisions'] = list(item.get('legal_provisions'))
+        nodes.extend([{'id': item['ecli'], 'data': item}])
     return nodes
 
 
@@ -351,46 +279,45 @@ def fetch_edges_data(doc_source_eclis, degrees_sources, degrees_targets):
     :return: list of edge dicts (containing edge_id, source_id, target_id, data)
     """
     edges = []
+    target_keys = []
+    source_keys = []
+
+    for doc_source_ecli in doc_source_eclis:
+        _, _, ecli = doc_source_ecli.split('_')
+        target_keys.append({'ecli': ecli, 'DocSourceId': 'C-CITES'})
+        source_keys.append({'ecli': ecli, 'DocSourceId': 'C-CITED-BY'})
 
     # c_sources:
-    targets = [doc_source_id.split('_')[2] for doc_source_id in doc_source_eclis]
+    #targets = [doc_source_id.split('_')[2] for doc_source_id in doc_source_eclis]
     for _ in range(degrees_sources):
         next_targets = []
-        for target in targets:
-            response = full_query_dynamodb({
-                'IndexName': 'GSI-DocSourceId',
-                'KeyConditionExpression': '#DocSourceId = :DocSourceId AND #extracted_from = :extracted_from',
-                'ExpressionAttributeNames': {'#DocSourceId': 'DocSourceId', '#extracted_from': 'extracted_from'},
-                'ExpressionAttributeValues': {':DocSourceId': f'C-CIT_{data}_{target}', ':extracted_from': 'LIDO'}
-            })
-            next_targets.extend(item['ecli'] for item in response['Items'])
-            edges.extend([{
-                'id': f"{item['ecli']}_{item['target_ecli']}", 
-                'source': item['ecli'], 
-                'target': item['target_ecli'], 
-                'data': item
-            } for item in response['Items']])
-        targets = next_targets
+        items = ddb_client.execute_batch(target_keys, 'ecli, cites')
+        for item in items:
+            for citation in item['cites']:
+                next_targets.extend([{'ecli': citation, 'DocSourceId': 'C-CITES'}])
+                edges.extend([{
+                    'id': f"{item['ecli']}_{citation}", 
+                    'source': item['ecli'], 
+                    'target': citation, 
+                    #'data': item
+                }])
+        target_keys = next_targets
 
     # targets:
-    c_sources = [doc_source_id.split('_')[2] for doc_source_id in doc_source_eclis]
+    #c_sources = [doc_source_id.split('_')[2] for doc_source_id in doc_source_eclis]
     for _ in range(degrees_targets):
-        next_c_sources = []
-        for c_source in c_sources:
-            response = full_query_dynamodb({
-                'KeyConditionExpression': '#ecli = :ecli AND begins_with(#DocSourceId, :Doc)',
-                'FilterExpression': '#extracted_from = :extracted_from',
-                'ExpressionAttributeNames': {'#ecli': 'ecli', '#DocSourceId': 'DocSourceId', '#extracted_from': 'extracted_from'},
-                'ExpressionAttributeValues': {':ecli': c_source, ':Doc': 'C-CIT', ':extracted_from': 'LIDO'},
-            })
-            next_c_sources.extend(item['target_ecli'] for item in response['Items'])
-            edges.extend([{
-                'id': f"{item['ecli']}_{item['target_ecli']}", 
-                'source': item['ecli'], 
-                'target': item['target_ecli'], 
-                'data': item
-            } for item in response['Items']])
-            c_sources = next_c_sources
+        next_sources = []
+        items = ddb_client.execute_batch(source_keys, 'ecli, cited_by')
+        for item in items:
+            for citation in item['cited_by']:
+                next_sources.extend([{'ecli': citation, 'DocSourceId': 'C-CITED-BY'}])
+                edges.extend([{
+                    'id': f"{citation}_{item['ecli']}", 
+                    'source': citation, 
+                    'target': item['ecli'], 
+                    #'data': item
+                }])
+        source_keys = next_sources
 
     return edges
 
