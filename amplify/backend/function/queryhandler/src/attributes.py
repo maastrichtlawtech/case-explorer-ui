@@ -6,6 +6,8 @@ ALL = 'Artikel, ' \
     'alternative_publications_li, ' \
     'case_number, ' \
     'case_number_li, ' \
+    'cited_by, ' \
+    'cites, ' \
     'date_added_li, ' \
     'date_decision, ' \
     'date_decision_li, ' \
@@ -36,7 +38,19 @@ ALL = 'Artikel, ' \
     'predecessor_successor_case, ' \
     'predecessor_successor_cases, ' \
     'procedure_type, ' \
-    'publication_number_li'
+    'publication_number_li, ' \
+    'referenced_legislation_title, ' \
+    'referenced_legislation_titles, ' \
+    'source, ' \
+    'source_li, ' \
+    'summary, ' \
+    'summary_li, ' \
+    'target_ecli, ' \
+    'title, ' \
+    'title_li, ' \
+    'url_entry_li, ' \
+    'url_publication, ' \
+    'url_publication_li'
 
 NODE_FULL = 'alternative_publications, ' \
             'case_number, ' \
@@ -55,7 +69,14 @@ NODE_FULL = 'alternative_publications, ' \
             'language, ' \
             'legal_provisions, ' \
             'predecessor_successor_cases, ' \
-            'procedure_type, '
+            'procedure_type, ' \
+            'referenced_legislation_title, ' \
+            'referenced_legislation_titles, ' \
+            'source, ' \
+            'summary, ' \
+            'target_ecli, ' \
+            'title, ' \
+            'url_publication' \
 
 NODE_FULL_LI =  'alternative_publications, ' \
                 'alternative_publications_li, ' \
@@ -87,7 +108,19 @@ NODE_FULL_LI =  'alternative_publications, ' \
                 'legal_provisions, ' \
                 'predecessor_successor_cases, ' \
                 'procedure_type, ' \
-                'publication_number_li'
+                'publication_number_li, ' \
+                'referenced_legislation_title, ' \
+                'referenced_legislation_titles, ' \
+                'source, ' \
+                'source_li, ' \
+                'summary, ' \
+                'summary_li, ' \
+                'target_ecli, ' \
+                'title, ' \
+                'title_li, ' \
+                'url_entry_li, ' \
+                'url_publication, ' \
+                'url_publication_li'
 
 NODE_ESSENTIAL = 'date_decision, ' \
                 'date_publication, ' \
@@ -96,7 +129,8 @@ NODE_ESSENTIAL = 'date_decision, ' \
                 'ecli, ' \
                 'instance, ' \
                 'jurisdiction_city, ' \
-                'jurisdiction_country'# \
+                'jurisdiction_country, ' \
+                'source'
                 #'language'
 
 NODE_ESSENTIAL_LI = 'date_decision, ' \
@@ -111,7 +145,9 @@ NODE_ESSENTIAL_LI = 'date_decision, ' \
                     'instance_li, ' \
                     'jurisdiction_city, ' \
                     'jurisdiction_country, ' \
-                    'jurisdiction_country_li'# \
+                    'jurisdiction_country_li, ' \
+                    'source, ' \
+                    'source_li'
                     #'language'
             
             

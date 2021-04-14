@@ -46,6 +46,7 @@ class DynamodbClient:
         """
         start = time.time()
 
+        # filter out duplicate entries
         keys_list = [dict(t) for t in {tuple(sorted(d.items())) for d in keys_list}]
 
         batch = keys_list[:100]

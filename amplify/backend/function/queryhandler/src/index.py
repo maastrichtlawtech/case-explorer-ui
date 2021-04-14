@@ -94,7 +94,7 @@ def handler(event, context):
     ''' 5. FORMAT OUTPUT '''
     
     print('Duration total:', time.time()-start)
-    return {'nodes': nodes, 'edges': edges}
+    return {'nodes': len(nodes), 'edges': len(edges)}
 
 
 def build_query_elasticsearch(keywords, articles, doc_source_eclis, li_permission):
@@ -217,8 +217,6 @@ def query(s_params, li_permission=False):
 
     # query for all combinations of input filters
     doc_source_eclis = []
-    sources = []
-    targets = []
     for ecli in eclis:
         for instance in s_params['Instances']:
             for domain in s_params['Domains']:
@@ -278,6 +276,7 @@ def fetch_edges_data(doc_source_eclis, degrees_sources, degrees_targets):
     :param degrees_targets: int degree of target citations
     :return: list of edge dicts (containing edge_id, source_id, target_id, data)
     """
+    nodes = []
     edges = []
     target_keys = []
     source_keys = []
@@ -288,7 +287,6 @@ def fetch_edges_data(doc_source_eclis, degrees_sources, degrees_targets):
         source_keys.append({'ecli': ecli, 'DocSourceId': 'C-CITED-BY'})
 
     # c_sources:
-    #targets = [doc_source_id.split('_')[2] for doc_source_id in doc_source_eclis]
     for _ in range(degrees_sources):
         next_targets = []
         items = ddb_client.execute_batch(target_keys, 'ecli, cites')
@@ -304,7 +302,6 @@ def fetch_edges_data(doc_source_eclis, degrees_sources, degrees_targets):
         target_keys = next_targets
 
     # targets:
-    #c_sources = [doc_source_id.split('_')[2] for doc_source_id in doc_source_eclis]
     for _ in range(degrees_targets):
         next_sources = []
         items = ddb_client.execute_batch(source_keys, 'ecli, cited_by')
