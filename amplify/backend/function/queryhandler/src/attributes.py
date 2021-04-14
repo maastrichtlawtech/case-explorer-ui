@@ -129,8 +129,8 @@ NODE_ESSENTIAL = 'date_decision, ' \
                 'ecli, ' \
                 'instance, ' \
                 'jurisdiction_city, ' \
-                'jurisdiction_country, ' \
-                'source'
+                'jurisdiction_country'
+                #'source'
                 #'language'
 
 NODE_ESSENTIAL_LI = 'date_decision, ' \
@@ -145,9 +145,9 @@ NODE_ESSENTIAL_LI = 'date_decision, ' \
                     'instance_li, ' \
                     'jurisdiction_city, ' \
                     'jurisdiction_country, ' \
-                    'jurisdiction_country_li, ' \
-                    'source, ' \
-                    'source_li'
+                    'jurisdiction_country_li'
+                    #'source, ' \
+                    #'source_li'
                     #'language'
             
             

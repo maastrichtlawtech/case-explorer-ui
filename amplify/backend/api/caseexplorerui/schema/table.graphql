@@ -1,3 +1,4 @@
+
 type CaselawV4 @model @searchable
   @key(fields: ["ecli", "DocSourceId"])
   @key(name: "GSI-DocSourceId", fields: ["DocSourceId", "extracted_from"], queryField: "queryByDocSourceId")
@@ -5,6 +6,21 @@ type CaselawV4 @model @searchable
   @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "queryByInstanceLi")
   {
 	DocSourceId: String!
+	SourceDocDate: String
+	ecli: String!
+	instance: String
+	instance_li: String
+	extracted_from: String
+  }
+
+type CaselawV5 @model @searchable
+  @key(fields: ["ecli", "DocId"])
+  @key(name: "GSI-DocSourceId", fields: ["DocSourceId", "extracted_from"], queryField: "queryDocSourceId")
+  @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "queryInstance")
+  @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "queryInstanceLi")
+  {
+  DocId: String!
+	DocSourceId: String
 	SourceDocDate: String
 	ecli: String!
 	instance: String

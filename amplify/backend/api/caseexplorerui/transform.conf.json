@@ -1,4 +1,9 @@
 {
     "Version": 5,
-    "ElasticsearchWarning": true
+    "ElasticsearchWarning": true,
+    "StackMapping": {
+        "QueryqueryByDocSourceIdResolver": "CaselawV4",
+        "QueryqueryByInstanceResolver": "CaselawV4",
+        "QueryqueryByInstanceLiResolver": "CaselawV4"
+    }
 }
