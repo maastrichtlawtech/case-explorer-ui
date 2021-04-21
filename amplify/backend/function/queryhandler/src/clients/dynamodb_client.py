@@ -23,15 +23,18 @@ class DynamodbClient:
         scanned_count = response['ScannedCount']
         pages = 1
 
-        while 'LastEvaluatedKey' in response and pages < self.page_limit:
+        while 'LastEvaluatedKey' in response:
+            if pages == self.page_limit:
+                print('DYNAMOBO REQUEST LIMIT REACHED!')
+                break
             response = self.table.query(**query_params, ExclusiveStartKey=response['LastEvaluatedKey'], Limit=100)
             count += response['Count']
             items.extend(response['Items'])
             scanned_count += response['ScannedCount']
             pages += 1
 
-        print('Duration ddb query:', time.time()-start)
-        print('Pages scanned: ', pages)
+        #print('Duration ddb query:', time.time()-start)
+        #print('Pages scanned: ', pages)
         response['Count'] = count
         response['Items'] = items
         response['ScannedCount'] = scanned_count
@@ -41,13 +44,19 @@ class DynamodbClient:
 
     def execute_batch(self, keys_list, return_attributes):
         """
-
+        :keys_list: list of dicts
+        :return_attributes: list of strings
         :return list of dict items
         """
         start = time.time()
 
         # filter out duplicate entries
         keys_list = [dict(t) for t in {tuple(sorted(d.items())) for d in keys_list}]
+
+        # substitute attribute names to avoid conflicts with DynamoDB reserved words
+        tokens = ['#' + attribute for attribute in return_attributes]
+        projection_expression = ', '.join(tokens)
+        expression_attribute_names = dict(zip(tokens, return_attributes))
 
         batch = keys_list[:100]
         rest = keys_list[100:]
@@ -59,7 +68,8 @@ class DynamodbClient:
                 RequestItems={
                     self.table_name: {
                         'Keys': batch,
-                        'ProjectionExpression': return_attributes
+                        'ProjectionExpression': projection_expression,
+                        'ExpressionAttributeNames': expression_attribute_names
                     }
                 }
             )
@@ -70,5 +80,5 @@ class DynamodbClient:
             batch = rest[:100]
             rest = rest[100:]
 
-        print('Duration ddb batch execution: ', time.time() - start)
+        #print('Duration ddb batch execution: ', time.time() - start)
         return items

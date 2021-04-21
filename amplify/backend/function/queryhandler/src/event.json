@@ -8,9 +8,9 @@
         "DegreesTargets": 1,
         "DateStart": "1796-01-11",
         "DateEnd": "2100-01-14",
-        "Instances": ["Gerechtshof Amsterdam"],
-        "Domains": [""],
-        "Doctypes": ["OPI", "DEC"],
+        "Instances": [""],
+        "Domains": ["Bestuursrecht"],
+        "Doctypes": ["DEC", "OPI"],
         "LiPermission": true
     }
 }

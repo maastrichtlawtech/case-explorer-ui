@@ -44,3 +44,84 @@ export const onDeleteCaselawV4 = /* GraphQL */ `
     }
   }
 `;
+export const onCreateCaselawV5 = /* GraphQL */ `
+  subscription OnCreateCaselawV5 {
+    onCreateCaselawV5 {
+      DocId
+      DocSourceId
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCaselawV5 = /* GraphQL */ `
+  subscription OnUpdateCaselawV5 {
+    onUpdateCaselawV5 {
+      DocId
+      DocSourceId
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCaselawV5 = /* GraphQL */ `
+  subscription OnDeleteCaselawV5 {
+    onDeleteCaselawV5 {
+      DocId
+      DocSourceId
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateCaselawV6 = /* GraphQL */ `
+  subscription OnCreateCaselawV6 {
+    onCreateCaselawV6 {
+      ItemType
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateCaselawV6 = /* GraphQL */ `
+  subscription OnUpdateCaselawV6 {
+    onUpdateCaselawV6 {
+      ItemType
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteCaselawV6 = /* GraphQL */ `
+  subscription OnDeleteCaselawV6 {
+    onDeleteCaselawV6 {
+      ItemType
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;

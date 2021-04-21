@@ -13,7 +13,7 @@ It handles the following tasks:
 import warnings
 from clients.elasticsearch_client import ElasticsearchClient
 from clients.dynamodb_client import DynamodbClient
-from attributes import NODE_ESSENTIAL, NODE_ESSENTIAL_LI
+from attributes import NODE_ESSENTIAL, NODE_ESSENTIAL_LI, KEYWORD_SEARCH, KEYWORD_SEARCH_LI, ARTICLE_SEARCH
 import os
 import time
 
@@ -23,19 +23,22 @@ if TESTING:
 else:
     data ='RS'
 
+# name of table to use as defined in GraphQL schema
+TABLE = 'caselawv6'
 
 # set up Elasticsearch client
 es_client = ElasticsearchClient(
     endpoint='search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com',
-    max_hits=100,
-    timeout=180,
-    page_limit=100
+    max_hits=100,       # limit number of hits per page
+    timeout= 180,       # limit query time
+    page_limit=100,     # limit number of pages per query
+    index=TABLE
 )
 
 # set up DynamoDB client
 ddb_client = DynamodbClient(
-    table_name=os.getenv('API_CASEEXPLORERUI_CASELAWV4TABLE_NAME'),
-    page_limit=50
+    table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE.upper()}TABLE_NAME'),
+    page_limit=50       # limit number of pages per query
 )
 
 
@@ -48,7 +51,7 @@ def handler(event, context):
     """
     start = time.time()
     search_params = event['arguments'].copy()
-    attributes = NODE_ESSENTIAL_LI
+    attributes = NODE_ESSENTIAL
 
     ''' 1. CHECK AUTHORIZATION '''
     
@@ -71,33 +74,33 @@ def handler(event, context):
 
     ''' 3. SELECT CASES MATCHING SEARCH INPUT '''
     ''' a. select cases matching filters '''
-    doc_source_eclis, searched_dynamodb = query(search_params)
+    node_eclis, searched_dynamodb = query(search_params)
 
     # add li entries if permission given
     if search_params['LiPermission'] == True:
         attributes = NODE_ESSENTIAL_LI
-        doc_source_eclis_li, _ = query(search_params, li_permission=True)
-        doc_source_eclis = doc_source_eclis.union(doc_source_eclis_li)
+        node_eclis_li, _ = query(search_params, li_permission=True)
+        node_eclis = node_eclis.union(node_eclis_li)
 
     ''' b. filter selected cases by keyword match '''
-    if (search_params['Keywords'] != '' or search_params['Articles'] != '') and not (doc_source_eclis == set() and searched_dynamodb):
-    #if not (doc_source_eclis == set() and searched_dynamodb):
+    if (search_params['Keywords'] != '' or search_params['Articles'] != '') and not (node_eclis == set() and searched_dynamodb):
         print('in ES')
-        es_query = build_query_elasticsearch(search_params['Keywords'], search_params['Articles'], doc_source_eclis, search_params['LiPermission'])
-        result = es_client.execute(es_query, ['DocSourceId'])
-        doc_source_eclis = set([item['_source']['DocSourceId'] for item in result])
+        es_query = build_query_elasticsearch(search_params['Keywords'], search_params['Articles'], node_eclis, search_params['LiPermission'])
+        result = es_client.execute(es_query, ['ecli'])
+        node_eclis = {item['_source']['ecli'] for item in result}
 
     ''' 4. FETCH NODES AND EDGES DATA OF SELECTED CASES '''
-    nodes = batch_get(doc_source_eclis, attributes)
-    edges = fetch_edges_data(doc_source_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
-
+    nodes = batch_get(node_eclis, attributes)
+    edges, new_node_eclis = fetch_edges_data(node_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
+    nodes.extend(batch_get(new_node_eclis, attributes))
+    
     ''' 5. FORMAT OUTPUT '''
     
     print('Duration total:', time.time()-start)
     return {'nodes': len(nodes), 'edges': len(edges)}
 
 
-def build_query_elasticsearch(keywords, articles, doc_source_eclis, li_permission):
+def build_query_elasticsearch(keywords, articles, eclis, li_permission):
     """
     Builds Elasticsearch query to filter by doc_source_eclis if provided and match keywords and articles.
     :param keywords: string of keywords in simple query string syntax*
@@ -108,29 +111,12 @@ def build_query_elasticsearch(keywords, articles, doc_source_eclis, li_permissio
     * simple query string syntax: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
     """
     filters = []
-    if list(doc_source_eclis) != []:
-        filters.append({'terms': {'DocSourceId': list(doc_source_eclis)}})
+    if list(eclis) != []:
+        filters.append({'terms': {'ecli': list(eclis)}})
     if keywords != '': 
-        fields = [
-            'alternative_publications',
-            'summary',
-            'case_number',
-            'procedure_type',
-            'referenced_legislation_titles',
-            'full_text',
-            'info',
-            'predecessor_successor_cases',
-            'title']
+        fields = KEYWORD_SEARCH
         if li_permission:
-            fields += [
-                'summary_li',
-                'case_number_li',
-                'display_subtitle_li',
-                'title_li',
-                'alternative_publications_li',
-                'display_title_li',
-                'publication_number_li',
-                'issue_number_li']
+            fields = KEYWORD_SEARCH_LI
         filters.append({
                 'simple_query_string': {
                     'query': keywords,
@@ -142,7 +128,7 @@ def build_query_elasticsearch(keywords, articles, doc_source_eclis, li_permissio
         filters.append({
                 'simple_query_string': {
                     'query': articles,
-                    'fields': ['legal_provisions']
+                    'fields': ARTICLE_SEARCH
                 },
             })
     return {'bool': {'filter': filters}}
@@ -162,47 +148,52 @@ def query(s_params, li_permission=False):
     # CASE 1: neither eclis, nor instances given --> fetch by domain:
     if s_params['Eclis'] == [''] and s_params['Instances'] == [''] and s_params['Domains'] != ['']:
         print('IN DOMAINS')
-        eclis = []
+        node_eclis = set()
         for source in s_params['DataSources']:
-            for domain in s_params['Domains']:
-                q_params = {
-                    'IndexName': 'GSI-DocSourceId',
-                    'ProjectionExpression': '#ecli',
-                    'KeyConditionExpression': '#DocSourceId = :DocSourceId',
-                    'ExpressionAttributeNames': {'#DocSourceId': 'DocSourceId', '#ecli': 'ecli'},
-                    'ExpressionAttributeValues': {':DocSourceId': f'DOM_{source}_{domain}'}
-                }
-                if not li_permission:
-                    q_params['KeyConditionExpression'] += ' AND #extracted_from = :extracted_from'
-                    q_params['ExpressionAttributeNames']['#extracted_from'] = 'extracted_from'
-                    q_params['ExpressionAttributeValues'][':extracted_from'] = data
-                response = ddb_client.execute_query(q_params)
-                eclis.extend([item['ecli'] for item in response['Items']])
+            for doc in s_params['Doctypes']:
+                for domain in s_params['Domains']:
+                    dom = 'DOM_LI' if li_permission else 'DOM'
+                    q_params = {
+                        'IndexName': 'GSI-ItemType',
+                        'ProjectionExpression': '#ecli',
+                        'KeyConditionExpression': '#ItemType = :ItemType AND #SourceDocDate BETWEEN :DateStart AND :DateEnd',
+                        'ExpressionAttributeNames': {'#ItemType': 'ItemType', '#ecli': 'ecli', '#SourceDocDate': 'SourceDocDate'},
+                        'ExpressionAttributeValues': {
+                            ':ItemType': f"{dom}_{domain}",
+                            ':DateStart': f"{source}_{doc}_{s_params['DateStart']}",
+                            ':DateEnd': f"{source}_{doc}_{s_params['DateEnd']}"
+                        }
+                    }
+                    response = ddb_client.execute_query(q_params)
+                    node_eclis = node_eclis.union({item['ecli'] for item in response['Items']})
+        return node_eclis, True
 
-    projection_expression = '#DocSourceId'
+    projection_expression = '#ecli'
     expression_attribute_names = {
-        '#DocSourceId': 'DocSourceId',
+        '#ecli': 'ecli',
         '#instance': 'instance',
         '#SourceDocDate': 'SourceDocDate',
         '#domains': 'domains'
     }
+    if s_params['Domains'] == ['']:
+        expression_attribute_names.pop('#domains')
     
     # CASE 2: eclis given
     if eclis != ['']:
         print('IN ECLIS')
         index_name = ''
-        key_condition_expression = '#ecli = :ecli AND #DocSourceId = :DocSourceId'
-        expression_attribute_names['#ecli'] = 'ecli'
+        key_condition_expression = '#ecli = :ecli'
         filter_expression = 'contains(#instance, :instance) AND \
-                            #SourceDocDate BETWEEN :DateStart AND :DateEnd AND \
-                            contains(#domains, :domain)'
+                            #SourceDocDate BETWEEN :DateStart AND :DateEnd'
+        if s_params['Domains'] != ['']:
+            filter_expression += ' AND contains(#domains, :domain)'
 
     # CASE 3: instances given
     elif s_params['Instances'] != ['']:
         print('IN INSTANCES')
         index_name = 'GSI-instance'
         key_condition_expression = '#instance = :instance AND #SourceDocDate BETWEEN :DateStart AND :DateEnd'
-        filter_expression = 'contains(#domains, :domain)'
+        filter_expression = 'contains(#domains, :domain)' if s_params['Domains'] != [''] else ''
 
     # CASE 4: neither eclis, nor instances, nor domains given --> only query Elasticsearch by keywords 
     else:
@@ -213,21 +204,27 @@ def query(s_params, li_permission=False):
     if li_permission:
         index_name += '_li' if index_name == 'GSI-instance' else index_name
         expression_attribute_names['#instance'] += '_li'
-        expression_attribute_names['#domains'] += '_li'
+        if s_params['Domains'] != ['']:
+            expression_attribute_names['#domains'] += '_li'
 
     # query for all combinations of input filters
-    doc_source_eclis = []
+    node_eclis = set()
     for ecli in eclis:
         for instance in s_params['Instances']:
             for domain in s_params['Domains']:
                 for source in s_params['DataSources']:
                     for doc in s_params['Doctypes']:
+                        if len(node_eclis) >= 10000:
+                            print('LIMIT REACHED: 10k CASES FETCHED')
+                            return node_eclis, True
                         expression_attribute_values = {
                             ':instance': instance,
                             ':domain': domain,
                             ':DateStart': f"{source}_{doc}_{s_params['DateStart']}",
                             ':DateEnd': f"{source}_{doc}_{s_params['DateEnd']}"
                         }
+                        if domain == '':
+                            expression_attribute_values.pop(':domain')
                         q_params = {
                             'ProjectionExpression': projection_expression,
                             'KeyConditionExpression': key_condition_expression,
@@ -235,40 +232,38 @@ def query(s_params, li_permission=False):
                             'ExpressionAttributeNames': expression_attribute_names,
                             'ExpressionAttributeValues': expression_attribute_values
                         }
+                        if filter_expression == '':
+                            q_params.pop('FilterExpression')
                         if index_name == '':
                             expression_attribute_values[':ecli'] = ecli
-                            expression_attribute_values[':DocSourceId'] = f'{doc}_{source}_{ecli}'
                         else:
                             q_params['IndexName'] = index_name
                         response = ddb_client.execute_query(q_params)
-                        doc_source_eclis.extend([item['DocSourceId'] for item in response['Items']])
-    
-    return set(doc_source_eclis), True
+                        node_eclis = node_eclis.union({item['ecli'] for item in response['Items']})
+    return node_eclis, True
 
 
-def batch_get(doc_source_eclis, return_attributes):
+def batch_get(eclis, return_attributes):
     """
-    Selects cases by doc_source_id from DynamoDB and returns specified meta data.
-    :param doc_source_eclis: set of doc_source_eclis
-    :param return_attributes: string of attributes to return, separated by comma
+    Selects cases by ecli from DynamoDB and returns specified meta data.
+    :param eclis: set of eclis
+    :param return_attributes: list of attributes to return
     :return: list of node dicts (containing id, data)
     """
     keys_list = []
-    for doc_source_ecli in doc_source_eclis:
-        _, _, ecli = doc_source_ecli.split('_')
-        keys_list.append({'ecli': ecli, 'DocSourceId': doc_source_ecli})
+    for ecli in eclis:
+        keys_list.append({'ecli': ecli, 'ItemType': 'DATA'})
 
     items = ddb_client.execute_batch(keys_list, return_attributes)
 
     nodes = []
     for item in items:
-        if item.get('legal_provisions'):
-            item['legal_provisions'] = list(item.get('legal_provisions'))
-        nodes.extend([{'id': item['ecli'], 'data': item}])
+        data = format_node(item)
+        nodes.extend([{'id': item['ecli'], 'data': data}])
     return nodes
 
 
-def fetch_edges_data(doc_source_eclis, degrees_sources, degrees_targets):
+def fetch_edges_data(eclis, degrees_sources, degrees_targets):
     """
     Queries source and target citations by doc_source_id from DynamoDB and returns corresponding edges.
     :param doc_source_eclis: set of doc_source_eclis  
@@ -276,47 +271,74 @@ def fetch_edges_data(doc_source_eclis, degrees_sources, degrees_targets):
     :param degrees_targets: int degree of target citations
     :return: list of edge dicts (containing edge_id, source_id, target_id, data)
     """
-    nodes = []
+    new_node_eclis = set()
     edges = []
     target_keys = []
     source_keys = []
 
-    for doc_source_ecli in doc_source_eclis:
-        _, _, ecli = doc_source_ecli.split('_')
-        target_keys.append({'ecli': ecli, 'DocSourceId': 'C-CITES'})
-        source_keys.append({'ecli': ecli, 'DocSourceId': 'C-CITED-BY'})
+
+    for ecli in eclis:
+        target_keys.append({'ecli': ecli, 'ItemType': 'DATA'})
+        source_keys.append({'ecli': ecli, 'ItemType': 'DATA'})
 
     # c_sources:
     for _ in range(degrees_sources):
         next_targets = []
-        items = ddb_client.execute_batch(target_keys, 'ecli, cites')
+        items = ddb_client.execute_batch(target_keys, ['ecli', 'cites'])
         for item in items:
-            for citation in item['cites']:
-                next_targets.extend([{'ecli': citation, 'DocSourceId': 'C-CITES'}])
-                edges.extend([{
-                    'id': f"{item['ecli']}_{citation}", 
-                    'source': item['ecli'], 
-                    'target': citation, 
-                    #'data': item
-                }])
+            if 'cites' in item:
+                for citation in item['cites']:
+                    next_targets.extend([{'ecli': citation, 'ItemType': 'DATA'}])
+                    edges.extend([{
+                        'id': f"{item['ecli']}_{citation}", 
+                        'source': item['ecli'], 
+                        'target': citation, 
+                        #'data': item
+                    }])
+                    if item['ecli'] not in eclis:
+                        new_node_eclis = new_node_eclis.union({item['ecli']})
+                    if citation not in eclis:
+                        new_node_eclis = new_node_eclis.union({citation})
         target_keys = next_targets
 
     # targets:
     for _ in range(degrees_targets):
         next_sources = []
-        items = ddb_client.execute_batch(source_keys, 'ecli, cited_by')
+        items = ddb_client.execute_batch(source_keys, ['ecli', 'cited_by'])
         for item in items:
-            for citation in item['cited_by']:
-                next_sources.extend([{'ecli': citation, 'DocSourceId': 'C-CITED-BY'}])
-                edges.extend([{
-                    'id': f"{citation}_{item['ecli']}", 
-                    'source': citation, 
-                    'target': item['ecli'], 
-                    #'data': item
-                }])
+            if 'cited_by' in item:
+                for citation in item['cited_by']:
+                    next_sources.extend([{'ecli': citation, 'ItemType': 'DATA'}])
+                    edges.extend([{
+                        'id': f"{citation}_{item['ecli']}", 
+                        'source': citation, 
+                        'target': item['ecli'], 
+                        #'data': item
+                    }])
+                    if item['ecli'] not in eclis:
+                        new_node_eclis = new_node_eclis.union({item['ecli']})
+                    if citation not in eclis:
+                        new_node_eclis = new_node_eclis.union({citation})
         source_keys = next_sources
 
-    return edges
+    return edges, new_node_eclis
+
+
+def format_node(item):
+    atts = list(item.keys())
+    for attribute in atts:
+        # remove li attribute if correspondig rs attribute present
+        if attribute in NODE_ESSENTIAL and attribute + '_li' in item:
+            item.pop(attribute + '_li')
+        # convert set types to lists to make JSON serializable
+        if attribute in item and type(item[attribute]) is set:
+            item[attribute] = list(item[attribute])
+        # remove '_li' suffix from attribute name if applicable
+        if attribute in item and attribute.endswith('_li'):
+            item[attribute[:-3]] = item[attribute]
+            item.pop(attribute)
+    return item
+
 
 
 def verify_input_string(s_params, key):

@@ -1,9 +1,9 @@
 
 type CaselawV4 @model @searchable
   @key(fields: ["ecli", "DocSourceId"])
-  @key(name: "GSI-DocSourceId", fields: ["DocSourceId", "extracted_from"], queryField: "queryByDocSourceId")
-  @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "queryByInstance")
-  @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "queryByInstanceLi")
+  @key(name: "GSI-DocSourceId", fields: ["DocSourceId", "extracted_from"], queryField: "ByDocSourceId")
+  @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "ByInstance")
+  @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "ByInstanceLi")
   {
 	DocSourceId: String!
 	SourceDocDate: String
@@ -15,7 +15,8 @@ type CaselawV4 @model @searchable
 
 type CaselawV5 @model @searchable
   @key(fields: ["ecli", "DocId"])
-  @key(name: "GSI-DocSourceId", fields: ["DocSourceId", "extracted_from"], queryField: "queryDocSourceId")
+  @key(name: "GSI-DocSourceId", fields: ["DocSourceId"], queryField: "queryDocSourceId")
+  @key(name: "GSI-DocId", fields: ["DocId", "SourceDocDate"], queryField: "queryDocId")
   @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "queryInstance")
   @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "queryInstanceLi")
   {
@@ -25,5 +26,18 @@ type CaselawV5 @model @searchable
 	ecli: String!
 	instance: String
 	instance_li: String
-	extracted_from: String
   }
+
+type CaselawV6 @model @searchable
+  @key(fields: ["ecli", "ItemType"])
+  @key(name: "GSI-ItemType", fields: ["ItemType", "SourceDocDate"], queryField: "queryByItemType")
+  @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "queryByInstance")
+  @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "queryByInstanceLi")
+  {
+  ItemType: String!
+	SourceDocDate: String
+	ecli: String!
+	instance: String
+	instance_li: String
+  }
+

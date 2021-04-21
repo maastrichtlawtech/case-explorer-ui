@@ -53,3 +53,102 @@ export const deleteCaselawV4 = /* GraphQL */ `
     }
   }
 `;
+export const createCaselawV5 = /* GraphQL */ `
+  mutation CreateCaselawV5(
+    $input: CreateCaselawV5Input!
+    $condition: ModelCaselawV5ConditionInput
+  ) {
+    createCaselawV5(input: $input, condition: $condition) {
+      DocId
+      DocSourceId
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCaselawV5 = /* GraphQL */ `
+  mutation UpdateCaselawV5(
+    $input: UpdateCaselawV5Input!
+    $condition: ModelCaselawV5ConditionInput
+  ) {
+    updateCaselawV5(input: $input, condition: $condition) {
+      DocId
+      DocSourceId
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCaselawV5 = /* GraphQL */ `
+  mutation DeleteCaselawV5(
+    $input: DeleteCaselawV5Input!
+    $condition: ModelCaselawV5ConditionInput
+  ) {
+    deleteCaselawV5(input: $input, condition: $condition) {
+      DocId
+      DocSourceId
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const createCaselawV6 = /* GraphQL */ `
+  mutation CreateCaselawV6(
+    $input: CreateCaselawV6Input!
+    $condition: ModelCaselawV6ConditionInput
+  ) {
+    createCaselawV6(input: $input, condition: $condition) {
+      ItemType
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateCaselawV6 = /* GraphQL */ `
+  mutation UpdateCaselawV6(
+    $input: UpdateCaselawV6Input!
+    $condition: ModelCaselawV6ConditionInput
+  ) {
+    updateCaselawV6(input: $input, condition: $condition) {
+      ItemType
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteCaselawV6 = /* GraphQL */ `
+  mutation DeleteCaselawV6(
+    $input: DeleteCaselawV6Input!
+    $condition: ModelCaselawV6ConditionInput
+  ) {
+    deleteCaselawV6(input: $input, condition: $condition) {
+      ItemType
+      SourceDocDate
+      ecli
+      instance
+      instance_li
+      createdAt
+      updatedAt
+    }
+  }
+`;

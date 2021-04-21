@@ -6,11 +6,12 @@ import time
 
 class ElasticsearchClient:
 
-    def __init__(self, endpoint, max_hits, timeout, page_limit):
+    def __init__(self, endpoint, max_hits, timeout, page_limit, index):
 
         self.max_hits = max_hits
         self.timeout = timeout
         self.page_limit = page_limit
+        self.index=index
 
         awsauth = AWS4Auth(
             os.getenv('AWS_ACCESS_KEY_ID'), 
@@ -24,7 +25,8 @@ class ElasticsearchClient:
             http_auth = awsauth,
             use_ssl = True,
             verify_certs = True,
-            connection_class = RequestsHttpConnection
+            connection_class = RequestsHttpConnection,
+            timeout = self.timeout
         )
 
     
@@ -33,6 +35,7 @@ class ElasticsearchClient:
         #pit_id = es.open_point_in_time(index='caselaw4', keep_alive= f'{timeout/60}m')
         start = time.time()
         result = self.es.search(
+            index=[self.index],
             body={
                 'size': self.max_hits,
                 'query': query,
@@ -46,7 +49,10 @@ class ElasticsearchClient:
         total_hits.extend(hits)
 
         counter = 1
-        while len(hits) > 0 and counter < self.page_limit:
+        while len(hits) > 0:
+            if counter == self.page_limit:
+                print(f'ELASTICSEARCH LIMIT REACHED - RETRIEVED {len(total_hits)} HITS')
+                break
             #pit_id = result['pit_id']
             result = self.es.search(
                 body={
@@ -63,10 +69,10 @@ class ElasticsearchClient:
             hits = result['hits']['hits']
             total_hits.extend(hits)
             counter += 1
-            print(f'COUNTER: {counter}')
+            #print(f'COUNTER: {counter}')
         
         #es.close_point_in_time(body={'id': pit_id})
 
-        print('Duration es search:', time.time() - start)
+        #print('Duration es search:', time.time() - start)
 
         return total_hits
