@@ -98,32 +98,6 @@
             "FUNCTION_QUERYHANDLER_NAME": {
               "Ref": "functionqueryhandlerName"
             },
-            "API_CASEEXPLORERUI_CASELAWV4TABLE_NAME": {
-              "Fn::ImportValue": {
-                "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawV4Table:Name"
-              }
-            },
-            "API_CASEEXPLORERUI_CASELAWV4TABLE_ARN": {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:aws:dynamodb:",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId"
-                  },
-                  ":table/",
-                  {
-                    "Fn::ImportValue": {
-                      "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawV4Table:Name"
-                    }
-                  }
-                ]
-              ]
-            },
             "API_CASEEXPLORERUI_CASELAWV6TABLE_NAME": {
               "Fn::ImportValue": {
                 "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawV6Table:Name"
@@ -323,68 +297,6 @@
                         "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
                       },
                       "/types/Subscription/*"
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Put*",
-                "dynamodb:Create*",
-                "dynamodb:BatchWriteItem",
-                "dynamodb:Get*",
-                "dynamodb:BatchGetItem",
-                "dynamodb:List*",
-                "dynamodb:Describe*",
-                "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:Update*",
-                "dynamodb:RestoreTable*",
-                "dynamodb:Delete*"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawV4Table:Name"
-                        }
-                      }
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawV4Table:Name"
-                        }
-                      },
-                      "/index/*"
                     ]
                   ]
                 }

@@ -97,7 +97,7 @@ def handler(event, context):
     ''' 5. FORMAT OUTPUT '''
     
     print('Duration total:', time.time()-start)
-    return {'nodes': len(nodes), 'edges': len(edges)}
+    return {'nodes': nodes, 'edges': edges}
 
 
 def build_query_elasticsearch(keywords, articles, eclis, li_permission):
