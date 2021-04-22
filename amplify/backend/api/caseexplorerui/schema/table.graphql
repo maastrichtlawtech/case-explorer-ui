@@ -1,33 +1,3 @@
-
-type CaselawV4 @model @searchable
-  @key(fields: ["ecli", "DocSourceId"])
-  @key(name: "GSI-DocSourceId", fields: ["DocSourceId", "extracted_from"], queryField: "ByDocSourceId")
-  @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "ByInstance")
-  @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "ByInstanceLi")
-  {
-	DocSourceId: String!
-	SourceDocDate: String
-	ecli: String!
-	instance: String
-	instance_li: String
-	extracted_from: String
-  }
-
-type CaselawV5 @model @searchable
-  @key(fields: ["ecli", "DocId"])
-  @key(name: "GSI-DocSourceId", fields: ["DocSourceId"], queryField: "queryDocSourceId")
-  @key(name: "GSI-DocId", fields: ["DocId", "SourceDocDate"], queryField: "queryDocId")
-  @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "queryInstance")
-  @key(name: "GSI-instance_li", fields: ["instance_li", "SourceDocDate"], queryField: "queryInstanceLi")
-  {
-  DocId: String!
-	DocSourceId: String
-	SourceDocDate: String
-	ecli: String!
-	instance: String
-	instance_li: String
-  }
-
 type CaselawV6 @model @searchable
   @key(fields: ["ecli", "ItemType"])
   @key(name: "GSI-ItemType", fields: ["ItemType", "SourceDocDate"], queryField: "queryByItemType")

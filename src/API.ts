@@ -2,23 +2,21 @@
 /* eslint-disable */
 //  This file was automatically generated and should not be edited.
 
-export type CreateCaselawV4Input = {
-  DocSourceId: string,
+export type CreateCaselawV6Input = {
+  ItemType: string,
   SourceDocDate?: string | null,
   ecli: string,
   instance?: string | null,
   instance_li?: string | null,
-  extracted_from?: string | null,
 };
 
-export type ModelCaselawV4ConditionInput = {
+export type ModelCaselawV6ConditionInput = {
   SourceDocDate?: ModelStringInput | null,
   instance?: ModelStringInput | null,
   instance_li?: ModelStringInput | null,
-  extracted_from?: ModelStringInput | null,
-  and?: Array< ModelCaselawV4ConditionInput | null > | null,
-  or?: Array< ModelCaselawV4ConditionInput | null > | null,
-  not?: ModelCaselawV4ConditionInput | null,
+  and?: Array< ModelCaselawV6ConditionInput | null > | null,
+  or?: Array< ModelCaselawV6ConditionInput | null > | null,
+  not?: ModelCaselawV6ConditionInput | null,
 };
 
 export type ModelStringInput = {
@@ -59,94 +57,6 @@ export type ModelSizeInput = {
   ge?: number | null,
   gt?: number | null,
   between?: Array< number | null > | null,
-};
-
-export type CaselawV4 = {
-  __typename: "CaselawV4",
-  DocSourceId?: string,
-  SourceDocDate?: string | null,
-  ecli?: string,
-  instance?: string | null,
-  instance_li?: string | null,
-  extracted_from?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateCaselawV4Input = {
-  DocSourceId: string,
-  SourceDocDate?: string | null,
-  ecli: string,
-  instance?: string | null,
-  instance_li?: string | null,
-  extracted_from?: string | null,
-};
-
-export type DeleteCaselawV4Input = {
-  ecli: string,
-  DocSourceId: string,
-};
-
-export type CreateCaselawV5Input = {
-  DocId: string,
-  DocSourceId?: string | null,
-  SourceDocDate?: string | null,
-  ecli: string,
-  instance?: string | null,
-  instance_li?: string | null,
-};
-
-export type ModelCaselawV5ConditionInput = {
-  DocSourceId?: ModelStringInput | null,
-  SourceDocDate?: ModelStringInput | null,
-  instance?: ModelStringInput | null,
-  instance_li?: ModelStringInput | null,
-  and?: Array< ModelCaselawV5ConditionInput | null > | null,
-  or?: Array< ModelCaselawV5ConditionInput | null > | null,
-  not?: ModelCaselawV5ConditionInput | null,
-};
-
-export type CaselawV5 = {
-  __typename: "CaselawV5",
-  DocId?: string,
-  DocSourceId?: string | null,
-  SourceDocDate?: string | null,
-  ecli?: string,
-  instance?: string | null,
-  instance_li?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
-};
-
-export type UpdateCaselawV5Input = {
-  DocId: string,
-  DocSourceId?: string | null,
-  SourceDocDate?: string | null,
-  ecli: string,
-  instance?: string | null,
-  instance_li?: string | null,
-};
-
-export type DeleteCaselawV5Input = {
-  ecli: string,
-  DocId: string,
-};
-
-export type CreateCaselawV6Input = {
-  ItemType: string,
-  SourceDocDate?: string | null,
-  ecli: string,
-  instance?: string | null,
-  instance_li?: string | null,
-};
-
-export type ModelCaselawV6ConditionInput = {
-  SourceDocDate?: ModelStringInput | null,
-  instance?: ModelStringInput | null,
-  instance_li?: ModelStringInput | null,
-  and?: Array< ModelCaselawV6ConditionInput | null > | null,
-  or?: Array< ModelCaselawV6ConditionInput | null > | null,
-  not?: ModelCaselawV6ConditionInput | null,
 };
 
 export type CaselawV6 = {
@@ -203,48 +113,6 @@ export type ModelStringKeyConditionInput = {
   beginsWith?: string | null,
 };
 
-export type ModelCaselawV4FilterInput = {
-  DocSourceId?: ModelStringInput | null,
-  SourceDocDate?: ModelStringInput | null,
-  ecli?: ModelStringInput | null,
-  instance?: ModelStringInput | null,
-  instance_li?: ModelStringInput | null,
-  extracted_from?: ModelStringInput | null,
-  and?: Array< ModelCaselawV4FilterInput | null > | null,
-  or?: Array< ModelCaselawV4FilterInput | null > | null,
-  not?: ModelCaselawV4FilterInput | null,
-};
-
-export enum ModelSortDirection {
-  ASC = "ASC",
-  DESC = "DESC",
-}
-
-
-export type ModelCaselawV4Connection = {
-  __typename: "ModelCaselawV4Connection",
-  items?:  Array<CaselawV4 | null > | null,
-  nextToken?: string | null,
-};
-
-export type ModelCaselawV5FilterInput = {
-  DocId?: ModelStringInput | null,
-  DocSourceId?: ModelStringInput | null,
-  SourceDocDate?: ModelStringInput | null,
-  ecli?: ModelStringInput | null,
-  instance?: ModelStringInput | null,
-  instance_li?: ModelStringInput | null,
-  and?: Array< ModelCaselawV5FilterInput | null > | null,
-  or?: Array< ModelCaselawV5FilterInput | null > | null,
-  not?: ModelCaselawV5FilterInput | null,
-};
-
-export type ModelCaselawV5Connection = {
-  __typename: "ModelCaselawV5Connection",
-  items?:  Array<CaselawV5 | null > | null,
-  nextToken?: string | null,
-};
-
 export type ModelCaselawV6FilterInput = {
   ItemType?: ModelStringInput | null,
   SourceDocDate?: ModelStringInput | null,
@@ -256,22 +124,27 @@ export type ModelCaselawV6FilterInput = {
   not?: ModelCaselawV6FilterInput | null,
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}
+
+
 export type ModelCaselawV6Connection = {
   __typename: "ModelCaselawV6Connection",
   items?:  Array<CaselawV6 | null > | null,
   nextToken?: string | null,
 };
 
-export type SearchableCaselawV4FilterInput = {
-  DocSourceId?: SearchableStringFilterInput | null,
+export type SearchableCaselawV6FilterInput = {
+  ItemType?: SearchableStringFilterInput | null,
   SourceDocDate?: SearchableStringFilterInput | null,
   ecli?: SearchableStringFilterInput | null,
   instance?: SearchableStringFilterInput | null,
   instance_li?: SearchableStringFilterInput | null,
-  extracted_from?: SearchableStringFilterInput | null,
-  and?: Array< SearchableCaselawV4FilterInput | null > | null,
-  or?: Array< SearchableCaselawV4FilterInput | null > | null,
-  not?: SearchableCaselawV4FilterInput | null,
+  and?: Array< SearchableCaselawV6FilterInput | null > | null,
+  or?: Array< SearchableCaselawV6FilterInput | null > | null,
+  not?: SearchableCaselawV6FilterInput | null,
 };
 
 export type SearchableStringFilterInput = {
@@ -291,79 +164,6 @@ export type SearchableStringFilterInput = {
   range?: Array< string | null > | null,
 };
 
-export type SearchableCaselawV4SortInput = {
-  field?: SearchableCaselawV4SortableFields | null,
-  direction?: SearchableSortDirection | null,
-};
-
-export enum SearchableCaselawV4SortableFields {
-  DocSourceId = "DocSourceId",
-  SourceDocDate = "SourceDocDate",
-  ecli = "ecli",
-  instance = "instance",
-  instance_li = "instance_li",
-  extracted_from = "extracted_from",
-}
-
-
-export enum SearchableSortDirection {
-  asc = "asc",
-  desc = "desc",
-}
-
-
-export type SearchableCaselawV4Connection = {
-  __typename: "SearchableCaselawV4Connection",
-  items?:  Array<CaselawV4 | null > | null,
-  nextToken?: string | null,
-  total?: number | null,
-};
-
-export type SearchableCaselawV5FilterInput = {
-  DocId?: SearchableStringFilterInput | null,
-  DocSourceId?: SearchableStringFilterInput | null,
-  SourceDocDate?: SearchableStringFilterInput | null,
-  ecli?: SearchableStringFilterInput | null,
-  instance?: SearchableStringFilterInput | null,
-  instance_li?: SearchableStringFilterInput | null,
-  and?: Array< SearchableCaselawV5FilterInput | null > | null,
-  or?: Array< SearchableCaselawV5FilterInput | null > | null,
-  not?: SearchableCaselawV5FilterInput | null,
-};
-
-export type SearchableCaselawV5SortInput = {
-  field?: SearchableCaselawV5SortableFields | null,
-  direction?: SearchableSortDirection | null,
-};
-
-export enum SearchableCaselawV5SortableFields {
-  DocId = "DocId",
-  DocSourceId = "DocSourceId",
-  SourceDocDate = "SourceDocDate",
-  ecli = "ecli",
-  instance = "instance",
-  instance_li = "instance_li",
-}
-
-
-export type SearchableCaselawV5Connection = {
-  __typename: "SearchableCaselawV5Connection",
-  items?:  Array<CaselawV5 | null > | null,
-  nextToken?: string | null,
-  total?: number | null,
-};
-
-export type SearchableCaselawV6FilterInput = {
-  ItemType?: SearchableStringFilterInput | null,
-  SourceDocDate?: SearchableStringFilterInput | null,
-  ecli?: SearchableStringFilterInput | null,
-  instance?: SearchableStringFilterInput | null,
-  instance_li?: SearchableStringFilterInput | null,
-  and?: Array< SearchableCaselawV6FilterInput | null > | null,
-  or?: Array< SearchableCaselawV6FilterInput | null > | null,
-  not?: SearchableCaselawV6FilterInput | null,
-};
-
 export type SearchableCaselawV6SortInput = {
   field?: SearchableCaselawV6SortableFields | null,
   direction?: SearchableSortDirection | null,
@@ -378,125 +178,17 @@ export enum SearchableCaselawV6SortableFields {
 }
 
 
+export enum SearchableSortDirection {
+  asc = "asc",
+  desc = "desc",
+}
+
+
 export type SearchableCaselawV6Connection = {
   __typename: "SearchableCaselawV6Connection",
   items?:  Array<CaselawV6 | null > | null,
   nextToken?: string | null,
   total?: number | null,
-};
-
-export type CreateCaselawV4MutationVariables = {
-  input?: CreateCaselawV4Input,
-  condition?: ModelCaselawV4ConditionInput | null,
-};
-
-export type CreateCaselawV4Mutation = {
-  createCaselawV4?:  {
-    __typename: "CaselawV4",
-    DocSourceId: string,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    extracted_from?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCaselawV4MutationVariables = {
-  input?: UpdateCaselawV4Input,
-  condition?: ModelCaselawV4ConditionInput | null,
-};
-
-export type UpdateCaselawV4Mutation = {
-  updateCaselawV4?:  {
-    __typename: "CaselawV4",
-    DocSourceId: string,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    extracted_from?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCaselawV4MutationVariables = {
-  input?: DeleteCaselawV4Input,
-  condition?: ModelCaselawV4ConditionInput | null,
-};
-
-export type DeleteCaselawV4Mutation = {
-  deleteCaselawV4?:  {
-    __typename: "CaselawV4",
-    DocSourceId: string,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    extracted_from?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type CreateCaselawV5MutationVariables = {
-  input?: CreateCaselawV5Input,
-  condition?: ModelCaselawV5ConditionInput | null,
-};
-
-export type CreateCaselawV5Mutation = {
-  createCaselawV5?:  {
-    __typename: "CaselawV5",
-    DocId: string,
-    DocSourceId?: string | null,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type UpdateCaselawV5MutationVariables = {
-  input?: UpdateCaselawV5Input,
-  condition?: ModelCaselawV5ConditionInput | null,
-};
-
-export type UpdateCaselawV5Mutation = {
-  updateCaselawV5?:  {
-    __typename: "CaselawV5",
-    DocId: string,
-    DocSourceId?: string | null,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type DeleteCaselawV5MutationVariables = {
-  input?: DeleteCaselawV5Input,
-  condition?: ModelCaselawV5ConditionInput | null,
-};
-
-export type DeleteCaselawV5Mutation = {
-  deleteCaselawV5?:  {
-    __typename: "CaselawV5",
-    DocId: string,
-    DocSourceId?: string | null,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
 };
 
 export type CreateCaselawV6MutationVariables = {
@@ -586,98 +278,6 @@ export type GiveMeAllTheDataQuery = {
   } | null,
 };
 
-export type GetCaselawV4QueryVariables = {
-  ecli?: string,
-  DocSourceId?: string,
-};
-
-export type GetCaselawV4Query = {
-  getCaselawV4?:  {
-    __typename: "CaselawV4",
-    DocSourceId: string,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    extracted_from?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCaselawV4sQueryVariables = {
-  ecli?: string | null,
-  DocSourceId?: ModelStringKeyConditionInput | null,
-  filter?: ModelCaselawV4FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListCaselawV4sQuery = {
-  listCaselawV4s?:  {
-    __typename: "ModelCaselawV4Connection",
-    items?:  Array< {
-      __typename: "CaselawV4",
-      DocSourceId: string,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      extracted_from?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type GetCaselawV5QueryVariables = {
-  ecli?: string,
-  DocId?: string,
-};
-
-export type GetCaselawV5Query = {
-  getCaselawV5?:  {
-    __typename: "CaselawV5",
-    DocId: string,
-    DocSourceId?: string | null,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type ListCaselawV5sQueryVariables = {
-  ecli?: string | null,
-  DocId?: ModelStringKeyConditionInput | null,
-  filter?: ModelCaselawV5FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  sortDirection?: ModelSortDirection | null,
-};
-
-export type ListCaselawV5sQuery = {
-  listCaselawV5s?:  {
-    __typename: "ModelCaselawV5Connection",
-    items?:  Array< {
-      __typename: "CaselawV5",
-      DocId: string,
-      DocSourceId?: string | null,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
 export type GetCaselawV6QueryVariables = {
   ecli?: string,
   ItemType?: string,
@@ -711,194 +311,6 @@ export type ListCaselawV6sQuery = {
     items?:  Array< {
       __typename: "CaselawV6",
       ItemType: string,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type ByDocSourceIdQueryVariables = {
-  DocSourceId?: string | null,
-  extracted_from?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCaselawV4FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ByDocSourceIdQuery = {
-  ByDocSourceId?:  {
-    __typename: "ModelCaselawV4Connection",
-    items?:  Array< {
-      __typename: "CaselawV4",
-      DocSourceId: string,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      extracted_from?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type ByInstanceQueryVariables = {
-  instance?: string | null,
-  SourceDocDate?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCaselawV4FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ByInstanceQuery = {
-  ByInstance?:  {
-    __typename: "ModelCaselawV4Connection",
-    items?:  Array< {
-      __typename: "CaselawV4",
-      DocSourceId: string,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      extracted_from?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type ByInstanceLiQueryVariables = {
-  instance_li?: string | null,
-  SourceDocDate?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCaselawV4FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type ByInstanceLiQuery = {
-  ByInstanceLi?:  {
-    __typename: "ModelCaselawV4Connection",
-    items?:  Array< {
-      __typename: "CaselawV4",
-      DocSourceId: string,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      extracted_from?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type QueryDocSourceIdQueryVariables = {
-  DocSourceId?: string | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCaselawV5FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QueryDocSourceIdQuery = {
-  queryDocSourceId?:  {
-    __typename: "ModelCaselawV5Connection",
-    items?:  Array< {
-      __typename: "CaselawV5",
-      DocId: string,
-      DocSourceId?: string | null,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type QueryDocIdQueryVariables = {
-  DocId?: string | null,
-  SourceDocDate?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCaselawV5FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QueryDocIdQuery = {
-  queryDocId?:  {
-    __typename: "ModelCaselawV5Connection",
-    items?:  Array< {
-      __typename: "CaselawV5",
-      DocId: string,
-      DocSourceId?: string | null,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type QueryInstanceQueryVariables = {
-  instance?: string | null,
-  SourceDocDate?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCaselawV5FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QueryInstanceQuery = {
-  queryInstance?:  {
-    __typename: "ModelCaselawV5Connection",
-    items?:  Array< {
-      __typename: "CaselawV5",
-      DocId: string,
-      DocSourceId?: string | null,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-  } | null,
-};
-
-export type QueryInstanceLiQueryVariables = {
-  instance_li?: string | null,
-  SourceDocDate?: ModelStringKeyConditionInput | null,
-  sortDirection?: ModelSortDirection | null,
-  filter?: ModelCaselawV5FilterInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-};
-
-export type QueryInstanceLiQuery = {
-  queryInstanceLi?:  {
-    __typename: "ModelCaselawV5Connection",
-    items?:  Array< {
-      __typename: "CaselawV5",
-      DocId: string,
-      DocSourceId?: string | null,
       SourceDocDate?: string | null,
       ecli: string,
       instance?: string | null,
@@ -988,60 +400,6 @@ export type QueryByInstanceLiQuery = {
   } | null,
 };
 
-export type SearchCaselawV4sQueryVariables = {
-  filter?: SearchableCaselawV4FilterInput | null,
-  sort?: SearchableCaselawV4SortInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  from?: number | null,
-};
-
-export type SearchCaselawV4sQuery = {
-  searchCaselawV4s?:  {
-    __typename: "SearchableCaselawV4Connection",
-    items?:  Array< {
-      __typename: "CaselawV4",
-      DocSourceId: string,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      extracted_from?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-    total?: number | null,
-  } | null,
-};
-
-export type SearchCaselawV5sQueryVariables = {
-  filter?: SearchableCaselawV5FilterInput | null,
-  sort?: SearchableCaselawV5SortInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  from?: number | null,
-};
-
-export type SearchCaselawV5sQuery = {
-  searchCaselawV5s?:  {
-    __typename: "SearchableCaselawV5Connection",
-    items?:  Array< {
-      __typename: "CaselawV5",
-      DocId: string,
-      DocSourceId?: string | null,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-    total?: number | null,
-  } | null,
-};
-
 export type SearchCaselawV6sQueryVariables = {
   filter?: SearchableCaselawV6FilterInput | null,
   sort?: SearchableCaselawV6SortInput | null,
@@ -1065,90 +423,6 @@ export type SearchCaselawV6sQuery = {
     } | null > | null,
     nextToken?: string | null,
     total?: number | null,
-  } | null,
-};
-
-export type OnCreateCaselawV4Subscription = {
-  onCreateCaselawV4?:  {
-    __typename: "CaselawV4",
-    DocSourceId: string,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    extracted_from?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCaselawV4Subscription = {
-  onUpdateCaselawV4?:  {
-    __typename: "CaselawV4",
-    DocSourceId: string,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    extracted_from?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCaselawV4Subscription = {
-  onDeleteCaselawV4?:  {
-    __typename: "CaselawV4",
-    DocSourceId: string,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    extracted_from?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnCreateCaselawV5Subscription = {
-  onCreateCaselawV5?:  {
-    __typename: "CaselawV5",
-    DocId: string,
-    DocSourceId?: string | null,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnUpdateCaselawV5Subscription = {
-  onUpdateCaselawV5?:  {
-    __typename: "CaselawV5",
-    DocId: string,
-    DocSourceId?: string | null,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    createdAt: string,
-    updatedAt: string,
-  } | null,
-};
-
-export type OnDeleteCaselawV5Subscription = {
-  onDeleteCaselawV5?:  {
-    __typename: "CaselawV5",
-    DocId: string,
-    DocSourceId?: string | null,
-    SourceDocDate?: string | null,
-    ecli: string,
-    instance?: string | null,
-    instance_li?: string | null,
-    createdAt: string,
-    updatedAt: string,
   } | null,
 };
 
