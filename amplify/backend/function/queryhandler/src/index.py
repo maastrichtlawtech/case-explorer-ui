@@ -29,10 +29,10 @@ TABLE = 'caselawv6'
 # set up Elasticsearch client
 es_client = ElasticsearchClient(
     endpoint='search-amplify-elasti-m9qgehjp2rek-snhvhkpprt2nayzynzb4ozkmkm.eu-central-1.es.amazonaws.com',
+    index=TABLE,
     max_hits=100,       # limit number of hits per page
     timeout= 180,       # limit query time
-    page_limit=100,     # limit number of pages per query
-    index=TABLE
+    page_limit=100     # limit number of pages per query
 )
 
 # set up DynamoDB client
@@ -90,14 +90,14 @@ def handler(event, context):
         node_eclis = {item['_source']['ecli'] for item in result}
 
     ''' 4. FETCH NODES AND EDGES DATA OF SELECTED CASES '''
-    nodes = batch_get(node_eclis, attributes)
+    nodes = fetch_nodes_data(ddb_client, node_eclis, attributes)
     edges, new_node_eclis = fetch_edges_data(node_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
-    nodes.extend(batch_get(new_node_eclis, attributes))
+    nodes.extend(fetch_nodes_data(ddb_client, new_node_eclis, attributes))
     
     ''' 5. FORMAT OUTPUT '''
     
     print('Duration total:', time.time()-start)
-    return {'nodes': nodes, 'edges': edges}
+    return {'nodes': len(nodes), 'edges': len(edges)}
 
 
 def build_query_elasticsearch(keywords, articles, eclis, li_permission):
@@ -243,26 +243,6 @@ def query(s_params, li_permission=False):
     return node_eclis, True
 
 
-def batch_get(eclis, return_attributes):
-    """
-    Selects cases by ecli from DynamoDB and returns specified meta data.
-    :param eclis: set of eclis
-    :param return_attributes: list of attributes to return
-    :return: list of node dicts (containing id, data)
-    """
-    keys_list = []
-    for ecli in eclis:
-        keys_list.append({'ecli': ecli, 'ItemType': 'DATA'})
-
-    items = ddb_client.execute_batch(keys_list, return_attributes)
-
-    nodes = []
-    for item in items:
-        data = format_node(item)
-        nodes.extend([{'id': item['ecli'], 'data': data}])
-    return nodes
-
-
 def fetch_edges_data(eclis, degrees_sources, degrees_targets):
     """
     Queries source and target citations by doc_source_id from DynamoDB and returns corresponding edges.
@@ -323,22 +303,38 @@ def fetch_edges_data(eclis, degrees_sources, degrees_targets):
 
     return edges, new_node_eclis
 
+# @TODO: to dataacceseslayer > utils
+def fetch_nodes_data(ddb, eclis, return_attributes):
+    """
+    Selects cases by ecli from DynamoDB and returns specified meta data.
+    :param eclis: set of eclis
+    :param return_attributes: list of attributes to return
+    :return: list of node dicts (containing id, data)
+    """
+    keys_list = []
+    for ecli in eclis:
+        keys_list.append({'ecli': ecli, 'ItemType': 'DATA'})
 
-def format_node(item):
-    atts = list(item.keys())
-    for attribute in atts:
-        # remove li attribute if correspondig rs attribute present
-        if attribute in NODE_ESSENTIAL and attribute + '_li' in item:
-            item.pop(attribute + '_li')
-        # convert set types to lists to make JSON serializable
-        if attribute in item and type(item[attribute]) is set:
-            item[attribute] = list(item[attribute])
-        # remove '_li' suffix from attribute name if applicable
-        if attribute in item and attribute.endswith('_li'):
-            item[attribute[:-3]] = item[attribute]
-            item.pop(attribute)
-    return item
+    items = ddb_client.execute_batch(keys_list, return_attributes)
 
+    nodes = []
+
+    # format node
+    for item in items:
+        atts = list(item.keys())
+        for attribute in atts:
+            # remove li attribute if correspondig rs attribute present
+            if attribute + '_li' in item:
+                item.pop(attribute + '_li')
+            # convert set types to lists to make JSON serializable
+            if attribute in item and type(item[attribute]) is set:
+                item[attribute] = list(item[attribute])
+            # remove '_li' suffix from attribute name if applicable
+            if attribute in item and attribute.endswith('_li'):
+                item[attribute[:-3]] = item[attribute]
+                item.pop(attribute)
+        nodes.extend([{'id': item['ecli'], 'data': item}])
+    return nodes
 
 
 def verify_input_string(s_params, key):

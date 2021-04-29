@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "api": {
+      "caseexplorerui": [
+        "Query"
+      ]
+    },
+    "storage": {
+      "CaselawV6:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "dataaccesslayer",
+      "version": 3
+    },
+    {
+      "type": "ProjectLayer",
+      "resourceName": "globalsettingslayer",
+      "version": 1
+    }
+  ]
+}

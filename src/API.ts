@@ -278,6 +278,19 @@ export type QueryNetworkByUserInputQuery = {
   } | null,
 };
 
+export type FetchNodeDataQueryVariables = {
+  Ecli?: string | null,
+  LiPermission?: boolean | null,
+};
+
+export type FetchNodeDataQuery = {
+  fetchNodeData?:  {
+    __typename: "Node",
+    id?: string | null,
+    data?: string | null,
+  } | null,
+};
+
 export type GetCaselawV6QueryVariables = {
   ecli?: string,
   ItemType?: string,

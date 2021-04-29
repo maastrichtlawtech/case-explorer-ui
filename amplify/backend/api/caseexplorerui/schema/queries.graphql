@@ -13,6 +13,10 @@ type Query {
     Doctypes: [String],
     LiPermission: Boolean
   ): Network @function(name: "queryhandler-${env}")
+  fetchNodeData(
+    Ecli: String,
+    LiPermission: Boolean
+  ): Node @function(name: "datafetcher-${env}")
 }
 
 type Network {

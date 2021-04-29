@@ -44,6 +44,14 @@ export const queryNetworkByUserInput = /* GraphQL */ `
     }
   }
 `;
+export const fetchNodeData = /* GraphQL */ `
+  query FetchNodeData($Ecli: String, $LiPermission: Boolean) {
+    fetchNodeData(Ecli: $Ecli, LiPermission: $LiPermission) {
+      id
+      data
+    }
+  }
+`;
 export const getCaselawV6 = /* GraphQL */ `
   query GetCaselawV6($ecli: String!, $ItemType: String!) {
     getCaselawV6(ecli: $ecli, ItemType: $ItemType) {
