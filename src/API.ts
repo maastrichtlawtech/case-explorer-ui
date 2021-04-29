@@ -245,7 +245,7 @@ export type DeleteCaselawV6Mutation = {
   } | null,
 };
 
-export type GiveMeAllTheDataQueryVariables = {
+export type QueryNetworkByUserInputQueryVariables = {
   DataSources?: Array< string | null > | null,
   Keywords?: string | null,
   Articles?: string | null,
@@ -260,8 +260,8 @@ export type GiveMeAllTheDataQueryVariables = {
   LiPermission?: boolean | null,
 };
 
-export type GiveMeAllTheDataQuery = {
-  giveMeAllTheData?:  {
+export type QueryNetworkByUserInputQuery = {
+  queryNetworkByUserInput?:  {
     __typename: "Network",
     nodes?:  Array< {
       __typename: "Node",

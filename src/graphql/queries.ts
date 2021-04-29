@@ -2,8 +2,8 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const giveMeAllTheData = /* GraphQL */ `
-  query GiveMeAllTheData(
+export const queryNetworkByUserInput = /* GraphQL */ `
+  query QueryNetworkByUserInput(
     $DataSources: [String]
     $Keywords: String
     $Articles: String
@@ -17,7 +17,7 @@ export const giveMeAllTheData = /* GraphQL */ `
     $Doctypes: [String]
     $LiPermission: Boolean
   ) {
-    giveMeAllTheData(
+    queryNetworkByUserInput(
       DataSources: $DataSources
       Keywords: $Keywords
       Articles: $Articles

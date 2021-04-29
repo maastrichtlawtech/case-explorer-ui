@@ -1,5 +1,5 @@
 type Query {
-  giveMeAllTheData(
+  queryNetworkByUserInput(
     DataSources: [String],
     Keywords: String,
     Articles: String,
