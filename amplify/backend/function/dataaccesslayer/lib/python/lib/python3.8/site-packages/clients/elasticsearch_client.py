@@ -31,13 +31,6 @@ class ElasticsearchClient:
 
     
     def execute(self, query, return_attributes):
-        """
-        retrieves given attributes for all items matching query
-
-        :param query: query dict in Elasticsearch query DSL
-        :param return_attributes: list of string attribute names to return
-        :return: list of item dicts containing attribute data
-        """
         total_hits = []
         #pit_id = es.open_point_in_time(index='caselaw4', keep_alive= f'{timeout/60}m')
         start = time.time()
