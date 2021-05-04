@@ -27,7 +27,7 @@
         },
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/datafetcher-46623955567a74326539-build.zip"
+          "s3Key": "amplify-builds/datafetcher-686c30622f615a426159-build.zip"
         }
       }
     },
@@ -58,6 +58,14 @@
                 }
               ],
               "hash": "K1UyrGK6/H1jSJRyoRdkUEhhxcZDLnyzX51rBSAnozI="
+            },
+            "4": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "fCmTzY/vJh9hIlELXnrv5H2C1MrqEvvI+uliHeKu/1Y="
             }
           }
         },
