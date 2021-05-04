@@ -7,7 +7,8 @@ import {
    ThemeProvider as MuiThemeProvider,
    createMuiTheme
 } from '@material-ui/core'
-import {  View } from 'colay-ui'
+import { View, } from 'colay-ui'
+import { useImmer } from 'colay-ui/hooks/useImmer'
 import { 
   DarkTheme,
   DefaultTheme,
@@ -21,13 +22,16 @@ import { UseEffect } from 'perfect-graph/components/UseEffect'
 import {drawLine} from 'perfect-graph/components/Graphics'
 import defaultData from './data'
 import * as C from 'colay/color'
-import { getFilterSchema, VIEW_CONFIG_SCHEMA  } from './constants'
+import { getFilterSchema, getFetchSchema, VIEW_CONFIG_SCHEMA, RECORDED_EVENTS  } from './constants'
 import { EVENT } from 'perfect-graph/utils/constants'
 import {useController} from 'perfect-graph/plugins/controller'
+import { createSchema } from 'perfect-graph/plugins/createSchema'
+import { getSelectedItemByElement } from 'perfect-graph/utils'
 import {calculateStatistics} from './utils/networkStatistics'
 import {RenderNode} from './RenderNode'
 import {RenderEdge} from './RenderEdge'
 import * as API from './API'
+import {QueryBuilder} from './QueryBuilder'
 // import { Data } from '../../components/Graph/Default'
 
 const MUIDarkTheme = createMuiTheme({
@@ -62,7 +66,6 @@ const prepareData = (data) =>  {
 const data = prepareData(defaultData)
 type Props = Partial<GraphEditorProps>
 
-// console.log('statistics', calculateStatistics(data))
 const NODE_SIZE = {
   width: 80,
   height: 80,
@@ -123,6 +126,10 @@ const perc2color = (
   return '#' + ('000000' + h.toString(16)).slice(-6);
 }
 
+const AUTO_CREATED_SCHEMA = {
+  schema: createSchema(data.nodes)
+}
+console.log('a', AUTO_CREATED_SCHEMA.schema)
 const AppContainer = ({
   changeMUITheme,
   ...rest
@@ -133,11 +140,18 @@ const AppContainer = ({
       nodeColor: null
     },
     filtering: {
-      year: [1960, 2021]
+      year: [1960, 2021],
+      degree: [0, 100],
+      indegree: [0, 100],
+      outdegree: [0, 100]
     }
   })
-  const FILTER_SCHEMA = React.useMemo(() => getFilterSchema({
-    onPopupPress: () => console.log('popup')
+  
+  const FILTER_SCHEMA = React.useMemo(() => getFilterSchema(), [])
+  const FETCH_SCHEMA = React.useMemo(() => getFetchSchema({
+    onPopupPress: () => updateState((draft) => {
+      draft.queryBuilder.visible = true
+    })
   }), [])
   const THEMES = {
     Dark: DarkTheme,
@@ -145,41 +159,163 @@ const AppContainer = ({
   }
   const NODE_ID = 'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
   const filteredDataRef = React.useRef({})
+  const [state, updateState] = useImmer({
+    queryBuilder: {
+      visible: false,
+      query: {},
+    }
+  })
   const [controllerProps, controller] = useController({
     ...data,
+    // events: RECORDED_EVENTS,
     graphConfig: {
-      layout: Graph.Layouts.grid,
+      layout: Graph.Layouts.cose,
       zoom: 0.2,
+      nodes: {},
+      clusters: [
+        {
+          id: '123',
+          name: 'SimpleCluster',
+          ids: [
+            'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:3019',
+            'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:644',
+            'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
+          ],
+          childClusterIds: []
+        },
+        {
+          id: '1234',
+          name: 'SimpleCluster2',
+          ids: [
+            'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:3019',
+            'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:644',
+            'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
+          ],
+          childClusterIds: []
+        }
+      ]
     },
     settingsBar: {
       opened: true,
-      forms: [FILTER_SCHEMA, VIEW_CONFIG_SCHEMA]
+      // forms: [AUTO_CREATED_SCHEMA,FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
+      forms: [FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
+      createClusterForm: {
+        ...FILTER_SCHEMA,
+        schema: {...FILTER_SCHEMA.schema, title: 'Create Cluster', },
+        formData: configRef.current.filtering
+      },
     },
     dataBar: {
+      // opened: true,
       editable: false,
     },
     actionBar: {
-      opened: false,
+      // opened: true,
+      // autoOpen: true,
+      eventRecording: false,
       actions: {
-        add: { visible: false },
-        delete: { visible: false },
-      }
+        // add: { visible: false },
+        // delete: { visible: false },
+      },
+      theming: {
+        options: [
+          {
+            name: 'Dark',
+            value: 'Dark',
+          },
+          {
+            name: 'Default',
+            value: 'Default',
+          }
+        ],
+        value: 'Default'
+      },
     },
     onEvent: async ({
       type,
-      element,
-      graphRef,
       payload,
-      item,
+      elementId,
+      graphRef,
+      graphEditor,
       update,
     },draft) => {
+      const {
+        cy,
+      } = graphEditor
+      const element = cy.$id(elementId)
+      const {
+        item: selectedItem,
+        index: selectedItemIndex,
+      } = (element && getSelectedItemByElement(element, draft)) ?? {}
       switch (type) {
+        case EVENT.ELEMENT_SELECTED: {
+          console.log('el1', selectedItem.data.ecli)
+          const elementData = await API.getElementData({ id: selectedItem.data.ecli });
+          if (elementData) {
+            update((draft) => {
+              const elementList = element.isNode() ? draft.nodes : draft.edges
+              const itemDraft = elementList.find((elementItem) => elementItem.id === selectedItem.id)
+              itemDraft.data = elementData
+            })
+          }
+          console.log('el', elementData)
+          break
+        }
+        case EVENT.CREATE_CLUSTER_FORM_SUBMIT: {
+          const {
+            name,
+            formData,
+          } = payload
+          const {
+            year,
+            degree,
+            indegree,
+            outdegree
+           }= formData
+          const clusterItemIds = draft.nodes.filter((item) => {
+            const element = cy.$id(item.id)
+            return (
+              R.inBetween(year[0], year[1])(item.data.year)
+                && R.inBetween(degree[0], degree[1])(element.degree())
+                && R.inBetween(indegree[0], indegree[1])(element.indegree())
+                && R.inBetween(outdegree[0], outdegree[1])(element.outdegree())
+                
+              )
+          }).map((item) => item.id)
+          draft.graphConfig.clusters.push({
+            id: R.uuid(),
+            name,
+            ids: clusterItemIds,
+            childClusterIds: []
+          })
+          return false
+        }
         case EVENT.SETTINGS_FORM_CHANGED:{
           draft.settingsBar.forms[payload.index].formData = payload.value
           if (payload.form.schema.title === FILTER_SCHEMA.schema.title) {
             configRef.current = {
               ...configRef.current,
               filtering: payload.value
+            }
+            draft.graphConfig.nodes.filter =  {
+              test: ({ element,item }) => {
+                const {
+                  year,
+                  degree,
+                  indegree,
+                  outdegree
+                 }= payload.value
+                  return (
+                    R.inBetween(year[0], year[1])(item.data.year)
+                      && R.inBetween(degree[0], degree[1])(element.degree())
+                      && R.inBetween(indegree[0], indegree[1])(element.indegree())
+                      && R.inBetween(outdegree[0], outdegree[1])(element.outdegree())
+                      
+                    )
+                },
+                settings: {
+                  opacity: 0.2
+                }
             }
 
           } else {
@@ -191,23 +327,18 @@ const AppContainer = ({
           return false
           break
         }
-        case EVENT.ELEMENT_SELECTED: {
-          console.log(element)
-          const elementList = element.isNode() ? draft.nodes : draft.edges
-          const itemDraft = elementList.find((elementItem) => elementItem.id === item.id)
-          console.log('el1')
-          const elementData = await API.getElementData({ id: item.id })
-          console.log('el', elementData)
-          break
-        }
-        case EVENT.CHANGE_THEME:{
-          draft.graphConfig.theme = THEMES[payload]
-          changeMUITheme(payload)
+      
+        case EVENT.CHANGE_THEME: {
+          const {
+            value
+          } = payload
+          draft.graphConfig.theme = THEMES[value]
+          changeMUITheme(value)
+          draft.actionBar.theming.value = value
           return false
           break
         }
         // case EVENT.ELEMENT_SELECTED: {
-        //   console.log('ELEMENT_SELECTED', element.isNode(), graphRef)
         //   if (element.isNode()) {
         //     // const TARGET_SIZE = 700
         //     // const {
@@ -251,7 +382,6 @@ const AppContainer = ({
   // React.useEffect(() => {
   //   const call = async () =>{
   //     const results = await listCases()
-  //     console.log(results)
   //     const nodes = results.map(({id, ...data}) => ({
   //       id: `${data.doctype}:${id}`,
   //       data
@@ -283,8 +413,9 @@ const AppContainer = ({
       <GraphEditor
         ref={graphEditorRef}
         {...controllerProps}
-        extraData={[configRef.current]}
-        style={{ width: '100%', height: 820, }}
+        // {...R.omit(['eventHistory', ])(controllerProps)}
+        payload={[configRef.current]}
+        style={{ width: '100%', height: 800, }}
         renderNode={(props) => (
           <RenderNode
             {...props}
@@ -377,17 +508,23 @@ const AppContainer = ({
         // }}
         {...rest}
       />
+      <QueryBuilder 
+        isOpen={state.queryBuilder.visible}
+        query={state.queryBuilder.query}
+        onClose={() => updateState((draft) => {
+          draft.queryBuilder.visible = false
+        })}
+        onCreate={(query) => updateState((draft) => {
+          draft.queryBuilder.visible = false
+          draft.queryBuilder.query = query
+          alert(JSON.stringify(query))
+          // const data = API.complexQuery(query)
+          // QueryCallback(query)
+        })}
+      />
       </View>
   )
 }
-
-export const mergeDeepAll = (list: Record<string, any>[]) => R.reduce(
-  R.mergeDeepRight,
-  // @ts-ignore
-  {},
-)(list)
-
-
 
 
 const MUI_THEMES = {
@@ -405,3 +542,21 @@ export default (props: Props) => {
     </MuiThemeProvider>
   )
 }
+
+// type Node = {
+//   id: string;
+//   data: {
+//     year: string;
+//     ...
+//   },
+// }
+
+// type Edge = {
+//   id: string;
+//   source: string;
+//   target: string;
+//   data: {
+//     year: string;
+//     ...
+//   },
+// }
