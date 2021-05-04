@@ -3,10 +3,10 @@ import Amplify, { API }  from "aws-amplify";
 
 Amplify.configure({
   "aws_project_region": "eu-central-1",
-  "aws_appsync_graphqlEndpoint": "https://4qb233n5szaubbp2e7apnpp4lm.appsync-api.eu-central-1.amazonaws.com/graphql",
+  "aws_appsync_graphqlEndpoint": "https://culpdi4smbeqtjyiqaqxusuv3q.appsync-api.eu-central-1.amazonaws.com/graphql",
   "aws_appsync_region": "eu-central-1",
   "aws_appsync_authenticationType": "API_KEY",
-  "aws_appsync_apiKey": "da2-3bhdjwenmrbfvelucz62cjwuii"
+  "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y"
 });
 
 const API_AUTH_MODE = {
@@ -53,19 +53,29 @@ export async function listCases() {
   }
 }
 
-type GetElementDataVariables = {
-  id: string;
-}
+const COMPLEX_QUERY = `query ListCases($query) {
+  complexQuery(query: $query) {
+    items {
+      abstract
+      country
+      court
+      date
+      doctype
+      id
+      subject
+    }
+  }
+}`
 
-export async function getElementData(variables: GetElementDataVariables) {
+export async function complexQuery(query: any) {
   try {
-    const elementDataResult = await API.graphql({
-      query: GET_ELEMENT_DATA,
+    const listCasesResult = await API.graphql({
+      query: COMPLEX_QUERY,
       authMode: API_AUTH_MODE.API_KEY,
-      // variables
+      variables: query
     })
-    const result = elementDataResult.data.fetchNodeData.data
-    return result
+    const caseResults = listCasesResult.data.listCaselaws.items
+    return caseResults
     // return caseResults.map(project => ({
     //   // ...project,
     //   nodes: project.nodes.items.map(convertJSONStringFields),
@@ -77,3 +87,26 @@ export async function getElementData(variables: GetElementDataVariables) {
 }
 
 
+
+type GetElementDataVariables = {
+  id: string;
+}
+
+export async function getElementData(variables: GetElementDataVariables) {
+  try {
+    const elementDataResult = await API.graphql({
+      query: GET_ELEMENT_DATA,
+      authMode: API_AUTH_MODE.API_KEY,
+      variables
+    })
+    const result = elementDataResult.data.fetchNodeData.data
+    return result
+    // return caseResults.map(project => ({
+    //   // ...project,
+    //   nodes: project.nodes.items.map(convertJSONStringFields),
+    //   // edges: project.edges.items.map(convertJSONStringFields),
+    // }))
+  } catch (err) {
+    console.log('error getElementData node:', err)
+  }
+}

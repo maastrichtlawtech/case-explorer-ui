@@ -1,6 +1,5 @@
 import React from 'react';
-import GraphEditor from "./components/Graph";
-import { listCases } from './API'
+import GraphEditor from "./components/CaseLawExplorer";
 
 
 
