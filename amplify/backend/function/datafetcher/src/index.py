@@ -12,6 +12,9 @@ def handler(event, context):
     else:
         attributes = NODE_FULL
 
-    node = fetch_nodes_data(ddb_client, [event["arguments"]["Ecli"]], attributes)[0]
+    nodes = fetch_nodes_data(ddb_client, [event["arguments"]["Ecli"]], attributes)
+    
+    if nodes == []:
+        return []
 
-    return node
+    return nodes[0]
