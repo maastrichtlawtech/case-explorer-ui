@@ -8,7 +8,7 @@
         "DegreesTargets": 3,
         "DateStart": "1796-01-11",
         "DateEnd": "2100-01-14",
-        "Instances": ["Raad van State", "Gerechtshof Amsterdam"],
+        "Instances": ["Gerechtshof Amsterdam"],
         "Domains": [""],
         "Doctypes": ["DEC", "OPI"],
         "LiPermission": true
