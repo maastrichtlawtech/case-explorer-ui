@@ -10,8 +10,8 @@ export const queryNetworkByUserInput = /* GraphQL */ `
     $Eclis: String
     $DegreesSources: Int
     $DegreesTargets: Int
-    $DateStart: String
-    $DateEnd: String
+    $DateStart: AWSDate
+    $DateEnd: AWSDate
     $Instances: [String]
     $Domains: [String]
     $Doctypes: [String]
