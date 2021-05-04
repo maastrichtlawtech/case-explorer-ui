@@ -136,7 +136,7 @@
         "Runtime": "python3.8",
         "Layers": [
           {
-            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:dataaccesslayer-dev:3"
+            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:dataaccesslayer-dev:5"
           },
           {
             "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:globalsettingslayer-dev:1"
