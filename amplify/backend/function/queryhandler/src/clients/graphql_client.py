@@ -4,7 +4,7 @@ from datetime import datetime
 import json
 import urllib
 
-
+# legacy class
 class GraphqlClient:
 
     def __init__(self, endpoint, headers):

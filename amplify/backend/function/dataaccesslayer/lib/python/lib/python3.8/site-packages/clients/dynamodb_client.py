@@ -1,6 +1,7 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import time
+from utils import build_projection_expression
 
 
 class DynamodbClient:
@@ -14,7 +15,10 @@ class DynamodbClient:
     
     def execute_query(self, query_params):
         """
-        use pagination to retrieve all results of a DynamoDB query
+        retrieves all items matching query parameters from DynamoDB
+    
+        :param query_params: dict of DynamoDB query parameters
+        :return: dict containing response meta data and list of items matching query
         """
         start = time.time()
         response = self.table.query(**query_params, Limit=100)
@@ -23,6 +27,7 @@ class DynamodbClient:
         scanned_count = response['ScannedCount']
         pages = 1
 
+        # use pagination to retrieve full list of results
         while 'LastEvaluatedKey' in response:
             if pages == self.page_limit:
                 print('DYNAMOBO REQUEST LIMIT REACHED!')
@@ -44,9 +49,11 @@ class DynamodbClient:
 
     def execute_batch(self, keys_list, return_attributes):
         """
-        :keys_list: list of dicts
-        :return_attributes: list of strings
-        :return list of dict items
+        retrieves given attributes for given list of item keys from DynamoDB
+    
+        :param keys_list: list of dicts containing DynamoDB key value pairs
+        :param return_attributes: list of string attribute names to return
+        :return: list of dict items
         """
         start = time.time()
 
@@ -54,10 +61,9 @@ class DynamodbClient:
         keys_list = [dict(t) for t in {tuple(sorted(d.items())) for d in keys_list}]
 
         # substitute attribute names to avoid conflicts with DynamoDB reserved words
-        tokens = ['#' + attribute for attribute in return_attributes]
-        projection_expression = ', '.join(tokens)
-        expression_attribute_names = dict(zip(tokens, return_attributes))
+        projection_expression, expression_attribute_names = build_projection_expression(return_attributes)
 
+        # disect requests into batches of 100 to avoid limit errors
         batch = keys_list[:100]
         rest = keys_list[100:]
 
