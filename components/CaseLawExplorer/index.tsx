@@ -249,16 +249,29 @@ const AppContainer = ({
       } = (element && getSelectedItemByElement(element, draft)) ?? {}
       switch (type) {
         case EVENT.ELEMENT_SELECTED: {
-          console.log('el1', selectedItem.data.ecli)
-          const elementData = await API.getElementData({ id: selectedItem.data.ecli });
+          // draft.loading = true
+          let elementData = null
+          try {
+            elementData = await API.getElementData({ id: selectedItem.data.ecli });
+          } catch (error) {
+            console.error(error)
+          }
           if (elementData) {
             update((draft) => {
+              const {
+                item: selectedItem,
+                index: selectedItemIndex,
+              } = (element && getSelectedItemByElement(element, draft)) ?? {}
               const elementList = element.isNode() ? draft.nodes : draft.edges
               const itemDraft = elementList.find((elementItem) => elementItem.id === selectedItem.id)
               itemDraft.data = elementData
+              draft.loading = false
+            })
+          } else {
+            update((draft) => {
+              draft.loading = false
             })
           }
-          console.log('el', elementData)
           break
         }
         case EVENT.CREATE_CLUSTER_FORM_SUBMIT: {

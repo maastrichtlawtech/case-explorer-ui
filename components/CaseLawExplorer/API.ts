@@ -100,7 +100,7 @@ export async function getElementData(variables: GetElementDataVariables) {
       variables
     })
     const result = elementDataResult.data.fetchNodeData.data
-    return result
+    return result ? JSON.parse(result)  : {}
     // return caseResults.map(project => ({
     //   // ...project,
     //   nodes: project.nodes.items.map(convertJSONStringFields),
