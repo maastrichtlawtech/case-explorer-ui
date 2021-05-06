@@ -34,6 +34,7 @@ import * as API from './API'
 import {QueryBuilder} from './QueryBuilder'
 // import { Data } from '../../components/Graph/Default'
 
+
 const MUIDarkTheme = createMuiTheme({
   palette: {
     mode: 'dark',
@@ -139,6 +140,36 @@ const AppContainer = ({
       nodeSize: null,
       nodeColor: null
     },
+    fetching: {
+      source: [
+        "Rechtspraak"
+      ],
+      year: [
+        1969,
+        2015
+      ],
+      instances: [
+        "Hoge Raad",
+        "Raad van State",
+        "Centrale Raad van Beroep",
+        "College van Beroep voor het bedrijfsleven",
+        "Gerechtshof Arnhem-Leeuwarden"
+      ],
+      domains: [
+        "Not"
+      ],
+      doctypes: [
+        "DEC",
+        "OPI"
+      ],
+      degreesSources: 3,
+      popup: false,
+      liPermission: false,
+      keywords: "test",
+      degreesTargets: 3,
+      eclis: "",
+      articles: ""
+    },
     filtering: {
       year: [1960, 2021],
       degree: [0, 100],
@@ -149,10 +180,30 @@ const AppContainer = ({
   
   const FILTER_SCHEMA = React.useMemo(() => getFilterSchema(), [])
   const FETCH_SCHEMA = React.useMemo(() => getFetchSchema({
-    onPopupPress: () => updateState((draft) => {
+    onPopupPress: async () => {
+      let cases = await API.listCases({
+        DataSources: ["RS"],
+        Keywords: "test",
+        Articles: "",
+        Eclis: "",
+        DegreesSources: 3,
+        DegreesTargets: 3,
+        DateStart: "1796-01-11",
+        DateEnd: "2100-01-14",
+        Instances: [""],
+        Domains: [""],
+        Doctypes: ["DEC", "OPI"],
+        LiPermission: false
+      
+    })
+
+    console.log(cases);
+
+    updateState((draft) => {
       draft.queryBuilder.visible = true
     })
-  }), [])
+
+  }}), [])
   const THEMES = {
     Dark: DarkTheme,
     Default: DefaultTheme
@@ -198,7 +249,7 @@ const AppContainer = ({
     settingsBar: {
       opened: true,
       // forms: [AUTO_CREATED_SCHEMA,FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
-      forms: [FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
+      forms: [{...FETCH_SCHEMA, formData: configRef.current.fetching}, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
       createClusterForm: {
         ...FILTER_SCHEMA,
         schema: {...FILTER_SCHEMA.schema, title: 'Create Cluster', },

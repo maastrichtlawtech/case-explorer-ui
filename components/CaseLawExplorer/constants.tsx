@@ -2,6 +2,7 @@ import React from 'react'
 import {Button, Slider, Typography} from '@material-ui/core'
 
 const SliderUIField = ({ formData, schema, onChange, name}) => {
+  
   return (
     <>
     <Typography id={`${schema.title}-continuous-slider`} gutterBottom>
@@ -105,18 +106,97 @@ export const getFetchSchema  = (props: {onPopupPress: () => void}) => {
       ],
       additionalProperties: false,
       properties: {
-        label: {
+        source: {
+          type: 'array',
+          title: 'Data sources',
+          uniqueItems: true,
+          items: {
+            enum: [
+              'Rechtspraak',
+              'ECHR',
+              'Eurlex'
+            ],
+            type: 'string'
+          },
+        },
+        eclis: {
           type: 'string',
+          title: 'ECLIs'
+        },
+        keywords: {
+          type: 'string',
+          title: 'Keywords'
+        },
+        articles: {
+          type: 'string',
+          title: 'Articles'
         },
         year: {
           type: 'array',
+          title: 'Date',
           items: {
             type: 'number',
           },
           minimum: 1969,
           maximum: 2015,
         },
-        popup: {
+        degreesSources: {
+          type: 'integer',
+          title: 'Degrees Sources',
+          minimum: 1,
+          maximum: 5,
+        },
+        degreesTargets: {
+          type: 'integer',
+          title: 'Degrees Targets',
+          minimum: 1,
+          maximum: 5,
+        },
+        instances: {
+          type: 'array',
+          title: 'Instances',
+          uniqueItems: true,
+          items: {
+            enum: [
+              "Hoge Raad", 
+              "Raad van State", 
+              "Centrale Raad van Beroep", 
+              "College van Beroep voor het bedrijfsleven", 
+              "Gerechtshof Arnhem-Leeuwarden"
+            ],
+            type: 'string'
+          },
+        },
+          domains: {
+            type: 'array',
+            title: 'Domains',
+            uniqueItems: true,
+            items: {
+              enum: [
+                'Not',
+                'Sure',
+                'What'
+              ],
+              type: 'string'
+            },
+        },
+        doctypes: {
+          type: 'array',
+          title: 'Document types',
+          uniqueItems: true,
+          items: {
+            enum: [
+              "DEC", 
+              "OPI"
+            ],
+            type: 'string'
+          },
+      },
+      liPermission: {
+        type: 'boolean',
+        title: 'LI Permission',
+      },
+      popup: {
           title: 'More Settings',
           type: 'boolean',
         },
@@ -126,6 +206,18 @@ export const getFetchSchema  = (props: {onPopupPress: () => void}) => {
       'year': {
         'ui:field': SliderUIField,
       },
+      // 'degreesSources': {
+      //   'ui:field': SliderUIField,
+      // },
+      // 'degreesTargets': {
+      //   'ui:field': SliderUIField,
+      // },
+      // 'source':{
+      //   'ui:widget': 'checkboxes'
+      // },
+      // 'liPermission':{
+      //   'ui:widget': 'select'
+      // },
       'popup': {
         'ui:field': ({ formData, schema, onChange}) => {
           return (
