@@ -1,4 +1,4 @@
-import Amplify, { API }  from "aws-amplify";
+import Amplify, { API } from "aws-amplify";
 // import awsExports from "./aws-exports";
 
 Amplify.configure({
@@ -16,7 +16,7 @@ const API_AUTH_MODE = {
 const convertJSONStringFields = (item) => {
   return {
     ...item,
-    ...(item.position ? { position: JSON.parse(item.position)} : {}),
+    ...(item.position ? { position: JSON.parse(item.position) } : {}),
     data: JSON.parse(item.data)
   }
 }
@@ -84,12 +84,12 @@ export async function listCases(variables: listCasesVariables) {
 
     const caseResults = listCasesResult.data.queryNetworkByUserInput
     console.log(caseResults)
-    
+
     return {
       nodes: caseResults.nodes.map(convertJSONStringFields),
       // edges: project.edges.items.map(convertJSONStringFields),
     }
-    
+
     // return caseResults.map(project => ({
     //   // ...project,
     //   nodes: project.nodes.items.map(convertJSONStringFields),
@@ -145,7 +145,7 @@ export async function getElementData(variables: GetElementDataVariables) {
       variables
     })
     const result = elementDataResult.data.fetchNodeData.data
-    return result ? JSON.parse(result)  : {}
+    return result ? JSON.parse(result) : {}
     // return caseResults.map(project => ({
     //   // ...project,
     //   nodes: project.nodes.items.map(convertJSONStringFields),
