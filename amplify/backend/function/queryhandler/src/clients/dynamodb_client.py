@@ -13,7 +13,7 @@ class DynamodbClient:
         self.page_limit=page_limit
 
     
-    def execute_query(self, query_params):
+    def execute_query(self, **query_params):
         """
         retrieves all items matching query parameters from DynamoDB
     

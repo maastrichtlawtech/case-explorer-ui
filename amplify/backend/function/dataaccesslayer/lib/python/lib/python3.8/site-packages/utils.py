@@ -1,3 +1,5 @@
+import warnings
+
 def format_node_data(item):
     """
     formats DynamoDB dict to node data type, handling replacements of Rechtspraak data with legal intelligence data
@@ -22,6 +24,10 @@ def format_node_data(item):
     return {'id': item['ecli'], 'data': item}
 
 
+def get_key(ecli):
+    return {'ecli': ecli, 'ItemType': 'DATA'}
+
+
 def build_projection_expression(attributes):
     """
     converts list of attribute names to token substitutes to avoid conflicts with DynamoDB reserved words
@@ -35,28 +41,10 @@ def build_projection_expression(attributes):
     return projection_expression, expression_attribute_names
 
 
-def verify_input_string(s_params, key):
-    val = s_params.get(key)
-    if val is None or not isinstance(val, str):
-        warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to ''.")
-        return ""
-    else:
-        return val
-
-
-def verify_input_string_list(s_params, key):
-    val = s_params.get(key)
+def verify_input_string_list(key, val):
+    # checks string list input types for validity and returns default value if invalid
     if val is None or not isinstance(val, list) or not all(isinstance(elem, str) for elem in val) or len(val) < 1:
         warnings.warn(f"Invalid input: argument '{key}' of type list of strings expected. Setting '{key}' to [''].")
         return [""]
-    else:
-        return val
-
-
-def verify_input_int(s_params, key):
-    val = s_params.get(key)
-    if val is None or not isinstance(val, int) or val < 0:
-        warnings.warn(f"Invalid input: argument '{key}' of type int >= 0 expected. Setting '{key}' to 0.")
-        return 0
     else:
         return val

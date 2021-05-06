@@ -15,7 +15,7 @@
       "function": {
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/queryhandler-756c467a7766446b5653-build.zip"
+          "s3Key": "amplify-builds/queryhandler-724e5978697477792b45-build.zip"
         },
         "dataaccesslayer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
@@ -27,7 +27,7 @@
         },
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/datafetcher-6b637346717232517879-build.zip"
+          "s3Key": "amplify-builds/datafetcher-476455586e5763647473-build.zip"
         }
       }
     },
@@ -74,6 +74,14 @@
                 }
               ],
               "hash": "+gxT2L8QMwxsgYo/Ign8AtwwsorA/slzC6F6Eq3IP84="
+            },
+            "6": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "Pw2rEg40ubOXRZ6SS6mCQarBC9c74LOw3fea0R5Z524="
             }
           }
         },
