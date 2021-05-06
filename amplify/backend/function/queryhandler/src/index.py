@@ -104,7 +104,7 @@ def build_elasticsearch_query(keywords, articles, eclis, li_permission):
     Builds Elasticsearch query to filter by doc_source_eclis if provided and match keywords and articles.
     :param keywords: string of keywords in simple query string syntax*
     :param articles: string of legal provisions in simple query string syntax*
-    :param doc_source_eclis: list of doc_source_eclis
+    :param eclis: list of eclis
     :param li_permission: boolean flag whether or not permission to access Legal Intelligence data is given
     :return: dict of Elasticsearch query in Query DSL
     * simple query string syntax: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
@@ -142,7 +142,7 @@ def filter_dynamodb(filters, li_permission=False):
     :param li_permission: boolean flag whether or not permission to access Legal Intelligence data is given
     :return: set of DocSourceIds of cases matching search input
     """
-
+ 
     if li_permission:
         domain_name = 'DOM_LI'
         domains_name = 'domains_li'
@@ -226,7 +226,7 @@ def execute_dynamodb_query_by_filters(filters, **q_params):
                     for doc in filters['Doctypes']:
                         if len(node_eclis) >= 10000:
                             print('LIMIT REACHED: 10k CASES FETCHED')
-                            return node_eclis, True
+                            return node_eclis
                         expression_attribute_values = {
                             ':instance': instance,
                             ':DateStart': f"{source}_{doc}_{filters['DateStart']}",
