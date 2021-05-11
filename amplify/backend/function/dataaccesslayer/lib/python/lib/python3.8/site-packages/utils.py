@@ -11,9 +11,12 @@ def format_node_data(item):
         return {'id': None, 'data': None}
     atts = list(item.keys())
     for attribute in atts:
-        # remove li attribute if correspondig rs attribute present
+        # remove li attribute if correspondig rs attribute present, except for summary
         if attribute + '_li' in item:
-            item.pop(attribute + '_li')
+            if attribute == 'summary':
+                item.pop(attribute)
+            else:
+                item.pop(attribute + '_li')
         # convert set types to lists to make JSON serializable
         if attribute in item and type(item[attribute]) is set:
             item[attribute] = list(item[attribute])

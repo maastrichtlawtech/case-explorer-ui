@@ -1,16 +1,16 @@
 {
     "arguments": {
         "DataSources": ["RS"],
-        "Keywords": "test",
+        "Keywords": "",
         "Articles": "",
-        "Eclis": "",
+        "Eclis": "ECLI:NL:HR:2012:BV5128",
         "DegreesSources": 3,
         "DegreesTargets": 3,
         "DateStart": "1796-01-11",
         "DateEnd": "2100-01-14",
-        "Instances": ["Hoge Raad", "Raad van State", "Centrale Raad van Beroep", "College van Beroep voor het bedrijfsleven", "Gerechtshof Arnhem-Leeuwarden"],
+        "Instances": [""],
         "Domains": [""],
         "Doctypes": ["DEC", "OPI"],
-        "LiPermission": false
+        "LiPermission": true
     }
 }
