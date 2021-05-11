@@ -87,6 +87,7 @@ export async function listCases(variables: listCasesVariables) {
 
     return {
       nodes: caseResults.nodes.map(convertJSONStringFields),
+      edges: caseResults.edges.map(convertJSONStringFields),
       // edges: project.edges.items.map(convertJSONStringFields),
     }
 
