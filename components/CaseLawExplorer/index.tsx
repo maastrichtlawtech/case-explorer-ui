@@ -181,28 +181,9 @@ const AppContainer = ({
   const FILTER_SCHEMA = React.useMemo(() => getFilterSchema(), [])
   const FETCH_SCHEMA = React.useMemo(() => getFetchSchema({
     onPopupPress: async () => {
-      // let cases = await API.listCases({
-      //   DataSources: ["RS"],
-      //   Keywords: "test",
-      //   Articles: "",
-      //   Eclis: "",
-      //   DegreesSources: 3,
-      //   DegreesTargets: 3,
-      //   DateStart: "1796-01-11",
-      //   DateEnd: "2100-01-14",
-      //   Instances: [""],
-      //   Domains: [""],
-      //   Doctypes: ["DEC", "OPI"],
-      //   LiPermission: false
-
-      // })
-
-      // console.log(cases);
-
       updateState((draft) => {
         draft.queryBuilder.visible = true
       })
-
     }
   }), [])
   const THEMES = {
@@ -516,90 +497,7 @@ const AppContainer = ({
             {...configRef.current}
           />
         )}
-        // renderNode={({ item, element, cy, theme }) => {
-        //   const size = calculateNodeSize(item.data, configRef.current.visualization.nodeSize)
-        //   const color = configRef.current.visualization.nodeColor ? calculateColor(
-        //     item.data,
-        //     configRef.current.visualization.nodeColor
-        //   ) : theme.palette.background.paper
-        //   const hasSelectedEdge = element.connectedEdges(':selected').length > 0
-        //   return (
-        //           <Graph.Pressable
-        //       style={{
-        //         width: size,
-        //         height: size,
-        //         justifyContent: 'center',
-        //         alignItems: 'center',
-        //         display: 'flex',
-        //         backgroundColor: hasSelectedEdge
-        //         ? theme.palette.secondary.main
-        //         : (element.selected()
-        //           ? theme.palette.primary.main
-        //           : color),
-        //         // hasSelectedEdge
-        //         //   ? theme.palette.secondary.main
-        //         //   : (element.selected()
-        //         //     ? theme.palette.primary.main
-        //         //     : theme.palette.background.paper),
-        //         borderRadius: size,
-        //       }}
-        //       onPress={() => {
-        //         cy.$(':selected').unselect()
-        //         element.select()
-        //       }}
-        //     >
-        //       <Graph.Text
-        //         style={{
-        //           position: 'absolute',
-        //           top: -size/1.5,
-        //           left: 20,
-        //         }}
-        //         isSprite
-        //       >
-        //         {R.takeLast(6, item.id)}
-        //       </Graph.Text>
-        //     </Graph.Pressable>
-        //   )
-        // }}
         renderEdge={RenderEdge}
-        // renderNode={({ item: { id, data } }) => {
-        // const size = calculateNodeSize(data, configRef.current.visualization.nodeSize)
-        // const color = calculateColor(data, configRef.current.visualization.nodeColor)
-        //   return (
-        //     <Graph.HoverContainer
-        //       style={{
-        //         width: size,
-        //         height: size,
-        //         alignItems: 'center',
-        //         justifyContent: 'center',
-        //         borderRadius: 25,//(size/2 )+10,
-        //         backgroundColor: color
-        //         }}
-        //         renderHoverElement={() => (
-        //           <Graph.View
-        //             style={{
-        //               width: size,
-        //               height: 20,
-        //               position: 'absolute',
-        //               left: 0,
-        //               backgroundColor: color
-        //             }}
-        //           >
-        //             <Graph.Text style={{
-        //               fontSize: 20,
-        //                textAlign: 'center',
-        //               }}>
-        //               {R.replace('ECLI:NL:', '')(data.ecli)}
-        //             </Graph.Text>
-        //           </Graph.View>
-        //         )}
-        //     >
-        //       <Graph.Text style={{fontSize: 10}}>
-        //         {R.replace('ECLI:NL:', '')(data.ecli)}
-        //       </Graph.Text>
-        //     </Graph.HoverContainer>
-        //   )
-        // }}
         {...rest}
       />
       <QueryBuilder
@@ -608,13 +506,46 @@ const AppContainer = ({
         onClose={() => updateState((draft) => {
           draft.queryBuilder.visible = false
         })}
-        onCreate={(query) => updateState((draft) => {
-          draft.queryBuilder.visible = false
-          draft.queryBuilder.query = query
-          alert(JSON.stringify(query))
-          // const data = API.complexQuery(query)
-          // QueryCallback(query)
-        })}
+        onCreate={async (query) => {
+          let cases = await API.listCases({
+            DataSources: ["RS"],
+            Keywords: "test",
+            Articles: "",
+            Eclis: "",
+            DegreesSources: 3,
+            DegreesTargets: 3,
+            DateStart: "1796-01-11",
+            DateEnd: "2100-01-14",
+            Instances: [""],
+            Domains: [""],
+            Doctypes: ["DEC", "OPI"],
+            LiPermission: false
+          })
+
+          console.log(cases)
+          let casesData = prepareData(cases)
+
+          console.log(casesData)
+          controller.update((draft) => {
+            console.log(controllerProps.nodes, controllerProps.edges)
+            draft.nodes = casesData.nodes
+            draft.edges = casesData.edges
+            console.log(controllerProps.nodes, controllerProps.edges)
+          })
+
+          // console.log(controllerProps)
+          // console.log(defaultData)
+          // console.log(prepareData(defaultData))
+
+          updateState((draft) => {
+            draft.queryBuilder.visible = false
+            draft.queryBuilder.query = query
+
+            // alert(JSON.stringify(query))
+            // const data = API.complexQuery(query)
+            // QueryCallback(query)
+          })
+        }}
       />
     </View>
   )
