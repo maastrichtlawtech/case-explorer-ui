@@ -1,7 +1,7 @@
 import React from 'react'
 import Form from '@rjsf/material-ui'
 import { getFetchSchema } from './constants'
-import { Modal, Button, Box, Typography, TextField, Paper} from '@material-ui/core'
+import { Modal, Button, Box, Typography, TextField, Paper } from '@material-ui/core'
 
 export type QueryBuilderProps = {
   query: any;
@@ -19,10 +19,10 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
   } = props
 
   const [state, setState] = React.useState(query)
-    return (
-      <Modal
+  return (
+    <Modal
       open={isOpen}
-    // onClose={onClose}
+      // onClose={onClose}
       style={{
         display: 'flex',
         // flexDirection: 'column-reverse',
@@ -46,7 +46,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         overflow: 'scroll'
       }}
       >
-        <Box 
+        <Box
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -62,9 +62,9 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             flexDirection: 'column'
           }}
         >
-          <Form 
-            schema={getFetchSchema({onPopupPress: () => console.log('eyyyy')}).schema}
-            uiSchema={getFetchSchema({onPopupPress: () => console.log('eyyyy')}).uiSchema}
+          <Form
+            schema={getFetchSchema({ onPopupPress: () => console.log('eyyyy') }).schema}
+            uiSchema={getFetchSchema({ onPopupPress: () => console.log('eyyyy') }).uiSchema}
             onChange={e => console.log(e.formData)}
             formData={query}
           />
@@ -77,9 +77,11 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             alignItems: 'center',
           }}
         >
-          <Paper style={{ display: 'flex', 
-          
-          flexDirection: 'row', justifyContent: 'space-around' , width: '40%'}}>
+          <Paper style={{
+            display: 'flex',
+
+            flexDirection: 'row', justifyContent: 'space-around', width: '40%'
+          }}>
             <Button
               onClick={() => {
                 onCreate(state)
@@ -99,7 +101,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         </Box>
       </Paper>
     </Modal>
- 
-    )
+
+  )
 
 }
