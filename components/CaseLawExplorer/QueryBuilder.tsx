@@ -65,8 +65,8 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
           <Form
             schema={getFetchSchema({ onPopupPress: () => console.log('eyyyy') }).schema}
             uiSchema={getFetchSchema({ onPopupPress: () => console.log('eyyyy') }).uiSchema}
-            onChange={e => console.log(e.formData)}
-            formData={query}
+            onChange={e => setState(e.formData)}
+            formData={state}
           />
         </Box>
         <Box

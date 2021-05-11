@@ -196,34 +196,34 @@ const AppContainer = ({
     queryBuilder: {
       visible: false,
       query: {
-        source: [
-          "Rechtspraak"
+        DataSources: [
+          "RS"
         ],
-        year: [
+        Date: [
           1969,
           2015
         ],
-        instances: [
+        Instances: [
           "Hoge Raad",
           "Raad van State",
           "Centrale Raad van Beroep",
           "College van Beroep voor het bedrijfsleven",
           "Gerechtshof Arnhem-Leeuwarden"
         ],
-        domains: [
+        Domains: [
           "Not"
         ],
-        doctypes: [
+        Doctypes: [
           "DEC",
           "OPI"
         ],
-        degreesSources: 3,
+        DegreesSources: 3,
         popup: false,
-        liPermission: false,
-        keywords: "test",
-        degreesTargets: 3,
-        eclis: "",
-        articles: ""
+        LiPermission: false,
+        Keywords: "test",
+        DegreesTargets: 3,
+        Eclis: "",
+        Articles: ""
       },
     }
   })
@@ -507,30 +507,16 @@ const AppContainer = ({
           draft.queryBuilder.visible = false
         })}
         onCreate={async (query) => {
-          let cases = await API.listCases({
-            DataSources: ["RS"],
-            Keywords: "test",
-            Articles: "",
-            Eclis: "",
-            DegreesSources: 3,
-            DegreesTargets: 3,
-            DateStart: "1796-01-11",
-            DateEnd: "2100-01-14",
-            Instances: [""],
-            Domains: [""],
-            Doctypes: ["DEC", "OPI"],
-            LiPermission: false
-          })
+          console.log(query)
 
-          console.log(cases)
+          let cases = await API.listCases(query)
+
           let casesData = prepareData(cases)
-
           console.log(casesData)
+          
           controller.update((draft) => {
-            console.log(controllerProps.nodes, controllerProps.edges)
             draft.nodes = casesData.nodes
             draft.edges = casesData.edges
-            console.log(controllerProps.nodes, controllerProps.edges)
           })
 
           // console.log(controllerProps)

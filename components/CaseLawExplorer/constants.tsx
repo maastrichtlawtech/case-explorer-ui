@@ -106,32 +106,37 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
       ],
       additionalProperties: false,
       properties: {
-        source: {
+        DataSources: {
           type: 'array',
           title: 'Data sources',
           uniqueItems: true,
           items: {
             enum: [
-              'Rechtspraak',
+              'RS',
               'ECHR',
+              'Eurlex'
+            ],
+            enumNames: [
+              'Rechtspraak',
+              'European Court of Human Rights',
               'Eurlex'
             ],
             type: 'string'
           },
         },
-        eclis: {
+        Eclis: {
           type: 'string',
           title: 'ECLIs'
         },
-        keywords: {
+        Keywords: {
           type: 'string',
           title: 'Keywords'
         },
-        articles: {
+        Articles: {
           type: 'string',
           title: 'Articles'
         },
-        year: {
+        Date: {
           type: 'array',
           title: 'Date',
           items: {
@@ -140,19 +145,19 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
           minimum: 1969,
           maximum: 2015,
         },
-        degreesSources: {
+        DegreesSources: {
           type: 'integer',
           title: 'Degrees Sources',
           minimum: 1,
           maximum: 5,
         },
-        degreesTargets: {
+        DegreesTargets: {
           type: 'integer',
           title: 'Degrees Targets',
           minimum: 1,
           maximum: 5,
         },
-        instances: {
+        Instances: {
           type: 'array',
           title: 'Instances',
           uniqueItems: true,
@@ -167,7 +172,7 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
             type: 'string'
           },
         },
-        domains: {
+        Domains: {
           type: 'array',
           title: 'Domains',
           uniqueItems: true,
@@ -180,7 +185,7 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
             type: 'string'
           },
         },
-        doctypes: {
+        Doctypes: {
           type: 'array',
           title: 'Document types',
           uniqueItems: true,
@@ -192,7 +197,7 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
             type: 'string'
           },
         },
-        liPermission: {
+        LiPermission: {
           type: 'boolean',
           title: 'LI Permission',
         },
@@ -203,7 +208,7 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
       },
     },
     uiSchema: {
-      'year': {
+      'Date': {
         'ui:field': SliderUIField,
       },
       // 'degreesSources': {
