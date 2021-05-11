@@ -1,0 +1,15 @@
+{
+  "permissions": {},
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "dataaccesslayer",
+      "version": 7
+    },
+    {
+      "type": "ProjectLayer",
+      "resourceName": "globalsettingslayer",
+      "version": 1
+    }
+  ]
+}
