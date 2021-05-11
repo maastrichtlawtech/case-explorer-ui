@@ -1,4 +1,6 @@
 import React from 'react'
+import Form from '@rjsf/material-ui'
+import { getFetchSchema } from './constants'
 import { Modal, Button, Box, Typography, TextField, Paper} from '@material-ui/core'
 
 export type QueryBuilderProps = {
@@ -40,7 +42,8 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         flexDirection: 'column',
         width: '80%',
         height: '80%',
-        padding: 10
+        padding: 10,
+        overflow: 'scroll'
       }}
       >
         <Box 
@@ -56,25 +59,14 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         <Box
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-            height: '80%',
+            flexDirection: 'column'
           }}
         >
-          <TextField 
-            label="QueryType"
-            onChange={(e)=> setState({...state, type: e.target.value})}
-            value={state.type}
-          />
-          <TextField 
-            label="QueryValue"
-            onChange={(e)=> setState({...state, value: e.target.value})}
-            value={state.value}
-          />
-          <TextField 
-            label="QueryMode"
-            onChange={(e)=> setState({...state, mode: e.target.value})}
-            value={state.mode}
+          <Form 
+            schema={getFetchSchema({onPopupPress: () => console.log('eyyyy')}).schema}
+            uiSchema={getFetchSchema({onPopupPress: () => console.log('eyyyy')}).uiSchema}
+            onChange={e => console.log(e.formData)}
+            formData={query}
           />
         </Box>
         <Box

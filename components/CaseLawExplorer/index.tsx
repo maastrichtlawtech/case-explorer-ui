@@ -181,23 +181,23 @@ const AppContainer = ({
   const FILTER_SCHEMA = React.useMemo(() => getFilterSchema(), [])
   const FETCH_SCHEMA = React.useMemo(() => getFetchSchema({
     onPopupPress: async () => {
-      let cases = await API.listCases({
-        DataSources: ["RS"],
-        Keywords: "test",
-        Articles: "",
-        Eclis: "",
-        DegreesSources: 3,
-        DegreesTargets: 3,
-        DateStart: "1796-01-11",
-        DateEnd: "2100-01-14",
-        Instances: [""],
-        Domains: [""],
-        Doctypes: ["DEC", "OPI"],
-        LiPermission: false
+      // let cases = await API.listCases({
+      //   DataSources: ["RS"],
+      //   Keywords: "test",
+      //   Articles: "",
+      //   Eclis: "",
+      //   DegreesSources: 3,
+      //   DegreesTargets: 3,
+      //   DateStart: "1796-01-11",
+      //   DateEnd: "2100-01-14",
+      //   Instances: [""],
+      //   Domains: [""],
+      //   Doctypes: ["DEC", "OPI"],
+      //   LiPermission: false
 
-      })
+      // })
 
-      console.log(cases);
+      // console.log(cases);
 
       updateState((draft) => {
         draft.queryBuilder.visible = true
@@ -214,7 +214,36 @@ const AppContainer = ({
   const [state, updateState] = useImmer({
     queryBuilder: {
       visible: false,
-      query: {},
+      query: {
+        source: [
+          "Rechtspraak"
+        ],
+        year: [
+          1969,
+          2015
+        ],
+        instances: [
+          "Hoge Raad",
+          "Raad van State",
+          "Centrale Raad van Beroep",
+          "College van Beroep voor het bedrijfsleven",
+          "Gerechtshof Arnhem-Leeuwarden"
+        ],
+        domains: [
+          "Not"
+        ],
+        doctypes: [
+          "DEC",
+          "OPI"
+        ],
+        degreesSources: 3,
+        popup: false,
+        liPermission: false,
+        keywords: "test",
+        degreesTargets: 3,
+        eclis: "",
+        articles: ""
+      },
     }
   })
   const [controllerProps, controller] = useController({
