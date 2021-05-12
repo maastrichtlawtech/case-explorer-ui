@@ -13,17 +13,20 @@ Amplify.configure({
   "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y"
 });
 
-const runQuery = async ()=> {
-  const result = await API.complexQuery({
 
-  })
-  console.log('API RESULT: ', result)
-}
 
 // runQuery()
 
 const App = () => {
-  
+  React.useEffect(() => {
+    const runQuery = async ()=> {
+      const result = await API.complexQuery({
+    
+      })
+      console.log('API RESULT: ', result)
+    }
+    runQuery()
+  }, [])
   return (
     <div>
       {/* <AmplifySignOut /> */}
