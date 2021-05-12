@@ -8,7 +8,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@aws-amplify/ui-react": "1.1.0",
+    "@aws-amplify/ui-components": "^1.3.0",
+    "@aws-amplify/ui-react": "^1.1.0",
     "@emotion/react": "11.1.5",
     "@emotion/styled": "11.3.0",
     "@material-ui/core": "5.0.0-alpha.28",
@@ -16,7 +17,7 @@
     "@rjsf/core": "2.5.1",
     "@rjsf/material-ui": "2.5.1",
     "@rjsf/semantic-ui": "2.5.1",
-    "aws-amplify": "3.3.18",
+    "aws-amplify": "^4.0.0",
     "colay": "0.0.36",
     "colay-ui": "0.0.88",
     "expo": "~39.0.2",
@@ -26,7 +27,7 @@
     "react-beautiful-dnd": "13.1.0",
     "react-dom": "^17.0.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
-    "react-native-web": "~0.13.12",
+    "react-native-web": "^0.16.2",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "2.0.3",
     "to-json-schema": "0.2.5"
