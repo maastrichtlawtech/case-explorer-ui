@@ -1,14 +1,6 @@
 import Amplify, { API } from "aws-amplify";
 // import awsExports from "./aws-exports";
 
-Amplify.configure({
-  "aws_project_region": "eu-central-1",
-  "aws_appsync_graphqlEndpoint": "https://culpdi4smbeqtjyiqaqxusuv3q.appsync-api.eu-central-1.amazonaws.com/graphql",
-  "aws_appsync_region": "eu-central-1",
-  "aws_appsync_authenticationType": "API_KEY",
-  "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y"
-});
-
 const API_AUTH_MODE = {
   API_KEY: 'API_KEY'
 } as const
