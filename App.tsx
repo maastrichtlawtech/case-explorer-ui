@@ -8,17 +8,19 @@ import awsconfig from './src/aws-exports';
 
 Amplify.configure(awsconfig);
 
-const runQuery = async ()=> {
-  const result = await API.getElementData({
-    "id": "ECLI:NL:HR:2012:BV5128"
-  })
-  console.log('API RESULT: ', result)
-}
 
 // runQuery()
 
 const App = () => {
-  
+  React.useEffect(() => {
+    const runQuery = async ()=> {
+      const result = await API.complexQuery({
+    
+      })
+      console.log('API RESULT: ', result)
+    }
+    runQuery()
+  }, [])
   return (
     <div>
       {/* <AmplifySignOut /> */}
