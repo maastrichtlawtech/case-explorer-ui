@@ -31,8 +31,11 @@
         },
         "elasticsearchindexer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/elasticsearchindexer-6d78793047336c764a4f-build.zip"
+          "s3Key": "amplify-builds/elasticsearchindexer-3942374d71626a757469-build.zip"
         }
+      },
+      "auth": {
+        "caseexplorerui595d4daa": {}
       }
     },
     "nonCFNdata": {

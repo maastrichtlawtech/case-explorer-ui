@@ -95,5 +95,13 @@
         }
       ]
     }
+  },
+  "auth": {
+    "caseexplorerui595d4daa": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
   }
 }
