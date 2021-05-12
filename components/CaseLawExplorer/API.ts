@@ -61,6 +61,10 @@ const GET_ELEMENT_DATA = `query GetElementData($id: String) {
   }
 }`
 
+const TEST_AUTH = `query TestAuth {
+  testAuth()
+}`
+
 type listCasesVariables = {
   DataSources: string[];
 }
@@ -146,5 +150,20 @@ export async function getElementData(variables: GetElementDataVariables) {
     // }))
   } catch (err) {
     console.log('error getElementData node:', err)
+  }
+}
+
+
+export async function testAuth() {
+  try {
+    const elementDataResult = await API.graphql({
+      query: TEST_AUTH,
+      // authMode: API_AUTH_MODE.API_KEY,
+      // variables
+    })
+    const result = elementDataResult.data.testAuth
+    return result
+  } catch (err) {
+    console.log('error testAuth:', err)
   }
 }
