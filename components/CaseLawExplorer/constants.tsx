@@ -95,6 +95,7 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
     onPopupPress
   } = props
   return {
+    children: <div></div>,
     schema: {
       title: 'Fetch Data',
       type: 'object',
@@ -106,103 +107,103 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
       ],
       additionalProperties: false,
       properties: {
-        DataSources: {
-          type: 'array',
-          title: 'Data sources',
-          uniqueItems: true,
-          items: {
-            enum: [
-              'RS',
-              'ECHR',
-              'Eurlex'
-            ],
-            enumNames: [
-              'Rechtspraak',
-              'European Court of Human Rights',
-              'Eurlex'
-            ],
-            type: 'string'
-          },
-        },
-        Eclis: {
-          type: 'string',
-          title: 'ECLIs'
-        },
-        Keywords: {
-          type: 'string',
-          title: 'Keywords'
-        },
-        Articles: {
-          type: 'string',
-          title: 'Articles'
-        },
-        Date: {
-          type: 'array',
-          title: 'Date',
-          items: {
-            type: 'number',
-          },
-          minimum: 1969,
-          maximum: 2015,
-        },
-        DegreesSources: {
-          type: 'integer',
-          title: 'Degrees Sources',
-          minimum: 1,
-          maximum: 5,
-        },
-        DegreesTargets: {
-          type: 'integer',
-          title: 'Degrees Targets',
-          minimum: 1,
-          maximum: 5,
-        },
-        Instances: {
-          type: 'array',
-          title: 'Instances',
-          uniqueItems: true,
-          items: {
-            enum: [
-              'Hoge Raad',
-              'Raad van State',
-              'Centrale Raad van Beroep',
-              'College van Beroep voor het bedrijfsleven',
-              'Gerechtshof Arnhem-Leeuwarden'
-            ],
-            type: 'string'
-          },
-        },
-        Domains: {
-          type: 'array',
-          title: 'Domains',
-          uniqueItems: true,
-          items: {
-            enum: [
-              'Not',
-              'Sure',
-              'What'
-            ],
-            type: 'string'
-          },
-        },
-        Doctypes: {
-          type: 'array',
-          title: 'Document types',
-          uniqueItems: true,
-          items: {
-            enum: [
-              'DEC',
-              'OPI'
-            ],
-            type: 'string'
-          },
-        },
-        LiPermission: {
-          type: 'boolean',
-          title: 'LI Permission',
-        },
+        // DataSources: {
+        //   type: 'array',
+        //   title: 'Data sources',
+        //   uniqueItems: true,
+        //   items: {
+        //     enum: [
+        //       'RS',
+        //       'ECHR',
+        //       'Eurlex'
+        //     ],
+        //     enumNames: [
+        //       'Rechtspraak',
+        //       'European Court of Human Rights',
+        //       'Eurlex'
+        //     ],
+        //     type: 'string'
+        //   },
+        // },
+        // Eclis: {
+        //   type: 'string',
+        //   title: 'ECLIs'
+        // },
+        // Keywords: {
+        //   type: 'string',
+        //   title: 'Keywords'
+        // },
+        // Articles: {
+        //   type: 'string',
+        //   title: 'Articles'
+        // },
+        // Date: {
+        //   type: 'array',
+        //   title: 'Date',
+        //   items: {
+        //     type: 'number',
+        //   },
+        //   minimum: 1969,
+        //   maximum: 2015,
+        // },
+        // DegreesSources: {
+        //   type: 'integer',
+        //   title: 'Degrees Sources',
+        //   minimum: 1,
+        //   maximum: 5,
+        // },
+        // DegreesTargets: {
+        //   type: 'integer',
+        //   title: 'Degrees Targets',
+        //   minimum: 1,
+        //   maximum: 5,
+        // },
+        // Instances: {
+        //   type: 'array',
+        //   title: 'Instances',
+        //   uniqueItems: true,
+        //   items: {
+        //     enum: [
+        //       'Hoge Raad',
+        //       'Raad van State',
+        //       'Centrale Raad van Beroep',
+        //       'College van Beroep voor het bedrijfsleven',
+        //       'Gerechtshof Arnhem-Leeuwarden'
+        //     ],
+        //     type: 'string'
+        //   },
+        // },
+        // Domains: {
+        //   type: 'array',
+        //   title: 'Domains',
+        //   uniqueItems: true,
+        //   items: {
+        //     enum: [
+        //       'Not',
+        //       'Sure',
+        //       'What'
+        //     ],
+        //     type: 'string'
+        //   },
+        // },
+        // Doctypes: {
+        //   type: 'array',
+        //   title: 'Document types',
+        //   uniqueItems: true,
+        //   items: {
+        //     enum: [
+        //       'DEC',
+        //       'OPI'
+        //     ],
+        //     type: 'string'
+        //   },
+        // },
+        // LiPermission: {
+        //   type: 'boolean',
+        //   title: 'LI Permission',
+        // },
         popup: {
-          title: 'More Settings',
+          title: 'Build Query',
           type: 'boolean',
         },
       },

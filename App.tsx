@@ -1,7 +1,9 @@
 import React from 'react';
 import GraphEditor from "./components/CaseLawExplorer";
 import Amplify  from "aws-amplify";
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+import * as API from './components/CaseLawExplorer/API';
+
 
 Amplify.configure({
   "aws_project_region": "eu-central-1",
@@ -11,11 +13,21 @@ Amplify.configure({
   "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y"
 });
 
+const runQuery = async ()=> {
+  const result = await API.complexQuery({
+
+  })
+  console.log('API RESULT: ', result)
+}
+
+// runQuery()
+
 const App = () => {
+  
   return (
     <div>
-      <GraphEditor />
       {/* <AmplifySignOut /> */}
+      <GraphEditor />
     </div>
   )
  }
