@@ -1,21 +1,16 @@
 import React from 'react';
 import GraphEditor from "./components/CaseLawExplorer";
-import Amplify  from "aws-amplify";
+import Amplify, { Auth }  from "aws-amplify";
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import * as API from './components/CaseLawExplorer/API';
+import awsconfig from './src/aws-exports';
 
 
-Amplify.configure({
-  "aws_project_region": "eu-central-1",
-  "aws_appsync_graphqlEndpoint": "https://culpdi4smbeqtjyiqaqxusuv3q.appsync-api.eu-central-1.amazonaws.com/graphql",
-  "aws_appsync_region": "eu-central-1",
-  "aws_appsync_authenticationType": "API_KEY",
-  "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y"
-});
+Amplify.configure(awsconfig);
 
 const runQuery = async ()=> {
-  const result = await API.complexQuery({
-
+  const result = await API.getElementData({
+    "id": "ECLI:NL:HR:2012:BV5128"
   })
   console.log('API RESULT: ', result)
 }
