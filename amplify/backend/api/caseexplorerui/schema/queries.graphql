@@ -17,6 +17,10 @@ type Query {
     Ecli: String,
     LiPermission: Boolean
   ): Node @function(name: "datafetcher-${env}")
+  testAuth(
+    Ecli: String,
+    LiPermission: Boolean
+  ): Node @function(name: "test-${env}")
 }
 
 type Network {
@@ -35,4 +39,3 @@ type Edge {
     target: String
     data: AWSJSON
 }
-

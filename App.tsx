@@ -14,8 +14,8 @@ Amplify.configure(awsconfig);
 const App = () => {
   React.useEffect(() => {
     const runQuery = async ()=> {
-      const result = await API.complexQuery({
-    
+      const result = await API.testAuth({
+        "id": "ECLI:NL:HR:2012:BV5128"
       })
       console.log('API RESULT: ', result)
     }

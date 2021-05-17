@@ -52,6 +52,14 @@ export const fetchNodeData = /* GraphQL */ `
     }
   }
 `;
+export const testAuth = /* GraphQL */ `
+  query TestAuth($Ecli: String, $LiPermission: Boolean) {
+    testAuth(Ecli: $Ecli, LiPermission: $LiPermission) {
+      id
+      data
+    }
+  }
+`;
 export const getCaselawV6 = /* GraphQL */ `
   query GetCaselawV6($ecli: String!, $ItemType: String!) {
     getCaselawV6(ecli: $ecli, ItemType: $ItemType) {

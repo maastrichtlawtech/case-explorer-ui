@@ -61,8 +61,11 @@ const GET_ELEMENT_DATA = `query GetElementData($id: String) {
   }
 }`
 
-const TEST_AUTH = `query TestAuth {
-  testAuth()
+const TEST_AUTH = `query TestAuth($id: String) {
+  testAuth(Ecli: $id, LiPermission: true) {
+    data
+    id
+  }
 }`
 
 type listCasesVariables = {
@@ -154,15 +157,15 @@ export async function getElementData(variables: GetElementDataVariables) {
 }
 
 
-export async function testAuth() {
+export async function testAuth(variables: GetElementDataVariables) {
   try {
     const elementDataResult = await API.graphql({
       query: TEST_AUTH,
       // authMode: API_AUTH_MODE.API_KEY,
-      // variables
+      variables
     })
-    const result = elementDataResult.data.testAuth
-    return result
+    const result = elementDataResult.data.testAuth.data
+    return result ? JSON.parse(result) : {}
   } catch (err) {
     console.log('error testAuth:', err)
   }

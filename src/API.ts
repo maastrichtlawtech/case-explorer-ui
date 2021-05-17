@@ -291,6 +291,19 @@ export type FetchNodeDataQuery = {
   } | null,
 };
 
+export type TestAuthQueryVariables = {
+  Ecli?: string | null,
+  LiPermission?: boolean | null,
+};
+
+export type TestAuthQuery = {
+  testAuth?:  {
+    __typename: "Node",
+    id?: string | null,
+    data?: string | null,
+  } | null,
+};
+
 export type GetCaselawV6QueryVariables = {
   ecli?: string,
   ItemType?: string,
