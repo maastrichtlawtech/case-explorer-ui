@@ -4,16 +4,9 @@ import Amplify  from "aws-amplify";
 import { Button }  from "@material-ui/core";
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import * as API from './components/CaseLawExplorer/API';
+import awsconfig from './src/aws-exports';
 
-
-Amplify.configure({
-  "aws_project_region": "eu-central-1",
-  "aws_appsync_graphqlEndpoint": "https://culpdi4smbeqtjyiqaqxusuv3q.appsync-api.eu-central-1.amazonaws.com/graphql",
-  "aws_appsync_region": "eu-central-1",
-  "aws_appsync_authenticationType": "API_KEY",
-  "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y"
-});
-
+Amplify.configure(awsconfig);
 
 
 // runQuery()

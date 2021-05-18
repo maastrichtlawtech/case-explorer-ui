@@ -35,11 +35,11 @@
         },
         "test": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/test-4534757a3157734a3132-build.zip"
+          "s3Key": "amplify-builds/test-56507636527979627853-build.zip"
         }
       },
       "auth": {
-        "caseexplorerui7e3022c8": {}
+        "caseexplorerui50cf907150cf9071": {}
       }
     },
     "nonCFNdata": {

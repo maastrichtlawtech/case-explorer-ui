@@ -1,5 +1,11 @@
 {
   "AppSyncApiName": "caseexplorerui",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authcaseexplorerui50cf907150cf9071",
+      "Outputs.UserPoolId"
+    ]
+  }
 }
