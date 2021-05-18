@@ -34,11 +34,10 @@ def handler(event, context):
     
     user_id = ''
     if "identity" in event:
-        user_id = event['identity']['claims']['sub']
+        user_id = event['identity']['claims']['username']
     
     return {"id": "test", "data": {
         "ecli": format_node_data(item)['id'],
-        "cog_id": cog_id,
         "pool_id": user_pool_id,
         "event": event,
         "user_id": user_id
