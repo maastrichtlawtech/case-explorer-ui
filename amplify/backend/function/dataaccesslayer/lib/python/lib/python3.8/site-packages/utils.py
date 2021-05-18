@@ -1,5 +1,14 @@
 import warnings
 
+def get_user_authorization(event):
+    authorized = False
+    if "identity" in event:
+        user_id = event['identity']['claims']['username']
+        if user_id.startswith('google'):  # @TODO: adjust to SURFconext user group prefix
+            authorized = True
+    return authorized
+
+
 def format_node_data(item):
     """
     formats DynamoDB dict to node data type, handling replacements of Rechtspraak data with legal intelligence data

@@ -15,7 +15,7 @@ import time
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
 from clients.elasticsearch_client import ElasticsearchClient
 from clients.dynamodb_client import DynamodbClient
-from utils import get_key, format_node_data, verify_input_string_list
+from utils import get_key, format_node_data, verify_input_string_list, get_user_authorization
 from attributes import NODE_ESSENTIAL, NODE_ESSENTIAL_LI, KEYWORD_SEARCH, KEYWORD_SEARCH_LI, ARTICLE_SEARCH
 from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
 
@@ -47,8 +47,9 @@ def handler(event, context):
     search_params = event['arguments'].copy()
     attributes = NODE_ESSENTIAL
 
-    # 1. CHECK AUTHORIZATION
-    # @TODO
+
+    # 1. CHECK USER AUTHORIZATION
+    authorized_user = get_user_authorization(event)
     
 
     # 2. CHECK INPUT VALIDITY
@@ -65,15 +66,15 @@ def handler(event, context):
     node_eclis, searched_dynamodb = filter_dynamodb(search_params)
 
     # add li entries if permission given
-    if search_params['LiPermission']:
+    if authorized_user:
         attributes = NODE_ESSENTIAL_LI
-        node_eclis_li, _ = filter_dynamodb(search_params, li_permission=True)
+        node_eclis_li, _ = filter_dynamodb(search_params, authorized=True)
         node_eclis = node_eclis.union(node_eclis_li)
 
     # b. filter selected cases by keyword match if keywords given and filters did not return no matches
     if (search_params['Keywords'] != '' or search_params['Articles'] != '') and not (node_eclis == set() and searched_dynamodb):
         print('in ES')
-        es_query = build_elasticsearch_query(search_params['Keywords'], search_params['Articles'], node_eclis, search_params['LiPermission'])
+        es_query = build_elasticsearch_query(search_params['Keywords'], search_params['Articles'], node_eclis, authorized_user)
         result = es_client.execute(es_query, ['ecli'])
         node_eclis = {item['_source']['ecli'] for item in result}
 
@@ -99,13 +100,13 @@ def handler(event, context):
     #return {'nodes': len(nodes), 'edges': len(edges)}  # @TODO: only for testing
 
 
-def build_elasticsearch_query(keywords, articles, eclis, li_permission):
+def build_elasticsearch_query(keywords, articles, eclis, authorized):
     """
     Builds Elasticsearch query to filter by doc_source_eclis if provided and match keywords and articles.
     :param keywords: string of keywords in simple query string syntax*
     :param articles: string of legal provisions in simple query string syntax*
     :param eclis: list of eclis
-    :param li_permission: boolean flag whether or not permission to access Legal Intelligence data is given
+    :param authorized: boolean flag whether or not permission to access Legal Intelligence data is given
     :return: dict of Elasticsearch query in Query DSL
     * simple query string syntax: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
     """
@@ -114,7 +115,7 @@ def build_elasticsearch_query(keywords, articles, eclis, li_permission):
         filters.append({'terms': {'ecli': list(eclis)}})
     if keywords != '': 
         fields = KEYWORD_SEARCH
-        if li_permission:
+        if authorized:
             fields = KEYWORD_SEARCH_LI
         filters.append({
                 'simple_query_string': {
@@ -133,17 +134,17 @@ def build_elasticsearch_query(keywords, articles, eclis, li_permission):
     return {'bool': {'filter': filters}}
 
 
-def filter_dynamodb(filters, li_permission=False):
+def filter_dynamodb(filters, authorized=False):
     """
     Handles querying of data to match all given input filters and keywords:
     - Queries DynamoDB by selecting the most suitable index for the given input filters and looping through all filters.
     - Queries Elasticsearch to match selected cases to keywords.
     :param s_params: dictionary of search filters
-    :param li_permission: boolean flag whether or not permission to access Legal Intelligence data is given
+    :param authorized: boolean flag whether or not permission to access Legal Intelligence data is given
     :return: set of DocSourceIds of cases matching search input
     """
  
-    if li_permission:
+    if authorized:
         domain_name = 'DOM_LI'
         domains_name = 'domains_li'
         instance_name = 'instance_li'

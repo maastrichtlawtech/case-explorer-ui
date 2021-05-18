@@ -5,6 +5,14 @@
         "Query"
       ]
     },
+    "auth": {
+      "caseexplorerui50cf907150cf9071": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
     "storage": {
       "CaselawV6:@model(appsync)": [
         "read"
@@ -15,7 +23,7 @@
     {
       "type": "ProjectLayer",
       "resourceName": "dataaccesslayer",
-      "version": 7
+      "version": 8
     },
     {
       "type": "ProjectLayer",
