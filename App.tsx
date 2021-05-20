@@ -6,6 +6,7 @@ import { withAuthenticator  } from '@aws-amplify/ui-react';
 import * as API from './components/CaseLawExplorer/API';
 // import awsconfig from './src/aws-exports';
 
+// Amplify.configure(awsconfig);
 Amplify.configure({
   "aws_project_region": "eu-central-1",
   "aws_appsync_graphqlEndpoint": "https://culpdi4smbeqtjyiqaqxusuv3q.appsync-api.eu-central-1.amazonaws.com/graphql",
