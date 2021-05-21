@@ -37,7 +37,7 @@ const AppContainer = () => {
     .shadowRoot?.children[0].getElementsByTagName('amplify-oauth-button')[0]
     .shadowRoot?.children[0].getElementsByTagName('button')[0]
     .click()
-    }, 400 )
+    }, 800 )
   }, [])
   return (
     <AppContent/>
