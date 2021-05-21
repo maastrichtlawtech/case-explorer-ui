@@ -12,6 +12,9 @@
       "AmplifyAppId": "dbvgwmy1tjq9d"
     },
     "categories": {
+      "auth": {
+        "caseexplorerui50cf907150cf9071": {}
+      },
       "function": {
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
@@ -21,13 +24,13 @@
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
           "s3Key": "amplify-builds/dataaccesslayer-build.zip"
         },
-        "globalsettingslayer": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/globalsettingslayer-build.zip"
-        },
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
           "s3Key": "amplify-builds/datafetcher-4552584946536f4d3372-build.zip"
+        },
+        "globalsettingslayer": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
+          "s3Key": "amplify-builds/globalsettingslayer-build.zip"
         },
         "elasticsearchindexer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
@@ -37,9 +40,6 @@
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
           "s3Key": "amplify-builds/test-425177794c526c377271-build.zip"
         }
-      },
-      "auth": {
-        "caseexplorerui50cf907150cf9071": {}
       }
     },
     "nonCFNdata": {
