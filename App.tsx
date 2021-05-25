@@ -32,22 +32,26 @@ const AppContainer = () => {
   React.useEffect(() => {
     const index = detectBrowser() === 'Firefox' ? 1 : 0
     setTimeout(()=>{
-      const el1 = document.getElementsByTagName('amplify-authenticator')[0]
-    .shadowRoot?.children
-    const el2 = [...el1].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-sign-in')[0]
-    .shadowRoot?.children
-    const el3 = [...el2].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-federated-buttons')[0]
-    .shadowRoot?.children
-    const el4 = [...el3].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-oauth-button')[0]
-    .shadowRoot?.children
-    const button = [...el4].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('button')[0]
-    button.click()
-    //   const button = document.getElementsByTagName('amplify-authenticator')[0]
-    // .shadowRoot?.lastChild.getElementsByTagName('amplify-sign-in')[0]
-    // .shadowRoot?.lastChild.getElementsByTagName('amplify-federated-buttons')[0]
-    // ?.shadowRoot//?.lastChild//.getElementsByTagName('amplify-oauth-button')[0]
-    // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
-    // // .click()
+      try {
+        const el1 = document.getElementsByTagName('amplify-authenticator')[0]
+        .shadowRoot?.children
+        const el2 = [...el1].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-sign-in')[0]
+        .shadowRoot?.children
+        const el3 = [...el2].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-federated-buttons')[0]
+        .shadowRoot?.children
+        const el4 = [...el3].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-oauth-button')[0]
+        .shadowRoot?.children
+        const button = [...el4].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('button')[0]
+        button.click()
+        //   const button = document.getElementsByTagName('amplify-authenticator')[0]
+        // .shadowRoot?.lastChild.getElementsByTagName('amplify-sign-in')[0]
+        // .shadowRoot?.lastChild.getElementsByTagName('amplify-federated-buttons')[0]
+        // ?.shadowRoot//?.lastChild//.getElementsByTagName('amplify-oauth-button')[0]
+        // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
+        // // .click()
+      } catch (error) {
+        
+      }
     }, 400 )
   }, [])
   return (

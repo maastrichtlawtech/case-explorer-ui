@@ -368,11 +368,11 @@ const AppContainer = ({
               const elementList = element.isNode() ? draft.nodes : draft.edges
               const itemDraft = elementList.find((elementItem) => elementItem.id === selectedItem.id)
               itemDraft.data = elementData
-              draft.isLoading = false
+              // draft.isLoading = false
             })
           } else {
             update((draft) => {
-              draft.isLoading = false
+              // draft.isLoading = false
             })
           }
           break
