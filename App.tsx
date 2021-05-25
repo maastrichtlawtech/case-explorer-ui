@@ -1,10 +1,11 @@
 import React from 'react';
 import GraphEditor from "./components/CaseLawExplorer";
 import Amplify  from "aws-amplify";
-import { Button }  from "@material-ui/core";
+import { Button, CircularProgress }  from "@material-ui/core";
 import { withAuthenticator  } from '@aws-amplify/ui-react';
 import * as API from './components/CaseLawExplorer/API';
 import awsconfig from './src/aws-exports';
+import { Auth } from 'aws-amplify';
 
 Amplify.configure(awsconfig);
 
@@ -27,32 +28,83 @@ const App = () => {
 }
 
 const AppContent = withAuthenticator(App);
-
+// const AppContainer = () => {
+//   const [user, setUser] = React.useState()
+//   React.useEffect(() => {
+//     const call = async () => {
+//       try {
+//         const authUser = await Auth.currentAuthenticatedUser()
+//         setUser(authUser)
+//       } catch (error) {
+//         Auth.federatedSignIn({
+//           provider: 'Google'
+//         })
+//       }
+//     }
+//     call()
+//     // const index = detectBrowser() === 'Firefox' ? 1 : 0
+//     // setTimeout(()=>{
+//     //   try {
+//     //     const el1 = document.getElementsByTagName('amplify-authenticator')[0]
+//     //     .shadowRoot?.children
+//     //     const el2 = [...el1].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-sign-in')[0]
+//     //     .shadowRoot?.children
+//     //     const el3 = [...el2].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-federated-buttons')[0]
+//     //     .shadowRoot?.children
+//     //     const el4 = [...el3].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-oauth-button')[0]
+//     //     .shadowRoot?.children
+//     //     const button = [...el4].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('button')[0]
+//     //     button.click()
+//     //     //   const button = document.getElementsByTagName('amplify-authenticator')[0]
+//     //     // .shadowRoot?.lastChild.getElementsByTagName('amplify-sign-in')[0]
+//     //     // .shadowRoot?.lastChild.getElementsByTagName('amplify-federated-buttons')[0]
+//     //     // ?.shadowRoot//?.lastChild//.getElementsByTagName('amplify-oauth-button')[0]
+//     //     // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
+//     //     // // .click()
+//     //   } catch (error) {
+        
+//     //   }
+//     // }, 400 )
+//   }, [])
+//   return (
+//     <AppContent/>
+//   )
+// }
 const AppContainer = () => {
   React.useEffect(() => {
     const index = detectBrowser() === 'Firefox' ? 1 : 0
     setTimeout(()=>{
-      try {
-        const el1 = document.getElementsByTagName('amplify-authenticator')[0]
-        .shadowRoot?.children
-        const el2 = [...el1].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-sign-in')[0]
-        .shadowRoot?.children
-        const el3 = [...el2].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-federated-buttons')[0]
-        .shadowRoot?.children
-        const el4 = [...el3].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-oauth-button')[0]
-        .shadowRoot?.children
-        const button = [...el4].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('button')[0]
-        button.click()
-        //   const button = document.getElementsByTagName('amplify-authenticator')[0]
-        // .shadowRoot?.lastChild.getElementsByTagName('amplify-sign-in')[0]
-        // .shadowRoot?.lastChild.getElementsByTagName('amplify-federated-buttons')[0]
-        // ?.shadowRoot//?.lastChild//.getElementsByTagName('amplify-oauth-button')[0]
-        // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
-        // // .click()
-      } catch (error) {
+      const call = async ()=> {
+        try {
+          const authUser = await Auth.currentAuthenticatedUser()
+          console.log('auth', authUser)
+        } catch (error) {
+          console.log( 'er', error)  
+          try {
+            const el1 = document.getElementsByTagName('amplify-authenticator')[0]
+            .shadowRoot?.children
+            const el2 = [...el1].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-sign-in')[0]
+            .shadowRoot?.children
+            const el3 = [...el2].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-federated-buttons')[0]
+            .shadowRoot?.children
+            const el4 = [...el3].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-oauth-button')[0]
+            .shadowRoot?.children
+            const button = [...el4].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('button')[0]
+            button.click()
+            //   const button = document.getElementsByTagName('amplify-authenticator')[0]
+            // .shadowRoot?.lastChild.getElementsByTagName('amplify-sign-in')[0]
+            // .shadowRoot?.lastChild.getElementsByTagName('amplify-federated-buttons')[0]
+            // ?.shadowRoot//?.lastChild//.getElementsByTagName('amplify-oauth-button')[0]
+            // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
+            // // .click()
+          } catch (error) {
+            
+          }
+        }
         
       }
-    }, 400 )
+      call()
+    }, 500 )
   }, [])
   return (
     <AppContent/>

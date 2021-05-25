@@ -132,7 +132,6 @@ const perc2color = (
 const AUTO_CREATED_SCHEMA = {
   schema: createSchema(data.nodes)
 }
-console.log('a', AUTO_CREATED_SCHEMA.schema)
 
 const ActionBarRight = () => (
   <View
@@ -151,16 +150,16 @@ const DataBarHeader = () => {
       const authUser = await Auth.currentAuthenticatedUser()
       setUser(authUser)
     }
-  })
-  console.log('user',user)
+    call()
+  }, [])
   return (
     <View
       style={{ flexDirection: 'row', justifyContent: 'space-between' }}
     >
-      <Typography>Turgay SABA</Typography>
+      <Typography>{user?.attributes?.email}</Typography>
       <Button
         color="secondary"
-        onClick={Auth.signOut}
+        onClick={() => Auth.signOut()}
       >
         Signout
       </Button>
