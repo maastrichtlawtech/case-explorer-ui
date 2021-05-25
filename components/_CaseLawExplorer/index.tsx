@@ -5,9 +5,7 @@ import * as R from 'colay/ramda'
 import {
   useTheme as useMuiTheme,
   ThemeProvider as MuiThemeProvider,
-  createMuiTheme,
-  Button,
-  Typography,
+  createMuiTheme
 } from '@material-ui/core'
 import { View, } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
@@ -25,7 +23,7 @@ import { drawLine } from 'perfect-graph/components/Graphics'
 import defaultData from './data'
 import * as C from 'colay/color'
 import { getFilterSchema, getFetchSchema, VIEW_CONFIG_SCHEMA, RECORDED_EVENTS } from './constants'
-import { EVENT } from 'perfect-graph/constants'
+import { EVENT } from 'perfect-graph/utils/constants'
 import { useController } from 'perfect-graph/plugins/controller'
 import { createSchema } from 'perfect-graph/plugins/createSchema'
 import { getSelectedItemByElement } from 'perfect-graph/utils'
@@ -35,7 +33,7 @@ import { RenderEdge } from './RenderEdge'
 import * as API from './API'
 import { QueryBuilder } from './QueryBuilder'
 // import { Data } from '../../components/Graph/Default'
-import { Auth } from 'aws-amplify'
+
 
 const MUIDarkTheme = createMuiTheme({
   palette: {
@@ -133,40 +131,6 @@ const AUTO_CREATED_SCHEMA = {
   schema: createSchema(data.nodes)
 }
 console.log('a', AUTO_CREATED_SCHEMA.schema)
-
-const ActionBarRight = () => (
-  <View
-    style={{ flexDirection: 'row' }}
-  >
-    <Button>
-      Share
-    </Button>
-  </View>
-)
-
-const DataBarHeader = () => {
-  const [user, setUser] = React.useState({})
-  React.useEffect(() => {
-    const call = async () => {
-      const authUser = await Auth.currentAuthenticatedUser()
-      setUser(authUser)
-    }
-  })
-  console.log('user',user)
-  return (
-    <View
-      style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-    >
-      <Typography>Turgay SABA</Typography>
-      <Button
-        color="secondary"
-        onClick={Auth.signOut}
-      >
-        Signout
-      </Button>
-    </View>
-  )
-}
 const AppContainer = ({
   changeMUITheme,
   ...rest
@@ -293,9 +257,6 @@ const AppContainer = ({
         }
       ]
     },
-    preferencesModal: {
-      // isOpen: true,
-    },
     settingsBar: {
       opened: true,
       // forms: [AUTO_CREATED_SCHEMA,FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
@@ -307,13 +268,11 @@ const AppContainer = ({
       },
     },
     dataBar: {
-      isOpen: true,
+      // opened: true,
       editable: false,
-      header: DataBarHeader,
     },
     actionBar: {
-      isOpen: true,
-      right: ActionBarRight,
+      // opened: true,
       // autoOpen: true,
       eventRecording: false,
       actions: {
@@ -352,7 +311,7 @@ const AppContainer = ({
       } = (element && getSelectedItemByElement(element, draft)) ?? {}
       switch (type) {
         case EVENT.ELEMENT_SELECTED: {
-          // draft.isLoading = true
+          // draft.loading = true
           let elementData = null
           try {
             elementData = await API.getElementData({ id: selectedItem.data.ecli });
@@ -368,11 +327,11 @@ const AppContainer = ({
               const elementList = element.isNode() ? draft.nodes : draft.edges
               const itemDraft = elementList.find((elementItem) => elementItem.id === selectedItem.id)
               itemDraft.data = elementData
-              draft.isLoading = false
+              draft.loading = false
             })
           } else {
             update((draft) => {
-              draft.isLoading = false
+              draft.loading = false
             })
           }
           break
@@ -547,40 +506,32 @@ const AppContainer = ({
         onClose={() => updateState((draft) => {
           draft.queryBuilder.visible = false
         })}
-        onStart={() => {
-          controller.update((draft) => {
-            draft.isLoading = true
-          })
-        }}
-        onError={() => {
-          controller.update((draft) => {
-            draft.isLoading = false
-          })
-        }}
-        onFinish={({ nodes = [], edges= []} = {}) => {
-          controller.update((draft) => {
-            draft.nodes = nodes
-            draft.edges = edges
-            draft.isLoading = false
-            draft.graphConfig!.layout = GraphLayouts['circle']
-          })
-          
-        }}
-        // onCreate={async (query) => {
-        //   let cases = await API.listCases(query)
+        onCreate={async (query) => {
+          console.log(query)
 
-        //   let casesData = prepareData(cases)
-        //   console.log(casesData)
+          let cases = await API.listCases(query)
+
+          let casesData = prepareData(cases)
+          console.log(casesData)
           
-        //   controller.update((draft) => {
-        //     draft.nodes = casesData.nodes
-        //     draft.edges = casesData.edges
-        //   })
-        //   updateState((draft) => {
-        //     draft.queryBuilder.visible = false
-        //     draft.queryBuilder.query = query
-        //   })
-        // }}
+          controller.update((draft) => {
+            draft.nodes = casesData.nodes
+            draft.edges = casesData.edges
+          })
+
+          // console.log(controllerProps)
+          // console.log(defaultData)
+          // console.log(prepareData(defaultData))
+
+          updateState((draft) => {
+            draft.queryBuilder.visible = false
+            draft.queryBuilder.query = query
+
+            // alert(JSON.stringify(query))
+            // const data = API.complexQuery(query)
+            // QueryCallback(query)
+          })
+        }}
       />
     </View>
   )
@@ -591,7 +542,6 @@ const MUI_THEMES = {
   Dark: MUIDarkTheme,
   Light: MUILightTheme,
 }
-
 export default (props: Props) => {
   const [theme, setTheme] = React.useState(MUI_THEMES.Light)
   return (
