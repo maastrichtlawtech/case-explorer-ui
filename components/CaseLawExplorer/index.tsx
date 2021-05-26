@@ -240,24 +240,19 @@ const AppContainer = ({
           2015
         ],
         Instances: [
-          "Hoge Raad",
           "Raad van State",
-          "Centrale Raad van Beroep",
-          "College van Beroep voor het bedrijfsleven",
-          "Gerechtshof Arnhem-Leeuwarden"
         ],
         Domains: [
-          "Not"
+          ""
         ],
         Doctypes: [
           "DEC",
           "OPI"
         ],
-        DegreesSources: 3,
-        popup: false,
+        DegreesSources: 1,
         LiPermission: false,
         Keywords: "test",
-        DegreesTargets: 3,
+        DegreesTargets: 1,
         Eclis: "",
         Articles: ""
       },
@@ -562,9 +557,11 @@ const AppContainer = ({
             draft.nodes = nodes
             draft.edges = edges
             draft.isLoading = false
-            draft.graphConfig!.layout = GraphLayouts['circle']
+            draft.graphConfig!.layout = Graph.Layouts.circle
           })
-          
+          updateState((draft) => {
+            draft.queryBuilder.visible = false
+          })
         }}
         // onCreate={async (query) => {
         //   let cases = await API.listCases(query)
