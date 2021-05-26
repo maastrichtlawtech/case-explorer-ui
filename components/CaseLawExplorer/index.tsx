@@ -8,6 +8,8 @@ import {
   createMuiTheme,
   Button,
   Typography,
+  Backdrop,
+  CircularProgress
 } from '@material-ui/core'
 import { View, } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
@@ -581,6 +583,12 @@ const AppContainer = ({
         //   })
         // }}
       />
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={controllerProps.isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </View>
   )
 }
