@@ -39,6 +39,11 @@ import { QueryBuilder } from './QueryBuilder'
 // import { Data } from '../../components/Graph/Default'
 import { Auth } from 'aws-amplify'
 
+
+export const ACTIONS = {
+  TEST_API: 'TEST_API',
+}
+
 const MUIDarkTheme = createMuiTheme({
   palette: {
     mode: 'dark',
@@ -135,15 +140,7 @@ const AUTO_CREATED_SCHEMA = {
   schema: createSchema(data.nodes)
 }
 
-const ActionBarRight = () => (
-  <View
-    style={{ flexDirection: 'row' }}
-  >
-    <Button>
-      Share
-    </Button>
-  </View>
-)
+
 
 const DataBarHeader = () => {
   const [user, setUser] = React.useState({})
@@ -170,6 +167,7 @@ const DataBarHeader = () => {
 }
 const AppContainer = ({
   changeMUITheme,
+  dispatch,
   ...rest
 }) => {
   const configRef = React.useRef({
@@ -264,6 +262,19 @@ const AppContainer = ({
       },
     }
   })
+  const ActionBarRight = React.useMemo(() => () => (
+    <View
+      style={{ flexDirection: 'row' }}
+    >
+      <Button
+        onClick={() => dispatch({
+          type: ACTIONS.TEST_API
+        })}
+      >
+        Test the API
+      </Button>
+    </View>
+  ), [dispatch])
   const [controllerProps, controller] = useController({
     ...data,
     // events: RECORDED_EVENTS,
