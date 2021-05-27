@@ -40,29 +40,29 @@ const App = () => {
   )
 }
 
-const AppWithAuth = () => {
-  const [authState, setAuthState] = React.useState();
-  const [user, setUser] = React.useState();
+// const AppWithAuth = () => {
+//   const [authState, setAuthState] = React.useState();
+//   const [user, setUser] = React.useState();
 
-    React.useEffect(() => {
-        return onAuthUIStateChange((nextAuthState, authData) => {
-            setAuthState(nextAuthState);
-            setUser(authData)
-        });
-    }, []);
+//     React.useEffect(() => {
+//         return onAuthUIStateChange((nextAuthState, authData) => {
+//             setAuthState(nextAuthState);
+//             setUser(authData)
+//         });
+//     }, []);
 
-  return authState === AuthState.SignedIn && user ? (
-      <App />
-    ) : (
-      <AmplifyAuthenticator>
-        <AmplifySignIn
-          // headerText="My Custom Sign In Text"
-          slot="sign-in"
-        ></AmplifySignIn>
-      </AmplifyAuthenticator>
-  );
-}
-// const AppContent = withAuthenticator(App);
+//   return authState === AuthState.SignedIn && user ? (
+//       <App />
+//     ) : (
+//       <AmplifyAuthenticator>
+//         <AmplifySignIn
+//           // headerText="My Custom Sign In Text"
+//           slot="sign-in"
+//         ></AmplifySignIn>
+//       </AmplifyAuthenticator>
+//   );
+// }
+const AppWithAuth = withAuthenticator(App);
 
 // const AppContainer = () => {
 //   React.useEffect(() => {
