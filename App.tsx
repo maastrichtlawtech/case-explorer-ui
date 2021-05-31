@@ -30,8 +30,10 @@ const awsconfig = {
           "profile",
           "aws.cognito.signin.user.admin"
       ],
-      "redirectSignIn": "http://localhost:19006/,https://dev.dbvgwmy1tjq9d.amplifyapp.com/",
-      "redirectSignOut": "http://localhost:19006/,https://dev.dbvgwmy1tjq9d.amplifyapp.com/",
+      // "redirectSignIn": "http://localhost:19006/",
+      // "redirectSignOut": "http://localhost:19006/",
+      "redirectSignIn": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/", 
+      "redirectSignOut": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/",
       "responseType": "code"
   },
   "federationTarget": "COGNITO_USER_POOLS"
