@@ -20,7 +20,7 @@ type Query {
   testAuth(
     Ecli: String,
     LiPermission: Boolean
-  ): Node @function(name: "test-${env}")
+  ): Node @function(name: "datafetcher-${env}")
 }
 
 type Network {
