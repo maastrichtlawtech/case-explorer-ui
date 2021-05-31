@@ -122,6 +122,20 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "function",
+          "resourceName": "dataaccesslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "globalsettingslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
           "category": "auth",
           "resourceName": "caseexplorerui50cf907150cf9071",
           "attributes": [

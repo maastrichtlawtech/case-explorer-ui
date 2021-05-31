@@ -127,7 +127,14 @@
           ]
         },
         "Runtime": "python3.8",
-        "Layers": [],
+        "Layers": [
+          {
+            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:dataaccesslayer-dev:8"
+          },
+          {
+            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:globalsettingslayer-dev:1"
+          }
+        ],
         "Timeout": "25"
       }
     },

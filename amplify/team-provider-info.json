@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "caseexplorerui50cf907150cf9071": {}
+        "caseexplorerui50cf907150cf9071": {},
+        "userPoolGroups": {}
       },
       "function": {
         "queryhandler": {
@@ -38,7 +39,7 @@
         },
         "test": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/test-425177794c526c377271-build.zip"
+          "s3Key": "amplify-builds/test-6d3442536530485a3036-build.zip"
         }
       }
     },
