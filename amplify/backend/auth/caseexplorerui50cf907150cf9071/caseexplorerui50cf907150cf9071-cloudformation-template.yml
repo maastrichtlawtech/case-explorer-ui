@@ -173,17 +173,21 @@ Parameters:
   authProviders:
     Type: CommaDelimitedList
       
-  hostedUIProviderCreds:
-    Type: String
-  
-            
   oAuthMetadata:
     Type: String
   
             
-            
   
   breakCircularDependency:
+    Type: String
+            
+  hostedUIProviderCreds:
+    Type: String
+  
+            
+            
+  
+  thirdPartyAuth:
     Type: String
             
 Conditions:
