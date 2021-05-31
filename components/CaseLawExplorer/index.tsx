@@ -543,7 +543,7 @@ const AppContainer = ({
         {...controllerProps}
         // {...R.omit(['eventHistory', ])(controllerProps)}
         payload={[configRef.current]}
-        style={{ width: '100%', height: 800, }}
+        style={{ width: '100%', height: 750, }}
         renderNode={(props) => (
           <RenderNode
             {...props}
