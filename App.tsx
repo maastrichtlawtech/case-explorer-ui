@@ -35,7 +35,8 @@ const awsconfig = {
       "responseType": "code"
   },
   "federationTarget": "COGNITO_USER_POOLS"
-}
+};
+
 
 Amplify.configure(awsconfig);
 
