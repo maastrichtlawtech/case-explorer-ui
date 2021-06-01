@@ -14,11 +14,13 @@ type Query {
     LiPermission: Boolean
   ): Network @function(name: "queryhandler-${env}")
   fetchNodeData(
-    Ecli: String
+    Ecli: String,
+    LiPermission: Boolean
   ): Node @function(name: "datafetcher-${env}")
   testAuth(
-    Ecli: String
-  ): Node @function(name: "test-${env}")
+    Ecli: String,
+    LiPermission: Boolean
+  ): Node @function(name: "datafetcher-${env}")
 }
 
 type Network {

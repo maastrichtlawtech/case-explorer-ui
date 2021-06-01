@@ -55,14 +55,14 @@ const LIST_CASES = `query QueryNetworkByUserInput(
 }`
 
 const GET_ELEMENT_DATA = `query GetElementData($id: String) {
-  fetchNodeData(Ecli: $id) {
+  fetchNodeData(Ecli: $id, LiPermission: true) {
     data
     id
   }
 }`
 
 const TEST_AUTH = `query TestAuth($id: String) {
-  testAuth(Ecli: $id) {
+  testAuth(Ecli: $id, LiPermission: true) {
     data
     id
   }
