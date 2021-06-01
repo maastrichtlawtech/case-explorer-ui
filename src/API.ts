@@ -280,7 +280,6 @@ export type QueryNetworkByUserInputQuery = {
 
 export type FetchNodeDataQueryVariables = {
   Ecli?: string | null,
-  LiPermission?: boolean | null,
 };
 
 export type FetchNodeDataQuery = {
@@ -293,7 +292,6 @@ export type FetchNodeDataQuery = {
 
 export type TestAuthQueryVariables = {
   Ecli?: string | null,
-  LiPermission?: boolean | null,
 };
 
 export type TestAuthQuery = {

@@ -28,7 +28,7 @@ const LIST_CASES = `query ListCases {
 }`
 
 const GET_ELEMENT_DATA = `query GetElementData($id: String) {
-  fetchNodeData(Ecli: $id, LiPermission: true) {
+  fetchNodeData(Ecli: $id) {
     data
     id
   }

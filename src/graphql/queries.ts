@@ -45,16 +45,16 @@ export const queryNetworkByUserInput = /* GraphQL */ `
   }
 `;
 export const fetchNodeData = /* GraphQL */ `
-  query FetchNodeData($Ecli: String, $LiPermission: Boolean) {
-    fetchNodeData(Ecli: $Ecli, LiPermission: $LiPermission) {
+  query FetchNodeData($Ecli: String) {
+    fetchNodeData(Ecli: $Ecli) {
       id
       data
     }
   }
 `;
 export const testAuth = /* GraphQL */ `
-  query TestAuth($Ecli: String, $LiPermission: Boolean) {
-    testAuth(Ecli: $Ecli, LiPermission: $LiPermission) {
+  query TestAuth($Ecli: String) {
+    testAuth(Ecli: $Ecli) {
       id
       data
     }
