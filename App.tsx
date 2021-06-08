@@ -47,12 +47,10 @@ const AWS_DEV_CONFIG_OVERRIDE = {
   },
 }
 
-const AWS_CONFIG = AWS_PROD_CONFIG
-// __DEV__
-//   ? R.mergeDeepRight(AWS_PROD_CONFIG, AWS_DEV_CONFIG_OVERRIDE)
-//   : AWS_PROD_CONFIG
+const AWS_CONFIG = __DEV__
+  ? R.mergeDeepRight(AWS_PROD_CONFIG, AWS_DEV_CONFIG_OVERRIDE)
+  : AWS_PROD_CONFIG
 
-console.log(AWS_CONFIG)
 Amplify.configure(AWS_CONFIG);
 
 const runQuery = async ()=> {
@@ -92,24 +90,10 @@ const AppWithAuth = () => {
             setUser(authData)
         });
     }, []);
-    console.log('a', authState, user)
   return  authState === AuthState.SignedIn && user ? (
       <App />
     ) : (
-      <>
         <AmplifyAuthenticator />
-        {
-          <TermsOfService
-          isOpen={!user}
-          onAgree={() => {
-            
-          }}
-          onDisagree={() => {
-            alert('To proceed on signin, you need to accept the Terms of Usage!')
-          }}
-        />
-        }
-      </>
       // <AmplifyAuthenticator>
       //   <AmplifySignIn
       //     // headerText="My Custom Sign In Text"

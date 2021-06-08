@@ -1,20 +1,17 @@
-import React from 'react';
-import {
-  useControllableState
-} from 'colay-ui';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { useAuthState } from '../hooks';
-import { Auth } from 'aws-amplify';
+import React from 'react';
+import { useUser } from './useUser';
 
 type TermsOfServiceProps = {
   onAgree: () => void;
   onDisagree: () => void;
   isOpen?: boolean;
+  user: object
 }
 
 const TERMS_OF_SERVICE_URL = `https://en.wikipedia.org/wiki/Terms_of_service#:~:text=Terms%20of%20service%20(also%20known,to%20use%20the%20offered%20service.`
@@ -23,31 +20,25 @@ export function TermsOfService(props: TermsOfServiceProps) {
   const {
     onAgree,
     onDisagree,
-  } = props
-  const [isOpen, setOpen] = React.useState(true);
-  const [{
     user
-  }] = useAuthState()
-  // React.useEffect(() => {
-  //   const call = async () => {
-  //     try {
-  //       await Auth.currentAuthenticatedUser()
-  //     } catch (error) {
-  //       setOpen(true)
-        
-  //     }
-  //   }
-  //   call()
-  // }, [])
+  } = props
+  const [isOpen, setOpen] = React.useState(false);
+  
   const handleClose = () => {
     setOpen(false);
   };
 
+  React.useEffect(() => { 
+    setTimeout(() => {
+      setOpen(true)
+    }, 1000)
+  }, [])
+
   return (
     <>
       <Dialog
-        open={isOpen && !user}
-        onClose={handleClose}
+        open={isOpen && user?.attributes?.['custom:isOldUser'] !== 'yes'}
+        // onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >

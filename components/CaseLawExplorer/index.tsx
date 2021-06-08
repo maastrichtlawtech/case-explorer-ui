@@ -9,9 +9,10 @@ import {
   Button,
   Typography,
   Backdrop,
-  CircularProgress
+  CircularProgress,
+  Modal
 } from '@material-ui/core'
-import { View, } from 'colay-ui'
+import { View, useControllableState } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
 import {
   DarkTheme,
@@ -36,13 +37,18 @@ import { RenderNode } from './RenderNode'
 import { RenderEdge } from './RenderEdge'
 import * as API from './API'
 import { QueryBuilder } from './QueryBuilder'
+import { HelpModal } from './HelpModal'
+import { TermsOfService } from './TermsOfService'
 // import { Data } from '../../components/Graph/Default'
 import { Auth } from 'aws-amplify'
+import { useUser } from './useUser'
 
 
 export const ACTIONS = {
   TEST_API: 'TEST_API',
 }
+
+const HELP_VIDEO_ID = "OrzMIhLpVps"
 
 const MUIDarkTheme = createMuiTheme({
   palette: {
@@ -143,14 +149,7 @@ const AUTO_CREATED_SCHEMA = {
 
 
 const DataBarHeader = () => {
-  const [user, setUser] = React.useState({})
-  React.useEffect(() => {
-    const call = async () => {
-      const authUser = await Auth.currentAuthenticatedUser()
-      setUser(authUser)
-    }
-    call()
-  }, [])
+  const [user] = useUser()
   return (
     <View
       style={{ flexDirection: 'row', justifyContent: 'space-between' }}
@@ -165,11 +164,13 @@ const DataBarHeader = () => {
     </View>
   )
 }
+
 const AppContainer = ({
   changeMUITheme,
   dispatch,
   ...rest
 }) => {
+  const [user] = useUser()
   const configRef = React.useRef({
     visualization: {
       nodeSize: null,
@@ -260,12 +261,22 @@ const AppContainer = ({
         Eclis: "",
         Articles: ""
       },
+    },
+    helpModal: {
+      isOpen: false,
     }
   })
   const ActionBarRight = React.useMemo(() => () => (
     <View
       style={{ flexDirection: 'row' }}
     >
+      <Button
+        onClick={() => updateState((draft) => {
+          draft.helpModal.isOpen = true
+        })}
+      >
+        Help
+      </Button>
       <Button
         onClick={() => dispatch({
           type: ACTIONS.TEST_API
@@ -508,6 +519,13 @@ const AppContainer = ({
     }
   })
   // React.useEffect(() => {
+  //    if (user){
+  //     Auth.updateUserAttributes(user, {
+  //       'custom:isOldUser': 'no'
+  //     })
+  //    }
+  // }, [user])
+  // React.useEffect(() => {
   //   const call = async () =>{
   //     const results = await listCases()
   //     const nodes = results.map(({id, ...data}) => ({
@@ -594,6 +612,27 @@ const AppContainer = ({
         //   })
         // }}
       />
+      <HelpModal 
+        isOpen={state.helpModal.isOpen}
+        onClose={() => updateState((draft) => {
+          draft.helpModal.isOpen = false
+        })}
+        videoId={HELP_VIDEO_ID}
+      />
+      <TermsOfService
+          user={user}
+          onAgree={async () => {
+            updateState((draft) => {
+              draft.helpModal.isOpen = true
+            })
+            await Auth.updateUserAttributes(user, {
+              'custom:isOldUser': 'yes'
+            })
+          }}
+          onDisagree={() => {
+            alert('To proceed on signin, you need to accept the Terms of Usage!')
+          }}
+        />
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={controllerProps.isLoading}
