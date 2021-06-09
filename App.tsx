@@ -11,7 +11,7 @@ import * as R from 'colay/ramda';
 import {
   CircularProgress
 } from '@material-ui/core';
-import { TermsOfService } from './components/TermsOfService';
+// import { TermsOfService } from './components/TermsOfService';
 
 const AWS_PROD_CONFIG = {
   "aws_project_region": "eu-central-1",
@@ -32,10 +32,10 @@ const AWS_PROD_CONFIG = {
           "profile",
           "aws.cognito.signin.user.admin"
       ],
-      // "redirectSignIn": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/", 
-      // "redirectSignOut": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/",
-      "redirectSignIn": "http://localhost:19006/",
-      "redirectSignOut": "http://localhost:19006/",
+      "redirectSignIn": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/", 
+      "redirectSignOut": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/",
+      // "redirectSignIn": "http://localhost:19006/",
+      // "redirectSignOut": "http://localhost:19006/",
       "responseType": "code"
   },
   "federationTarget": "COGNITO_USER_POOLS"
