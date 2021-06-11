@@ -7,6 +7,7 @@ import GraphEditor, {
   ACTIONS
 } from "./components/CaseLawExplorer";
 import * as API from './components/CaseLawExplorer/API';
+import {TermsOfService} from './components/CaseLawExplorer/TermsOfService';
 import * as R from 'colay/ramda';
 import {
   CircularProgress
@@ -83,14 +84,17 @@ const App = () => {
 const AppWithAuth = () => {
   const [authState, setAuthState] = React.useState();
   const [user, setUser] = React.useState();
-
+  const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
     React.useEffect(() => {
       return onAuthUIStateChange((nextAuthState, authData) => {
             setAuthState(nextAuthState);
             setUser(authData)
         });
     }, []);
-  return  authState === AuthState.SignedIn && user ? (
+    console.log('a',authState)
+  return  <>
+  {
+    authState === AuthState.SignedIn && user ? (
       <App />
     ) : (
         <AmplifyAuthenticator />
@@ -101,6 +105,20 @@ const AppWithAuth = () => {
       //   ></AmplifySignIn>
       // </AmplifyAuthenticator>
   )
+  }
+  {
+    authState === AuthState.SignUp && (
+      <TermsOfService 
+        user={termsOfServiceUser}
+        onAgree={() => setTermsOfServiceUser({
+          attributes: {
+            'custom:isOldUser': 'yes'
+          }
+        })}
+      />
+  )
+  }
+  </>
 }
 // const AppWithAuth = withAuthenticator(App);
 
