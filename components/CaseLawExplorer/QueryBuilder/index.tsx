@@ -2,7 +2,8 @@
 import React from 'react'
 import Form from '@rjsf/material-ui'
 import * as API from '../API'
-import { Modal, Button, Box, Typography, TextField, Paper } from '@material-ui/core'
+import { Modal, Button, Box, Typography, TextField, Paper,IconButton } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close'
 import { getQueryBuilderSchema } from './constants'
 
 export type QueryBuilderProps = {
@@ -65,6 +66,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         overflow: 'scroll'
       }}
       >
+        
         <Box
           style={{
             display: 'flex',
@@ -74,6 +76,17 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
           }}
         >
           <Typography variant="h6">Query Builder</Typography>
+          <IconButton 
+            aria-label="Example"
+            onClick={onClose}
+            // style={{
+            //   position: 'absolute',
+            //   right: 24,
+            //   top: 24
+            // }}
+          >
+            <CloseIcon  />
+          </IconButton>
         </Box>
         <Box
           style={{
@@ -104,7 +117,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             }}
           />
         </Box>
-        <Box
+        {/* <Box
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -112,6 +125,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             alignItems: 'center',
           }}
         >
+
           <Paper style={{
             display: 'flex',
 
@@ -133,7 +147,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
               Close
             </Button>
           </Paper>
-        </Box>
+        </Box> */}
       </Paper>
     </Modal>
 
