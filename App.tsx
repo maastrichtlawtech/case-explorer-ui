@@ -9,6 +9,7 @@ import GraphEditor, {
 import * as API from './components/CaseLawExplorer/API';
 import {TermsOfService} from './components/CaseLawExplorer/TermsOfService';
 import * as R from 'colay/ramda';
+import {useMeasure, View} from 'colay-ui';
 import {
   CircularProgress
 } from '@material-ui/core';
@@ -72,12 +73,23 @@ const App = () => {
         break;
     }
   }, [])
+  const [containerRef, { width, height, initialized }] = useMeasure()
   return (
-    <div>
-      <GraphEditor
-        dispatch={dispatch}
-      />
-    </div>
+    <View 
+      ref={containerRef}
+      style={{
+        width: '100%', height: '100%'
+      }}
+    >
+      {
+        initialized && (
+          <GraphEditor
+            dispatch={dispatch}
+            {...{width, height}}
+          />
+        )
+      }
+    </View>
   )
 }
 
@@ -91,7 +103,6 @@ const AppWithAuth = () => {
             setUser(authData)
         });
     }, []);
-    console.log('a',authState)
   return  <>
   {
     authState === AuthState.SignedIn && user ? (
