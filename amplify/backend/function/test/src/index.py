@@ -12,8 +12,10 @@ def handler(event, context):
 
     if authorized_user:
         attributes = NODE_FULL_LI
+        message = ''
     else:
         attributes = NODE_FULL
+        message = 'test warning: user not authorized'
 
     projection_expression, expression_attribute_names = build_projection_expression(attributes)
 
@@ -38,10 +40,15 @@ def handler(event, context):
     if "identity" in event:
         user_id = event['identity']['claims']['username']
     
-    return {"id": "test", "data": {
-        "node_ecli": format_node_data(item)['id'],
-        "node_data": format_node_data(item)['data'],
-        "pool_id": user_pool_id,
-        "event": event,
-        "user_id": user_id
-    }}
+
+    return {
+        "id": "test", 
+        "data": {
+            "node_ecli": format_node_data(item)['id'],
+            "node_data": format_node_data(item)['data'],
+            "pool_id": user_pool_id,
+            "event": event,
+            "user_id": user_id
+        },
+        "message": message
+    }

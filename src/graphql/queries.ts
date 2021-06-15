@@ -34,6 +34,7 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       nodes {
         id
         data
+        message
       }
       edges {
         id
@@ -41,6 +42,7 @@ export const queryNetworkByUserInput = /* GraphQL */ `
         target
         data
       }
+      message
     }
   }
 `;
@@ -49,6 +51,7 @@ export const fetchNodeData = /* GraphQL */ `
     fetchNodeData(Ecli: $Ecli) {
       id
       data
+      message
     }
   }
 `;
@@ -57,6 +60,7 @@ export const testAuth = /* GraphQL */ `
     testAuth(Ecli: $Ecli) {
       id
       data
+      message
     }
   }
 `;

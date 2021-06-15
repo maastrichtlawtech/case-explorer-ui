@@ -96,7 +96,7 @@ def handler(event, context):
         nodes.append(format_node_data(item))
 
     print('Duration total:', time.time()-start)
-    return {'nodes': nodes, 'edges': edges}
+    return {'nodes': nodes, 'edges': edges, 'message': 'test message'}
     #return {'nodes': len(nodes), 'edges': len(edges)}  # @TODO: only for testing
 
 

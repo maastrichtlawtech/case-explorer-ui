@@ -24,11 +24,13 @@ type Query {
 type Network {
     nodes: [Node]
     edges: [Edge]
+    message: String
 }
 
 type Node {
     id: String
     data: AWSJSON
+    message: String
 }
 
 type Edge {
