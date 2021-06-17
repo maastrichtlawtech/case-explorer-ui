@@ -27,7 +27,4 @@ def handler(event, context):
     if 'Item' in response:
         item = response['Item']
     
-    result = format_node_data(item)
-    result["message"] = 'test message'
-    
-    return result
+    return format_node_data(item)

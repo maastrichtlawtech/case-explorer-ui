@@ -49,6 +49,5 @@ def handler(event, context):
             "pool_id": user_pool_id,
             "event": event,
             "user_id": user_id
-        },
-        "message": message
+        }
     }

@@ -51,6 +51,7 @@ const LIST_CASES = `query QueryNetworkByUserInput(
       target
       data
     }
+    statistics
     message
   }
 }`
@@ -59,7 +60,6 @@ const GET_ELEMENT_DATA = `query GetElementData($id: String) {
   fetchNodeData(Ecli: $id) {
     data
     id
-    message
   }
 }`
 
@@ -67,7 +67,6 @@ const TEST_AUTH = `query TestAuth($id: String) {
   testAuth(Ecli: $id) {
     data
     id
-    message
   }
 }`
 

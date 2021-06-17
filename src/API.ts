@@ -87,6 +87,7 @@ export type Network = {
   __typename: "Network",
   nodes?:  Array<Node | null > | null,
   edges?:  Array<Edge | null > | null,
+  statistics?: string | null,
   message?: string | null,
 };
 
@@ -94,7 +95,6 @@ export type Node = {
   __typename: "Node",
   id?: string | null,
   data?: string | null,
-  message?: string | null,
 };
 
 export type Edge = {
@@ -269,7 +269,6 @@ export type QueryNetworkByUserInputQuery = {
       __typename: "Node",
       id?: string | null,
       data?: string | null,
-      message?: string | null,
     } | null > | null,
     edges?:  Array< {
       __typename: "Edge",
@@ -278,6 +277,7 @@ export type QueryNetworkByUserInputQuery = {
       target?: string | null,
       data?: string | null,
     } | null > | null,
+    statistics?: string | null,
     message?: string | null,
   } | null,
 };
@@ -291,7 +291,6 @@ export type FetchNodeDataQuery = {
     __typename: "Node",
     id?: string | null,
     data?: string | null,
-    message?: string | null,
   } | null,
 };
 
@@ -304,7 +303,6 @@ export type TestAuthQuery = {
     __typename: "Node",
     id?: string | null,
     data?: string | null,
-    message?: string | null,
   } | null,
 };
 
