@@ -98,7 +98,7 @@ def handler(event, context):
 
     print('Duration total:', time.time()-start)
     return {'nodes': nodes, 'edges': edges, 'statistics': add_network_statistics(nodes, edges), 'message': 'test message'}
-    #return {'nodes': nodes, 'edges': edges, 'statistics': [{'testid': {'rel_in_degree': 123}}], 'message': 'test message'}
+    #return {'nodes': nodes, 'edges': edges, 'statistics': {'testid': {'rel_in_degree': 123}}, 'message': 'test message'}
     #return {'nodes': len(nodes), 'edges': len(edges)}  # @TODO: only for testing
 
 
