@@ -10,6 +10,7 @@ src = {editable = true, path = "./src"}
 boto3 = "*"
 elasticsearch = "<=7.10"
 requests-aws4auth = "*"
+networkx = "*"
 
 [requires]
 python_version = "3.8"
