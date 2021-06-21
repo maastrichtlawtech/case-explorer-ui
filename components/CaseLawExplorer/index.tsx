@@ -389,7 +389,7 @@ const AppContainer = ({
             })
             console.error(error)
           }
-          if (elementData && !R.isPlainObject(elementData)) {
+          if (elementData && !R.isEmpty(elementData)) {
             update((draft) => {
               const {
                 item: selectedItem,
@@ -640,17 +640,17 @@ const AppContainer = ({
             draft.queryBuilder.visible = false
           })
         }}
-        onError={() => {
+        onError={(error) => {
           controller.update((draft) => {
             draft.isLoading = false
           })
           updateState((draft) => {
             draft.queryBuilder.visible = true
           })
-          // alertRef.current.alert({
-          //   type: 'alert',
-          //   text: 'There is an error.'
-          // })
+          alertRef.current.alert({
+            type: 'error',
+            text: error.message
+          })
         }}
         onFinish={({ nodes = [], edges= []} = {}) => {
           controller.update((draft) => {

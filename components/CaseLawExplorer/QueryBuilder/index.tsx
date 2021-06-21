@@ -9,7 +9,7 @@ import { getQueryBuilderSchema } from './constants'
 export type QueryBuilderProps = {
   query: any;
   onStart: () => void;
-  onError: () => void;
+  onError: (e: Error) => void;
   onFinish: (data: any) => void;
   onClose: () => void;
   isOpen: boolean;
@@ -104,7 +104,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                 // let casesData = prepareData(cases)
                 
                 if (casesData.nodes.length == 0) {
-                  throw "No cases returned"
+                  throw new Error("No cases returned")
                 }
                 else {
                   onFinish({
@@ -114,7 +114,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                 }
               } catch (e) {
                 console.log(e)
-                onError()
+                onError(e)
               }
             }}
           />
