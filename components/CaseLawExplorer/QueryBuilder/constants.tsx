@@ -135,10 +135,6 @@ export const getQueryBuilderSchema = () => {
           minimum: 1,
           maximum: 5,
         },
-        LiPermission: {
-          type: 'boolean',
-          title: 'LI Permission',
-        },
       },
     },
     uiSchema: {

@@ -257,7 +257,6 @@ const AppContainer = ({
           "OPI"
         ],
         DegreesSources: 1,
-        LiPermission: false,
         Keywords: "",
         DegreesTargets: 1,
         Eclis: "ECLI:NL:GHSGR:1972:AB4988",

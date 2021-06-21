@@ -119,37 +119,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             }}
           />
         </Box>
-        {/* <Box
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-
-          <Paper style={{
-            display: 'flex',
-
-            flexDirection: 'row', justifyContent: 'space-around', width: '40%'
-          }}>
-            <Button
-              onClick={() => {
-                onCreate(state)
-              }}
-              fullWidth
-            >
-              Create
-            </Button>
-            <Button
-              color="secondary"
-              onClick={onClose}
-              fullWidth
-            >
-              Close
-            </Button>
-          </Paper>
-        </Box> */}
       </Paper>
     </Modal>
 
