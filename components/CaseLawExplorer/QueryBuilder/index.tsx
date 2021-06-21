@@ -15,16 +15,13 @@ export type QueryBuilderProps = {
   isOpen: boolean;
 }
 
-const prepareData = (data) => {
-  const {
-    nodes,
-    edges
-  } = data
-  const preNodes = R.splitEvery(Math.ceil(nodes.length / CHUNK_COUNT))(nodes)[0]
-  const preEdges = filterEdges(preNodes)(edges)
+const transformData = (data) => {
+  const date = data.Date;
+  console.log(date)
   return {
-    nodes: preNodes,
-    edges: preEdges
+    "DateStart": `${date[0]}-01-01`,
+    "DateEnd": `${date[1]}-12-31`,
+    ...data
   }
 }
 
@@ -103,13 +100,18 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
               onStart()
               
               try {
-                let casesData = await API.listCases(e.formData)
+                let casesData = await API.listCases(transformData(e.formData))
                 // let casesData = prepareData(cases)
                 
-                onFinish({
-                  nodes: casesData.nodes,
-                  edges: casesData.edges
-                })
+                if (casesData.nodes.length == 0) {
+                  throw "No cases returned"
+                }
+                else {
+                  onFinish({
+                    nodes: casesData.nodes,
+                    edges: casesData.edges
+                  })
+                }
               } catch (e) {
                 console.log(e)
                 onError()
