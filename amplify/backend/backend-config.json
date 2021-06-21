@@ -122,6 +122,15 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "caseexplorerui",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
           "category": "auth",
           "resourceName": "caseexplorerui50cf907150cf9071",
           "attributes": [
@@ -129,10 +138,17 @@
           ]
         },
         {
-          "category": "api",
-          "resourceName": "caseexplorerui",
+          "category": "function",
+          "resourceName": "dataaccesslayer",
           "attributes": [
-            "GraphQLAPIIdOutput"
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "globalsettingslayer",
+          "attributes": [
+            "Arn"
           ]
         }
       ]
@@ -144,6 +160,22 @@
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false
+    },
+    "userPoolGroups": {
+      "service": "Cognito-UserPool-Groups",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "caseexplorerui50cf907150cf9071",
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ]
+        }
+      ]
     }
   }
 }

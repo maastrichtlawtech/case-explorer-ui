@@ -22,12 +22,8 @@
     ],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
-    "userpoolClientWriteAttributes": [
-        "email"
-    ],
-    "userpoolClientReadAttributes": [
-        "email"
-    ],
+    "userpoolClientWriteAttributes": [],
+    "userpoolClientReadAttributes": [],
     "userpoolClientLambdaRole": "caseex50cf9071_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
     "sharedId": "50cf9071",
@@ -45,7 +41,7 @@
             "Arn"
         ]
     },
-    "useDefault": "defaultSocial",
+    "useDefault": "manual",
     "usernameAttributes": [
         "email"
     ],
@@ -53,7 +49,10 @@
     "adminQueries": false,
     "triggers": "{}",
     "hostedUI": true,
-    "userPoolGroupList": [],
+    "userPoolGroupList": [
+        "userLimitedAccess",
+        "userFullAccess"
+    ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
     "parentStack": {
@@ -66,6 +65,8 @@
         "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:19006/\"],\"LogoutURLs\":[\"http://localhost:19006/\"]}",
-    "authProviders": []
+    "authProviders": [],
+    "breakCircularDependency": false,
+    "thirdPartyAuth": false,
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:19006/\",\"https://dev.dbvgwmy1tjq9d.amplifyapp.com/\"],\"LogoutURLs\":[\"http://localhost:19006/\",\"https://dev.dbvgwmy1tjq9d.amplifyapp.com/\"]}"
 }

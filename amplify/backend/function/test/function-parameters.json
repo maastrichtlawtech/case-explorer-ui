@@ -1,12 +1,13 @@
 {
-  "lambdaLayers": [],
   "permissions": {
+    "api": {
+      "caseexplorerui": [
+        "Query"
+      ]
+    },
     "auth": {
       "caseexplorerui50cf907150cf9071": [
-        "create",
-        "read",
-        "update",
-        "delete"
+        "read"
       ]
     },
     "storage": {
@@ -14,5 +15,17 @@
         "read"
       ]
     }
-  }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "dataaccesslayer",
+      "version": 8
+    },
+    {
+      "type": "ProjectLayer",
+      "resourceName": "globalsettingslayer",
+      "version": 1
+    }
+  ]
 }

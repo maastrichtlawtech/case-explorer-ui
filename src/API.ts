@@ -61,13 +61,13 @@ export type ModelSizeInput = {
 
 export type CaselawV6 = {
   __typename: "CaselawV6",
-  ItemType?: string,
+  ItemType: string,
   SourceDocDate?: string | null,
-  ecli?: string,
+  ecli: string,
   instance?: string | null,
   instance_li?: string | null,
-  createdAt?: string,
-  updatedAt?: string,
+  createdAt: string,
+  updatedAt: string,
 };
 
 export type UpdateCaselawV6Input = {
@@ -87,6 +87,8 @@ export type Network = {
   __typename: "Network",
   nodes?:  Array<Node | null > | null,
   edges?:  Array<Edge | null > | null,
+  statistics?: string | null,
+  message?: string | null,
 };
 
 export type Node = {
@@ -192,7 +194,7 @@ export type SearchableCaselawV6Connection = {
 };
 
 export type CreateCaselawV6MutationVariables = {
-  input?: CreateCaselawV6Input,
+  input: CreateCaselawV6Input,
   condition?: ModelCaselawV6ConditionInput | null,
 };
 
@@ -210,7 +212,7 @@ export type CreateCaselawV6Mutation = {
 };
 
 export type UpdateCaselawV6MutationVariables = {
-  input?: UpdateCaselawV6Input,
+  input: UpdateCaselawV6Input,
   condition?: ModelCaselawV6ConditionInput | null,
 };
 
@@ -228,7 +230,7 @@ export type UpdateCaselawV6Mutation = {
 };
 
 export type DeleteCaselawV6MutationVariables = {
-  input?: DeleteCaselawV6Input,
+  input: DeleteCaselawV6Input,
   condition?: ModelCaselawV6ConditionInput | null,
 };
 
@@ -275,12 +277,13 @@ export type QueryNetworkByUserInputQuery = {
       target?: string | null,
       data?: string | null,
     } | null > | null,
+    statistics?: string | null,
+    message?: string | null,
   } | null,
 };
 
 export type FetchNodeDataQueryVariables = {
   Ecli?: string | null,
-  LiPermission?: boolean | null,
 };
 
 export type FetchNodeDataQuery = {
@@ -293,7 +296,6 @@ export type FetchNodeDataQuery = {
 
 export type TestAuthQueryVariables = {
   Ecli?: string | null,
-  LiPermission?: boolean | null,
 };
 
 export type TestAuthQuery = {
@@ -305,8 +307,8 @@ export type TestAuthQuery = {
 };
 
 export type GetCaselawV6QueryVariables = {
-  ecli?: string,
-  ItemType?: string,
+  ecli: string,
+  ItemType: string,
 };
 
 export type GetCaselawV6Query = {

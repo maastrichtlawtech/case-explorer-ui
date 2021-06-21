@@ -18,6 +18,7 @@ from clients.dynamodb_client import DynamodbClient
 from utils import get_key, format_node_data, verify_input_string_list, get_user_authorization
 from attributes import NODE_ESSENTIAL, NODE_ESSENTIAL_LI, KEYWORD_SEARCH, KEYWORD_SEARCH_LI, ARTICLE_SEARCH
 from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
+from network_statistics import add_network_statistics
 
 
 # set up Elasticsearch client
@@ -90,13 +91,14 @@ def handler(event, context):
         keys_list.append(get_key(node_ecli))
     items = ddb_client.execute_batch(keys_list, attributes)
 
-    # 5. FORMAT NODES 
+    # 5. FORMAT NODES
     nodes = []
     for item in items:
         nodes.append(format_node_data(item))
 
     print('Duration total:', time.time()-start)
-    return {'nodes': nodes, 'edges': edges}
+    return {'nodes': nodes, 'edges': edges, 'statistics': add_network_statistics(nodes, edges), 'message': 'test message'}
+    #return {'nodes': nodes, 'edges': edges, 'statistics': [{'testid': {'rel_in_degree': 123}}], 'message': 'test message'}
     #return {'nodes': len(nodes), 'edges': len(edges)}  # @TODO: only for testing
 
 

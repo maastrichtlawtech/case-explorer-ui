@@ -14,18 +14,18 @@ type Query {
     LiPermission: Boolean
   ): Network @function(name: "queryhandler-${env}")
   fetchNodeData(
-    Ecli: String,
-    LiPermission: Boolean
+    Ecli: String
   ): Node @function(name: "datafetcher-${env}")
   testAuth(
-    Ecli: String,
-    LiPermission: Boolean
+    Ecli: String
   ): Node @function(name: "test-${env}")
 }
 
 type Network {
     nodes: [Node]
     edges: [Edge]
+    statistics: AWSJSON
+    message: String
 }
 
 type Node {

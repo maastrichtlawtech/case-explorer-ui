@@ -1,7 +1,7 @@
 import React from 'react'
 import * as R from 'colay/ramda'
 import * as PIXI from 'pixi.js'
-import { Graph,  } from 'perfect-graph'
+import { Graph,  } from 'perfect-graph/components'
 import { RenderEdge as RenderEdgeType,  } from 'perfect-graph/type'
 
 
