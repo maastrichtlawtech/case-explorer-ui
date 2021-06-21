@@ -295,6 +295,8 @@ const AppContainer = ({
   ), [dispatch])
   const [controllerProps, controller] = useController({
     ...data,
+    // nodes: [],
+    // edges: [],
     // events: RECORDED_EVENTS,
     graphConfig: {
       layout: Graph.Layouts.cose,
