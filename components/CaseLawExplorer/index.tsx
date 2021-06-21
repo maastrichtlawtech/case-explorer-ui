@@ -247,7 +247,7 @@ const AppContainer = ({
           2015
         ],
         Instances: [
-          "Raad van State",
+          "Hoge Raad", "Raad van State",
         ],
         Domains: [
           ""
@@ -258,9 +258,9 @@ const AppContainer = ({
         ],
         DegreesSources: 1,
         LiPermission: false,
-        Keywords: "test",
+        Keywords: "",
         DegreesTargets: 1,
-        Eclis: "",
+        Eclis: "ECLI:NL:GHSGR:1972:AB4988",
         Articles: ""
       },
     },
@@ -637,15 +637,21 @@ const AppContainer = ({
           controller.update((draft) => {
             draft.isLoading = true
           })
+          updateState((draft) => {
+            draft.queryBuilder.visible = false
+          })
         }}
         onError={() => {
           controller.update((draft) => {
             draft.isLoading = false
           })
-          alertRef.current.alert({
-            type: 'alert',
-            text: 'There is an error.'
+          updateState((draft) => {
+            draft.queryBuilder.visible = true
           })
+          // alertRef.current.alert({
+          //   type: 'alert',
+          //   text: 'There is an error.'
+          // })
         }}
         onFinish={({ nodes = [], edges= []} = {}) => {
           controller.update((draft) => {
@@ -654,25 +660,7 @@ const AppContainer = ({
             draft.isLoading = false
             draft.graphConfig!.layout = Graph.Layouts.circle
           })
-          updateState((draft) => {
-            draft.queryBuilder.visible = false
-          })
         }}
-        // onCreate={async (query) => {
-        //   let cases = await API.listCases(query)
-
-        //   let casesData = prepareData(cases)
-        //   console.log(casesData)
-          
-        //   controller.update((draft) => {
-        //     draft.nodes = casesData.nodes
-        //     draft.edges = casesData.edges
-        //   })
-        //   updateState((draft) => {
-        //     draft.queryBuilder.visible = false
-        //     draft.queryBuilder.query = query
-        //   })
-        // }}
       />
       <HelpModal 
         isOpen={state.helpModal.isOpen}
