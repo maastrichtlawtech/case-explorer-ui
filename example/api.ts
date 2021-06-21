@@ -178,8 +178,7 @@ export async function listProjects() {
         DateEnd: "2100-01-14",
         Instances: ["TEST_court001"],
         Domains: ["TEST_domain001"],
-        Doctypes: ["OPI", "DEC"],
-        LiPermission: false 
+        Doctypes: ["OPI", "DEC"]
       },
       authMode: API_AUTH_MODE.API_KEY,
     })

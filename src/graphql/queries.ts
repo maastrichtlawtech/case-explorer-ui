@@ -15,7 +15,6 @@ export const queryNetworkByUserInput = /* GraphQL */ `
     $Instances: [String]
     $Domains: [String]
     $Doctypes: [String]
-    $LiPermission: Boolean
   ) {
     queryNetworkByUserInput(
       DataSources: $DataSources
@@ -29,7 +28,6 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       Instances: $Instances
       Domains: $Domains
       Doctypes: $Doctypes
-      LiPermission: $LiPermission
     ) {
       nodes {
         id

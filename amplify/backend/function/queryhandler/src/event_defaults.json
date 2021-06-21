@@ -9,6 +9,5 @@
     "DateEnd": "3000-01-01",
     "Instances": [""],
     "Domains": [""],
-    "Doctypes": [""],
-    "LiPermission": false
+    "Doctypes": [""]
 }

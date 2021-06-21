@@ -25,7 +25,6 @@ const LIST_CASES = `query QueryNetworkByUserInput(
   $Instances: [String]
   $Domains: [String]
   $Doctypes: [String]
-  $LiPermission: Boolean
 ) {
   queryNetworkByUserInput(
     DataSources: $DataSources
@@ -39,7 +38,6 @@ const LIST_CASES = `query QueryNetworkByUserInput(
     Instances: $Instances
     Domains: $Domains
     Doctypes: $Doctypes
-    LiPermission: $LiPermission
   ) {
     nodes {
       id

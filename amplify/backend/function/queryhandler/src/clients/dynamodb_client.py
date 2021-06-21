@@ -30,7 +30,7 @@ class DynamodbClient:
         # use pagination to retrieve full list of results
         while 'LastEvaluatedKey' in response:
             if pages == self.page_limit:
-                print('DYNAMOBO REQUEST LIMIT REACHED!')
+                print(f'DYNAMOBO REQUEST LIMIT REACHED! {len(items)} items fetched.')
                 break
             response = self.table.query(**query_params, ExclusiveStartKey=response['LastEvaluatedKey'], Limit=100)
             count += response['Count']

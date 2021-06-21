@@ -98,8 +98,9 @@ def handler(event, context):
 
     print('Duration total:', time.time()-start)
     return {'nodes': nodes, 'edges': edges, 'statistics': add_network_statistics(nodes, edges), 'message': 'test message'}
-    #return {'nodes': nodes, 'edges': edges, 'statistics': {'testid': {'rel_in_degree': 123}}, 'message': 'test message'}
-    #return {'nodes': len(nodes), 'edges': len(edges)}  # @TODO: only for testing
+    #return {'nodes': len(nodes), 'edges': len(edges), 
+    #        'statistics': len(add_network_statistics(nodes, edges)), 
+    #        'message': 'test message'}  # @TODO: only for testing
 
 
 def build_elasticsearch_query(keywords, articles, eclis, authorized):
@@ -300,5 +301,7 @@ def fetch_edges_data(eclis, degrees_sources, degrees_targets):
                     if citation not in eclis:
                         new_node_eclis = new_node_eclis.union({citation})
         source_keys = next_sources
+
+    edges = list({v['id']:v for v in edges}.values())
 
     return edges, new_node_eclis

@@ -10,8 +10,7 @@ type Query {
     DateEnd: AWSDate,
     Instances: [String],
     Domains: [String],
-    Doctypes: [String],
-    LiPermission: Boolean
+    Doctypes: [String]
   ): Network @function(name: "queryhandler-${env}")
   fetchNodeData(
     Ecli: String

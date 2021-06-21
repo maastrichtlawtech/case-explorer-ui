@@ -259,7 +259,6 @@ export type QueryNetworkByUserInputQueryVariables = {
   Instances?: Array< string | null > | null,
   Domains?: Array< string | null > | null,
   Doctypes?: Array< string | null > | null,
-  LiPermission?: boolean | null,
 };
 
 export type QueryNetworkByUserInputQuery = {
