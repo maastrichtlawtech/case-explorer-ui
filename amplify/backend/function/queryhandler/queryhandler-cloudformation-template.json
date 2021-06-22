@@ -145,7 +145,7 @@
         },
         "Runtime": "python3.8",
         "Layers": [],
-        "Timeout": "60"
+        "Timeout": "900"
       }
     },
     "LambdaExecutionRole": {

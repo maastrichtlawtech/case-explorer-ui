@@ -97,9 +97,7 @@ def handler(event, context):
 
     print('Duration total:', time.time()-start)
     return {'nodes': nodes, 'edges': edges, 'statistics': add_network_statistics(nodes, edges), 'message': 'test message'}
-    #return {'nodes': len(nodes), 'edges': len(edges), 
-    #        'statistics': len(add_network_statistics(nodes, edges)), 
-    #        'message': 'test message'}  # @TODO: only for testing
+    #return {'nodes': len(nodes), 'edges': len(edges), 'statistics': len(add_network_statistics(nodes, edges)), 'message': 'test message'}  # @TODO: only for testing
 
 
 def build_elasticsearch_query(keywords, articles, eclis, authorized):
