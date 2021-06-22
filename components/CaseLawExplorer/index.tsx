@@ -652,13 +652,27 @@ const AppContainer = ({
             text: error.message
           })
         }}
-        onFinish={({ nodes = [], edges= []} = {}) => {
+        onFinish={({
+          nodes = [],
+          edges= [],
+          networkStatistics,
+          message
+        } = {}) => {
           controller.update((draft) => {
             draft.nodes = nodes
             draft.edges = edges
+            draft.networkStatistics = {
+              local: networkStatistics
+            }
             draft.isLoading = false
             draft.graphConfig!.layout = Graph.Layouts.circle
           })
+          if (message) {
+            alertRef.current.alert({
+              type: 'warning',
+              text: message
+            })
+          }
         }}
       />
       <HelpModal 
