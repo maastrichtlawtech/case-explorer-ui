@@ -15,7 +15,7 @@ import time
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
 from clients.elasticsearch_client import ElasticsearchClient
 from clients.dynamodb_client import DynamodbClient
-from utils import get_key, format_node_data, verify_input_string_list, get_user_authorization
+from utils import get_key, format_node_data, verify_input_string_list, verify_input_ecli_string, get_user_authorization
 from attributes import NODE_ESSENTIAL, NODE_ESSENTIAL_LI, KEYWORD_SEARCH, KEYWORD_SEARCH_LI, ARTICLE_SEARCH
 from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
 from network_statistics import add_network_statistics
@@ -58,8 +58,7 @@ def handler(event, context):
     search_params["Instances"] = verify_input_string_list("Instances", search_params["Instances"])
     search_params["Domains"] = verify_input_string_list("Domains", search_params["Domains"])
     search_params["Doctypes"] = verify_input_string_list("Doctypes", search_params["Doctypes"])
-    # convert string of eclis into list of eclis
-    search_params["Eclis"] = search_params["Eclis"].split(' ')
+    search_params["Eclis"] = verify_input_ecli_string("Eclis", search_params["Eclis"])
 
 
     # 3. SELECT CASES MATCHING SEARCH INPUT

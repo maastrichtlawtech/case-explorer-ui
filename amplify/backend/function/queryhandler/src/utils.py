@@ -60,3 +60,11 @@ def verify_input_string_list(key, val):
         return [""]
     else:
         return val
+
+
+def verify_input_ecli_string(key, val):
+    if not isinstance(val, str):
+        warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to ''.")
+        return [""]
+    else:
+        return val.strip().split(' ')
