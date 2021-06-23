@@ -648,7 +648,7 @@ const AppContainer = ({
             draft.queryBuilder.visible = true
           })
           alertRef.current.alert({
-            type: 'error',
+            type: 'warning',
             text: error.message
           })
         }}
