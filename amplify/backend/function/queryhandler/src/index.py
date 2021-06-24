@@ -46,6 +46,11 @@ def handler(event, context):
     :param context: dict containing context information of triggered event
     :return: dict of nodes (id, data) and edges (edge_id, source_node_id, target_node_id, data)
     """
+    # function call without input arguments scheduled every 15mins to keep warm
+    #print(event)
+    #if event == {}:
+    #    return {"pong"}
+
     start = time.time()
     search_params = event['arguments'].copy()
     attributes = NODE_ESSENTIAL
