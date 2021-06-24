@@ -1,0 +1,10 @@
+[
+    {
+        "groupName": "userLimitedAccess",
+        "precedence": 1
+    },
+    {
+        "groupName": "userFullAccess",
+        "precedence": 2
+    }
+]
