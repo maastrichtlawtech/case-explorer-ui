@@ -21,12 +21,14 @@ from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
 from network_statistics import add_network_statistics
 
 
+TEST = True
+
 # set up Elasticsearch client
 es_client = ElasticsearchClient(
     endpoint=ELASTICSEARCH_ENDPOINT,
     index=TABLE_NAME,
     max_hits=100,       # limit number of hits per page
-    timeout= 180,       # limit query time
+    timeout= 20,       # limit query time (s)
     page_limit=100     # limit number of pages per query
 )
 
@@ -47,6 +49,8 @@ def handler(event, context):
     start = time.time()
     search_params = event['arguments'].copy()
     attributes = NODE_ESSENTIAL
+
+    print(context.aws_request_id)
 
 
     # 1. CHECK USER AUTHORIZATION
@@ -96,8 +100,11 @@ def handler(event, context):
         nodes.append(format_node_data(item))
 
     print('Duration total:', time.time()-start)
+    
+    if TEST:  # @TODO remove
+        return {'nodes': len(nodes), 'edges': len(edges), 'statistics': len(add_network_statistics(nodes, edges)), 'message': 'test message'}
+
     return {'nodes': nodes, 'edges': edges, 'statistics': add_network_statistics(nodes, edges), 'message': 'test message'}
-    #return {'nodes': len(nodes), 'edges': len(edges), 'statistics': len(add_network_statistics(nodes, edges)), 'message': 'test message'}  # @TODO: only for testing
 
 
 def build_elasticsearch_query(keywords, articles, eclis, authorized):
