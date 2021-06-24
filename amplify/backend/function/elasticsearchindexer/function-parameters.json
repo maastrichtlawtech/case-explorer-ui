@@ -2,14 +2,16 @@
   "permissions": {},
   "lambdaLayers": [
     {
-      "type": "ProjectLayer",
-      "resourceName": "dataaccesslayer",
-      "version": 7
+      "type": "ExternalLayer",
+      "arn": {
+        "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:dataaccesslayer:7"
+      }
     },
     {
-      "type": "ProjectLayer",
-      "resourceName": "globalsettingslayer",
-      "version": 1
+      "type": "ExternalLayer",
+      "arn": {
+        "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:globalsettingslayer:1"
+      }
     }
   ]
 }
