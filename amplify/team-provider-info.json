@@ -127,5 +127,30 @@
         }
       }
     }
+  },
+  "test": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-caseexplorerui-test-212116-authRole",
+      "UnauthRoleArn": "arn:aws:iam::665988736951:role/amplify-caseexplorerui-test-212116-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::665988736951:role/amplify-caseexplorerui-test-212116-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-caseexplorerui-test-212116-deployment",
+      "UnauthRoleName": "amplify-caseexplorerui-test-212116-unauthRole",
+      "StackName": "amplify-caseexplorerui-test-212116",
+      "StackId": "arn:aws:cloudformation:eu-central-1:665988736951:stack/amplify-caseexplorerui-test-212116/f8384220-d518-11eb-9924-06b3fb26c106",
+      "AmplifyAppId": "dbvgwmy1tjq9d"
+    },
+    "categories": {
+      "auth": {
+        "caseexplorerui50cf907150cf9071": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "queryhandler": {},
+        "datafetcher": {},
+        "elasticsearchindexer": {},
+        "test": {}
+      }
+    }
   }
 }
