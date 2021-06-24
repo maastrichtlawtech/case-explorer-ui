@@ -21,7 +21,7 @@ from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
 from network_statistics import add_network_statistics
 
 
-TEST = True
+TEST = False
 
 # set up Elasticsearch client
 es_client = ElasticsearchClient(
