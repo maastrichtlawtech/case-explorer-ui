@@ -17,30 +17,28 @@ import {
 
 const AWS_PROD_CONFIG = {
   "aws_project_region": "eu-central-1",
-  "aws_appsync_graphqlEndpoint": "https://culpdi4smbeqtjyiqaqxusuv3q.appsync-api.eu-central-1.amazonaws.com/graphql",
-  "aws_appsync_region": "eu-central-1",
-  "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
-  "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y",
-  "aws_cognito_identity_pool_id": "eu-central-1:d0d334ac-2447-4b56-9467-24eb22b28144",
-  "aws_cognito_region": "eu-central-1",
-  "aws_user_pools_id": "eu-central-1_czNZx5VZq",
-  "aws_user_pools_web_client_id": "1im211cm81rp1sqinrlfq06bp8",
-  "oauth": {
-      "domain": "caseexplorerui357be15f-357be15f-dev.auth.eu-central-1.amazoncognito.com",
-      "scope": [
-          "phone",
-          "email",
-          "openid",
-          "profile",
-          "aws.cognito.signin.user.admin"
-      ],
-      "redirectSignIn": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/", 
-      "redirectSignOut": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/",
-      // "redirectSignIn": "http://localhost:19006/",
-      // "redirectSignOut": "http://localhost:19006/",
-      "responseType": "code"
-  },
-  "federationTarget": "COGNITO_USER_POOLS"
+    "aws_appsync_graphqlEndpoint": "https://ivzusvp5tradxl6ezobl4ixhfa.appsync-api.eu-central-1.amazonaws.com/graphql",
+    "aws_appsync_region": "eu-central-1",
+    "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
+    "aws_appsync_apiKey": "da2-hiynrdkgsfgrtjyn5edyqikfcm",
+    "aws_cognito_identity_pool_id": "eu-central-1:ccb4e49c-d21a-49d2-8d4a-89628f77e3f9",
+    "aws_cognito_region": "eu-central-1",
+    "aws_user_pools_id": "eu-central-1_U3dDWeJKc",
+    "aws_user_pools_web_client_id": "6cbbaje9upkt4kg5pvjiag7cs2",
+    "oauth": {
+        "domain": "caseexplorerui357be15f-357be15f-prod.auth.eu-central-1.amazoncognito.com",
+        "scope": [
+            "phone",
+            "email",
+            "openid",
+            "profile",
+            "aws.cognito.signin.user.admin"
+        ],
+        "redirectSignIn": "https://prod.dbvgwmy1tjq9d.amplifyapp.com/",
+        "redirectSignOut": "https://prod.dbvgwmy1tjq9d.amplifyapp.com/",
+        "responseType": "code"
+    },
+    "federationTarget": "COGNITO_USER_POOLS"
 }
 const AWS_DEV_CONFIG_OVERRIDE = {
   "oauth": {
