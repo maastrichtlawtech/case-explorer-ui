@@ -2,27 +2,30 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Lambda layer resource stack creation using Amplify CLI",
   "Parameters": {
-    "layerVersion": {
-      "Type": "String",
-      "Default": "1"
-    },
     "env": {
+      "Type": "String"
+    },
+    "deploymentBucketName": {
       "Type": "String"
     },
     "s3Key": {
       "Type": "String"
     },
-    "deploymentBucketName": {
-      "Type": "String"
+    "description": {
+      "Type": "String",
+      "Default": ""
+    },
+    "runtimes": {
+      "Type": "List<String>"
     }
   },
   "Resources": {
-    "LambdaLayer": {
+    "LambdaLayerVersiond7b1d837": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
-        "CompatibleRuntimes": [
-          "python3.8"
-        ],
+        "CompatibleRuntimes": {
+          "Ref": "runtimes"
+        },
         "Content": {
           "S3Bucket": {
             "Ref": "deploymentBucketName"
@@ -32,14 +35,7 @@
           }
         },
         "Description": {
-          "Fn::Sub": [
-            "Lambda layer version ${latestVersion}",
-            {
-              "latestVersion": {
-                "Ref": "layerVersion"
-              }
-            }
-          ]
+          "Ref": "description"
         },
         "LayerName": {
           "Fn::Sub": [
@@ -52,15 +48,15 @@
           ]
         }
       },
-      "DeletionPolicy": "Retain",
+      "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionprivate1": {
+    "LambdaLayerPermissionPrivated7b1d837": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayer"
+          "Ref": "LambdaLayerVersiond7b1d837"
         },
         "Principal": {
           "Ref": "AWS::AccountId"
@@ -68,29 +64,10 @@
       }
     }
   },
-  "Conditions": {
-    "HasEnvironmentParameter": {
-      "Fn::Not": [
-        {
-          "Fn::Equals": [
-            {
-              "Ref": "env"
-            },
-            "NONE"
-          ]
-        }
-      ]
-    }
-  },
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayer"
-      }
-    },
-    "Region": {
-      "Value": {
-        "Ref": "AWS::Region"
+        "Ref": "LambdaLayerVersiond7b1d837"
       }
     }
   }
