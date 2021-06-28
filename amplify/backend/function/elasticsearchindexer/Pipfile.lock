@@ -114,7 +114,7 @@
         },
         "src": {
             "editable": true,
-            "file": "file:///home/maxine/Documents/Law%2BTech/Comenius/case-explorer-ui/amplify/backend/function/elasticsearchindexer/src"
+            "file": "./src"
         },
         "urllib3": {
             "hashes": [
