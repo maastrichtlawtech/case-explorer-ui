@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8076ca72a980cca31b9aa7c891ad66dc4552e57ae66e800a7d3cd299a265171f"
+            "sha256": "da551abcc14df4656debcd9c0728a845c9ad8927bb2bfe384a48c7ebb59e5622"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -114,7 +114,7 @@
         },
         "src": {
             "editable": true,
-            "file": "./src"
+            "file": "file:///home/maxine/Documents/Law%2BTech/Comenius/case-explorer-ui/amplify/backend/function/elasticsearchindexer/src"
         },
         "urllib3": {
             "hashes": [
