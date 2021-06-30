@@ -9,7 +9,7 @@
         "DateStart": "1796-01-11",
         "DateEnd": "2100-01-14",
         "Instances": [""],
-        "Domains": [""],
+        "Domains": ["Bestuursrecht"],
         "Doctypes": ["DEC", "OPI"]
     }
 }

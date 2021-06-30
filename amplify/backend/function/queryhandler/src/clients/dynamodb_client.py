@@ -6,11 +6,12 @@ from utils import build_projection_expression
 
 class DynamodbClient:
 
-    def __init__(self, table_name, page_limit=1):
+    def __init__(self, table_name, item_limit=100, page_limit=1):
         self.ddb = boto3.resource('dynamodb')
         self.table_name = table_name
         self.table = self.ddb.Table(self.table_name)
-        self.page_limit=page_limit
+        self.item_limit=item_limit      # max number of items to evaluate per query (page)
+        self.page_limit=page_limit      # max number of queries (pages)
 
     
     def execute_query(self, **query_params):
@@ -18,21 +19,24 @@ class DynamodbClient:
         retrieves all items matching query parameters from DynamoDB
     
         :param query_params: dict of DynamoDB query parameters
-        :return: dict containing response meta data and list of items matching query
+        :return: dict containing response meta data and list of items matching query, flag whether item limit was reached
         """
         start = time.time()
-        response = self.table.query(**query_params, Limit=100)
+        response = self.table.query(**query_params, Limit=self.item_limit)
         count = response['Count']
         items = response['Items']
         scanned_count = response['ScannedCount']
         pages = 1
+        limit_reached = False
 
         # use pagination to retrieve full list of results
         while 'LastEvaluatedKey' in response:
-            if pages == self.page_limit:
+            if len(items) >= self.item_limit * self.page_limit:
+            #if pages == self.page_limit: #* 10 or len(items) >= self.item_limit * self.page_limit: # @TODO
+                limit_reached = True
                 print(f'DYNAMOBO REQUEST LIMIT REACHED! {len(items)} items fetched.')
                 break
-            response = self.table.query(**query_params, ExclusiveStartKey=response['LastEvaluatedKey'], Limit=100)
+            response = self.table.query(**query_params, ExclusiveStartKey=response['LastEvaluatedKey'], Limit=self.item_limit)
             count += response['Count']
             items.extend(response['Items'])
             scanned_count += response['ScannedCount']
@@ -44,7 +48,7 @@ class DynamodbClient:
         response['Items'] = items
         response['ScannedCount'] = scanned_count
 
-        return response
+        return response, limit_reached
 
 
     def execute_batch(self, keys_list, return_attributes):

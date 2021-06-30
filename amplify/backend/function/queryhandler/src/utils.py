@@ -1,6 +1,6 @@
 import warnings
 
-def get_user_authorization(event):
+def is_authorized(event):
     authorized = False
     if "identity" in event:
         user_id = event['identity']['claims']['username']
