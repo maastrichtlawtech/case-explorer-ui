@@ -23,8 +23,8 @@ from network_statistics import add_network_statistics
 
 TEST = False
 
-MAX_ITEMS_PER_PAGE = 20             # 500
-MAX_PAGES = 10                      # 10
+MAX_ITEMS_PER_PAGE = 10             # 500
+MAX_PAGES = 5                       # 10
 MAX_ITEMS = MAX_ITEMS_PER_PAGE * MAX_PAGES
 
 
