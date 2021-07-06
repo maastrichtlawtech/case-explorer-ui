@@ -21,10 +21,10 @@ from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
 from network_statistics import add_network_statistics
 
 
-TEST = False
+TEST = False                        # returns number of nodes instead of nodes
 
-MAX_ITEMS_PER_PAGE = 10             # 500
-MAX_PAGES = 5                       # 10
+MAX_ITEMS_PER_PAGE = 10             # 500   (10)
+MAX_PAGES = 5                       # 10    (5)
 MAX_ITEMS = MAX_ITEMS_PER_PAGE * MAX_PAGES
 
 
@@ -68,7 +68,7 @@ def handler(event, context):
     # 1. CHECK USER AUTHORIZATION
     authorized_user = is_authorized(event)
     if TEST:
-        authorized_user = True
+        authorized_user = False
     
 
     # 2. CHECK INPUT VALIDITY
@@ -90,6 +90,7 @@ def handler(event, context):
         node_eclis = node_eclis.union(node_eclis_li)
 
     # b. filter selected cases by keyword match if keywords given and filters did not return no matches
+    # @TODO filter by doc_source_date!
     if (search_params['Keywords'] != '' or search_params['Articles'] != '') and not (node_eclis == set() and searched_dynamodb):
         print('in ES')
         es_query = build_elasticsearch_query(search_params['Keywords'], search_params['Articles'], node_eclis, authorized_user)
@@ -101,12 +102,19 @@ def handler(event, context):
     # 4. FETCH NODES AND EDGES DATA OF SELECTED CASES
 
     # fetch edges
-    edges, new_node_eclis = fetch_edges_data(node_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
+    if TEST:
+        edges = []
+    else:
+        edges, new_node_eclis = fetch_edges_data(node_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
     
     # fetch nodes data
     keys_list = []
-    for node_ecli in node_eclis.union(new_node_eclis):
-        keys_list.append(get_key(node_ecli))
+    if TEST:
+        for node_ecli in node_eclis:
+            keys_list.append(get_key(node_ecli))
+    else:
+        for node_ecli in node_eclis.union(new_node_eclis):
+            keys_list.append(get_key(node_ecli))
     items = ddb_client.execute_batch(keys_list, attributes)
 
     # 5. FORMAT NODES
@@ -148,7 +156,7 @@ def build_elasticsearch_query(keywords, articles, eclis, authorized):
                 'simple_query_string': {
                     'query': keywords,
                     'fields': fields,
-                    #'analyzer': 'dutch'
+                    'analyzer': 'standard'
                 },
             })
     if articles != '': 

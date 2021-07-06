@@ -99,22 +99,7 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "dataaccesslayer",
-          "attributes": [
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "globalsettingslayer",
-          "attributes": [
-            "Arn"
-          ]
-        }
-      ]
+      "dependsOn": []
     },
     "test": {
       "build": true,

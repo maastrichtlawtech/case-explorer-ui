@@ -1,15 +1,15 @@
 {
     "arguments": {
         "DataSources": ["RS"],
-        "Keywords": "",
+        "Keywords": "moord",
         "Articles": "",
         "Eclis": "",
-        "DegreesSources": 3,
-        "DegreesTargets": 3,
-        "DateStart": "1796-01-11",
-        "DateEnd": "2100-01-14",
-        "Instances": ["Centrale Raad van Beroep"],
+        "DegreesSources": 1,
+        "DegreesTargets": 1,
+        "DateStart": "1900-01-01",
+        "DateEnd": "2020-12-31",
+        "Instances": [""],
         "Domains": [""],
-        "Doctypes": ["DEC", "OPI"]
+        "Doctypes": ["OPI"]
     }
 }

@@ -19,11 +19,11 @@
       "function": {
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/queryhandler-6b61714c6236764d6648-build.zip"
+          "s3Key": "amplify-builds/queryhandler-515a654e6b5962544342-build.zip"
         },
         "dataaccesslayer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/dataaccesslayer-build.zip"
+          "s3Key": "amplify-builds/dataaccesslayer-LambdaLayerVersiona665ef0c-build.zip"
         },
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
@@ -31,99 +31,15 @@
         },
         "globalsettingslayer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/globalsettingslayer-build.zip"
+          "s3Key": "amplify-builds/globalsettingslayer-LambdaLayerVersionbcd2c7ef-build.zip"
         },
         "elasticsearchindexer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/elasticsearchindexer-63334e6647556c63556a-build.zip"
+          "s3Key": "amplify-builds/elasticsearchindexer-63494e72336b51743933-build.zip"
         },
         "test": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
           "s3Key": "amplify-builds/test-6848784e684d5a4b7444-build.zip"
-        }
-      }
-    },
-    "nonCFNdata": {
-      "function": {
-        "dataaccesslayer": {
-          "layerVersionMap": {
-            "1": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "zrlmD6yQUdEvk4FAj9SeoZUXPibdrk1FI6JpI+lcVJc="
-            },
-            "2": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "KAeajnMVd4XqnIL1wQYsWLOB4xhO+vHrs3s0PQhlRJ8="
-            },
-            "3": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "K1UyrGK6/H1jSJRyoRdkUEhhxcZDLnyzX51rBSAnozI="
-            },
-            "4": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "fCmTzY/vJh9hIlELXnrv5H2C1MrqEvvI+uliHeKu/1Y="
-            },
-            "5": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "+gxT2L8QMwxsgYo/Ign8AtwwsorA/slzC6F6Eq3IP84="
-            },
-            "6": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "Pw2rEg40ubOXRZ6SS6mCQarBC9c74LOw3fea0R5Z524="
-            },
-            "7": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "MoHEDZen/2vae+8hLPNqXMNSJ1uHDlIoQhYg04CYQk4="
-            },
-            "8": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "h49HD4sgQusUhwLWQUdYmjXow1LDOkouQJDOi1XMSX0="
-            }
-          }
-        },
-        "globalsettingslayer": {
-          "layerVersionMap": {
-            "1": {
-              "permissions": [
-                {
-                  "type": "private"
-                }
-              ],
-              "hash": "A2xdqDvp0d6wWXWZMehnRgNzNbhAwCysWIoqFhNldQw="
-            }
-          }
         }
       }
     }
