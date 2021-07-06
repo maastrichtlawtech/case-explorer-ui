@@ -19,7 +19,7 @@
       "function": {
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",
-          "s3Key": "amplify-builds/queryhandler-515a654e6b5962544342-build.zip"
+          "s3Key": "amplify-builds/queryhandler-50456e6e33353335475a-build.zip"
         },
         "dataaccesslayer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-130525-deployment",

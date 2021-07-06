@@ -4,7 +4,7 @@ def is_authorized(event):
     authorized = False
     if "identity" in event:
         user_id = event['identity']['claims']['username']
-        if user_id.startswith('google'):  # @TODO: adjust to SURFconext user group prefix
+        if user_id.startswith('surfconext'):
             authorized = True
     return authorized
 
