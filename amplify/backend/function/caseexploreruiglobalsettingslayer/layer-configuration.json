@@ -8,8 +8,8 @@
     {
       "value": "python",
       "name": "Python",
-      "layerExecutablePath": "python",
-      "runtimePluginId": "amplify-python-function-runtime-provider"
+      "runtimePluginId": "amplify-python-function-runtime-provider",
+      "layerExecutablePath": "python"
     }
   ]
 }

@@ -1,15 +1,15 @@
 {
     "arguments": {
         "DataSources": ["RS"],
-        "Keywords": "moord",
+        "Keywords": "",
         "Articles": "",
-        "Eclis": "",
+        "Eclis": "ECLI:NL:HR:2012:BQ6098",
         "DegreesSources": 1,
         "DegreesTargets": 1,
         "DateStart": "1900-01-01",
         "DateEnd": "2020-12-31",
         "Instances": [""],
         "Domains": [""],
-        "Doctypes": ["OPI"]
+        "Doctypes": ["DEC"]
     }
 }

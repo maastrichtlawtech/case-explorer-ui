@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersionbcd2c7ef": {
+    "LambdaLayerVersion1174387f": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -39,7 +39,7 @@
         },
         "LayerName": {
           "Fn::Sub": [
-            "globalsettingslayer-${env}",
+            "caseexploreruidataaccesslayer-${env}",
             {
               "env": {
                 "Ref": "env"
@@ -51,23 +51,13 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivatebcd2c7ef": {
+    "LambdaLayerPermissionPrivate1174387f": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersionbcd2c7ef"
+          "Ref": "LambdaLayerVersion1174387f"
         },
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerPermissionPrivateLegacy1": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:eu-central-1:665988736951:layer:globalsettingslayer-dev:1",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -77,7 +67,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersionbcd2c7ef"
+        "Ref": "LambdaLayerVersion1174387f"
       }
     }
   }

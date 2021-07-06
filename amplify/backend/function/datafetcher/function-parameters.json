@@ -22,13 +22,17 @@
   "lambdaLayers": [
     {
       "type": "ProjectLayer",
-      "resourceName": "dataaccesslayer",
-      "version": 8
+      "resourceName": "caseexploreruidataaccesslayer",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
     },
     {
       "type": "ProjectLayer",
-      "resourceName": "globalsettingslayer",
-      "version": 1
+      "resourceName": "caseexploreruiglobalsettingslayer",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 import os
 from clients.dynamodb_client import DynamodbClient
-from utils import format_node_data, build_projection_expression, get_key, get_user_authorization
+from utils import format_node_data, build_projection_expression, get_key, is_authorized
 from attributes import NODE_FULL, NODE_FULL_LI
 from settings import TABLE_NAME
 
@@ -8,7 +8,7 @@ from settings import TABLE_NAME
 def handler(event, context):
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
     
-    authorized_user = get_user_authorization(event)
+    authorized_user = is_authorized(event)
 
     if authorized_user:
         attributes = NODE_FULL_LI

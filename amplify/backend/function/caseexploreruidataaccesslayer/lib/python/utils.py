@@ -1,10 +1,10 @@
 import warnings
 
-def get_user_authorization(event):
+def is_authorized(event):
     authorized = False
     if "identity" in event:
         user_id = event['identity']['claims']['username']
-        if user_id.startswith('google'):  # @TODO: adjust to SURFconext user group prefix
+        if user_id.startswith('surfconext'):
             authorized = True
     return authorized
 
@@ -60,3 +60,11 @@ def verify_input_string_list(key, val):
         return [""]
     else:
         return val
+
+
+def verify_input_ecli_string(key, val):
+    if not isinstance(val, str):
+        warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to ''.")
+        return [""]
+    else:
+        return val.strip().split(' ')

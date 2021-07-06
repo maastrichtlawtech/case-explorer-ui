@@ -39,6 +39,14 @@
     "authcaseexplorerui50cf907150cf9071UserPoolId": {
       "Type": "String",
       "Default": "authcaseexplorerui50cf907150cf9071UserPoolId"
+    },
+    "functioncaseexploreruidataaccesslayerArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruidataaccesslayerArn"
+    },
+    "functioncaseexploreruiglobalsettingslayerArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruiglobalsettingslayerArn"
     }
   },
   "Conditions": {
@@ -143,10 +151,10 @@
         "Runtime": "python3.8",
         "Layers": [
           {
-            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:dataaccesslayer-dev:8"
+            "Ref": "functioncaseexploreruidataaccesslayerArn"
           },
           {
-            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:globalsettingslayer-dev:1"
+            "Ref": "functioncaseexploreruiglobalsettingslayerArn"
           }
         ],
         "Timeout": "25"

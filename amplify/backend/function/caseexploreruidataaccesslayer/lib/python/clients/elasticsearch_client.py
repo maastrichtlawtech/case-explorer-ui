@@ -6,11 +6,11 @@ import time
 
 class ElasticsearchClient:
 
-    def __init__(self, endpoint, index, max_hits=1, timeout=15, page_limit=1):
+    def __init__(self, endpoint, index, max_hits=1, page_limit=1, timeout=10):
 
-        self.max_hits = max_hits
-        self.timeout = timeout
-        self.page_limit = page_limit
+        self.max_hits = max_hits        # max number of hits (matching items) per query (page)
+        self.page_limit = page_limit    # max number of queries (pages)
+        self.timeout = timeout          # request timeout in s
         self.index=index
 
         awsauth = AWS4Auth(
@@ -39,6 +39,7 @@ class ElasticsearchClient:
         :return: list of item dicts containing attribute data
         """
         total_hits = []
+        limit_reached = False
         #pit_id = es.open_point_in_time(index='caselaw4', keep_alive= f'{timeout/60}m')
         start = time.time()
         result = self.es.search(
@@ -47,7 +48,7 @@ class ElasticsearchClient:
                 'size': self.max_hits,
                 'query': query,
                 #'pit': {'id': pit_id}
-                'sort': [{"_doc": "asc"}],
+                #'sort': [{"_doc": "asc"}],
                 '_source': return_attributes
             },
             request_timeout = self.timeout
@@ -58,18 +59,21 @@ class ElasticsearchClient:
         counter = 1
         while len(hits) > 0:
             if counter == self.page_limit:
+                limit_reached = True
                 print(f'ELASTICSEARCH LIMIT REACHED - RETRIEVED {len(total_hits)} HITS')
                 break
             #pit_id = result['pit_id']
             result = self.es.search(
+                index=[self.index],
                 body={
+                    'from': counter*self.max_hits,
                     'size': self.max_hits,
                     'query': query,
                     #'pit': {'id': pit_id},
-                    'sort': [{"_doc": "asc"}],
+                    #'sort': [{"_doc": "asc"}],
                     '_source': return_attributes,
-                    'search_after': hits[-1]['sort'],
-                    'track_total_hits': False
+                    #'search_after': hits[-1]['sort'],
+                    #'track_total_hits': False
                 },
                 request_timeout = self.timeout
             )
@@ -82,4 +86,4 @@ class ElasticsearchClient:
 
         #print('Duration es search:', time.time() - start)
 
-        return total_hits
+        return total_hits, limit_reached
