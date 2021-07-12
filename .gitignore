@@ -112,8 +112,8 @@ amplify/logs
 amplify/mock-data
 amplify/backend/amplify-meta.json
 amplify/backend/awscloudformation
-amplify/backend/function/caseexploreruidataaccesslayer/lib/python/lib
-amplify/backend/function/caseexploreruiglobalsettingslayer/lib/python/lib
+amplify/backend/function/dataaccesslayer/lib/python
+amplify/backend/function/globalsettingslayer/lib/python
 amplify/backend/.temp
 build/
 dist/
