@@ -96,6 +96,8 @@ const App = () => {
 const AppWithAuth = () => {
   const [authState, setAuthState] = React.useState();
   const [user, setUser] = React.useState();
+  // const [authState, setAuthState] = React.useState(AuthState.SignedIn);
+  // const [user, setUser] = React.useState({});
   const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
     React.useEffect(() => {
       return onAuthUIStateChange((nextAuthState, authData) => {

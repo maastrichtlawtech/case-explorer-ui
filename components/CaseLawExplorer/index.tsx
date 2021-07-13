@@ -5,7 +5,7 @@ import * as R from 'colay/ramda'
 import {
   useTheme as useMuiTheme,
   ThemeProvider as MuiThemeProvider,
-  createMuiTheme,
+  createTheme as createMuiTheme,
   Button,
   Typography,
   Backdrop,
