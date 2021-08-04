@@ -133,3 +133,7 @@ amplifytools.xcconfig
 
 yarn.lock
 package-lock.json
+
+.backend
+
+prisma/
