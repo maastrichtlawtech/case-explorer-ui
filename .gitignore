@@ -137,3 +137,5 @@ package-lock.json
 .backend
 
 prisma/
+
+generated/
