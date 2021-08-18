@@ -7,7 +7,7 @@ import GraphEditor, {
   ACTIONS
 } from "./components/CaseLawExplorer";
 import * as API from './components/CaseLawExplorer/API';
-import {TermsOfService} from './components/CaseLawExplorer/TermsOfService';
+import {TermsOfService} from './components/CaseLawExplorer/components/TermsOfService';
 import * as R from 'colay/ramda';
 import {useMeasure, View} from 'colay-ui';
 import {
@@ -176,7 +176,7 @@ const AppWithAuth = () => {
 //   )
 // }
 
-export default AppWithAuth
+export default AppWithAuth // App
 
 
 function detectBrowser() { 
