@@ -1,0 +1,15 @@
+{
+    "arguments": {
+        "DataSources": ["RS"],
+        "Keywords": "",
+        "Articles": "",
+        "Eclis": "",
+        "DegreesSources": 3,
+        "DegreesTargets": 3,
+        "DateStart": "1796-01-11",
+        "DateEnd": "2100-01-14",
+        "Instances": [""],
+        "Domains": [""],
+        "Doctypes": ["DEC", "OPI"]
+    }
+}

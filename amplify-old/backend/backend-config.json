@@ -1,0 +1,166 @@
+{
+  "api": {
+    "caseexplorerui": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authcaseexplorerui50cf907150cf9071"
+            }
+          },
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "API_KEY",
+              "apiKeyConfig": {
+                "apiKeyExpirationDays": 365,
+                "description": ""
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "function": {
+    "queryhandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "caseexplorerui",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "caseexplorerui50cf907150cf9071",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
+    },
+    "datafetcher": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruidataaccesslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiglobalsettingslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "caseexplorerui",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "caseexplorerui50cf907150cf9071",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
+    },
+    "elasticsearchindexer": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
+    },
+    "test": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruidataaccesslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiglobalsettingslayer",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "caseexplorerui",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "caseexplorerui50cf907150cf9071",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
+    },
+    "caseexploreruidataaccesslayer": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "caseexploreruiglobalsettingslayer": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    }
+  },
+  "auth": {
+    "caseexplorerui50cf907150cf9071": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    },
+    "userPoolGroups": {
+      "service": "Cognito-UserPool-Groups",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "caseexplorerui50cf907150cf9071",
+          "attributes": [
+            "UserPoolId",
+            "AppClientIDWeb",
+            "AppClientID",
+            "IdentityPoolId"
+          ]
+        }
+      ]
+    }
+  }
+}
