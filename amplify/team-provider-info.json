@@ -1,26 +1,43 @@
 {
-    "dev": {
-        "awscloudformation": {
-            "AuthRoleName": "amplify-caseexplorerui-dev-133633-authRole",
-            "UnauthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-authRole",
-            "Region": "eu-central-1",
-            "DeploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-            "UnauthRoleName": "amplify-caseexplorerui-dev-133633-unauthRole",
-            "StackName": "amplify-caseexplorerui-dev-133633",
-            "StackId": "arn:aws:cloudformation:eu-central-1:275192370238:stack/amplify-caseexplorerui-dev-133633/a498dfe0-1090-11ec-9f45-06c163c7e882",
-            "AmplifyAppId": "d11iy22xsphp3a"
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-caseexplorerui-dev-133633-authRole",
+      "UnauthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+      "UnauthRoleName": "amplify-caseexplorerui-dev-133633-unauthRole",
+      "StackName": "amplify-caseexplorerui-dev-133633",
+      "StackId": "arn:aws:cloudformation:eu-central-1:275192370238:stack/amplify-caseexplorerui-dev-133633/a498dfe0-1090-11ec-9f45-06c163c7e882",
+      "AmplifyAppId": "d11iy22xsphp3a"
+    },
+    "categories": {
+      "function": {
+        "caseexploreruidataaccesslayer": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/caseexploreruidataaccesslayer-LambdaLayerVersioncb211103-build.zip"
         },
-        "categories": {
-            "auth": {
-                "caseexplorerui12052657": {}
-            },
-            "hosting": {
-                "amplifyhosting": {
-                    "appId": "d11iy22xsphp3a",
-                    "type": "cicd"
-                }
-            }
+        "caseexploreruiglobalsettingslayer": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/caseexploreruiglobalsettingslayer-LambdaLayerVersion5f1d9298-build.zip"
+        },
+        "datafetcher": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/datafetcher-334b3048756768477743-build.zip"
+        },
+        "elasticsearchindexer": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/elasticsearchindexer-59615250507a5752592b-build.zip"
+        },
+        "queryhandler": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/queryhandler-7572717a574a69624d6b-build.zip"
+        },
+        "test": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/test-76414d37745434382f6b-build.zip"
         }
+      }
     }
+  }
 }

@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "api": {
+      "caseexplorerui": [
+        "Query"
+      ]
+    },
+    "storage": {
+      "Caselaw:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "caseexploreruidataaccesslayer",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    },
+    {
+      "type": "ProjectLayer",
+      "resourceName": "caseexploreruiglobalsettingslayer",
+      "env": "dev",
+      "version": "Always choose latest version",
+      "isLatestVersionSelected": true
+    }
+  ]
+}

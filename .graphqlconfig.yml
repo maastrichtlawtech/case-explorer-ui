@@ -1,6 +1,6 @@
 projects:
   caseexplorerui:
-    schemaPath: src/graphql/schema.json
+    schemaPath: graphql/schema.json
     includes:
       - src/graphql/**/*.ts
     excludes:
