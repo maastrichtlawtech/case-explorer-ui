@@ -17,30 +17,15 @@ import {
 
 const AWS_PROD_CONFIG = {
   "aws_project_region": "eu-central-1",
-  "aws_appsync_graphqlEndpoint": "https://culpdi4smbeqtjyiqaqxusuv3q.appsync-api.eu-central-1.amazonaws.com/graphql",
-  "aws_appsync_region": "eu-central-1",
-  "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
-  "aws_appsync_apiKey": "da2-l7smc55gkvgbdftblcbfra4d5y",
-  "aws_cognito_identity_pool_id": "eu-central-1:d0d334ac-2447-4b56-9467-24eb22b28144",
-  "aws_cognito_region": "eu-central-1",
-  "aws_user_pools_id": "eu-central-1_czNZx5VZq",
-  "aws_user_pools_web_client_id": "1im211cm81rp1sqinrlfq06bp8",
-  "oauth": {
-      "domain": "caseexplorerui357be15f-357be15f-dev.auth.eu-central-1.amazoncognito.com",
-      "scope": [
-          "phone",
-          "email",
-          "openid",
-          "profile",
-          "aws.cognito.signin.user.admin"
-      ],
-      "redirectSignIn": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/", 
-      "redirectSignOut": "https://dev.dbvgwmy1tjq9d.amplifyapp.com/",
-      // "redirectSignIn": "http://localhost:19006/",
-      // "redirectSignOut": "http://localhost:19006/",
-      "responseType": "code"
-  },
-  "federationTarget": "COGNITO_USER_POOLS"
+    "aws_appsync_graphqlEndpoint": "https://xvukr2ypdjexllrzfwvfz7xohy.appsync-api.eu-central-1.amazonaws.com/graphql",
+    "aws_appsync_region": "eu-central-1",
+    "aws_appsync_authenticationType": "API_KEY",
+    "aws_appsync_apiKey": "da2-kvo23qvb5fcobcu7k53eoqvequ",
+    "aws_cognito_identity_pool_id": "eu-central-1:0e696687-f7fa-427b-a8bf-d3393315ebb7",
+    "aws_cognito_region": "eu-central-1",
+    "aws_user_pools_id": "eu-central-1_KFesMbfFI",
+    "aws_user_pools_web_client_id": "3ggitt7u7mafk19l1i2vogt1lj",
+    "oauth": {}
 }
 const AWS_DEV_CONFIG_OVERRIDE = {
   "oauth": {
