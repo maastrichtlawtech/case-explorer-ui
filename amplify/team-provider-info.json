@@ -37,6 +37,9 @@
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/test-76414d37745434382f6b-build.zip"
         }
+      },
+      "auth": {
+        "caseexplorerui5698cd52": {}
       }
     }
   }

@@ -17,7 +17,14 @@
       }
     }
   },
-  "auth": {},
+  "auth": {
+    "caseexplorerui5698cd52": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
   "hosting": {},
   "function": {
     "caseexploreruidataaccesslayer": {
