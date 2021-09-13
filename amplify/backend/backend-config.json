@@ -18,7 +18,7 @@
     }
   },
   "auth": {
-    "caseexplorerui5698cd52": {
+    "caseexploreruiauth": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],

@@ -1,8 +1,6 @@
 {
-    "identityPoolName": "caseexplorerui5698cd52_identitypool_5698cd52",
-    "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "caseex5698cd52",
-    "userPoolName": "caseexplorerui5698cd52_userpool_5698cd52",
+    "resourceNameTruncated": "caseexc641a998",
+    "userPoolName": "case-law-explorer_user-pool",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,11 +26,11 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "caseex5698cd52_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "caseexc641a998_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "5698cd52",
-    "resourceName": "caseexplorerui5698cd52",
-    "authSelections": "identityPoolAndUserPool",
+    "sharedId": "c641a998",
+    "resourceName": "caseexploreruiauth",
+    "authSelections": "userPoolOnly",
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -45,11 +43,18 @@
             "Arn"
         ]
     },
-    "useDefault": "default",
+    "useDefault": "manual",
     "usernameAttributes": [
         "email"
     ],
+    "userPoolGroups": false,
+    "adminQueries": false,
     "triggers": "{}",
+    "hostedUI": true,
+    "hostedUIDomainName": "case-law-explorer",
+    "authProvidersUserPool": [],
+    "hostedUIProviderMeta": "[]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:19006/\"],\"LogoutURLs\":[\"http://localhost:19006/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
