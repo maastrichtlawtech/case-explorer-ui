@@ -14,19 +14,10 @@ import {
   CircularProgress
 } from '@material-ui/core';
 // import { TermsOfService } from './components/TermsOfService';
+import awsmobile from "./aws-exports";
 
-const AWS_PROD_CONFIG = {
-  "aws_project_region": "eu-central-1",
-    "aws_appsync_graphqlEndpoint": "https://xvukr2ypdjexllrzfwvfz7xohy.appsync-api.eu-central-1.amazonaws.com/graphql",
-    "aws_appsync_region": "eu-central-1",
-    "aws_appsync_authenticationType": "API_KEY",
-    "aws_appsync_apiKey": "da2-kvo23qvb5fcobcu7k53eoqvequ",
-    "aws_cognito_identity_pool_id": "eu-central-1:0e696687-f7fa-427b-a8bf-d3393315ebb7",
-    "aws_cognito_region": "eu-central-1",
-    "aws_user_pools_id": "eu-central-1_KFesMbfFI",
-    "aws_user_pools_web_client_id": "3ggitt7u7mafk19l1i2vogt1lj",
-    "oauth": {}
-}
+const AWS_PROD_CONFIG = awsmobile
+
 const AWS_DEV_CONFIG_OVERRIDE = {
   "oauth": {
       "redirectSignIn": "http://localhost:19006/",
