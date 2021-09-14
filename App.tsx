@@ -1,7 +1,7 @@
 import { AuthState, onAuthUIStateChange, } from '@aws-amplify/ui-components';
 import { AmplifyAuthenticator,  } from '@aws-amplify/ui-react';
 import { Button } from "@material-ui/core";
-import Amplify  from "aws-amplify";
+import Amplify, { Auth }  from "aws-amplify";
 import React from 'react';
 import GraphEditor, {
   ACTIONS
@@ -14,9 +14,31 @@ import {
   CircularProgress
 } from '@material-ui/core';
 // import { TermsOfService } from './components/TermsOfService';
-import awsmobile from "./aws-exports";
 
-const AWS_PROD_CONFIG = awsmobile
+const AWS_PROD_CONFIG = {
+  "aws_project_region": "eu-central-1",
+  "aws_appsync_graphqlEndpoint": "https://mqnkmzj5ezd7vcdqxjp5lzdjj4.appsync-api.eu-central-1.amazonaws.com/graphql",
+  "aws_appsync_region": "eu-central-1",
+  "aws_appsync_authenticationType": "API_KEY",
+  "aws_appsync_apiKey": "da2-rafwqh2pjjfbnk5x7bwzxk6pgu",
+  "aws_cognito_region": "eu-central-1",
+  "aws_user_pools_id": "eu-central-1_Iia5Ube9G",
+  "aws_user_pools_web_client_id": "529do26g6icslepgrvcelapu8v",
+  "oauth": {
+      "domain": "case-law-explorer-dev.auth.eu-central-1.amazoncognito.com",
+      "scope": [
+          "phone",
+          "email",
+          "openid",
+          "profile",
+          "aws.cognito.signin.user.admin"
+      ],
+      "redirectSignIn": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+      "redirectSignOut": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+      "responseType": "code"
+  },
+  "federationTarget": "COGNITO_USER_POOLS"
+}
 
 const AWS_DEV_CONFIG_OVERRIDE = {
   "oauth": {
@@ -81,6 +103,7 @@ const AppWithAuth = () => {
             setUser(authData)
         });
     }, []);
+
   return  <>
   {
     authState === AuthState.SignedIn && user ? (
