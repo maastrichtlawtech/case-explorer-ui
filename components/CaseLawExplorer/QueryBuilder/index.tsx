@@ -59,7 +59,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         flexDirection: 'column',
         width: '80%',
         height: '80%',
-        padding: 10,
+        padding: 25,
         overflow: 'scroll'
       }}
       >
