@@ -139,21 +139,22 @@ const AppContainer = ({
           1969,
           2015
         ],
-        Instances: [
-          "Hoge Raad", "Raad van State",
-        ],
-        Domains: [
-          ""
-        ],
+        // EMPTY NOT ""
+        // Instances: [
+        //   "Hoge Raad", "Raad van State",
+        // ],
+        // Domains: [
+        //   ""
+        // ],
         Doctypes: [
           "DEC",
           "OPI"
         ],
         DegreesSources: 1,
-        Keywords: "",
+        // Keywords: "",
         DegreesTargets: 1,
         Eclis: "ECLI:NL:GHSGR:1972:AB4988",
-        Articles: ""
+        // Articles: ""
       },
     },
     helpModal: {

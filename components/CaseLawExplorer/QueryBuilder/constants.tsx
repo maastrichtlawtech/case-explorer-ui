@@ -2,7 +2,6 @@ import React from 'react'
 import { Button, Slider, Typography } from '@material-ui/core'
 
 const SliderUIField = ({ formData, schema, onChange, name }) => {
-
   return (
     <>
       <Typography id={`${schema.title}-continuous-slider`} gutterBottom>
@@ -21,6 +20,7 @@ const SliderUIField = ({ formData, schema, onChange, name }) => {
     </>
   )
 }
+
 export const getQueryBuilderSchema = () => {
   return {
     // children: <div></div>,
@@ -79,15 +79,7 @@ export const getQueryBuilderSchema = () => {
           title: 'Instances',
           uniqueItems: true,
           items: {
-            enum: [
-              '',
-              'Hoge Raad',
-              'Raad van State',
-              'Centrale Raad van Beroep',
-              'College van Beroep voor het bedrijfsleven',
-              'Gerechtshof Arnhem-Leeuwarden',
-              'Gerechtshof Amsterdam'
-            ],
+            enum: instancesList.instances,
             type: 'string'
           },
         },
@@ -96,12 +88,7 @@ export const getQueryBuilderSchema = () => {
           title: 'Domains',
           uniqueItems: true,
           items: {
-            enum: [
-              '',
-              'Not',
-              'Sure',
-              'What'
-            ],
+            enum: domainsList.subdomains,
             type: 'string'
           },
         },
@@ -138,9 +125,12 @@ export const getQueryBuilderSchema = () => {
       },
     },
     uiSchema: {
-      'Date': {
+      Date: {
         'ui:field': SliderUIField,
       },
+      Domains: {
+        'ui:enumDisabled': domainsList.domains
+      }
       // 'degreesSources': {
       //   'ui:field': SliderUIField,
       // },
@@ -155,4 +145,57 @@ export const getQueryBuilderSchema = () => {
       // },
     }
   }
+}
+
+const domainsList = {
+  domains: [
+    'Bestuursrecht',
+    'Civiel recht',
+    'Internationaal publiekrecht', 
+    'Strafrecht'
+  ],
+  subdomains: [
+    'Bestuursrecht', 
+    'Ambtenarenrecht', 
+    'Belastingrecht', 
+    'Bestuursprocesrecht', 
+    'Bestuursstrafrecht', 
+    'Europees bestuursrecht', 
+    'Mededingingsrecht', 
+    'Omgevingsrecht', 
+    'Socialezekerheidsrecht', 
+    'Vreemdelingenrecht', 
+    'Civiel recht', 
+    'Aanbestedingsrecht', 
+    'Arbeidsrecht', 
+    'Burgerlijk procesrecht', 
+    'Europees civiel recht', 
+    'Goederenrecht', 
+    'Insolventierecht', 
+    'Intellectueel eigendomsrecht', 
+    'Internationaal privaatrecht', 
+    'Ondernemingsrecht', 
+    'Personen- en familierecht', 
+    'Verbintenissenrecht', 
+    'Internationaal publiekrecht', 
+    'Mensenrechten', 
+    'Volkenrecht', 
+    'Strafrecht', 
+    'Europees strafrecht', 
+    'Internationaal strafrecht', 
+    'Materieel strafrecht', 
+    'Penitentiair strafrecht'
+  ]
+}
+
+const instancesList = {
+  instances: [
+    'Hoge Raad', 
+    'Raad van State', 
+    'Centrale Raad van Beroep', 
+    'College van Beroep voor het bedrijfsleven', 
+    'Gerechtshoven', 
+    'Rechtbanken', 
+    'Andere instanties binnen het Koninkrijk'
+  ]
 }
