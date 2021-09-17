@@ -25,7 +25,6 @@ export const getQueryBuilderSchema = () => {
   return {
     // children: <div></div>,
     schema: {
-      title: 'Fetch Data',
       type: 'object',
       required: [
         // 'title',
