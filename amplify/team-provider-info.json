@@ -19,23 +19,23 @@
         },
         "caseexploreruiglobalsettingslayer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/caseexploreruiglobalsettingslayer-LambdaLayerVersion5f1d9298-build.zip"
+          "s3Key": "amplify-builds/caseexploreruiglobalsettingslayer-LambdaLayerVersion63f887ad-build.zip"
         },
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/datafetcher-334b3048756768477743-build.zip"
+          "s3Key": "amplify-builds/datafetcher-4945324a4a416c396f61-build.zip"
         },
         "elasticsearchindexer": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/elasticsearchindexer-59615250507a5752592b-build.zip"
+          "s3Key": "amplify-builds/elasticsearchindexer-4c7258556c2f396a584d-build.zip"
         },
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/queryhandler-7572717a574a69624d6b-build.zip"
+          "s3Key": "amplify-builds/queryhandler-4a634b4e774c77626639-build.zip"
         },
         "test": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/test-76414d37745434382f6b-build.zip"
+          "s3Key": "amplify-builds/test-6a652b78367539775047-build.zip"
         }
       },
       "auth": {

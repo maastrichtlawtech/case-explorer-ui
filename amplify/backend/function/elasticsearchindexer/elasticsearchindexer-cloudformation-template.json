@@ -108,14 +108,7 @@
           ]
         },
         "Runtime": "python3.8",
-        "Layers": [
-          {
-            "Ref": "functioncaseexploreruidataaccesslayerArn"
-          },
-          {
-            "Ref": "functioncaseexploreruiglobalsettingslayerArn"
-          }
-        ],
+        "Layers": [],
         "Timeout": "25"
       }
     },

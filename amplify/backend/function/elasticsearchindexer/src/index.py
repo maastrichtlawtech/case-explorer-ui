@@ -30,9 +30,9 @@ mapping = {
 
 
 def handler(event, context):
-    # # create new index with correct mapping
+    # create new index with correct mapping
     # es_client.es.indices.create(
-    #     index=TABLE_NAME + '_new', 
+    #     index=TABLE_NAME.lower() + '_new', 
     #     body=
     #     {
     #         'mappings': {
@@ -45,20 +45,20 @@ def handler(event, context):
     # # reindex new index from old index
     # es_client.es.reindex(body={
     #     'source': {
-    #         'index': TABLE_NAME
+    #         'index': TABLE_NAME.lower()
     #     },
     #     'dest': {
-    #         'index': TABLE_NAME + '_new'
+    #         'index': TABLE_NAME.lower() + '_new'
     #     }
     # }, timeout='15m', slices='auto', wait_for_completion=True)
 
     # time.sleep(1)
     # delete old index
-    # es_client.es.indices.delete(index=TABLE_NAME, timeout='15m')
+    # es_client.es.indices.delete(index=TABLE_NAME.lower(), timeout='15m')
 
     # # recreate old index with correct mapping and reindex from new index
     # es_client.es.indices.create(
-    #     index=TABLE_NAME, 
+    #     index=TABLE_NAME.lower(), 
     #     body=
     #     {
     #         'mappings': {
@@ -71,15 +71,15 @@ def handler(event, context):
     # # reindex new index from old index
     # es_client.es.reindex(body={
     #     'source': {
-    #         'index': TABLE_NAME + '_new'
+    #         'index': TABLE_NAME.lower() + '_new'
     #     },
     #     'dest': {
-    #         'index': TABLE_NAME
+    #         'index': TABLE_NAME.lower()
     #     }
     # }, timeout='15m', wait_for_completion=True)
 
     # time.sleep(1)
     # delete old index
-    es_client.es.indices.delete(index=TABLE_NAME + '_new', timeout='15m')
+    es_client.es.indices.delete(index=TABLE_NAME.lower() + '_new', timeout='15m')
 
     return {}
