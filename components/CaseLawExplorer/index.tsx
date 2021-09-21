@@ -107,7 +107,7 @@ const AppContainer = ({
       articles: ""
     },
     filtering: {
-      year: [1960, 2021],
+      year: [1900, 2021],
       degree: [0, 100],
       indegree: [0, 100],
       outdegree: [0, 100]
