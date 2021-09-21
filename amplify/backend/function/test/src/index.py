@@ -5,7 +5,7 @@ from attributes import NODE_FULL, NODE_FULL_LI
 from settings import TABLE_NAME
 
 
-def handler(event, context):
+def handler2(event, context):
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
     
     authorized_user = is_authorized(event)
@@ -49,5 +49,17 @@ def handler(event, context):
             "pool_id": user_pool_id,
             "event": event,
             "user_id": user_id
+        }
+    }
+
+def handler(event, context):
+    ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
+    authorized_user = is_authorized(event)
+    return {
+        "id": "test", 
+        "data": {
+            "ddb_client": str(ddb_client),
+            "event": event,
+            "authorized": authorized_user
         }
     }

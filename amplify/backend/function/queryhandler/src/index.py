@@ -15,7 +15,7 @@ import time
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
 from clients.elasticsearch_client import ElasticsearchClient
 from clients.dynamodb_client import DynamodbClient
-from utils import get_key, format_node_data, verify_input_string_list, verify_input_ecli_string, is_authorized
+from utils import get_key, format_node_data, verify_input_string_list, verify_input_ecli_string, verify_input_string, verify_input_start_date, verify_input_end_date, verify_input_int, is_authorized
 from attributes import NODE_ESSENTIAL, NODE_ESSENTIAL_LI, KEYWORD_SEARCH, KEYWORD_SEARCH_LI, ARTICLE_SEARCH
 from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
 from network_statistics import add_network_statistics
@@ -31,7 +31,7 @@ MAX_ITEMS = MAX_ITEMS_PER_PAGE * MAX_PAGES
 # set up Elasticsearch client
 es_client = ElasticsearchClient(
     endpoint=ELASTICSEARCH_ENDPOINT,
-    index=TABLE_NAME,
+    index=TABLE_NAME.lower(),
     max_hits=MAX_ITEMS_PER_PAGE,    # max number of hits (matching items) per query (page)
     page_limit=MAX_PAGES            # max number of queries (pages)
     #timeout= 20                    # request timeout in s
@@ -72,11 +72,17 @@ def handler(event, context):
     
 
     # 2. CHECK INPUT VALIDITY
-    search_params["DataSources"] = verify_input_string_list("DataSources", search_params["DataSources"])
-    search_params["Instances"] = verify_input_string_list("Instances", search_params["Instances"])
-    search_params["Domains"] = verify_input_string_list("Domains", search_params["Domains"])
-    search_params["Doctypes"] = verify_input_string_list("Doctypes", search_params["Doctypes"])
-    search_params["Eclis"] = verify_input_ecli_string("Eclis", search_params["Eclis"])
+    search_params["Articles"] = verify_input_string("Articles", search_params)
+    search_params["DataSources"] = verify_input_string_list("DataSources", search_params)
+    search_params["DateStart"] = verify_input_start_date("DateStart", search_params)
+    search_params["DateEnd"] = verify_input_end_date("DateEnd", search_params)
+    search_params["DegreesSources"] = verify_input_int("DegreesSources", search_params)
+    search_params["DegreesTargets"] = verify_input_int("DegreesTargets", search_params)
+    search_params["Doctypes"] = verify_input_string_list("Doctypes", search_params)
+    search_params["Domains"] = verify_input_string_list("Domains", search_params)
+    search_params["Eclis"] = verify_input_ecli_string("Eclis", search_params)
+    search_params["Instances"] = verify_input_string_list("Instances", search_params)
+    search_params["Keywords"] = verify_input_string("Keywords", search_params)
 
 
     # 3. SELECT CASES MATCHING SEARCH INPUT

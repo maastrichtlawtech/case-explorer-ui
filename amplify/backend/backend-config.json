@@ -82,6 +82,13 @@
             "GraphQLAPIEndpointOutput",
             "GraphQLAPIKeyOutput"
           ]
+        },
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruiauth",
+          "attributes": [
+            "UserPoolId"
+          ]
         }
       ]
     },

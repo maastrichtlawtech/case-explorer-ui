@@ -1,8 +1,9 @@
 import warnings
+from datetime import datetime, date
 
 def is_authorized(event):
     authorized = False
-    if "identity" in event:
+    if "identity" in event and event["identity"]:
         user_id = event['identity']['claims']['username']
         if user_id.startswith('surfconext'):
             authorized = True
@@ -53,18 +54,61 @@ def build_projection_expression(attributes):
     return projection_expression, expression_attribute_names
 
 
-def verify_input_string_list(key, val):
+def verify_input_string_list(key, params):
     # checks string list input types for validity and returns default value if invalid
-    if val is None or not isinstance(val, list) or not all(isinstance(elem, str) for elem in val) or len(val) < 1:
+    if not key in params \
+            or not params[key] \
+            or not isinstance(params[key], list) \
+            or not all(isinstance(elem, str) for elem in params[key]) \
+            or len(params[key]) < 1:
         warnings.warn(f"Invalid input: argument '{key}' of type list of strings expected. Setting '{key}' to [''].")
         return [""]
     else:
-        return val
+        return params[key]
 
 
-def verify_input_ecli_string(key, val):
-    if not isinstance(val, str):
+def verify_input_string(key, params):
+    if not key in params \
+            or not isinstance(params[key], str):
         warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to ''.")
-        return [""]
+        return ""
     else:
-        return val.strip().split(' ')
+        return params[key].strip()
+
+
+def verify_input_ecli_string(key, params):
+    return verify_input_string(key, params).split(' ')
+
+
+def verify_input_start_date(key, params):
+    if not key in params \
+            or not isinstance(params[key], str) \
+            or not datetime.strptime(params[key], '%Y-%m-%d'):
+        warnings.warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected. Setting '{key}' to '1900-01-01'.")
+        return '1900-01-01'
+    else:
+        return params[key]
+
+
+def verify_input_end_date(key, params):
+    if not key in params \
+            or not isinstance(params[key], str) \
+            or not datetime.strptime(params[key], '%Y-%m-%d') \
+            or not date.fromisoformat(params['DateStart']) < date.fromisoformat(params[key]):
+        warnings.warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected "
+                      f"and '{key}' must be after 'DateStart'. Setting '{key}' to '{date.today().strftime('%Y-%m-%d')}'.")
+        return date.today().strftime('%Y-%m-%d')
+    else:
+        return params[key]
+
+
+def verify_input_int(key, params):
+    if not key in params \
+            or not isinstance(params[key], int) \
+            or not 1 <= params[key] <= 5:
+        warnings.warn(f"Invalid input: argument '{key}' of type Int between 1 and 5 expected."
+                      f"Setting '{key}' to 1.")
+        return 1
+    else:
+        return params[key]
+
