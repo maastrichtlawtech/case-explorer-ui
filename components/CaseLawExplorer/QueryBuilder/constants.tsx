@@ -70,8 +70,8 @@ export const getQueryBuilderSchema = () => {
           items: {
             type: 'number',
           },
-          minimum: 1969,
-          maximum: 2015,
+          minimum: 1900,
+          maximum: 2021,
         },
         Instances: {
           type: 'array',

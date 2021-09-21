@@ -81,8 +81,8 @@ const AppContainer = ({
         "Rechtspraak"
       ],
       year: [
-        1969,
-        2015
+        1900,
+        2021
       ],
       instances: [
         "Hoge Raad",
@@ -136,8 +136,8 @@ const AppContainer = ({
           "RS"
         ],
         Date: [
-          1969,
-          2015
+          1900,
+          2021
         ],
         // EMPTY NOT ""
         // Instances: [
