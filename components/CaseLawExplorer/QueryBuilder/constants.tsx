@@ -78,7 +78,7 @@ export const getQueryBuilderSchema = () => {
           title: 'Instances',
           uniqueItems: true,
           items: {
-            enum: instancesList.instances,
+            enum: instancesList.subinstances,
             type: 'string'
           },
         },
@@ -129,6 +129,9 @@ export const getQueryBuilderSchema = () => {
       },
       Domains: {
         'ui:enumDisabled': domainsList.domains
+      },
+      Instances: {
+        'ui:enumDisabled': instancesList.instances
       }
     }
   }
@@ -197,12 +200,41 @@ const domainsList = {
 
 const instancesList = {
   instances: [
-    'Hoge Raad', 
-    'Raad van State', 
-    'Centrale Raad van Beroep', 
-    'College van Beroep voor het bedrijfsleven', 
     'Gerechtshoven', 
     'Rechtbanken', 
     'Andere instanties binnen het Koninkrijk'
+  ],
+  subinstances: [
+    'Hoge Raad',
+    'Raad van State',
+    'Centrale Raad van Beroep',
+    'College van Beroep voor het bedrijfsleven',
+    'Gerechtshoven',
+    'Gerechtshof Amsterdam',
+    'Gerechtshof Arnhem-Leeuwarden',
+    'Gerechtshof s-Gravenhage',
+    'Gerechtshof s-Hertogenbosch',
+    'Rechtbanken',
+    'Rechtbank Amsterdam',
+    'Rechtbank s-Gravenhage',
+    'Rechtbank Gelderland',
+    'Rechtbank Limburg',
+    'Rechtbank Midden-Nederland',
+    'Rechtbank Noord-Holland',
+    'Rechtbank Noord-Nederland',
+    'Rechtbank Oost-Brabant',
+    'Rechtbank Overijssel',
+    'Rechtbank Rotterdam',
+    'Rechtbank Zeeland-West-Brabant',
+    'Andere instanties binnen het Koninkrijk',
+    'Constitutioneel Hof Sint Maarten',
+    'Gemeenschappelijk Hof van Justitie van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
+    'Gerecht in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
+    'Gerecht in Eerste Aanleg van Aruba',
+    'Gerecht in eerste aanleg van Bonaire, Sint Eustatius en Saba',
+    'Gerecht in eerste aanleg van Curaçao',
+    'Gerecht in eerste aanleg van Sint Maarten',
+    'Raad van Beroep in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
+    'Raad van Beroep voor Belastingzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba'
   ]
 }
