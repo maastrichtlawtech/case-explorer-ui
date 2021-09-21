@@ -130,60 +130,68 @@ export const getQueryBuilderSchema = () => {
       Domains: {
         'ui:enumDisabled': domainsList.domains
       }
-      // 'degreesSources': {
-      //   'ui:field': SliderUIField,
-      // },
-      // 'degreesTargets': {
-      //   'ui:field': SliderUIField,
-      // },
-      // 'source':{
-      //   'ui:widget': 'checkboxes'
-      // },
-      // 'liPermission':{
-      //   'ui:widget': 'select'
-      // },
     }
   }
 }
 
 const domainsList = {
   domains: [
-    'Bestuursrecht',
-    'Civiel recht',
-    'Internationaal publiekrecht', 
-    'Strafrecht'
+    'Bestuursrecht and subdomains',
+    'Civielrecht and subdomains',
+    'Internationaal publiekrecht and subdomains', 
+    'Strafrecht and subdomains',
+    'Uncategorized domains'
   ],
   subdomains: [
-    'Bestuursrecht', 
-    'Ambtenarenrecht', 
-    'Belastingrecht', 
-    'Bestuursprocesrecht', 
-    'Bestuursstrafrecht', 
-    'Europees bestuursrecht', 
-    'Mededingingsrecht', 
-    'Omgevingsrecht', 
-    'Socialezekerheidsrecht', 
-    'Vreemdelingenrecht', 
-    'Civiel recht', 
-    'Aanbestedingsrecht', 
-    'Arbeidsrecht', 
-    'Burgerlijk procesrecht', 
-    'Europees civiel recht', 
-    'Goederenrecht', 
-    'Insolventierecht', 
-    'Intellectueel eigendomsrecht', 
-    'Internationaal privaatrecht', 
-    'Ondernemingsrecht', 
-    'Personen- en familierecht', 
-    'Verbintenissenrecht', 
-    'Internationaal publiekrecht', 
-    'Mensenrechten', 
-    'Volkenrecht', 
-    'Strafrecht', 
-    'Europees strafrecht', 
-    'Internationaal strafrecht', 
-    'Materieel strafrecht', 
-    'Penitentiair strafrecht'
+    'Bestuursrecht and subdomains',
+    'Bestuursrecht',
+    'Ambtenarenrecht',
+    'Belastingrecht',
+    'Bestuursprocesrecht',
+    'Bestuursstrafrecht',
+    'Europees bestuursrecht',
+    'Mededingingsrecht',
+    'Omgevingsrecht',
+    'Socialezekerheidsrecht',
+    'Vreemdelingenrecht',
+    'Onderwijs/Studiefinanciering',
+    'Ruimtelijk Bestuursrecht/Milieurecht/Energierecht',
+    'Civielrecht and subdomains',
+    'Civiel recht',
+    'Aanbestedingsrecht',
+    'Arbeidsrecht',
+    'Burgerlijk procesrecht',
+    'Europees civiel recht',
+    'Goederenrecht',
+    'Insolventierecht',
+    'Intellectueel-eigendomsrecht',
+    'Internationaal privaatrecht',
+    'Ondernemingsrecht',
+    'Personen- en familierecht',
+    'Verbintenissenrecht',
+    'Bouwrecht',
+    'Burgerlijk recht',
+    'Gezondheidsrecht',
+    'Huurrecht/Woonrecht',
+    'Vervoer/Verkeersrecht',
+    'Verzekeringsrecht',
+    'Telecom/ICT/Mediarecht',
+    'Internationaal publiekrecht and subdomains',
+    'Internationaal publiekrecht',
+    'Mensenrechten',
+    'Volkenrecht',
+    'Strafrecht and subdomains',
+    'Strafrecht',
+    'Europees strafrecht',
+    'Internationaal strafrecht',
+    'Materieel strafrecht',
+    'Penitentiair strafrecht',
+    'Strafprocesrecht',
+    'Uncategorized domains',
+    'Algemeen/Overig/Niet-gelabeld',
+    'Bank- en effectenrecht',
+    'Gemeenschapsrecht EU',
+    'Buitenlands Recht/Religieus recht',
   ]
 }
 
