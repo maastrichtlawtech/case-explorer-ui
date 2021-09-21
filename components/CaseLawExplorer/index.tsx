@@ -76,38 +76,8 @@ const AppContainer = ({
       nodeSize: null,
       nodeColor: null
     },
-    fetching: {
-      source: [
-        "Rechtspraak"
-      ],
-      year: [
-        1969,
-        2015
-      ],
-      instances: [
-        "Hoge Raad",
-        "Raad van State",
-        "Centrale Raad van Beroep",
-        "College van Beroep voor het bedrijfsleven",
-        "Gerechtshof Arnhem-Leeuwarden"
-      ],
-      domains: [
-        "Not"
-      ],
-      doctypes: [
-        "DEC",
-        "OPI"
-      ],
-      degreesSources: 3,
-      popup: false,
-      liPermission: false,
-      keywords: "test",
-      degreesTargets: 3,
-      eclis: "",
-      articles: ""
-    },
     filtering: {
-      year: [1960, 2021],
+      year: [1900, 2021],
       degree: [0, 100],
       indegree: [0, 100],
       outdegree: [0, 100]
@@ -136,8 +106,8 @@ const AppContainer = ({
           "RS"
         ],
         Date: [
-          1969,
-          2015
+          1900,
+          2021
         ],
         // EMPTY NOT ""
         // Instances: [

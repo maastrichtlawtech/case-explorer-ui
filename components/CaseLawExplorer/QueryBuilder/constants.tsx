@@ -70,15 +70,15 @@ export const getQueryBuilderSchema = () => {
           items: {
             type: 'number',
           },
-          minimum: 1969,
-          maximum: 2015,
+          minimum: 1900,
+          maximum: 2021,
         },
         Instances: {
           type: 'array',
           title: 'Instances',
           uniqueItems: true,
           items: {
-            enum: instancesList.instances,
+            enum: instancesList.subinstances,
             type: 'string'
           },
         },
@@ -129,72 +129,112 @@ export const getQueryBuilderSchema = () => {
       },
       Domains: {
         'ui:enumDisabled': domainsList.domains
+      },
+      Instances: {
+        'ui:enumDisabled': instancesList.instances
       }
-      // 'degreesSources': {
-      //   'ui:field': SliderUIField,
-      // },
-      // 'degreesTargets': {
-      //   'ui:field': SliderUIField,
-      // },
-      // 'source':{
-      //   'ui:widget': 'checkboxes'
-      // },
-      // 'liPermission':{
-      //   'ui:widget': 'select'
-      // },
     }
   }
 }
 
 const domainsList = {
   domains: [
-    'Bestuursrecht',
-    'Civiel recht',
-    'Internationaal publiekrecht', 
-    'Strafrecht'
+    'Bestuursrecht and subdomains',
+    'Civielrecht and subdomains',
+    'Internationaal publiekrecht and subdomains', 
+    'Strafrecht and subdomains',
+    'Uncategorized domains'
   ],
   subdomains: [
-    'Bestuursrecht', 
-    'Ambtenarenrecht', 
-    'Belastingrecht', 
-    'Bestuursprocesrecht', 
-    'Bestuursstrafrecht', 
-    'Europees bestuursrecht', 
-    'Mededingingsrecht', 
-    'Omgevingsrecht', 
-    'Socialezekerheidsrecht', 
-    'Vreemdelingenrecht', 
-    'Civiel recht', 
-    'Aanbestedingsrecht', 
-    'Arbeidsrecht', 
-    'Burgerlijk procesrecht', 
-    'Europees civiel recht', 
-    'Goederenrecht', 
-    'Insolventierecht', 
-    'Intellectueel eigendomsrecht', 
-    'Internationaal privaatrecht', 
-    'Ondernemingsrecht', 
-    'Personen- en familierecht', 
-    'Verbintenissenrecht', 
-    'Internationaal publiekrecht', 
-    'Mensenrechten', 
-    'Volkenrecht', 
-    'Strafrecht', 
-    'Europees strafrecht', 
-    'Internationaal strafrecht', 
-    'Materieel strafrecht', 
-    'Penitentiair strafrecht'
+    'Bestuursrecht and subdomains',
+    'Bestuursrecht',
+    'Ambtenarenrecht',
+    'Belastingrecht',
+    'Bestuursprocesrecht',
+    'Bestuursstrafrecht',
+    'Europees bestuursrecht',
+    'Mededingingsrecht',
+    'Omgevingsrecht',
+    'Socialezekerheidsrecht',
+    'Vreemdelingenrecht',
+    'Onderwijs/Studiefinanciering',
+    'Ruimtelijk Bestuursrecht/Milieurecht/Energierecht',
+    'Civielrecht and subdomains',
+    'Civiel recht',
+    'Aanbestedingsrecht',
+    'Arbeidsrecht',
+    'Burgerlijk procesrecht',
+    'Europees civiel recht',
+    'Goederenrecht',
+    'Insolventierecht',
+    'Intellectueel-eigendomsrecht',
+    'Internationaal privaatrecht',
+    'Ondernemingsrecht',
+    'Personen- en familierecht',
+    'Verbintenissenrecht',
+    'Bouwrecht',
+    'Burgerlijk recht',
+    'Gezondheidsrecht',
+    'Huurrecht/Woonrecht',
+    'Vervoer/Verkeersrecht',
+    'Verzekeringsrecht',
+    'Telecom/ICT/Mediarecht',
+    'Internationaal publiekrecht and subdomains',
+    'Internationaal publiekrecht',
+    'Mensenrechten',
+    'Volkenrecht',
+    'Strafrecht and subdomains',
+    'Strafrecht',
+    'Europees strafrecht',
+    'Internationaal strafrecht',
+    'Materieel strafrecht',
+    'Penitentiair strafrecht',
+    'Strafprocesrecht',
+    'Uncategorized domains',
+    'Algemeen/Overig/Niet-gelabeld',
+    'Bank- en effectenrecht',
+    'Gemeenschapsrecht EU',
+    'Buitenlands Recht/Religieus recht',
   ]
 }
 
 const instancesList = {
   instances: [
-    'Hoge Raad', 
-    'Raad van State', 
-    'Centrale Raad van Beroep', 
-    'College van Beroep voor het bedrijfsleven', 
     'Gerechtshoven', 
     'Rechtbanken', 
     'Andere instanties binnen het Koninkrijk'
+  ],
+  subinstances: [
+    'Hoge Raad',
+    'Raad van State',
+    'Centrale Raad van Beroep',
+    'College van Beroep voor het bedrijfsleven',
+    'Gerechtshoven',
+    'Gerechtshof Amsterdam',
+    'Gerechtshof Arnhem-Leeuwarden',
+    'Gerechtshof s-Gravenhage',
+    'Gerechtshof s-Hertogenbosch',
+    'Rechtbanken',
+    'Rechtbank Amsterdam',
+    'Rechtbank s-Gravenhage',
+    'Rechtbank Gelderland',
+    'Rechtbank Limburg',
+    'Rechtbank Midden-Nederland',
+    'Rechtbank Noord-Holland',
+    'Rechtbank Noord-Nederland',
+    'Rechtbank Oost-Brabant',
+    'Rechtbank Overijssel',
+    'Rechtbank Rotterdam',
+    'Rechtbank Zeeland-West-Brabant',
+    'Andere instanties binnen het Koninkrijk',
+    'Constitutioneel Hof Sint Maarten',
+    'Gemeenschappelijk Hof van Justitie van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
+    'Gerecht in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
+    'Gerecht in Eerste Aanleg van Aruba',
+    'Gerecht in eerste aanleg van Bonaire, Sint Eustatius en Saba',
+    'Gerecht in eerste aanleg van Curaçao',
+    'Gerecht in eerste aanleg van Sint Maarten',
+    'Raad van Beroep in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
+    'Raad van Beroep voor Belastingzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba'
   ]
 }

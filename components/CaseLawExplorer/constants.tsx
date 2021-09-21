@@ -44,8 +44,8 @@ export const getFilterSchema = (props: {} = {}) => {
           items: {
             type: 'number',
           },
-          minimum: 1969,
-          maximum: 2015,
+          minimum: 1900,
+          maximum: 2021,
         },
         degree: {
           type: 'array',
