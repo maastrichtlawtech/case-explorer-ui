@@ -98,11 +98,10 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             formData={state}
             onSubmit={async e => {
               onStart()
-              
               try {
                 let casesData = await API.listCases(transformData(e.formData))
                 // let casesData = prepareData(cases)
-                // console.log('logCasesData',casesData)
+                console.log('logCasesData',casesData)
                 if (casesData.nodes.length == 0) {
                   throw new Error("No cases returned")
                 }

@@ -433,7 +433,7 @@ const AppContainer = ({
           message
         } = {}) => {
           controller.update((draft) => {
-            draft.nodes = nodes
+            draft.nodes = filterEdges(nodes)(edges)
             draft.edges = edges
             draft.networkStatistics = {
               local: networkStatistics
