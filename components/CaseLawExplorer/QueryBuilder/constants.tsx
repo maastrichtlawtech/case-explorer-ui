@@ -132,6 +132,12 @@ export const getQueryBuilderSchema = () => {
       },
       Instances: {
         'ui:enumDisabled': instancesList.instances
+      },
+      DataSources: {
+        'ui:enumDisabled': [
+          'ECHR',
+          'Eurlex'
+        ]
       }
     }
   }
