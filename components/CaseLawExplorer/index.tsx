@@ -38,6 +38,7 @@ export const ACTIONS = {
   TEST_API: 'TEST_API',
 }
 
+const NODE_LIMIT = 100
 const HELP_VIDEO_ID = "OrzMIhLpVps"
 
 const MUIDarkTheme = createMuiTheme({
@@ -381,7 +382,6 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
-
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
@@ -433,15 +433,19 @@ const AppContainer = ({
           message
         } = {}) => {
           controller.update((draft) => {
-            const nodes = R.take(50, nodes_)
+            const nodes = R.take(NODE_LIMIT, nodes_)
             draft.nodes = nodes
             draft.edges = filterEdges(nodes)(edges)
             draft.networkStatistics = {
               local: networkStatistics
             }
             draft.isLoading = false
-            draft.graphConfig!.layout = Graph.Layouts.circle
           })
+          setTimeout(() => {
+            controller.update((draft) => {
+            draft.graphConfig!.layout = {...Graph.Layouts.circle}
+            })
+          },250)
           if (message) {
             alertRef.current.alert({
               type: 'warning',

@@ -9,14 +9,15 @@ export type RenderNodeProps = Parameters<RenderNodeType>[0]
 
 const DEFAULT_FONT_SIZE = 20
 const TOP_SCALE = 3.1
-export const RenderNode = ({
-   item, element, cy, theme,
-   visualization, 
-   filtering,
-   labelPath,
-   label,
-  graphRef 
-}: RenderNodeProps) => {
+export const RenderNode = (props: RenderNodeProps) => {
+  const {
+    item, element, cy, theme,
+    visualization, 
+    filtering,
+    labelPath,
+    label,
+   graphRef ,
+ } = props
   const text = R.takeLast(6, `${label}`)//item.id
   const size = calculateNodeSize(item.data, visualization.nodeSize)
   const color = visualization.nodeColor ? calculateColor(
@@ -44,22 +45,11 @@ export const RenderNode = ({
         if (xScale >= 1 && xScale <= 5) {
           textRef.current.scale.x = xScale
           textRef.current.scale.y = yScale
-          const top =  (- DEFAULT_FONT_SIZE * TOP_SCALE * yScale) + size/2
-          const left =  (- DEFAULT_FONT_SIZE/2 +6) * xScale
-          // if (text === 'BC6699') {
-          //   console.log(top, left)
-          // }
+          const top =  - DEFAULT_FONT_SIZE * yScale
+          const left =  - (DEFAULT_FONT_SIZE / 2) * xScale
+          textRef.current.x = left
+          textRef.current.y = top
           return
-          textRef.current.__yoga.top =  top
-            textRef.current.__yoga.left =  left
-            localDataRef.current.text.top = top
-            localDataRef.current.text.left = left
-            if (text === 'BC6699') {
-              console.log(top, left)
-            }
-          
-          
-          
         }
     }
     if (graphRef.current.viewport) {
@@ -72,7 +62,6 @@ export const RenderNode = ({
       }
     }
   }, [graphRef.current.viewport])
-  
   return (
     <Graph.View
       style={{
@@ -83,12 +72,18 @@ export const RenderNode = ({
         display: 'flex',
         backgroundColor: hasSelectedEdge
         ? theme.palette.secondary.main
-        : (element.selected()
+        : (
+          element.selected()
           ? theme.palette.primary.main
-          : color),
+          : (
+            element.hovered()
+            ? theme.palette.secondary.main
+            : color
+            )
+          ),
         borderRadius: size,
       }}
-      click={(e) => {
+      pointertap={(e) => {
         cy.$(':selected').unselect()
         element.select()
       }}
@@ -97,7 +92,7 @@ export const RenderNode = ({
         ref={textRef}
         style={{
           position: 'absolute',
-          // left: localDataRef.current.text.left,
+          left: localDataRef.current.text.left,
           top: localDataRef.current.text.top  - size/3,
           fontSize: DEFAULT_FONT_SIZE
         }}
