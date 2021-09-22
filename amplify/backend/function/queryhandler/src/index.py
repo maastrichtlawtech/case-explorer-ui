@@ -23,8 +23,8 @@ from network_statistics import add_network_statistics
 
 TEST = False                        # returns number of nodes instead of nodes
 
-MAX_ITEMS_PER_PAGE = 10             # 500   (10)
-MAX_PAGES = 5                       # 10    (5)
+MAX_ITEMS_PER_PAGE = 20             # 500   (10)
+MAX_PAGES = 10                       # 10    (5)
 MAX_ITEMS = MAX_ITEMS_PER_PAGE * MAX_PAGES
 
 

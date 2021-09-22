@@ -8,7 +8,7 @@
         "DegreesTargets": 1,
         "DateStart": "1969-01-01",
         "DateEnd": "2015-12-31",
-        "Instances": [""],
+        "Instances": ["Hoge Raad"],
         "Domains": [""],
         "Doctypes": ["DEC"]
     }
