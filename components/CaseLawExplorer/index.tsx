@@ -427,14 +427,15 @@ const AppContainer = ({
           })
         }}
         onFinish={({
-          nodes = [],
+          nodes: nodes_ = [],
           edges= [],
           networkStatistics,
           message
         } = {}) => {
           controller.update((draft) => {
-            draft.nodes = filterEdges(nodes)(edges)
-            draft.edges = edges
+            const nodes = R.take(50, nodes_)
+            draft.nodes = nodes
+            draft.edges = filterEdges(nodes)(edges)
             draft.networkStatistics = {
               local: networkStatistics
             }
