@@ -44,9 +44,6 @@ ddb_client = DynamodbClient(
     page_limit=MAX_PAGES            # max number of queries (pages)
 )
 
-LIMIT_REACHED = False
-
-
 def handler(event, context):
     """
     Main function that is executed when lambda function is triggered.
@@ -62,8 +59,6 @@ def handler(event, context):
     start = time.time()
     search_params = event['arguments'].copy()
     attributes = NODE_ESSENTIAL
-    global LIMIT_REACHED
-
 
     # 1. CHECK USER AUTHORIZATION
     authorized_user = is_authorized(event)
@@ -87,13 +82,15 @@ def handler(event, context):
 
     # 3. SELECT CASES MATCHING SEARCH INPUT
     # a. select cases matching filters
-    node_eclis, searched_dynamodb = query_node_eclis(search_params)
+    node_eclis, searched_dynamodb, limit_reached = query_node_eclis(search_params)
 
-    # add li entries if permission given
+    # add li entries if authorized
     if authorized_user:
         attributes = NODE_ESSENTIAL_LI
-        node_eclis_li, _ = query_node_eclis(search_params, authorized=True)
+        node_eclis_li, _, li_limit_reached = query_node_eclis(search_params, authorized=True)
+        limit_reached = limit_reached or li_limit_reached
         node_eclis = node_eclis.union(node_eclis_li)
+        
 
     # b. filter selected cases by keyword match if keywords given and filters did not return no matches
     # @TODO filter by doc_source_date!
@@ -101,7 +98,7 @@ def handler(event, context):
         print('in ES')
         es_query = build_elasticsearch_query(search_params['Keywords'], search_params['Articles'], node_eclis, authorized_user)
         result, es_limit_reached = es_client.execute(es_query, ['ecli'])
-        LIMIT_REACHED = LIMIT_REACHED or es_limit_reached
+        limit_reached = limit_reached or es_limit_reached
         node_eclis = {item['_source']['ecli'] for item in result}
 
 
@@ -111,8 +108,9 @@ def handler(event, context):
     if TEST:
         edges = []
     else:
-        edges, new_node_eclis = fetch_edges_data(node_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
-    
+        edges, new_node_eclis, edges_limit_reached = fetch_edges_data(node_eclis, search_params['DegreesSources'], search_params['DegreesTargets'])
+        limit_reached = limit_reached or edges_limit_reached
+
     # fetch nodes data
     keys_list = []
     if TEST:
@@ -130,7 +128,7 @@ def handler(event, context):
 
     print('Duration total:', time.time()-start)
 
-    if LIMIT_REACHED:
+    if limit_reached:
         message = 'Network too large to fetch! Only partial result displayed.'
     else:
         message = ''
@@ -181,23 +179,20 @@ def query_node_eclis(filters, authorized=False):
     - Queries DynamoDB by selecting the most suitable index for the given input filters and looping through all filters.
     - Queries Elasticsearch to match selected cases to keywords.
     :param s_params: dictionary of search filters
-    :param authorized: boolean flag whether or not permission to access Legal Intelligence data is given
-    :return: set of DocSourceIds of cases matching search input
+    :param authorized: boolean flag whether or not user authorized to access Legal Intelligence data
+    :return: set of DocSourceIds of cases matching search input, 
+             boolean flag whether or not DynamoDB was searched, 
+             boolean flag whether or not node limit was reached
     """
-    global LIMIT_REACHED
 
     def execute_dynamodb_queries_per_filter(**q_params):
-        global LIMIT_REACHED
+        query_limit_reached = False
         node_eclis = set()
         for ecli in filters['Eclis']:
             for instance in filters['Instances']:
                 for domain in filters['Domains']:
                     for source in filters['DataSources']:
                         for doc in filters['Doctypes']:
-                            if len(node_eclis) >= MAX_ITEMS:
-                                LIMIT_REACHED = True
-                                print(f'LIMIT REACHED: {len(node_eclis)} CASES FETCHED')
-                                return node_eclis
                             expression_attribute_values = {
                                 ':instance': instance,
                                 ':DateStart': f"{source}_{doc}_{filters['DateStart']}",
@@ -208,9 +203,12 @@ def query_node_eclis(filters, authorized=False):
                             if 'IndexName' not in q_params:
                                 expression_attribute_values[':ecli'] = ecli
                             response, ddb_limit_reached = ddb_client.execute_query(ExpressionAttributeValues=expression_attribute_values, **q_params)
-                            LIMIT_REACHED = LIMIT_REACHED or ddb_limit_reached
                             node_eclis = node_eclis.union({item['ecli'] for item in response['Items']})
-        return node_eclis
+                            if ddb_limit_reached or len(node_eclis) >= MAX_ITEMS:
+                                query_limit_reached = True
+                                print(f'LIMIT REACHED: {len(node_eclis)} CASES FETCHED')
+                                return node_eclis, query_limit_reached
+        return node_eclis, query_limit_reached
 
     if authorized:
         domain_name = 'DOM_LI'
@@ -226,6 +224,7 @@ def query_node_eclis(filters, authorized=False):
 
     # CASE 1: neither eclis, nor instances given --> fetch by domain:
     if filters['Eclis'] == [''] and filters['Instances'] == [''] and filters['Domains'] != ['']:
+        limit_reached = False
         print('IN DOMAINS')
         node_eclis = set()
         for source in filters['DataSources']:
@@ -242,9 +241,12 @@ def query_node_eclis(filters, authorized=False):
                             ':DateEnd': f"{source}_{doc}_{filters['DateEnd']}"
                         }
                     )
-                    LIMIT_REACHED = LIMIT_REACHED or ddb_limit_reached
                     node_eclis = node_eclis.union({item['ecli'] for item in response['Items']})
-        return node_eclis, True
+                    if ddb_limit_reached or len(node_eclis) >= MAX_ITEMS:
+                        limit_reached = True
+                        print(f'LIMIT REACHED: {len(node_eclis)} CASES FETCHED')
+                        return node_eclis, True, limit_reached
+        return node_eclis, True, limit_reached
     
 
     # CASE 2: eclis given
@@ -261,8 +263,8 @@ def query_node_eclis(filters, authorized=False):
             q_params['FilterExpression'] = 'contains(#instance, :instance) AND #SourceDocDate BETWEEN :DateStart AND :DateEnd'
             q_params['ExpressionAttributeNames'] = {'#ecli': 'ecli', '#instance': instance_name, '#SourceDocDate': 'SourceDocDate'}
             
-        node_eclis = execute_dynamodb_queries_per_filter(**q_params)
-        return node_eclis, True
+        node_eclis, limit_reached = execute_dynamodb_queries_per_filter(**q_params)
+        return node_eclis, True, limit_reached
 
 
     # CASE 3: instances given
@@ -279,14 +281,14 @@ def query_node_eclis(filters, authorized=False):
         else:
             q_params['ExpressionAttributeNames'] = {'#ecli': 'ecli', '#instance': instance_name, '#SourceDocDate': 'SourceDocDate'}
         
-        node_eclis = execute_dynamodb_queries_per_filter(**q_params)
-        return node_eclis, True
+        node_eclis, limit_reached = execute_dynamodb_queries_per_filter(**q_params)
+        return node_eclis, True, limit_reached
 
 
     # CASE 4: neither eclis, nor instances, nor domains given --> only query Elasticsearch by keywords 
     else:
         print('IN ELSE')
-        return set(), False
+        return set(), False, False
 
 
 def fetch_edges_data(eclis, degrees_sources, degrees_targets):
@@ -295,13 +297,14 @@ def fetch_edges_data(eclis, degrees_sources, degrees_targets):
     :param doc_source_eclis: set of doc_source_eclis  
     :param degrees_sources: int degree of source citations
     :param degrees_targets: int degree of target citations
-    :return: list of edge dicts (containing edge_id, source_id, target_id, data)
+    :return: list of edge dicts (containing edge_id, source_id, target_id, data), 
+             set of new node eclis, 
+             flag whether or not query limit was reached
     """
     new_node_eclis = set()
     edges = []
     target_keys = []
     source_keys = []
-    global LIMIT_REACHED
 
     for ecli in eclis:
         target_keys.append(get_key(ecli))
@@ -315,7 +318,7 @@ def fetch_edges_data(eclis, degrees_sources, degrees_targets):
             if 'cites' in item:
                 for citation in item['cites']:
                     if len(edges) >= MAX_ITEMS:
-                        return list({v['id']:v for v in edges}.values()), new_node_eclis
+                        return list({v['id']:v for v in edges}.values()), new_node_eclis, True
                     next_targets.extend([get_key(citation)])
                     edges.extend([{
                         'id': f"{item['ecli']}_{citation}", 
@@ -337,7 +340,7 @@ def fetch_edges_data(eclis, degrees_sources, degrees_targets):
             if 'cited_by' in item:
                 for citation in item['cited_by']:
                     if len(edges) >= 2*MAX_ITEMS:
-                        return list({v['id']:v for v in edges}.values()), new_node_eclis
+                        return list({v['id']:v for v in edges}.values()), new_node_eclis, True
                     next_sources.extend([get_key(citation)])
                     edges.extend([{
                         'id': f"{citation}_{item['ecli']}", 
@@ -351,4 +354,4 @@ def fetch_edges_data(eclis, degrees_sources, degrees_targets):
                         new_node_eclis = new_node_eclis.union({citation})
         source_keys = next_sources
 
-    return list({v['id']:v for v in edges}.values()), new_node_eclis
+    return list({v['id']:v for v in edges}.values()), new_node_eclis, False
