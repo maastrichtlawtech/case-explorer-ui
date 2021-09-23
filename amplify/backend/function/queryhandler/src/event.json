@@ -1,14 +1,14 @@
 {
     "arguments": {
         "DataSources": ["RS"],
-        "Keywords": "",
+        "Keywords": "gevaarzetting",
         "Articles": "",
-        "Eclis": "ECLI:NL:GHSGR:1972:AB4988",
+        "Eclis": "",
         "DegreesSources": 1,
         "DegreesTargets": 1,
         "DateStart": "1969-01-01",
         "DateEnd": "2015-12-31",
-        "Instances": ["Hoge Raad"],
+        "Instances": ["Gerechtshof Amsterdam"],
         "Domains": [""],
         "Doctypes": ["DEC"]
     }
