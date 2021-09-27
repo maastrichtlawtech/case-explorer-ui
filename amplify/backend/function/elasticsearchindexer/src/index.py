@@ -1,5 +1,5 @@
 from clients.elasticsearch_client import ElasticsearchClient
-from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
+from definitions import TABLE_NAME, ELASTICSEARCH_ENDPOINT
 import time
 
 # set up Elasticsearch client

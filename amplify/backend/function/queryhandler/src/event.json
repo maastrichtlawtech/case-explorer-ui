@@ -1,15 +1,19 @@
 {
     "arguments": {
         "DataSources": ["RS"],
-        "Keywords": "gevaarzetting",
-        "Articles": "",
+        "Doctypes": ["DEC"],
+        "DateStart": "2020-01-01",
+        "DateEnd": "2021-12-31",
+        
         "Eclis": "",
+        "Instances": [],
+        "Domains": [],
+        
+
+        "Keywords": "",
+        "Articles": "",
+        
         "DegreesSources": 1,
-        "DegreesTargets": 1,
-        "DateStart": "1969-01-01",
-        "DateEnd": "2015-12-31",
-        "Instances": ["Gerechtshof Amsterdam"],
-        "Domains": [""],
-        "Doctypes": ["DEC"]
+        "DegreesTargets": 1
     }
 }

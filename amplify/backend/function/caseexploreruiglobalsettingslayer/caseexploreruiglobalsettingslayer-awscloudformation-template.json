@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion63f887ad": {
+    "LambdaLayerVersionf28fbfcb": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -51,13 +51,50 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionPrivate63f887ad": {
+    "LambdaLayerPermissionPrivatef28fbfcb": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion63f887ad"
+          "Ref": "LambdaLayerVersionf28fbfcb"
         },
+        "Principal": {
+          "Ref": "AWS::AccountId"
+        }
+      }
+    },
+    "LambdaLayerVersion63f887ad": {
+      "Type": "AWS::Lambda::LayerVersion",
+      "Properties": {
+        "CompatibleRuntimes": [
+          "python3.8"
+        ],
+        "Content": {
+          "S3Bucket": {
+            "Ref": "deploymentBucketName"
+          },
+          "S3Key": "amplify-builds/caseexploreruiglobalsettingslayer-LambdaLayerVersion63f887ad-build.zip"
+        },
+        "Description": "Updated layer version 2021-09-15T22:38:48.467Z",
+        "LayerName": {
+          "Fn::Sub": [
+            "caseexploreruiglobalsettingslayer-${env}",
+            {
+              "env": {
+                "Ref": "env"
+              }
+            }
+          ]
+        }
+      },
+      "DeletionPolicy": "Delete",
+      "UpdateReplacePolicy": "Retain"
+    },
+    "LambdaLayerPermissionPrivate63f887ad": {
+      "Type": "AWS::Lambda::LayerVersionPermission",
+      "Properties": {
+        "Action": "lambda:GetLayerVersion",
+        "LayerVersionArn": "arn:aws:lambda:eu-central-1:275192370238:layer:caseexploreruiglobalsettingslayer-dev:2",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -104,7 +141,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion63f887ad"
+        "Ref": "LambdaLayerVersionf28fbfcb"
       }
     }
   }

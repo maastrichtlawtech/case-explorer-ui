@@ -30,8 +30,11 @@ def format_node_data(item):
         # convert set types to lists to make JSON serializable
         if attribute in item and type(item[attribute]) is set:
             item[attribute] = list(item[attribute])
+    for attribute in atts:
         # remove '_li' suffix from attribute name if applicable
         if attribute in item and attribute.endswith('_li'):
+            if attribute[:-3] in item:
+                print('warning: overwriting existing RS attribute with LI attribute')
             item[attribute[:-3]] = item[attribute]
             item.pop(attribute)
     return {'id': item['ecli'], 'data': item}
@@ -41,56 +44,65 @@ def get_key(ecli):
     return {'ecli': ecli, 'ItemType': 'DATA'}
 
 
-def build_projection_expression(attributes):
-    """
-    converts list of attribute names to token substitutes to avoid conflicts with DynamoDB reserved words
-    
-    :param attributes: list of attribute string names
-    :return: projection expression string, dict map of expression attribute tokens to attribute names
-    """
-    tokens = ['#' + attribute for attribute in attributes]
-    projection_expression = ', '.join(tokens)
-    expression_attribute_names = dict(zip(tokens, attributes))
-    return projection_expression, expression_attribute_names
-
-
-def verify_input_string_list(key, params):
+def verify_input_string_list(key, params, warn=True):
     # checks string list input types for validity and returns default value if invalid
-    if not key in params \
-            or not params[key] \
-            or not isinstance(params[key], list) \
-            or not all(isinstance(elem, str) for elem in params[key]) \
-            or len(params[key]) < 1:
-        warnings.warn(f"Invalid input: argument '{key}' of type list of strings expected. Setting '{key}' to [''].")
-        return [""]
-    else:
-        return params[key]
+    if not key in params or not params[key] or params[key] == []:
+        return None
+    if not params[key] \
+        or not isinstance(params[key], list) \
+        or not all(isinstance(elem, str) for elem in params[key]):
+        if warn:
+            warnings.warn(f"Invalid input: argument '{key}' of type list of strings expected. Setting '{key}' to None.")
+        return None
+    return params[key]
 
 
-def verify_input_string(key, params):
-    if not key in params \
-            or not isinstance(params[key], str):
-        warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to ''.")
-        return ""
-    else:
-        return params[key].strip()
+def verify_input_string(key, params, warn=True):
+    if not key in params or not params[key] or params[key] == '':
+        return None
+    if not isinstance(params[key], str):
+        if warn:
+            warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to None.")
+        return None
+    return params[key].strip()
 
 
-def verify_input_ecli_string(key, params):
-    return verify_input_string(key, params).split(' ')
+def verify_data_sources(key, params):
+    params[key] = verify_input_string_list(key, params, warn=False)
+    # add datasources if  needed
+    available_datasources = {'RS'}
+    if not params[key] or set(params[key]).intersection(available_datasources) == {}:
+        warnings.warn(f"Invalid input: argument '{key}' must be list subset of {available_datasources}. Setting '{key}' to ['RS'].")
+        return ['RS']
+    return params[key]
 
 
-def verify_input_start_date(key, params):
+def verify_doc_types(key, params):
+    params[key] = verify_input_string_list(key, params, warn=False)
+    available_doctypes = {'DEC', 'OPI'}
+    if not params[key] or set(params[key]).intersection(available_doctypes) == {}:
+        warnings.warn(f"Invalid input: argument '{key}' must be list subset of {available_doctypes}. Setting '{key}' to ['DEC'].")
+        return ['DEC']
+    return params[key]
+
+
+def verify_eclis(key, params):
+    params[key] = verify_input_string(key, params)
+    if not params[key]:
+        return None
+    return params[key].split(' ')
+
+
+def verify_date_start(key, params):
     if not key in params \
             or not isinstance(params[key], str) \
             or not datetime.strptime(params[key], '%Y-%m-%d'):
         warnings.warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected. Setting '{key}' to '1900-01-01'.")
         return '1900-01-01'
-    else:
-        return params[key]
+    return params[key]
 
 
-def verify_input_end_date(key, params):
+def verify_date_end(key, params):
     if not key in params \
             or not isinstance(params[key], str) \
             or not datetime.strptime(params[key], '%Y-%m-%d') \
@@ -98,17 +110,14 @@ def verify_input_end_date(key, params):
         warnings.warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected "
                       f"and '{key}' must be after 'DateStart'. Setting '{key}' to '{date.today().strftime('%Y-%m-%d')}'.")
         return date.today().strftime('%Y-%m-%d')
-    else:
-        return params[key]
+    return params[key]
 
 
-def verify_input_int(key, params):
+def verify_degrees(key, params):
     if not key in params \
             or not isinstance(params[key], int) \
             or not 1 <= params[key] <= 5:
         warnings.warn(f"Invalid input: argument '{key}' of type Int between 1 and 5 expected."
                       f"Setting '{key}' to 1.")
         return 1
-    else:
-        return params[key]
-
+    return params[key]
