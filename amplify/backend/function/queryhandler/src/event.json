@@ -6,11 +6,11 @@
         "DateEnd": "2021-12-31",
         
         "Eclis": "",
-        "Instances": [],
+        "Instances": ["Hoge Raad"],
         "Domains": [],
         
 
-        "Keywords": "",
+        "Keywords": "moord",
         "Articles": "",
         
         "DegreesSources": 1,

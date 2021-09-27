@@ -104,7 +104,7 @@ class QueryHelper:
                 }}})
         # @TODO: add optional filtering by instance or domain
         if self.search_params[INSTANCES]:
-            filters.append({'terms': {'instance': get_doctype_names(self.search_params[INSTANCES])}})
+            filters.append({'terms': {'instance': self.search_params[INSTANCES]}})
         """
         if self.search_params[ECLIS]:
             filters.append({'terms': {'ecli': self.search_params[ECLIS]}})
