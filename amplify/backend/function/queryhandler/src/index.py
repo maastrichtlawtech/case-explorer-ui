@@ -27,6 +27,8 @@ TEST = False                        # returns number of nodes instead of nodes
 MAX_ITEMS = 1000                     # 500   (10)
 MAX_PAGES = 100                     # 10    (5)
 
+HARD_LIMIT = 10
+
 
 # set up Elasticsearch client
 es_client = ElasticsearchClient(
@@ -78,9 +80,8 @@ def handler(event, context):
     # 1. QUERY NODES MATCHING SEARCH INPUT
     nodes, limit_reached = query_nodes(query_helper)
 
-
     # 2. FETCH EDGES AND NEW TARGET NODES
-    edges, new_nodes, edges_limit_reached = fetch_edges(nodes, query_helper)
+    edges, new_nodes, edges_limit_reached = fetch_edges(nodes[:HARD_LIMIT], query_helper)
     #if not TEST:
     nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
@@ -95,11 +96,6 @@ def handler(event, context):
     
     print('Duration total:', time.time() - start)
     if TEST:
-        for edge in edges:
-            if 'ECLI:NL:HR:2019:1456' in edge['id'] \
-                or 'ECLI:NL:HR:2019:1456' in edge['source'] \
-                    or 'ECLI:NL:HR:2019:1456' in edge['target']:
-                    print(edge)
         print(f'nodes: {len(nodes)}\n edges: {len(edges)}\n statistics: {len(statistics)}\n message: {message}')
         return {'nodes': nodes[:10], 'edges': edges[:2], 'message': message}
     return {'nodes': nodes, 'edges': edges, 'statistics': statistics, 'message': message}
@@ -228,15 +224,26 @@ def query_nodes(helper):
         print('in ES')
         es_query = helper.get_elasticsearch_query()
         result, limit_reached = es_client.execute(es_query, helper.return_attributes)
-        nodes = [item['_source'] for item in result]
-        return nodes, limit_reached
+        nodes = []
+        for item in result:
+            response, ddb_limit_reached = ddb_client.execute_query(
+                ProjectionExpression=projection_expression,
+                KeyConditionExpression=helper.get_ddb_key_expression_ecli(item['_source']['ecli']),
+                FilterExpression=helper.get_ddb_filter_expression_citation(),
+                ExpressionAttributeNames=expression_attribute_names
+            )
+            nodes.extend(response['Items'])
+            if len(nodes) >= HARD_LIMIT:
+                break
+        #nodes = [item['_source'] for item in result]
+        return nodes[:HARD_LIMIT], limit_reached
 
 
     # CASE 2: no keywords, but eclis given
     elif helper.search_params[ECLIS]:
         print('IN ECLIS')
         nodes, limit_reached = query_ddb_by_eclis()
-        return nodes, limit_reached
+        return nodes[:HARD_LIMIT], limit_reached
 
 
     # CASE 3: no keywords or eclis, but instances given
@@ -248,7 +255,7 @@ def query_nodes(helper):
             for node in nodes_li:
                 if not node in nodes:
                     nodes.append(node)
-        return nodes, limit_reached
+        return nodes[:HARD_LIMIT], limit_reached
 
 
     # CASE 4: no keywords, eclis or instances, but domains given
@@ -260,7 +267,7 @@ def query_nodes(helper):
             for node in nodes_li:
                 if not node in nodes:
                     nodes.append(node)
-        return nodes, limit_reached
+        return nodes[:HARD_LIMIT], limit_reached
 
     # CASE 5: neither eclis, nor instances, nor domains given --> only query Elasticsearch by keywords 
     else:
