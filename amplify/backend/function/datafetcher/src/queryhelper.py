@@ -52,6 +52,9 @@ class QueryHelper:
                & Attr('document_type').is_in(get_doctype_names(self.search_params[DOCTYPES])) \
                & Attr('date_decision').between(self.search_params[DATE_START], self.search_params[DATE_END])
 
+    def get_ddb_filter_expression_citation(self):
+        return Attr('cites').exists() | Attr('cited_by').exists()
+
     def get_ddb_filter_expression_instances(self):
         if self.authorized:
             return (Attr('instance').exists() & Attr('instance').is_in(self.search_params[INSTANCES])) \
@@ -94,27 +97,20 @@ class QueryHelper:
         * simple query string syntax: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
         """
         filters = []
-        filters.append({'terms': {'source': get_datasource_names(self.search_params[DATA_SOURCES])}})
-        filters.append({'terms': {'document_type': get_doctype_names(self.search_params[DOCTYPES])}})
-        filters.append({
+        filters_params = []
+        shoulds_instance = []
+        shoulds_citation = []
+        # FILTERS
+        filters_params.append({'terms': {'source': get_datasource_names(self.search_params[DATA_SOURCES])}})
+        filters_params.append({'terms': {'document_type': get_doctype_names(self.search_params[DOCTYPES])}})
+        filters_params.append({
             'range': {
                 'date_decision': {
                     'gte': self.search_params[DATE_START],
                     'lte': self.search_params[DATE_END]
                 }}})
-        # @TODO: add optional filtering by instance or domain
-        if self.search_params[INSTANCES]:
-            filters.append({'terms': {'instance': get_doctype_names(self.search_params[INSTANCES])}})
-        """
-        if self.search_params[ECLIS]:
-            filters.append({'terms': {'ecli': self.search_params[ECLIS]}})
-        if self.search_params[INSTANCES]:
-            filters.append({'terms': {'instance': self.search_params[INSTANCES]}})
-            if self.authorized:
-                filters.append({'terms': {'instance_li': self.search_params[INSTANCES]}})
-        """
         if self.search_params[KEYWORDS]: 
-            filters.append({
+            filters_params.append({
                 'simple_query_string': {
                     'query': self.search_params[KEYWORDS],
                     'fields': self.keyword_search_attributes,
@@ -122,13 +118,37 @@ class QueryHelper:
                 },
             })
         if self.search_params[ARTICLES]: 
-            filters.append({
+            filters_params.append({
                 'simple_query_string': {
                     'query': self.search_params[ARTICLES],
                     'fields': self.article_search_attributes
                 },
             })
-        return {'bool': {'filter': filters}}
+        # SHOULD CITATIONS
+        shoulds_citation.append({'exists': {'field': 'cites'}})
+        shoulds_citation.append({'exists': {'field': 'cited_by'}})
+        
+        filters.append({'bool': {'filter': filters_params}})
+        filters.append({'bool': {'should': shoulds_citation}})
+
+
+        # @TODO: add optional filtering by instance or domain
+        if self.search_params[INSTANCES]:
+            shoulds_instance.append({'terms': {'instance': self.search_params[INSTANCES]}})
+            if self.authorized:
+                shoulds_instance.append({'terms': {'instance_li': self.search_params[INSTANCES]}})
+            filters.append({'bool': {'should': shoulds_instance}})
+
+        if self.search_params[ECLIS]:
+            filters.append({'bool': {'should': {'terms': {'ecli': self.search_params[ECLIS]}}}})
+
+        # @TODO; append only to final query if exists
+        """
+        if self.search_params[DOMAINS]:
+            filters.append({'terms': {'ecli': self.search_params[ECLIS]}})
+        """
+
+        return {'bool': {'filter': filters}}            
 
 
     

@@ -38,7 +38,7 @@ NODE_ESSENTIAL_LI = NODE_ESSENTIAL + [
     'domains_li',
     'instance_li',
     'jurisdiction_country_li',
-    'source_li'
+    #'source_li'
 ]
 
 # attributes to be displayed to the user when viewing a node

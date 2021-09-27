@@ -33,7 +33,7 @@ es_client = ElasticsearchClient(
     endpoint=ELASTICSEARCH_ENDPOINT,
     index=TABLE_NAME.lower(),
     max_hits=MAX_ITEMS,             # max number of hits (matching items) per query (page)
-    page_limit=1                    # max number of queries (pages)
+    page_limit=10                    # max number of queries (pages)
     #timeout= 20                    # request timeout in s
 )
 
@@ -95,7 +95,7 @@ def handler(event, context):
     
     print('Duration total:', time.time() - start)
     if TEST:
-        #return {'nodes': len(nodes), 'edges': len(edges), 'statistics': len(statistics), 'message': message}
+        print(f'nodes: {len(nodes)}\n edges: {len(edges)}\n statistics: {len(statistics)}\n message: {message}')
         return {'nodes': nodes[:10], 'edges': edges[:2], 'message': message}
     return {'nodes': nodes, 'edges': edges, 'statistics': statistics, 'message': message}
     
@@ -126,10 +126,12 @@ def query_nodes(helper):
                 return nodes_clean
             return nodes
         nodes = []
+        limit_reached = False
+        filter_expression = helper.get_ddb_filter_expression_sourcedocdate() & helper.get_ddb_filter_expression_citation()
         if helper.search_params[INSTANCES]:
-            filter_expression = helper.get_ddb_filter_expression_sourcedocdate() & helper.get_ddb_filter_expression_instances()
-        else:
-            filter_expression = helper.get_ddb_filter_expression_sourcedocdate()
+            filter_expression = filter_expression \
+                & helper.get_ddb_filter_expression_instances()
+            
         for ecli in helper.search_params[ECLIS]:  
             response, ddb_limit_reached = ddb_client.execute_query(
                 ProjectionExpression=projection_expression,
@@ -137,20 +139,23 @@ def query_nodes(helper):
                 FilterExpression=filter_expression,
                 ExpressionAttributeNames=expression_attribute_names
             )
+            limit_reached = limit_reached or ddb_limit_reached
             nodes.extend(response['Items'])
             #if ddb_limit_reached or len(nodes) >= MAX_ITEMS:
             if len(nodes) >= MAX_ITEMS:
                 print(f'LIMIT REACHED: {len(nodes)} CASES FETCHED')
                 return filter_nodes_by_domains(nodes), True
-        return filter_nodes_by_domains(nodes), False
+        return filter_nodes_by_domains(nodes), limit_reached
 
     def query_ddb_by_instances(li_mode=False):
         nodes = []
         index_name = 'GSI-instance'
         key_name = 'instance'
+        limit_reached = False
         if li_mode:
             index_name += '_li'
             key_name += '_li'
+        filter_expression = helper.get_ddb_filter_expression_citation()
         if helper.search_params[DOMAINS]:
             for domain in helper.search_params[DOMAINS]:
                 for instance in helper.search_params[INSTANCES]:
@@ -161,8 +166,9 @@ def query_nodes(helper):
                                 ProjectionExpression=projection_expression,
                                 KeyConditionExpression=helper.get_ddb_key_expression_instance(key_name, instance, source, doc),
                                 ExpressionAttributeNames=expression_attribute_names,
-                                FilterExpression=helper.get_ddb_filter_expression_domain(domain)
+                                FilterExpression=filter_expression & helper.get_ddb_filter_expression_domain(domain)
                             )
+                            limit_reached = limit_reached or ddb_limit_reached
                             nodes.extend(response['Items'])
                             #if ddb_limit_reached or len(nodes) >= MAX_ITEMS:
                             if len(nodes) >= MAX_ITEMS:
@@ -176,16 +182,19 @@ def query_nodes(helper):
                             IndexName=index_name,
                             ProjectionExpression=projection_expression,
                             KeyConditionExpression=helper.get_ddb_key_expression_instance(key_name, instance, source, doc),
+                            FilterExpression=filter_expression,
                             ExpressionAttributeNames=expression_attribute_names
                         )
                         nodes.extend(response['Items'])
+                        limit_reached = limit_reached or ddb_limit_reached
                         #if ddb_limit_reached or len(nodes) >= MAX_ITEMS:
                         if len(nodes) >= MAX_ITEMS:
                             print(f'LIMIT REACHED: {len(nodes)} CASES FETCHED')
                             return nodes, True
-        return nodes, False
+        return nodes, limit_reached
 
     def query_ddb_by_domains(mode=''):
+        limit_reached = False
         node_keys = []
         key_prefix = 'DOM_LI' if mode == 'li' else 'DOM'
         for domain in helper.search_params[DOMAINS]:
@@ -197,6 +206,7 @@ def query_nodes(helper):
                         KeyConditionExpression=helper.get_ddb_key_expression_domain(key_prefix, domain, source, doc),
                         ExpressionAttributeNames={'#ecli': 'ecli'},
                     )
+                    limit_reached = limit_reached or ddb_limit_reached
                     node_keys.extend([get_key(item['ecli']) for item in response['Items']])
                     #if ddb_limit_reached or len(node_keys) >= MAX_ITEMS:
                     if len(node_keys) >= MAX_ITEMS: 
@@ -204,7 +214,7 @@ def query_nodes(helper):
                         nodes = ddb_client.execute_batch(node_keys, helper.return_attributes)
                         return nodes, True
         nodes = ddb_client.execute_batch(node_keys, helper.return_attributes)
-        return nodes, False
+        return nodes, limit_reached
 
 
 

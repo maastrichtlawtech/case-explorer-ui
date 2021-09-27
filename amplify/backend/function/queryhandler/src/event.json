@@ -2,15 +2,15 @@
     "arguments": {
         "DataSources": ["RS"],
         "Doctypes": ["DEC"],
-        "DateStart": "2020-01-01",
+        "DateStart": "1900-01-01",
         "DateEnd": "2021-12-31",
         
         "Eclis": "",
-        "Instances": ["Hoge Raad"],
+        "Instances": [],
         "Domains": [],
         
 
-        "Keywords": "moord",
+        "Keywords": "gevaarzetting",
         "Articles": "",
         
         "DegreesSources": 1,
