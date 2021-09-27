@@ -1,12 +1,12 @@
 {
     "arguments": {
         "DataSources": ["RS"],
-        "Doctypes": ["DEC"],
+        "Doctypes": ["DEC", "OPI"],
         "DateStart": "1900-01-01",
         "DateEnd": "2021-12-31",
         
         "Eclis": "",
-        "Instances": [],
+        "Instances": ["Hoge Raad"],
         "Domains": [],
         
 

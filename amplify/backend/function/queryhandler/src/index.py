@@ -81,8 +81,8 @@ def handler(event, context):
 
     # 2. FETCH EDGES AND NEW TARGET NODES
     edges, new_nodes, edges_limit_reached = fetch_edges(nodes, query_helper)
-    if not TEST:
-        nodes += new_nodes
+    #if not TEST:
+    nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
 
     # format nodes
@@ -95,6 +95,11 @@ def handler(event, context):
     
     print('Duration total:', time.time() - start)
     if TEST:
+        for edge in edges:
+            if 'ECLI:NL:HR:2019:1456' in edge['id'] \
+                or 'ECLI:NL:HR:2019:1456' in edge['source'] \
+                    or 'ECLI:NL:HR:2019:1456' in edge['target']:
+                    print(edge)
         print(f'nodes: {len(nodes)}\n edges: {len(edges)}\n statistics: {len(statistics)}\n message: {message}')
         return {'nodes': nodes[:10], 'edges': edges[:2], 'message': message}
     return {'nodes': nodes, 'edges': edges, 'statistics': statistics, 'message': message}
@@ -273,14 +278,23 @@ def fetch_edges(nodes, helper):
              set of new node eclis, 
              flag whether or not query limit was reached
     """
-    node_eclis = [node['ecli'] for node in nodes]
+    #node_eclis = [node['ecli'] for node in nodes]
+    node_eclis = []
     new_node_keys = []
     edges = []
+    source_keys = []
+    target_keys = []
 
-    items = nodes
+    for node in nodes:
+        node_eclis.append(node['ecli'])
+        source_keys.append(get_key(node['ecli']))
+        target_keys.append(get_key(node['ecli']))
+
+    # @TODO items = nodes
 
     # c_sources:
     for _ in range(helper.search_params[DEGREES_SOURCES]):
+        items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
         target_keys = []
         for item in items:
             target = item['ecli']
@@ -298,11 +312,13 @@ def fetch_edges(nodes, helper):
                     if len(edges) >= MAX_ITEMS:
                         new_nodes = ddb_client.execute_batch(new_node_keys, helper.return_attributes)
                         return edges, new_nodes, True
-        items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
+        # @TODO items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
 
-    items = nodes
+    # @TODO items = nodes
+
     # targets:
     for _ in range(helper.search_params[DEGREES_TARGETS]):
+        items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
         source_keys = []
         for item in items:
             source = item['ecli']
@@ -320,7 +336,7 @@ def fetch_edges(nodes, helper):
                     if len(edges) >= 2*MAX_ITEMS:
                         new_nodes = ddb_client.execute_batch(new_node_keys, helper.return_attributes)
                         return edges, new_nodes, True
-        items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
+        # @TODO items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
 
     new_nodes = ddb_client.execute_batch(new_node_keys, helper.return_attributes)
     return edges, new_nodes, False
