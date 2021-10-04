@@ -1,7 +1,7 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 import time
-from utils import build_projection_expression
+from queryhelper import build_ddb_projection_expression
 
 
 class DynamodbClient:
@@ -31,8 +31,7 @@ class DynamodbClient:
 
         # use pagination to retrieve full list of results
         while 'LastEvaluatedKey' in response:
-            if len(items) >= self.item_limit * self.page_limit:
-            #if pages == self.page_limit: #* 10 or len(items) >= self.item_limit * self.page_limit: # @TODO
+            if len(items) >= self.item_limit or pages >= self.page_limit:
                 limit_reached = True
                 print(f'DYNAMOBO REQUEST LIMIT REACHED! {len(items)} items fetched.')
                 break
@@ -43,7 +42,7 @@ class DynamodbClient:
             pages += 1
 
         #print('Duration ddb query:', time.time()-start)
-        #print('Pages scanned: ', pages)
+        print('Pages scanned: ', pages)
         response['Count'] = count
         response['Items'] = items
         response['ScannedCount'] = scanned_count
@@ -65,7 +64,7 @@ class DynamodbClient:
         keys_list = [dict(t) for t in {tuple(sorted(d.items())) for d in keys_list}]
 
         # substitute attribute names to avoid conflicts with DynamoDB reserved words
-        projection_expression, expression_attribute_names = build_projection_expression(return_attributes)
+        projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
 
         # disect requests into batches of 100 to avoid limit errors
         batch = keys_list[:100]

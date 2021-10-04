@@ -1,21 +1,21 @@
 import os
 from clients.dynamodb_client import DynamodbClient
-from utils import format_node_data, build_projection_expression, get_key, is_authorized
-from attributes import NODE_FULL, NODE_FULL_LI
-from settings import TABLE_NAME, ELASTICSEARCH_ENDPOINT
+from queryhelper import build_ddb_projection_expression
+from utils import format_node_data, get_key, is_authorized
+from definitions import TABLE_NAME, NODE_FULL, NODE_FULL_LI
 
 
 def handler(event, context):
-    authorized_user = is_authorized(event)
+    authorized = is_authorized(event)
 
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
     
-    if authorized_user:
-        attributes = NODE_FULL_LI
+    if authorized:
+        return_attributes = NODE_FULL_LI
     else:
-        attributes = NODE_FULL
+        return_attributes = NODE_FULL
 
-    projection_expression, expression_attribute_names = build_projection_expression(attributes)
+    projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
 
     response = ddb_client.table.get_item(
         Key=get_key(event["arguments"]["Ecli"]),

@@ -1,23 +1,23 @@
 import os
 from clients.dynamodb_client import DynamodbClient
-from utils import format_node_data, build_projection_expression, get_key, is_authorized
-from attributes import NODE_FULL, NODE_FULL_LI
-from settings import TABLE_NAME
+from queryhelper import build_ddb_projection_expression
+from utils import format_node_data, get_key, is_authorized
+from definitions import TABLE_NAME, NODE_FULL, NODE_FULL_LI
 
 
 def handler2(event, context):
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
     
-    authorized_user = is_authorized(event)
+    authorized = is_authorized(event)
 
-    if authorized_user:
-        attributes = NODE_FULL_LI
+    if authorized:
+        return_attributes = NODE_FULL_LI
         message = ''
     else:
-        attributes = NODE_FULL
+        return_attributes = NODE_FULL
         message = 'test warning: user not authorized'
 
-    projection_expression, expression_attribute_names = build_projection_expression(attributes)
+    projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
 
     response = ddb_client.table.get_item(
         Key=get_key(event["arguments"]["Ecli"]),
