@@ -159,7 +159,7 @@ const AppContainer = ({
     // edges: [],
     // events: RECORDED_EVENTS,
     graphConfig: {
-      layout: Graph.Layouts.cose,
+      layout: Graph.Layouts.eular,
       zoom: 0.2,
       nodes: {},
       // clusters: [
@@ -191,7 +191,11 @@ const AppContainer = ({
     settingsBar: {
       opened: true,
       // forms: [AUTO_CREATED_SCHEMA,FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
-      forms: [{ ...FETCH_SCHEMA, formData: configRef.current.fetching }, VIEW_CONFIG_SCHEMA, { ...FILTER_SCHEMA, formData: configRef.current.filtering },],
+      forms: [
+        { ...FETCH_SCHEMA, formData: configRef.current.fetching },
+        VIEW_CONFIG_SCHEMA,
+        { ...FILTER_SCHEMA, formData: configRef.current.filtering },
+      ],
       createClusterForm: {
         ...FILTER_SCHEMA,
         schema: { ...FILTER_SCHEMA.schema, title: 'Create Cluster', },

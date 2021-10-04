@@ -18,7 +18,11 @@ export const RenderNode = (props: RenderNodeProps) => {
     label,
    graphRef ,
  } = props
-  const text = R.takeLast(6, `${label}`)//item.id
+ let text =  R.takeLast(6, `${label}`)//item.id
+ if (labelPath[0] === 'id' ) {
+  const arr =  R.reverse(label.split(':'))
+  text = `${arr[2]}:${arr[1]}`
+ }
   const size = calculateNodeSize(item.data, visualization.nodeSize)
   const color = visualization.nodeColor ? calculateColor(
     item.data,
@@ -119,7 +123,13 @@ const NODE_SIZE_RANGE_MAP = {
     1969,
     2015
   ],
+  rel_in_degree: [0, 1],
+  pagerank: [0, 1],
+  authorities: [0, 1],
+  hubs: [0, 1],
+  betweenness_centrality: [0, 1],
 }
+
 const calculateNodeSize = (data: object, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
   if (!fieldName) {
     return NODE_SIZE_RANGE_MAP.size[0]
@@ -130,6 +140,7 @@ const calculateNodeSize = (data: object, fieldName?: keyof typeof NODE_SIZE_RANG
   const fieldRangeValue = (data[fieldName] ?? fieldRange[0]) - fieldRange[0]
   return  ((fieldRangeValue / fieldRangeGap) * sizeRangeGap) + NODE_SIZE_RANGE_MAP.size[0]
 }
+
 const calculateColor = (data: object, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
   if (!fieldName) {
     return perc2color(0)

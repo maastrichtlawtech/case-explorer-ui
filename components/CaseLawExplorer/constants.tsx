@@ -282,6 +282,11 @@ export const VIEW_CONFIG_SCHEMA = {
           "out_degree",
           "in_degree",
           "year",
+          'rel_in_degree',
+          'pagerank',
+          'authorities',
+          'hubs',
+          'betweenness_centrality'
         ]
       },
       nodeColor: {

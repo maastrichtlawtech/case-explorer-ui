@@ -13,9 +13,15 @@ export const RenderEdge = ({
    item, element, cy, theme,
    visualization, 
    filtering,
+   label,
+   labelPath,
   graphRef 
 }: RenderEdgeProps) => {
-  const text = R.takeLast(6, item.id)
+  let text =  R.takeLast(6, `${label}`)//item.id
+ if (labelPath[0] === 'id' ) {
+  const arr =  R.reverse(label.split(':'))
+  text = `${arr[2]}:${arr[1]}`
+ }
   const textRef = React.useRef(null)
   const configRef = React.useRef({
     fontSize: DEFAULT_FONT_SIZE
