@@ -136,11 +136,15 @@ const NODE_SIZE_RANGE_MAP = {
 const NETWORK_STATISTICS_NAMES = [
   'betweenness',
   'betweenness_centrality',
+  'closeness_centrality',
   'closeness',
   'degree',
-  'indegree',
-  'outdegree',
-  'pageRank',
+  'degree_centrality',
+  'in_degree',
+  'out_degree',
+  'in_degree_centrality',
+'out_degree_centrality',
+  'page_rank',
   'rel_in_degree',
 ]
 const calculateNodeSize = (item: object, graphEditorRef: GraphEditorRef, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
