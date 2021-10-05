@@ -11,6 +11,8 @@ networkx = "*"
 boto3 = "*"
 elasticsearch = "<=7.10"
 requests-aws4auth = "*"
+python-louvain = "*"
+scipy = "*"
 
 [requires]
 python_version = "3.8"
