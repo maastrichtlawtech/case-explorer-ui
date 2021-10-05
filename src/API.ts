@@ -138,61 +138,6 @@ export type ModelCaselawConnection = {
   nextToken?: string | null,
 };
 
-export type SearchableCaselawFilterInput = {
-  ItemType?: SearchableStringFilterInput | null,
-  SourceDocDate?: SearchableStringFilterInput | null,
-  ecli?: SearchableStringFilterInput | null,
-  instance?: SearchableStringFilterInput | null,
-  instance_li?: SearchableStringFilterInput | null,
-  and?: Array< SearchableCaselawFilterInput | null > | null,
-  or?: Array< SearchableCaselawFilterInput | null > | null,
-  not?: SearchableCaselawFilterInput | null,
-};
-
-export type SearchableStringFilterInput = {
-  ne?: string | null,
-  gt?: string | null,
-  lt?: string | null,
-  gte?: string | null,
-  lte?: string | null,
-  eq?: string | null,
-  match?: string | null,
-  matchPhrase?: string | null,
-  matchPhrasePrefix?: string | null,
-  multiMatch?: string | null,
-  exists?: boolean | null,
-  wildcard?: string | null,
-  regexp?: string | null,
-  range?: Array< string | null > | null,
-};
-
-export type SearchableCaselawSortInput = {
-  field?: SearchableCaselawSortableFields | null,
-  direction?: SearchableSortDirection | null,
-};
-
-export enum SearchableCaselawSortableFields {
-  ItemType = "ItemType",
-  SourceDocDate = "SourceDocDate",
-  ecli = "ecli",
-  instance = "instance",
-  instance_li = "instance_li",
-}
-
-
-export enum SearchableSortDirection {
-  asc = "asc",
-  desc = "desc",
-}
-
-
-export type SearchableCaselawConnection = {
-  __typename: "SearchableCaselawConnection",
-  items?:  Array<Caselaw | null > | null,
-  nextToken?: string | null,
-  total?: number | null,
-};
-
 export type CreateCaselawMutationVariables = {
   input: CreateCaselawInput,
   condition?: ModelCaselawConditionInput | null,
@@ -424,32 +369,6 @@ export type QueryByInstanceLiQuery = {
       updatedAt: string,
     } | null > | null,
     nextToken?: string | null,
-  } | null,
-};
-
-export type SearchCaselawsQueryVariables = {
-  filter?: SearchableCaselawFilterInput | null,
-  sort?: SearchableCaselawSortInput | null,
-  limit?: number | null,
-  nextToken?: string | null,
-  from?: number | null,
-};
-
-export type SearchCaselawsQuery = {
-  searchCaselaws?:  {
-    __typename: "SearchableCaselawConnection",
-    items?:  Array< {
-      __typename: "Caselaw",
-      ItemType: string,
-      SourceDocDate?: string | null,
-      ecli: string,
-      instance?: string | null,
-      instance_li?: string | null,
-      createdAt: string,
-      updatedAt: string,
-    } | null > | null,
-    nextToken?: string | null,
-    total?: number | null,
   } | null,
 };
 
