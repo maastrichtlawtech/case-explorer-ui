@@ -193,32 +193,3 @@ export const queryByInstanceLi = /* GraphQL */ `
     }
   }
 `;
-export const searchCaselaws = /* GraphQL */ `
-  query SearchCaselaws(
-    $filter: SearchableCaselawFilterInput
-    $sort: SearchableCaselawSortInput
-    $limit: Int
-    $nextToken: String
-    $from: Int
-  ) {
-    searchCaselaws(
-      filter: $filter
-      sort: $sort
-      limit: $limit
-      nextToken: $nextToken
-      from: $from
-    ) {
-      items {
-        ItemType
-        SourceDocDate
-        ecli
-        instance
-        instance_li
-        createdAt
-        updatedAt
-      }
-      nextToken
-      total
-    }
-  }
-`;
