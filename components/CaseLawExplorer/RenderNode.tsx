@@ -151,7 +151,6 @@ const calculateNodeSize = (item: object, graphEditorRef: GraphEditorRef, fieldNa
   const value = NETWORK_STATISTICS_NAMES.includes(fieldName)
     ? graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
     : item.data[fieldName]
-  console.log(fieldName, item,graphEditorRef.current.context.localDataRef.current.networkStatistics.local, value, )
   const fieldRange = NODE_SIZE_RANGE_MAP[fieldName]
   const sizeRangeGap = NODE_SIZE_RANGE_MAP.size[1] - NODE_SIZE_RANGE_MAP.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
