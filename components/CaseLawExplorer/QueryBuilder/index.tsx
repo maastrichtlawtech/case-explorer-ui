@@ -36,6 +36,15 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
   } = props
 
   const [state, setState] = React.useState(query)
+  const formRef= React.useRef()
+  React.useEffect(() => {
+    setTimeout(()=> {
+      console.log('BB', formRef.current)
+      const  event = new Event('click')
+      event.persist = ()=>{}
+      formRef.current.onSubmit(event)
+    }, 1000)
+  }, [])
   return (
     <Modal
       open={isOpen}
@@ -92,6 +101,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
           }}
         >
           <Form
+            ref={formRef}
             schema={getQueryBuilderSchema().schema}
             uiSchema={getQueryBuilderSchema().uiSchema}
             onChange={e => setState(e.formData)}

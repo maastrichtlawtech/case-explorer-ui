@@ -279,24 +279,24 @@ export const VIEW_CONFIG_SCHEMA = {
         "title": "Node Size",
         "enum": [
           "degree",
-          "out_degree",
-          "in_degree",
-          "year",
+          "outdegree",
+          "indegree",
           'rel_in_degree',
-          'pagerank',
+          'pageRank',
+          'betweenness_centrality',
+          "year",
           'authorities',
           'hubs',
-          'betweenness_centrality'
         ]
       },
       nodeColor: {
         "type": "string",
         "title": "Node Color",
         "enum": [
-          "community",
           "degree",
-          "out_degree",
-          "in_degree",
+          "outdegree",
+          "indegree",
+          "community",
           "year",
         ]
       },

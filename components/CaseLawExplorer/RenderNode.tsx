@@ -2,7 +2,7 @@ import React from 'react'
 import * as R from 'colay/ramda'
 import * as PIXI from 'pixi.js'
 import { Graph,  } from 'perfect-graph/components'
-import { RenderNode as RenderNodeType,  } from 'perfect-graph/type'
+import { RenderNode as RenderNodeType, GraphEditorRef } from 'perfect-graph/type'
 
 
 export type RenderNodeProps = Parameters<RenderNodeType>[0]
@@ -17,13 +17,14 @@ export const RenderNode = (props: RenderNodeProps) => {
     labelPath,
     label,
    graphRef ,
+   graphEditorRef,
  } = props
  let text =  R.takeLast(6, `${label}`)//item.id
  if (labelPath[0] === 'id' ) {
   const arr =  R.reverse(label.split(':'))
   text = `${arr[2]}:${arr[1]}`
  }
-  const size = calculateNodeSize(item.data, visualization.nodeSize)
+  const size = calculateNodeSize(item, graphEditorRef, visualization.nodeSize)
   const color = visualization.nodeColor ? calculateColor(
     item.data,
     visualization.nodeColor
@@ -115,29 +116,46 @@ const NODE_SIZE = {
 
 const NODE_SIZE_RANGE_MAP = {
   size: [60, 250],
-  community: [0, 10],
-  in_degree: [0, 10],
-  out_degree: [0, 10],
+  betweenness: [0, 10],
+  betweenness_centrality: [0, 1],
+  closeness: [0, 10],
   degree: [0, 20],
+  indegree: [0, 10],
+  outdegree: [0, 10],
+  pageRank: [0, 1],
+  rel_in_degree: [0, 1],
   year: [
     1969,
     2015
   ],
-  rel_in_degree: [0, 1],
-  pagerank: [0, 1],
   authorities: [0, 1],
+  community: [0, 10],
   hubs: [0, 1],
-  betweenness_centrality: [0, 1],
 }
 
-const calculateNodeSize = (data: object, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
+const NETWORK_STATISTICS_NAMES = [
+  'betweenness',
+  'betweenness_centrality',
+  'closeness',
+  'degree',
+  'indegree',
+  'outdegree',
+  'pageRank',
+  'rel_in_degree',
+]
+const calculateNodeSize = (item: object, graphEditorRef: GraphEditorRef, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
   if (!fieldName) {
     return NODE_SIZE_RANGE_MAP.size[0]
   }
+  
+  const value = NETWORK_STATISTICS_NAMES.includes(fieldName)
+    ? graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
+    : item.data[fieldName]
+  console.log(fieldName, item,graphEditorRef.current.context.localDataRef.current.networkStatistics.local, value, )
   const fieldRange = NODE_SIZE_RANGE_MAP[fieldName]
   const sizeRangeGap = NODE_SIZE_RANGE_MAP.size[1] - NODE_SIZE_RANGE_MAP.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
-  const fieldRangeValue = (data[fieldName] ?? fieldRange[0]) - fieldRange[0]
+  const fieldRangeValue = (value ?? fieldRange[0]) - fieldRange[0]
   return  ((fieldRangeValue / fieldRangeGap) * sizeRangeGap) + NODE_SIZE_RANGE_MAP.size[0]
 }
 

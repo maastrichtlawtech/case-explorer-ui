@@ -103,29 +103,22 @@ const AppContainer = ({
     queryBuilder: {
       visible: true,
       query: {
-        DataSources: [
-          "RS"
+        "DataSources": [
+            "RS"
         ],
-        Date: [
-          1900,
-          2021
+        "Date": [
+            1900,
+            2021
         ],
-        // EMPTY NOT ""
-        // Instances: [
-        //   "Hoge Raad", "Raad van State",
-        // ],
-        // Domains: [
-        //   ""
-        // ],
-        Doctypes: [
-          "DEC",
-          "OPI"
+        "Instances": [
+            "Hoge Raad"
         ],
-        DegreesSources: 1,
-        // Keywords: "",
-        DegreesTargets: 1,
-        Eclis: "ECLI:NL:GHSGR:1972:AB4988",
-        // Articles: ""
+        "Doctypes": [
+            "DEC",
+            "OPI"
+        ],
+        "DegreesSources": 1,
+        "DegreesTargets": 1
       },
     },
     helpModal: {
@@ -399,9 +392,15 @@ const AppContainer = ({
           <RenderNode
             {...props}
             {...configRef.current}
+            graphEditorRef={controllerProps.ref}
           />
         )}
-        renderEdge={RenderEdge}
+        renderEdge={(props) => (
+          <RenderEdge
+            {...props}
+            graphEditorRef={controllerProps.ref}
+          />
+        )}
         {...rest}
       />
       <QueryBuilder
