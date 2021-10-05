@@ -97,7 +97,7 @@ def handler(event, context):
     print('Duration total:', time.time() - start)
     if TEST:
         print(f'nodes: {len(nodes)}\n edges: {len(edges)}\n statistics: {len(statistics)}\n message: {message}')
-        return {'nodes': nodes[:10], 'edges': edges[:2], 'message': message}
+        return {'nodes': nodes[:10], 'edges': edges[:2], 'statistics': statistics[nodes[0]['id']], 'message': message}
     return {'nodes': nodes, 'edges': edges, 'statistics': statistics, 'message': message}
     
 
