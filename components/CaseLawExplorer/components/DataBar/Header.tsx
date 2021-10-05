@@ -1,24 +1,50 @@
-import { Button, Typography } from '@material-ui/core'
+import { Button, Typography, Divider } from '@material-ui/core'
 import { Auth } from 'aws-amplify'
 import { View } from 'colay-ui'
 import React from 'react'
 import { useUser } from '../../useUser'
-
+import { useGraphEditor } from 'perfect-graph/hooks/useGraphEditor'
 
 
 export const DataBarHeader = () => {
   const [user] = useUser()
+  const [
+    {
+      nodes,
+      edges
+    },
+  ] = useGraphEditor(
+    (editor) => {
+      const {
+        nodes,
+        edges
+      } = editor
+      return {
+        nodes,
+        edges
+      }
+    }
+  )
   return (
-    <View
-      style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-    >
-      <Typography>{user?.attributes?.email}</Typography>
-      <Button
-        color="secondary"
-        onClick={() => Auth.signOut()}
+    <View>
+      <View
+        style={{ flexDirection: 'row', justifyContent: 'space-between' }}
       >
-        Signout
-      </Button>
+        <Typography>{user?.attributes?.email}</Typography>
+        <Button
+          color="secondary"
+          onClick={() => Auth.signOut()}
+        >
+          Signout
+        </Button>
+      </View>
+      <Divider />
+      <View
+        style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 2 }}
+      >
+        <Typography>{`Node Count: ${nodes.length}`}</Typography>
+        <Typography>{`Edge Count: ${edges.length}`}</Typography>
+      </View>
     </View>
   )
 }
