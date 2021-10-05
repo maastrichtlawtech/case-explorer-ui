@@ -41,7 +41,7 @@ def add_network_statistics(nodes, edges):
     degree = nx.degree(graph)
     if max(dict(degree).values()) > 0:
         hubs, authorities = get_hits(graph)
-        statistics = {
+        network_stats = {
             'degree': degree,
             'indegree': graph.in_degree(),
             'outdegree': graph.out_degree(),
@@ -59,22 +59,23 @@ def add_network_statistics(nodes, edges):
             'authorities': authorities
         }
     else:
-        statistics = {}
+        network_stats = {}
         
     # for relative in-degree we sort on date
     derive_date = lambda k: k['data']['date_decision'] if 'date_decision' in k['data'] and k['data']['date_decision'] != '' else '1900-01-01' # @ TODO: which default date?
     nodes.sort(key=derive_date, reverse=True)
-    result = dict()
+    statistics = dict()
     for i, node in enumerate(nodes):
         node_id = node['id']
-        result[node_id] = {
-            'community': str(partition[node_id])
-        }
-        for var in statistics.keys():
-            result[node_id][var] = statistics[var][node_id]
-        if 'in_degree' in statistics:
-            result[node_id]['rel_in_degree'] = statistics['in_degree'][node_id] / float(max(i, 1))
+        statistics[node_id] = {'community': str(partition[node_id])}
+        for var in network_stats.keys():
+            statistics[node_id][var] = network_stats[var][node_id]
+        if 'in_degree' in network_stats:
+            statistics[node_id]['rel_in_degree'] = network_stats['in_degree'][node_id] / float(max(i, 1))
         if 'date_decision' in node['data']:
-            result[node_id]['year'] = node['data']['date_decision'][:4]
-    
-    return result
+            statistics[node_id]['year'] = node['data']['date_decision'][:4]
+        # add year, authorities, hubs, community to node meta data:
+        for stat in ['year', 'authorities', 'hubs', 'community']:
+            if stat in statistics[node_id]:
+                node['data'][stat] = statistics[node_id][stat]
+    return statistics, nodes

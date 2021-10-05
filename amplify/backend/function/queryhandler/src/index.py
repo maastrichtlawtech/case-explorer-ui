@@ -90,7 +90,7 @@ def handler(event, context):
     nodes = [format_node_data(node) for node in nodes]
 
     # 3. COMPUTE NETWORK STATISTICS
-    statistics = add_network_statistics(nodes, edges)
+    statistics, nodes = add_network_statistics(nodes, edges)
 
     message = 'Query limit reached! Only partial result displayed.' if limit_reached else ''
     
