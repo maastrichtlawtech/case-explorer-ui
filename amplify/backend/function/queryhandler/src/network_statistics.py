@@ -2,6 +2,7 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import warnings
 import community
+import time
 # slightly modified taken from: 
 # https://github.com/caselawanalytics/CaseLawAnalytics/blob/master/caselawnet/network_analysis.py
 
@@ -34,6 +35,7 @@ def get_pagerank(graph, max_iter=10000):
         return p
 
 def add_network_statistics(nodes, edges):
+    start = time.time()
     if len(nodes) == 0:
         return nodes
     graph = get_network(nodes, edges)
@@ -57,7 +59,8 @@ def add_network_statistics(nodes, edges):
         }
     else:
         network_stats = {}
-        
+    print(f'STATS: compute network took: {time.time() - start} s.')
+    start = time.time()
     # for relative in-degree we sort on date
     derive_date = lambda k: k['data']['date_decision'] if 'date_decision' in k['data'] and k['data']['date_decision'] != '' else '1900-01-01' # @ TODO: which default date?
     nodes.sort(key=derive_date, reverse=True)
@@ -75,4 +78,5 @@ def add_network_statistics(nodes, edges):
         for stat in ['year', 'authorities', 'hubs', 'community']:
             if stat in statistics[node_id]:
                 node['data'][stat] = statistics[node_id][stat]
+    print(f'STATS: add to nodes took: {time.time() - start} s.')
     return statistics, nodes

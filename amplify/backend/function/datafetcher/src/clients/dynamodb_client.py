@@ -6,12 +6,13 @@ from queryhelper import build_ddb_projection_expression
 
 class DynamodbClient:
 
-    def __init__(self, table_name, item_limit=100, page_limit=1):
+    def __init__(self, table_name, item_limit=100, page_limit=1, max_hits=100):
         self.ddb = boto3.resource('dynamodb')
         self.table_name = table_name
         self.table = self.ddb.Table(self.table_name)
         self.item_limit=item_limit      # max number of items to evaluate per query (page)
         self.page_limit=page_limit      # max number of queries (pages)
+        self.max_hits=max_hits          # max number of matches to return
 
     
     def execute_query(self, **query_params):
@@ -26,23 +27,22 @@ class DynamodbClient:
         count = response['Count']
         items = response['Items']
         scanned_count = response['ScannedCount']
-        pages = 1
         limit_reached = False
 
         # use pagination to retrieve full list of results
         while 'LastEvaluatedKey' in response:
-            if len(items) >= self.item_limit or pages >= self.page_limit:
+            if count >= self.max_hits or scanned_count >= self.page_limit*self.item_limit:
                 limit_reached = True
-                print(f'DYNAMOBO REQUEST LIMIT REACHED! {len(items)} items fetched.')
+                print(f'DDB: Request limit reached!')
                 break
             response = self.table.query(**query_params, ExclusiveStartKey=response['LastEvaluatedKey'], Limit=self.item_limit)
             count += response['Count']
             items.extend(response['Items'])
             scanned_count += response['ScannedCount']
-            pages += 1
 
-        #print('Duration ddb query:', time.time()-start)
-        print('Pages scanned: ', pages)
+        print(f'DDB: {count}/{self.max_hits} items fetched.')
+        print(f'DDB: {int(scanned_count/self.item_limit)}/{self.page_limit} pages scanned.')
+        print(f'DDB: took {time.time()-start} s.')
         response['Count'] = count
         response['Items'] = items
         response['ScannedCount'] = scanned_count

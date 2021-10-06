@@ -24,17 +24,17 @@ from network_statistics import add_network_statistics
 
 TEST = False                        # returns number of nodes instead of nodes
 
-MAX_ITEMS = 1000                     # 500   (10)
-MAX_PAGES = 100                     # 10    (5)
+HARD_LIMIT = 1000                  # 3000 -> *3 (+ sources + targets)
 
-HARD_LIMIT = 10
+DDB_ITEM_LIMIT = 1000                     # 500   (10)
+DDB_PAGE_LIMIT = 50                     # 10    (5)
 
 
 # set up Elasticsearch client
 es_client = ElasticsearchClient(
     endpoint=ELASTICSEARCH_ENDPOINT,
     index=TABLE_NAME.lower(),
-    max_hits=MAX_ITEMS,             # max number of hits (matching items) per query (page)
+    max_hits=HARD_LIMIT,             # max number of hits (matching items) per query (page)
     page_limit=10                    # max number of queries (pages)
     #timeout= 20                    # request timeout in s
 )
@@ -42,8 +42,9 @@ es_client = ElasticsearchClient(
 # set up DynamoDB client
 ddb_client = DynamodbClient(
     table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'),
-    item_limit=MAX_ITEMS,           # max number of items to evaluate (not necessarily matches) per query (page)
-    page_limit=MAX_PAGES            # max number of queries (pages)
+    item_limit=DDB_ITEM_LIMIT,            # max number of items to scan per page (not necessarily matches)
+    page_limit=DDB_PAGE_LIMIT,            # max number of pages to scan (1 page = 1 DDB query)
+    max_hits=HARD_LIMIT                   # max number of matching items to return
 )
 
 def handler(event, context):
@@ -55,11 +56,10 @@ def handler(event, context):
     """
     start = time.time()
 
-
     # CHECK USER AUTHORIZATION
     authorized = is_authorized(event)
     if TEST:
-        authorized = False        
+        authorized = True        
 
     # CHECK INPUT VALIDITY
     search_params = event['arguments'].copy()
@@ -78,30 +78,37 @@ def handler(event, context):
     query_helper = QueryHelper(search_params, authorized)
 
     # 1. QUERY NODES MATCHING SEARCH INPUT
+    start_p = time.time()
     nodes, limit_reached = query_nodes(query_helper)
+    print(f'NODES:\t took {time.time() - start_p} s.')
 
     # 2. FETCH EDGES AND NEW TARGET NODES
+    start_p = time.time()
     edges, new_nodes, edges_limit_reached = fetch_edges(nodes[:HARD_LIMIT], query_helper)
     #if not TEST:
     nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
+    print(f'EDGES:\t took {time.time() - start_p} s.')
 
     # format nodes
+    start_p = time.time()
     nodes = [format_node_data(node) for node in nodes]
+    print(f'FORMAT:\t took {time.time() - start_p} s.')
 
     # 3. COMPUTE NETWORK STATISTICS
+    start_p = time.time()
     statistics, nodes = add_network_statistics(nodes, edges)
+    print(f'STATS:\t took {time.time() - start_p} s.')
 
     message = 'Query limit reached! Only partial result displayed.' if limit_reached else ''
     
-    print('Duration total:', time.time() - start)
+    print('Duration total:\t', time.time() - start)
     if TEST:
-        print(f'nodes: {len(nodes)}\n edges: {len(edges)}\n statistics: {len(statistics)}\n message: {message}')
-        return {'nodes': nodes[:10], 'edges': edges[:2], 'statistics': statistics[nodes[0]['id']], 'message': message}
+        print(f'nodes: {len(nodes)}\nedges: {len(edges)}\nstatistics: {len(statistics)}\nmessage: {message}')
+        #return {}
+        return {'nodes': nodes[:1], 'edges': edges[:1], 'statistics': statistics[nodes[0]['id']], 'message': message}
     return {'nodes': nodes, 'edges': edges, 'statistics': statistics, 'message': message}
     
-
-
 
 def query_nodes(helper):
     """
@@ -142,9 +149,8 @@ def query_nodes(helper):
             )
             limit_reached = limit_reached or ddb_limit_reached
             nodes.extend(response['Items'])
-            #if ddb_limit_reached or len(nodes) >= MAX_ITEMS:
-            if len(nodes) >= MAX_ITEMS:
-                print(f'LIMIT REACHED: {len(nodes)} CASES FETCHED')
+            if len(nodes) >= HARD_LIMIT:
+                print(f'Limit reached (@ query nodes): {len(nodes)} cases fetched.')
                 return filter_nodes_by_domains(nodes), True
         return filter_nodes_by_domains(nodes), limit_reached
 
@@ -171,9 +177,8 @@ def query_nodes(helper):
                             )
                             limit_reached = limit_reached or ddb_limit_reached
                             nodes.extend(response['Items'])
-                            #if ddb_limit_reached or len(nodes) >= MAX_ITEMS:
-                            if len(nodes) >= MAX_ITEMS:
-                                print(f'LIMIT REACHED: {len(nodes)} CASES FETCHED')
+                            if len(nodes) >= HARD_LIMIT:
+                                print(f'Limit reached (@ query nodes): {len(nodes)} cases fetched.')
                                 return nodes, True
         else:
             for instance in helper.search_params[INSTANCES]:
@@ -188,9 +193,8 @@ def query_nodes(helper):
                         )
                         nodes.extend(response['Items'])
                         limit_reached = limit_reached or ddb_limit_reached
-                        #if ddb_limit_reached or len(nodes) >= MAX_ITEMS:
-                        if len(nodes) >= MAX_ITEMS:
-                            print(f'LIMIT REACHED: {len(nodes)} CASES FETCHED')
+                        if len(nodes) >= HARD_LIMIT:
+                            print(f'Limit reached (@ query nodes): {len(nodes)} cases fetched.')
                             return nodes, True
         return nodes, limit_reached
 
@@ -209,9 +213,8 @@ def query_nodes(helper):
                     )
                     limit_reached = limit_reached or ddb_limit_reached
                     node_keys.extend([get_key(item['ecli']) for item in response['Items']])
-                    #if ddb_limit_reached or len(node_keys) >= MAX_ITEMS:
-                    if len(node_keys) >= MAX_ITEMS: 
-                        print(f'LIMIT REACHED: {len(node_keys)} CASES FETCHED')
+                    if len(node_keys) >= HARD_LIMIT: 
+                        print(f'Limit reached (@ query nodes): {len(node_keys)} cases fetched.')
                         nodes = ddb_client.execute_batch(node_keys, helper.return_attributes)
                         return nodes, True
         nodes = ddb_client.execute_batch(node_keys, helper.return_attributes)
@@ -269,7 +272,7 @@ def query_nodes(helper):
                     nodes.append(node)
         return nodes[:HARD_LIMIT], limit_reached
 
-    # CASE 5: neither eclis, nor instances, nor domains given --> only query Elasticsearch by keywords 
+    # CASE 5: neither eclis, nor instances, nor domains given
     else:
         print('IN ELSE')
         return [], False
@@ -285,68 +288,64 @@ def fetch_edges(nodes, helper):
              set of new node eclis, 
              flag whether or not query limit was reached
     """
-    #node_eclis = [node['ecli'] for node in nodes]
-    node_eclis = []
-    new_node_keys = []
-    edges = []
-    source_keys = []
-    target_keys = []
+    def fetch_sources(total_node_eclis):
+        items = nodes
+        new_node_keys = []
+        edges = []
+        for _ in range(helper.search_params[DEGREES_SOURCES]):
+            target_keys = []
+            for item in items:
+                target = item['ecli']
+                if 'cited_by' in item:
+                    for source in item['cited_by']:
+                        target_keys.append(get_key(source))
+                        edges.append({
+                            'id': f"{source}_{target}", 
+                            'source': source, 
+                            'target': target
+                        })
+                        if source not in total_node_eclis:
+                            total_node_eclis.append(source)
+                            new_node_keys.append(get_key(source))
+                        if len(total_node_eclis) >= 2*HARD_LIMIT:
+                            print(f'Limit reached (@ source edges): {len(total_node_eclis)} cases fetched.')
+                            return total_node_eclis, edges, new_node_keys, True
+            items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
+        return total_node_eclis, edges, new_node_keys, False
 
-    for node in nodes:
-        node_eclis.append(node['ecli'])
-        source_keys.append(get_key(node['ecli']))
-        target_keys.append(get_key(node['ecli']))
+    def fetch_targets(total_node_eclis):
+        items = nodes
+        new_node_keys = []
+        edges = []
+        for _ in range(helper.search_params[DEGREES_TARGETS]):
+            source_keys = []
+            for item in items:
+                source = item['ecli']
+                if 'cites' in item:
+                    for target in item['cites']:
+                        source_keys.append(get_key(target))
+                        edges.append({
+                            'id': f"{source}_{target}", 
+                            'source': source, 
+                            'target': target
+                        })
+                        if target not in total_node_eclis:
+                            total_node_eclis.append(target)
+                            new_node_keys.append(get_key(target))
+                        if len(total_node_eclis) >= 3*HARD_LIMIT:
+                            print(f'Limit reached (@ target edges): {len(total_node_eclis)} cases fetched.')
+                            return total_node_eclis, edges, new_node_keys, True
+            items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
+        return total_node_eclis, edges, new_node_keys, False
 
-    # @TODO items = nodes
+    total_node_eclis = [node['ecli'] for node in nodes]
+    total_node_eclis, edges_sources, new_node_keys_sources, sources_limit_reached = fetch_sources(total_node_eclis)
+    print(f'Sources fetched ({len(edges_sources)}).')
+    total_node_eclis, edges_targets, new_node_keys_targets, targets_limit_reached = fetch_targets(total_node_eclis)
+    print(f'Targets fetched ({len(edges_targets)}).')
+    new_nodes = ddb_client.execute_batch(new_node_keys_sources + new_node_keys_targets, helper.return_attributes)
 
-    # c_sources:
-    for _ in range(helper.search_params[DEGREES_SOURCES]):
-        items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
-        target_keys = []
-        for item in items:
-            target = item['ecli']
-            if 'cited_by' in item:
-                for source in item['cited_by']:
-                    target_keys.append(get_key(source))
-                    edges.append({
-                        'id': f"{source}_{target}", 
-                        'source': source, 
-                        'target': target
-                    })
-                    if source not in node_eclis:
-                        node_eclis.append(source)
-                        new_node_keys.append(get_key(source))
-                    if len(edges) >= MAX_ITEMS:
-                        new_nodes = ddb_client.execute_batch(new_node_keys, helper.return_attributes)
-                        return edges, new_nodes, True
-        # @TODO items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
-
-    # @TODO items = nodes
-
-    # targets:
-    for _ in range(helper.search_params[DEGREES_TARGETS]):
-        items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
-        source_keys = []
-        for item in items:
-            source = item['ecli']
-            if 'cites' in item:
-                for target in item['cites']:
-                    source_keys.append(get_key(target))
-                    edges.append({
-                        'id': f"{source}_{target}", 
-                        'source': source, 
-                        'target': target
-                    })
-                    if target not in node_eclis:
-                        node_eclis.append(target)
-                        new_node_keys.append(get_key(target))
-                    if len(edges) >= 2*MAX_ITEMS:
-                        new_nodes = ddb_client.execute_batch(new_node_keys, helper.return_attributes)
-                        return edges, new_nodes, True
-        # @TODO items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
-
-    new_nodes = ddb_client.execute_batch(new_node_keys, helper.return_attributes)
-    return edges, new_nodes, False
+    return edges_sources + edges_targets, new_nodes, sources_limit_reached or targets_limit_reached
 
 
 
