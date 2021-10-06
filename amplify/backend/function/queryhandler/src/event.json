@@ -6,8 +6,8 @@
         "DateEnd": "2021-12-31",
         
         "Eclis": "",
-        "Instances": [],
-        "Domains": ["Bestuursrecht"],
+        "Instances": ["Hoge Raad"],
+        "Domains": [],
         
 
         "Keywords": "",

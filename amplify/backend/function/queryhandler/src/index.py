@@ -24,7 +24,7 @@ from network_statistics import add_network_statistics
 
 TEST = False                        # returns number of nodes instead of nodes
 
-HARD_LIMIT = 1000                  # 3000 -> *3 (+ sources + targets)
+HARD_LIMIT = 500                  # 3000 -> *3 (+ sources + targets)
 
 DDB_ITEM_LIMIT = 1000                     # 500   (10)
 DDB_PAGE_LIMIT = 50                     # 10    (5)
