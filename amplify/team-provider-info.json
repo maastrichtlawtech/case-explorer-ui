@@ -25,10 +25,6 @@
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/datafetcher-562b4736526773485072-build.zip"
         },
-        "elasticsearchindexer": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/elasticsearchindexer-362f2f626930447a4432-build.zip"
-        },
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/queryhandler-6f30742b552b75336741-build.zip"

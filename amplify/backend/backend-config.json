@@ -53,22 +53,6 @@
         }
       ]
     },
-    "elasticsearchindexer": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
     "queryhandler": {
       "build": true,
       "providerPlugin": "awscloudformation",
