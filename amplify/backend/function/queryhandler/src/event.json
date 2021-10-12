@@ -7,10 +7,12 @@
         
         "Eclis": "",
         "Instances": ["Hoge Raad"],
-        "Domains": [],
-        
+        "Domains": [
+            "Strafrecht",
+            "Civiel recht"
+        ],
 
-        "Keywords": "",
+        "Keywords": "gevaarzetting",
         "Articles": "",
         
         "DegreesSources": 1,

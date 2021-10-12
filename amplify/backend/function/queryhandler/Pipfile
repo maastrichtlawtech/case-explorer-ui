@@ -9,10 +9,10 @@ verify_ssl = true
 src = {editable = true, path = "./src"}
 networkx = "*"
 boto3 = "*"
-elasticsearch = "<=7.10"
 requests-aws4auth = "*"
 python-louvain = "*"
 scipy = "*"
+opensearch-py = "*"
 
 [requires]
 python_version = "3.8"

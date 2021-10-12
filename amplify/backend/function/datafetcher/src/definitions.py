@@ -1,6 +1,7 @@
 # RESOURCES:
 TABLE_NAME = 'Caselaw'
-ELASTICSEARCH_ENDPOINT = 'search-amplify-elasti-1vcvtg2fe653t-fnjqu2kttzllzxgcj4jlptgb3y.eu-central-1.es.amazonaws.com'
+OPENSEARCH_INDEX_NAME = 'caselawexplorer_rechtspraak'
+OPENSEARCH_ENDPOINT = 'search-caselawexplorer-j72amls6ucledpopoyyxzyujqi.eu-central-1.es.amazonaws.com'
 
 
 # SEARCH PARAMETERS:

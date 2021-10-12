@@ -13,7 +13,7 @@ It handles the following tasks:
 import os
 import time
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
-from clients.elasticsearch_client import ElasticsearchClient
+from clients.opensearch_client import OpenSearchClient
 from clients.dynamodb_client import DynamodbClient
 from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
@@ -31,9 +31,9 @@ DDB_PAGE_LIMIT = 50                     # 10    (5)
 
 
 # set up Elasticsearch client
-es_client = ElasticsearchClient(
-    endpoint=ELASTICSEARCH_ENDPOINT,
-    index=TABLE_NAME.lower(),
+es_client = OpenSearchClient(
+    endpoint=OPENSEARCH_ENDPOINT,
+    index=OPENSEARCH_INDEX_NAME,
     max_hits=HARD_LIMIT,             # max number of hits (matching items) per query (page)
     page_limit=10                    # max number of queries (pages)
     #timeout= 20                    # request timeout in s
@@ -85,8 +85,8 @@ def handler(event, context):
     # 2. FETCH EDGES AND NEW TARGET NODES
     start_p = time.time()
     edges, new_nodes, edges_limit_reached = fetch_edges(nodes[:HARD_LIMIT], query_helper)
-    #if not TEST:
-    nodes += new_nodes
+    if not TEST:
+        nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
     print(f'EDGES:\t took {time.time() - start_p} s.')
 
@@ -106,7 +106,7 @@ def handler(event, context):
     if TEST:
         print(f'nodes: {len(nodes)}\nedges: {len(edges)}\nstatistics: {len(statistics)}\nmessage: {message}')
         #return {}
-        return {'nodes': nodes[:1], 'edges': edges[:1], 'statistics': statistics[nodes[0]['id']], 'message': message}
+        return {'nodes': nodes[:10], 'edges': edges[:1], 'statistics': statistics[nodes[0]['id']], 'message': message}
     return {'nodes': nodes, 'edges': edges, 'statistics': statistics, 'message': message}
     
 
@@ -220,8 +220,6 @@ def query_nodes(helper):
         nodes = ddb_client.execute_batch(node_keys, helper.return_attributes)
         return nodes, limit_reached
 
-
-
     # CASE 1: keywords and/or articles given --> search elasticsearch:
     if helper.search_params[KEYWORDS] or helper.search_params[ARTICLES]:
         print('in ES')
@@ -238,6 +236,7 @@ def query_nodes(helper):
             nodes.extend(response['Items'])
             if len(nodes) >= HARD_LIMIT:
                 break
+        # @TODO: remove above loop and uncomment below once correct data is indexed
         #nodes = [item['_source'] for item in result]
         return nodes[:HARD_LIMIT], limit_reached
 

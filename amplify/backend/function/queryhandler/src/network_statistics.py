@@ -36,8 +36,9 @@ def get_pagerank(graph, max_iter=10000):
 
 def add_network_statistics(nodes, edges):
     start = time.time()
+    statistics = dict()
     if len(nodes) == 0:
-        return nodes
+        return statistics, nodes
     graph = get_network(nodes, edges)
     partition = community.best_partition(nx.Graph(graph))
     degree = nx.degree(graph)
@@ -64,7 +65,6 @@ def add_network_statistics(nodes, edges):
     # for relative in-degree we sort on date
     derive_date = lambda k: k['data']['date_decision'] if 'date_decision' in k['data'] and k['data']['date_decision'] != '' else '1900-01-01' # @ TODO: which default date?
     nodes.sort(key=derive_date, reverse=True)
-    statistics = dict()
     for i, node in enumerate(nodes):
         node_id = node['id']
         statistics[node_id] = {'community': str(partition[node_id])}

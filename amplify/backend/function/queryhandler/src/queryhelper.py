@@ -96,21 +96,25 @@ class QueryHelper:
         :return: dict of Elasticsearch query in Query DSL
         * simple query string syntax: https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
         """
-        filters = []
-        filters_params = []
-        shoulds_instance = []
-        shoulds_citation = []
-        # FILTERS
-        filters_params.append({'terms': {'source': get_datasource_names(self.search_params[DATA_SOURCES])}})
-        filters_params.append({'terms': {'document_type': get_doctype_names(self.search_params[DOCTYPES])}})
-        filters_params.append({
+        expressions = []
+        filter = []
+        should_instance = []
+        should_citation = []
+        should_domain = []
+
+        # FILTER: results must match all clauses
+        filter.append({'terms': {'source': get_datasource_names(self.search_params[DATA_SOURCES])}})
+        filter.append({'terms': {'document_type': get_doctype_names(self.search_params[DOCTYPES])}})
+        filter.append({
             'range': {
                 'date_decision': {
                     'gte': self.search_params[DATE_START],
                     'lte': self.search_params[DATE_END]
                 }}})
+        if self.search_params[ECLIS]:
+            filter.append({'terms': {'ecli': self.search_params[ECLIS]}})
         if self.search_params[KEYWORDS]: 
-            filters_params.append({
+            filter.append({
                 'simple_query_string': {
                     'query': self.search_params[KEYWORDS],
                     'fields': self.keyword_search_attributes,
@@ -118,37 +122,34 @@ class QueryHelper:
                 },
             })
         if self.search_params[ARTICLES]: 
-            filters_params.append({
+            filter.append({
                 'simple_query_string': {
                     'query': self.search_params[ARTICLES],
                     'fields': self.article_search_attributes
                 },
             })
-        # SHOULD CITATIONS
-        shoulds_citation.append({'exists': {'field': 'cites'}})
-        shoulds_citation.append({'exists': {'field': 'cited_by'}})
-        
-        filters.append({'bool': {'filter': filters_params}})
-        filters.append({'bool': {'should': shoulds_citation}})
 
+        expressions.append({'bool': {'filter': filter}})
 
-        # @TODO: add optional filtering by instance or domain
+        # SHOULD: results must match at least one of the given clauses
+        should_citation.append({'exists': {'field': 'cites'}})
+        should_citation.append({'exists': {'field': 'cited_by'}})
+        # @TODO: uncomment once indexing has finished
+        # expressions.append({'bool': {'should': shoulds_citation}})
+
         if self.search_params[INSTANCES]:
-            shoulds_instance.append({'terms': {'instance': self.search_params[INSTANCES]}})
+            should_instance.append({'terms': {'instance': self.search_params[INSTANCES]}})
             if self.authorized:
-                shoulds_instance.append({'terms': {'instance_li': self.search_params[INSTANCES]}})
-            filters.append({'bool': {'should': shoulds_instance}})
+                should_instance.append({'terms': {'instance_li': self.search_params[INSTANCES]}})
+            expressions.append({'bool': {'should': should_instance}})
 
-        if self.search_params[ECLIS]:
-            filters.append({'bool': {'should': {'terms': {'ecli': self.search_params[ECLIS]}}}})
-
-        # @TODO; append only to final query if exists
-        """
         if self.search_params[DOMAINS]:
-            filters.append({'terms': {'ecli': self.search_params[ECLIS]}})
-        """
+            should_domain.append({'terms': {'domains': self.search_params[DOMAINS]}})
+            if self.authorized:
+                should_domain.append({'terms': {'domains_li': self.search_params[DOMAINS]}})
+            expressions.append({'bool': {'should': should_domain}})
 
-        return {'bool': {'filter': filters}}            
+        return {'bool': {'filter': expressions}}            
 
 
     

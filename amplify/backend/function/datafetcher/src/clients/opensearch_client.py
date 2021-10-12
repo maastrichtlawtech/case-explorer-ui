@@ -1,10 +1,10 @@
-from elasticsearch import Elasticsearch, RequestsHttpConnection
+from opensearchpy import OpenSearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 import os
 import time
 
 
-class ElasticsearchClient:
+class OpenSearchClient:
 
     def __init__(self, endpoint, index, max_hits=1, page_limit=1, timeout=10):
 
@@ -16,12 +16,12 @@ class ElasticsearchClient:
         awsauth = AWS4Auth(
             os.getenv('AWS_ACCESS_KEY_ID'), 
             os.getenv('AWS_SECRET_ACCESS_KEY'), 
-            os.getenv('REGION'), 
+            os.getenv('AWS_REGION'), 
             'es', 
             session_token=os.getenv('AWS_SESSION_TOKEN'))
 
-        self.es = Elasticsearch(
-            hosts = [{'host': endpoint, 'port': 443, 'use_ssl': True}],
+        self.es = OpenSearch(
+            hosts = [{'host': endpoint, 'port': 443}],
             http_auth = awsauth,
             use_ssl = True,
             verify_certs = True,
@@ -56,17 +56,17 @@ class ElasticsearchClient:
         hits = result['hits']['hits']
         total_hits.extend(hits)
 
-        counter = 1
+        page_count = 1
         while len(hits) > 0:
-            if counter == self.page_limit:
+            if page_count == self.page_limit or len(total_hits) >= self.max_hits:
                 limit_reached = True
-                print(f'ELASTICSEARCH LIMIT REACHED - RETRIEVED {len(total_hits)} HITS')
+                print(f'OS: Request limit reached!')
                 break
             #pit_id = result['pit_id']
             result = self.es.search(
                 index=[self.index],
                 body={
-                    'from': counter*self.max_hits,
+                    'from': page_count*self.max_hits,
                     'size': self.max_hits,
                     'query': query,
                     #'pit': {'id': pit_id},
@@ -79,11 +79,14 @@ class ElasticsearchClient:
             )
             hits = result['hits']['hits']
             total_hits.extend(hits)
-            counter += 1
+            page_count += 1
             #print(f'COUNTER: {counter}')
         
         #es.close_point_in_time(body={'id': pit_id})
 
         #print('Duration es search:', time.time() - start)
+        print(f'OS: {len(total_hits)}/{self.max_hits} items fetched.')
+        print(f'OS: {int(page_count)}/{self.page_limit} pages scanned.')
+        print(f'OS: took {time.time()-start} s.')
 
         return total_hits, limit_reached
