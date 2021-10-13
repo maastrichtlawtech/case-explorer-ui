@@ -37,14 +37,14 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
 
   const [state, setState] = React.useState(query)
   const formRef= React.useRef()
-  React.useEffect(() => {
-    setTimeout(()=> {
-      console.log('BB', formRef.current)
-      const  event = new Event('click')
-      event.persist = ()=>{}
-      formRef.current.onSubmit(event)
-    }, 1000)
-  }, [])
+  // React.useEffect(() => {
+  //   setTimeout(()=> {
+  //     console.log('BB', formRef.current)
+  //     const  event = new Event('click')
+  //     event.persist = ()=>{}
+  //     formRef.current.onSubmit(event)
+  //   }, 1000)
+  // }, [])
   return (
     <Modal
       open={isOpen}
