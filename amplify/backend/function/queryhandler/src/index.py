@@ -12,6 +12,7 @@ It handles the following tasks:
 
 import os
 import time
+from warnings import resetwarnings
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
 from clients.opensearch_client import OpenSearchClient
 from clients.dynamodb_client import DynamodbClient
@@ -19,32 +20,30 @@ from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
 from definitions import *
-from network_statistics import add_network_statistics
+import pandas as pd
+from networkstatistics import add_network_statistics
 
 
 TEST = False                        # returns number of nodes instead of nodes
+HARD_LIMIT = 1000                  
 
-HARD_LIMIT = 500                  # 3000 -> *3 (+ sources + targets)
 
-DDB_ITEM_LIMIT = 1000                     # 500   (10)
-DDB_PAGE_LIMIT = 50                     # 10    (5)
 
+# set up DynamoDB client
+ddb_client = DynamodbClient(
+    table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'),
+    item_limit=1000,            # max number of items to scan per page (not necessarily matches)
+    page_limit=50,            # max number of pages to scan (1 page = 1 DDB query)
+    max_hits=HARD_LIMIT                   # max number of matching items to return
+)
 
 # set up Elasticsearch client
 es_client = OpenSearchClient(
     endpoint=OPENSEARCH_ENDPOINT,
     index=OPENSEARCH_INDEX_NAME,
-    max_hits=HARD_LIMIT,             # max number of hits (matching items) per query (page)
-    page_limit=10                    # max number of queries (pages)
-    #timeout= 20                    # request timeout in s
-)
-
-# set up DynamoDB client
-ddb_client = DynamodbClient(
-    table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'),
-    item_limit=DDB_ITEM_LIMIT,            # max number of items to scan per page (not necessarily matches)
-    page_limit=DDB_PAGE_LIMIT,            # max number of pages to scan (1 page = 1 DDB query)
-    max_hits=HARD_LIMIT                   # max number of matching items to return
+    max_hits=1000,             # max number of hits (matching items) per query (page)
+    page_limit=HARD_LIMIT/1000,                    # max number of queries (pages)
+    #timeout= 5                    # request timeout in s
 )
 
 def handler(event, context):
@@ -79,35 +78,55 @@ def handler(event, context):
 
     # 1. QUERY NODES MATCHING SEARCH INPUT
     start_p = time.time()
-    nodes, limit_reached = query_nodes(query_helper)
+    all_nodes, limit_reached = query_nodes(query_helper)
     print(f'NODES:\t took {time.time() - start_p} s.')
 
     # 2. FETCH EDGES AND NEW TARGET NODES
     start_p = time.time()
-    edges, new_nodes, edges_limit_reached = fetch_edges(nodes[:HARD_LIMIT], query_helper)
-    if not TEST:
-        nodes += new_nodes
+    all_edges, new_nodes, edges_limit_reached = fetch_edges(all_nodes[:HARD_LIMIT], query_helper)
+    #if not TEST:
+    all_nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
     print(f'EDGES:\t took {time.time() - start_p} s.')
 
-    # format nodes
+    # 3. GENERATE SUBNETWORK
     start_p = time.time()
-    nodes = [format_node_data(node) for node in nodes]
+    nodes, edges = get_subnet(all_nodes, all_edges)
+    print(f'SUBNET:\t took {time.time() - start_p} s.')
+
+    # 4.FORMAT NODES
+    start_p = time.time()
+    all_nodes = [format_node_data(node, mode='essential') for node in all_nodes]
+    #nodes = [format_node_data(node, mode='id') for node in nodes]
     print(f'FORMAT:\t took {time.time() - start_p} s.')
 
     # 3. COMPUTE NETWORK STATISTICS
     start_p = time.time()
-    statistics, nodes = add_network_statistics(nodes, edges)
+    statistics, nodes = add_network_statistics(all_nodes, all_edges, nodes)
     print(f'STATS:\t took {time.time() - start_p} s.')
 
     message = 'Query limit reached! Only partial result displayed.' if limit_reached else ''
     
     print('Duration total:\t', time.time() - start)
     if TEST:
-        print(f'nodes: {len(nodes)}\nedges: {len(edges)}\nstatistics: {len(statistics)}\nmessage: {message}')
-        #return {}
-        return {'nodes': nodes[:10], 'edges': edges[:1], 'statistics': statistics[nodes[0]['id']], 'message': message}
-    return {'nodes': nodes, 'edges': edges, 'statistics': statistics, 'message': message}
+        print(f'allNodes: {len(all_nodes)}\nallEdges: {len(all_edges)}\nnodes: {len(nodes)}\nedges: {len(edges)}\nstatistics: {len(statistics)}\nmessage: {message}')
+        til = 10
+        return {
+            'allNodes': all_nodes[:til], 
+            'allEdges': all_edges[:til], 
+            'nodes': nodes[:til], 
+            'edges': edges[:til], 
+            'statistics': {},
+            'message': message
+        }
+    return {
+        'allNodes': all_nodes, 
+        'allEdges': all_edges, 
+        'nodes': nodes, 
+        'edges': edges, 
+        'statistics': statistics,
+        'message': message
+    }
     
 
 def query_nodes(helper):
@@ -135,7 +154,7 @@ def query_nodes(helper):
             return nodes
         nodes = []
         limit_reached = False
-        filter_expression = helper.get_ddb_filter_expression_sourcedocdate() & helper.get_ddb_filter_expression_citation()
+        filter_expression = helper.get_ddb_filter_expression_sourcedocdate() #& helper.get_ddb_filter_expression_citation()
         if helper.search_params[INSTANCES]:
             filter_expression = filter_expression \
                 & helper.get_ddb_filter_expression_instances()
@@ -162,7 +181,7 @@ def query_nodes(helper):
         if li_mode:
             index_name += '_li'
             key_name += '_li'
-        filter_expression = helper.get_ddb_filter_expression_citation()
+        #filter_expression = helper.get_ddb_filter_expression_citation()
         if helper.search_params[DOMAINS]:
             for domain in helper.search_params[DOMAINS]:
                 for instance in helper.search_params[INSTANCES]:
@@ -173,7 +192,8 @@ def query_nodes(helper):
                                 ProjectionExpression=projection_expression,
                                 KeyConditionExpression=helper.get_ddb_key_expression_instance(key_name, instance, source, doc),
                                 ExpressionAttributeNames=expression_attribute_names,
-                                FilterExpression=filter_expression & helper.get_ddb_filter_expression_domain(domain)
+                                FilterExpression = helper.get_ddb_filter_expression_domain(domain)
+                                #FilterExpression=filter_expression & helper.get_ddb_filter_expression_domain(domain)
                             )
                             limit_reached = limit_reached or ddb_limit_reached
                             nodes.extend(response['Items'])
@@ -188,7 +208,7 @@ def query_nodes(helper):
                             IndexName=index_name,
                             ProjectionExpression=projection_expression,
                             KeyConditionExpression=helper.get_ddb_key_expression_instance(key_name, instance, source, doc),
-                            FilterExpression=filter_expression,
+                            #FilterExpression=filter_expression,
                             ExpressionAttributeNames=expression_attribute_names
                         )
                         nodes.extend(response['Items'])
@@ -225,19 +245,7 @@ def query_nodes(helper):
         print('in ES')
         es_query = helper.get_elasticsearch_query()
         result, limit_reached = es_client.execute(es_query, helper.return_attributes)
-        nodes = []
-        for item in result:
-            response, ddb_limit_reached = ddb_client.execute_query(
-                ProjectionExpression=projection_expression,
-                KeyConditionExpression=helper.get_ddb_key_expression_ecli(item['_source']['ecli']),
-                FilterExpression=helper.get_ddb_filter_expression_citation(),
-                ExpressionAttributeNames=expression_attribute_names
-            )
-            nodes.extend(response['Items'])
-            if len(nodes) >= HARD_LIMIT:
-                break
-        # @TODO: remove above loop and uncomment below once correct data is indexed
-        #nodes = [item['_source'] for item in result]
+        nodes = [item['_source'] for item in result]
         return nodes[:HARD_LIMIT], limit_reached
 
 
@@ -291,7 +299,9 @@ def fetch_edges(nodes, helper):
         items = nodes
         new_node_keys = []
         edges = []
-        for _ in range(helper.search_params[DEGREES_SOURCES]):
+        for degree in range(helper.search_params[DEGREES_SOURCES]):
+            if degree != 0:
+                items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
             target_keys = []
             for item in items:
                 target = item['ecli']
@@ -306,17 +316,18 @@ def fetch_edges(nodes, helper):
                         if source not in total_node_eclis:
                             total_node_eclis.append(source)
                             new_node_keys.append(get_key(source))
-                        if len(total_node_eclis) >= 2*HARD_LIMIT:
-                            print(f'Limit reached (@ source edges): {len(total_node_eclis)} cases fetched.')
-                            return total_node_eclis, edges, new_node_keys, True
-            items = ddb_client.execute_batch(target_keys, ['ecli', 'cited_by'])
+                        #if len(total_node_eclis) >= 2*HARD_LIMIT:
+                        #    print(f'Limit reached (@ source edges): {len(total_node_eclis)} cases fetched.')
+                        #    return total_node_eclis, edges, new_node_keys, True
         return total_node_eclis, edges, new_node_keys, False
 
     def fetch_targets(total_node_eclis):
         items = nodes
         new_node_keys = []
         edges = []
-        for _ in range(helper.search_params[DEGREES_TARGETS]):
+        for degree in range(helper.search_params[DEGREES_TARGETS]):
+            if degree != 0:
+                items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
             source_keys = []
             for item in items:
                 source = item['ecli']
@@ -331,10 +342,9 @@ def fetch_edges(nodes, helper):
                         if target not in total_node_eclis:
                             total_node_eclis.append(target)
                             new_node_keys.append(get_key(target))
-                        if len(total_node_eclis) >= 3*HARD_LIMIT:
-                            print(f'Limit reached (@ target edges): {len(total_node_eclis)} cases fetched.')
-                            return total_node_eclis, edges, new_node_keys, True
-            items = ddb_client.execute_batch(source_keys, ['ecli', 'cites'])
+                        #if len(total_node_eclis) >= 3*HARD_LIMIT:
+                        #    print(f'Limit reached (@ target edges): {len(total_node_eclis)} cases fetched.')
+                        #    return total_node_eclis, edges, new_node_keys, True
         return total_node_eclis, edges, new_node_keys, False
 
     total_node_eclis = [node['ecli'] for node in nodes]
@@ -347,4 +357,36 @@ def fetch_edges(nodes, helper):
     return edges_sources + edges_targets, new_nodes, sources_limit_reached or targets_limit_reached
 
 
+def get_subnet(nodes, edges):
+    if len(edges) == 0:
+        return [{'id': node['ecli'], 'data': {}} for node in nodes[:100]], edges
+
+    df = pd.DataFrame(edges)
+    sources = df.groupby('source').agg(list)
+    targets = df.groupby('target').agg(list)
+    full = pd.concat([sources, targets], axis=1)
+    full.columns = ['id1', 'target', 'id2', 'source']
+    full.reset_index(level=0, inplace=True)
+    full['index'] = full['index'].apply(lambda x: [x])
+    full = full.fillna("").applymap(list)
+    full['degree'] = (full.source + full.target).apply(len)
+    full.sort_values(by='degree', ascending=False, inplace=True)
+
+    node_eclis = set()
+    edge_ids = set()
+    for index, row in full.iterrows():
+        if row['degree'] >= 100:
+            continue
+        node_eclis_peak = node_eclis.union(set(ecli for ecli in row['index'] + row['source'] + row['target']))
+        edge_ids_peak = edge_ids.union(set(edge_id for edge_id in row['id1'] + row['id2']))
+        if len(node_eclis_peak) > 100:
+            break
+        node_eclis = node_eclis_peak
+        edge_ids = edge_ids_peak
+
+    result_nodes = [{'id': ecli, 'data': {}} for ecli in node_eclis]
+    result_edges = [{'id': edge_id, 'source': edge_id.split('_')[0], 'target': edge_id.split('_')[1]} for edge_id in edge_ids]
+
+    
+    return result_nodes, result_edges
 

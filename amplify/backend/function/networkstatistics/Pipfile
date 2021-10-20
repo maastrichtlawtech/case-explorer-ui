@@ -7,11 +7,9 @@ verify_ssl = true
 
 [packages]
 src = {editable = true, path = "./src"}
-boto3 = "*"
-requests-aws4auth = "*"
-opensearch-py = "*"
-pandas = "*"
 networkx = "*"
+scipy = "*"
+python-louvain = "*"
 
 [requires]
 python_version = "3.8"

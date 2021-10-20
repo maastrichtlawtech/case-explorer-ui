@@ -58,7 +58,7 @@ class OpenSearchClient:
 
         page_count = 1
         while len(hits) > 0:
-            if page_count == self.page_limit or len(total_hits) >= self.max_hits:
+            if page_count == self.page_limit or len(total_hits) >= self.max_hits * self.page_limit:
                 limit_reached = True
                 print(f'OS: Request limit reached!')
                 break
@@ -85,7 +85,7 @@ class OpenSearchClient:
         #es.close_point_in_time(body={'id': pit_id})
 
         #print('Duration es search:', time.time() - start)
-        print(f'OS: {len(total_hits)}/{self.max_hits} items fetched.')
+        print(f'OS: {len(total_hits)}/{self.max_hits*self.page_limit} items fetched.')
         print(f'OS: {int(page_count)}/{self.page_limit} pages scanned.')
         print(f'OS: took {time.time()-start} s.')
 

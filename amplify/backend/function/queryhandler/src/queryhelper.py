@@ -99,7 +99,7 @@ class QueryHelper:
         expressions = []
         filter = []
         should_instance = []
-        should_citation = []
+        #should_citation = []
         should_domain = []
 
         # FILTER: results must match all clauses
@@ -132,8 +132,8 @@ class QueryHelper:
         expressions.append({'bool': {'filter': filter}})
 
         # SHOULD: results must match at least one of the given clauses
-        should_citation.append({'exists': {'field': 'cites'}})
-        should_citation.append({'exists': {'field': 'cited_by'}})
+        #should_citation.append({'exists': {'field': 'cites'}})
+        #should_citation.append({'exists': {'field': 'cited_by'}})
         # @TODO: uncomment once indexing has finished
         # expressions.append({'bool': {'should': shoulds_citation}})
 

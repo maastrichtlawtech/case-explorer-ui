@@ -3,39 +3,16 @@ from networkx.readwrite import json_graph
 import warnings
 import community
 import time
-# slightly modified taken from: 
+# taken from and modified: 
 # https://github.com/caselawanalytics/CaseLawAnalytics/blob/master/caselawnet/network_analysis.py
 
-
-def get_network(nodes, edges):
-    graph = json_graph.node_link_graph({'nodes': nodes, 'links': edges}, directed=True, multigraph=False)
-    return graph
-
-def get_hits(graph, max_iter=10000):
-    try:
-        hubs, authorities = nx.hits(graph, max_iter=max_iter)
-        return hubs, authorities
-    except nx.NetworkXError:
-        # It is possible that the HITS algorithm doesn't converge
-        warnings.warn('HITS algorithm did not converge!',
-                      Warning)
-        h = dict.fromkeys(graph, 1.0 / graph.number_of_nodes())
-        hubs, authorities = h, h
-        return hubs, authorities
-
-def get_pagerank(graph, max_iter=10000):
-    try:
-        pagerank = nx.pagerank(graph, max_iter=max_iter)
-        return pagerank
-    except nx.NetworkXError:
-        # It is possible that the pagerank algorithm doesn't converge
-        warnings.warn('PageRank algorithm did not converge!',
-                      Warning)
-        p = dict.fromkeys(graph, 1.0 / graph.number_of_nodes())
-        return p
-
-def add_network_statistics(nodes, edges):
+def handler(event, context):
     start = time.time()
+
+    network = event['arguments'].copy()
+    nodes = network['nodes']
+    edges = network['edges']
+
     statistics = dict()
     if len(nodes) == 0:
         return statistics, nodes
@@ -48,7 +25,6 @@ def add_network_statistics(nodes, edges):
             'degree': degree,
             'in_degree': graph.in_degree(),
             'out_degree': graph.out_degree(),
-
             'degree_centrality': nx.degree_centrality(graph),
             'in_degree_centrality': nx.in_degree_centrality(graph),
             'out_degree_centrality': nx.out_degree_centrality(graph),
@@ -80,3 +56,30 @@ def add_network_statistics(nodes, edges):
                 node['data'][stat] = statistics[node_id][stat]
     print(f'STATS: add to nodes took: {time.time() - start} s.')
     return statistics, nodes
+
+def get_network(nodes, edges):
+    graph = json_graph.node_link_graph({'nodes': nodes, 'links': edges}, directed=True, multigraph=False)
+    return graph
+
+def get_hits(graph, max_iter=10000):
+    try:
+        hubs, authorities = nx.hits(graph, max_iter=max_iter)
+        return hubs, authorities
+    except nx.NetworkXError:
+        # It is possible that the HITS algorithm doesn't converge
+        warnings.warn('HITS algorithm did not converge!',
+                      Warning)
+        h = dict.fromkeys(graph, 1.0 / graph.number_of_nodes())
+        hubs, authorities = h, h
+        return hubs, authorities
+
+def get_pagerank(graph, max_iter=10000):
+    try:
+        pagerank = nx.pagerank(graph, max_iter=max_iter)
+        return pagerank
+    except nx.NetworkXError:
+        # It is possible that the pagerank algorithm doesn't converge
+        warnings.warn('PageRank algorithm did not converge!',
+                      Warning)
+        p = dict.fromkeys(graph, 1.0 / graph.number_of_nodes())
+        return p

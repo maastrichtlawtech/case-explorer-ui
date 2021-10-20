@@ -10,7 +10,7 @@ def is_authorized(event):
     return authorized
 
 
-def format_node_data(item):
+def format_node_data(item, mode='full'):
     """
     formats DynamoDB dict to node data type, handling replacements of Rechtspraak data with legal intelligence data
     
@@ -19,25 +19,35 @@ def format_node_data(item):
     """
     if item == {}:
         return {'id': None, 'data': None}
-    atts = list(item.keys())
-    for attribute in atts:
-        # remove li attribute if correspondig rs attribute present, except for summary
-        if attribute + '_li' in item:
-            if attribute == 'summary':
+    if mode == 'id':
+        return {'id': item['ecli'], 'data': {}}
+    if mode == 'essential':
+        data = {}
+        if 'date_decision' in item:
+            data['date_decision'] = item['date_decision']
+        return {'id': item['ecli'], 'data': data}
+    if mode == 'full':
+        atts = list(item.keys())
+        for attribute in atts:
+            # remove li attribute if correspondig rs attribute present, except for summary
+            if attribute + '_li' in item:
+                if attribute == 'summary':
+                    item.pop(attribute)
+                else:
+                    item.pop(attribute + '_li')
+            # convert set types to lists to make JSON serializable
+            if attribute in item and type(item[attribute]) is set:
+                item[attribute] = list(item[attribute])
+        for attribute in atts:
+            # remove '_li' suffix from attribute name if applicable
+            if attribute in item and attribute.endswith('_li'):
+                if attribute[:-3] in item:
+                    print('warning: overwriting existing RS attribute with LI attribute')
+                item[attribute[:-3]] = item[attribute]
                 item.pop(attribute)
-            else:
-                item.pop(attribute + '_li')
-        # convert set types to lists to make JSON serializable
-        if attribute in item and type(item[attribute]) is set:
-            item[attribute] = list(item[attribute])
-    for attribute in atts:
-        # remove '_li' suffix from attribute name if applicable
-        if attribute in item and attribute.endswith('_li'):
-            if attribute[:-3] in item:
-                print('warning: overwriting existing RS attribute with LI attribute')
-            item[attribute[:-3]] = item[attribute]
-            item.pop(attribute)
-    return {'id': item['ecli'], 'data': item}
+        return {'id': item['ecli'], 'data': item}
+    else:
+        warnings.warn('Invalid formatting mode. Please choose one of: ["id", "essential", "full"].')
 
 
 def get_key(ecli):
@@ -116,8 +126,8 @@ def verify_date_end(key, params):
 def verify_degrees(key, params):
     if not key in params \
             or not isinstance(params[key], int) \
-            or not 1 <= params[key] <= 5:
-        warnings.warn(f"Invalid input: argument '{key}' of type Int between 1 and 5 expected."
-                      f"Setting '{key}' to 1.")
-        return 1
+            or not 0 <= params[key] <= 5:
+        warnings.warn(f"Invalid input: argument '{key}' of type Int between 0 and 5 expected."
+                      f"Setting '{key}' to 0.")
+        return 0
     return params[key]
