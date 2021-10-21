@@ -21,11 +21,11 @@ from utils import get_key, format_node_data, verify_input_string_list, verify_ec
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
 from definitions import *
 import pandas as pd
-from networkstatistics import add_network_statistics
+import json
 
 
 TEST = False                        # returns number of nodes instead of nodes
-HARD_LIMIT = 1000                  
+HARD_LIMIT = 5000                  
 
 
 
@@ -84,6 +84,7 @@ def handler(event, context):
     # 2. FETCH EDGES AND NEW TARGET NODES
     start_p = time.time()
     all_edges, new_nodes, edges_limit_reached = fetch_edges(all_nodes[:HARD_LIMIT], query_helper)
+    all_nodes = [format_node_data(node, mode='essential') for node in all_nodes]
     #if not TEST:
     all_nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
@@ -94,22 +95,18 @@ def handler(event, context):
     nodes, edges = get_subnet(all_nodes, all_edges)
     print(f'SUBNET:\t took {time.time() - start_p} s.')
 
-    # 4.FORMAT NODES
-    start_p = time.time()
-    all_nodes = [format_node_data(node, mode='essential') for node in all_nodes]
-    #nodes = [format_node_data(node, mode='id') for node in nodes]
-    print(f'FORMAT:\t took {time.time() - start_p} s.')
-
-    # 3. COMPUTE NETWORK STATISTICS
-    start_p = time.time()
-    statistics, nodes = add_network_statistics(all_nodes, all_edges, nodes)
-    print(f'STATS:\t took {time.time() - start_p} s.')
+    # @TODO: remove after testing
+    if TEST:
+        with open('edges.json', 'w') as f:
+            json.dump(all_edges, f)
+        with open('nodes.json', 'w') as f:
+            json.dump(all_nodes, f)
 
     message = 'Query limit reached! Only partial result displayed.' if limit_reached else ''
     
     print('Duration total:\t', time.time() - start)
     if TEST:
-        print(f'allNodes: {len(all_nodes)}\nallEdges: {len(all_edges)}\nnodes: {len(nodes)}\nedges: {len(edges)}\nstatistics: {len(statistics)}\nmessage: {message}')
+        print(f'allNodes: {len(all_nodes)}\nallEdges: {len(all_edges)}\nnodes: {len(nodes)}\nedges: {len(edges)}\nmessage: {message}')
         til = 10
         return {
             'allNodes': all_nodes[:til], 
@@ -124,7 +121,7 @@ def handler(event, context):
         'allEdges': all_edges, 
         'nodes': nodes, 
         'edges': edges, 
-        'statistics': statistics,
+        'statistics': {},
         'message': message
     }
     
@@ -295,9 +292,9 @@ def fetch_edges(nodes, helper):
              set of new node eclis, 
              flag whether or not query limit was reached
     """
-    def fetch_sources(total_node_eclis):
+    def fetch_sources():
         items = nodes
-        new_node_keys = []
+        new_node_eclis = set()
         edges = []
         for degree in range(helper.search_params[DEGREES_SOURCES]):
             if degree != 0:
@@ -313,17 +310,12 @@ def fetch_edges(nodes, helper):
                             'source': source, 
                             'target': target
                         })
-                        if source not in total_node_eclis:
-                            total_node_eclis.append(source)
-                            new_node_keys.append(get_key(source))
-                        #if len(total_node_eclis) >= 2*HARD_LIMIT:
-                        #    print(f'Limit reached (@ source edges): {len(total_node_eclis)} cases fetched.')
-                        #    return total_node_eclis, edges, new_node_keys, True
-        return total_node_eclis, edges, new_node_keys, False
+                        new_node_eclis.add(source)
+        return edges, new_node_eclis, False
 
-    def fetch_targets(total_node_eclis):
+    def fetch_targets():
         items = nodes
-        new_node_keys = []
+        new_node_eclis = set()
         edges = []
         for degree in range(helper.search_params[DEGREES_TARGETS]):
             if degree != 0:
@@ -335,31 +327,27 @@ def fetch_edges(nodes, helper):
                     for target in item['cites']:
                         source_keys.append(get_key(target))
                         edges.append({
-                            'id': f"{source}_{target}", 
+                            'id': f"{source}_{target}",
                             'source': source, 
                             'target': target
                         })
-                        if target not in total_node_eclis:
-                            total_node_eclis.append(target)
-                            new_node_keys.append(get_key(target))
-                        #if len(total_node_eclis) >= 3*HARD_LIMIT:
-                        #    print(f'Limit reached (@ target edges): {len(total_node_eclis)} cases fetched.')
-                        #    return total_node_eclis, edges, new_node_keys, True
-        return total_node_eclis, edges, new_node_keys, False
+                        new_node_eclis.add(target)
+        return edges, new_node_eclis, False
 
-    total_node_eclis = [node['ecli'] for node in nodes]
-    total_node_eclis, edges_sources, new_node_keys_sources, sources_limit_reached = fetch_sources(total_node_eclis)
+    old_node_eclis = {node['ecli'] for node in nodes}
+    edges_sources, new_node_eclis_sources, sources_limit_reached = fetch_sources()
     print(f'Sources fetched ({len(edges_sources)}).')
-    total_node_eclis, edges_targets, new_node_keys_targets, targets_limit_reached = fetch_targets(total_node_eclis)
+    edges_targets, new_node_eclis_targets, targets_limit_reached = fetch_targets()
     print(f'Targets fetched ({len(edges_targets)}).')
-    new_nodes = ddb_client.execute_batch(new_node_keys_sources + new_node_keys_targets, helper.return_attributes)
+    new_node_eclis = new_node_eclis_sources.union(new_node_eclis_targets).difference(old_node_eclis)
+    new_nodes = [{'id': ecli, 'data': {}} for ecli in new_node_eclis]
 
     return edges_sources + edges_targets, new_nodes, sources_limit_reached or targets_limit_reached
 
 
 def get_subnet(nodes, edges):
     if len(edges) == 0:
-        return [{'id': node['ecli'], 'data': {}} for node in nodes[:100]], edges
+        return [{'id': node['id'], 'data': {}} for node in nodes[:100]], edges
 
     df = pd.DataFrame(edges)
     sources = df.groupby('source').agg(list)

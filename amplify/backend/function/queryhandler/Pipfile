@@ -11,7 +11,6 @@ boto3 = "*"
 requests-aws4auth = "*"
 opensearch-py = "*"
 pandas = "*"
-networkx = "*"
 
 [requires]
 python_version = "3.8"
