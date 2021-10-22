@@ -29,6 +29,15 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       Domains: $Domains
       Doctypes: $Doctypes
     ) {
+      allNodes {
+        id
+        data
+      }
+      allEdges {
+        id
+        source
+        target
+      }
       nodes {
         id
         data
@@ -37,11 +46,15 @@ export const queryNetworkByUserInput = /* GraphQL */ `
         id
         source
         target
-        data
       }
       statistics
       message
     }
+  }
+`;
+export const computeNetworkStatistics = /* GraphQL */ `
+  query ComputeNetworkStatistics($nodes: [NodeInput], $edges: [EdgeInput]) {
+    computeNetworkStatistics(nodes: $nodes, edges: $edges)
   }
 `;
 export const fetchNodeData = /* GraphQL */ `

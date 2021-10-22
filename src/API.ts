@@ -85,6 +85,8 @@ export type DeleteCaselawInput = {
 
 export type Network = {
   __typename: "Network",
+  allNodes?:  Array<Node | null > | null,
+  allEdges?:  Array<Edge | null > | null,
   nodes?:  Array<Node | null > | null,
   edges?:  Array<Edge | null > | null,
   statistics?: string | null,
@@ -102,7 +104,17 @@ export type Edge = {
   id?: string | null,
   source?: string | null,
   target?: string | null,
+};
+
+export type NodeInput = {
+  id?: string | null,
   data?: string | null,
+};
+
+export type EdgeInput = {
+  id?: string | null,
+  source?: string | null,
+  target?: string | null,
 };
 
 export type ModelStringKeyConditionInput = {
@@ -209,6 +221,17 @@ export type QueryNetworkByUserInputQueryVariables = {
 export type QueryNetworkByUserInputQuery = {
   queryNetworkByUserInput?:  {
     __typename: "Network",
+    allNodes?:  Array< {
+      __typename: "Node",
+      id?: string | null,
+      data?: string | null,
+    } | null > | null,
+    allEdges?:  Array< {
+      __typename: "Edge",
+      id?: string | null,
+      source?: string | null,
+      target?: string | null,
+    } | null > | null,
     nodes?:  Array< {
       __typename: "Node",
       id?: string | null,
@@ -219,11 +242,19 @@ export type QueryNetworkByUserInputQuery = {
       id?: string | null,
       source?: string | null,
       target?: string | null,
-      data?: string | null,
     } | null > | null,
     statistics?: string | null,
     message?: string | null,
   } | null,
+};
+
+export type ComputeNetworkStatisticsQueryVariables = {
+  nodes?: Array< NodeInput | null > | null,
+  edges?: Array< EdgeInput | null > | null,
+};
+
+export type ComputeNetworkStatisticsQuery = {
+  computeNetworkStatistics?: string | null,
 };
 
 export type FetchNodeDataQueryVariables = {
