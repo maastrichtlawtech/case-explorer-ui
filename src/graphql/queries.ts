@@ -37,6 +37,7 @@ export const queryNetworkByUserInput = /* GraphQL */ `
         id
         source
         target
+        data
       }
       nodes {
         id
@@ -46,6 +47,7 @@ export const queryNetworkByUserInput = /* GraphQL */ `
         id
         source
         target
+        data
       }
       statistics
       message

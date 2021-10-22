@@ -47,6 +47,7 @@ const LIST_CASES = `query QueryNetworkByUserInput(
       id
       source
       target
+      data
     }
     statistics
     message

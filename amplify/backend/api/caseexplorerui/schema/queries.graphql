@@ -47,6 +47,7 @@ type Edge {
   id: String
   source: String
   target: String
+  data: String
 }
 
 input EdgeInput {

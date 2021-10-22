@@ -104,6 +104,7 @@ export type Edge = {
   id?: string | null,
   source?: string | null,
   target?: string | null,
+  data?: string | null,
 };
 
 export type NodeInput = {
@@ -231,6 +232,7 @@ export type QueryNetworkByUserInputQuery = {
       id?: string | null,
       source?: string | null,
       target?: string | null,
+      data?: string | null,
     } | null > | null,
     nodes?:  Array< {
       __typename: "Node",
@@ -242,6 +244,7 @@ export type QueryNetworkByUserInputQuery = {
       id?: string | null,
       source?: string | null,
       target?: string | null,
+      data?: string | null,
     } | null > | null,
     statistics?: string | null,
     message?: string | null,
