@@ -252,7 +252,7 @@ const AppContainer = ({
           } = getSelectedElementInfo(draft, graphEditor)
           let elementData = null
           try {
-            elementData = await API.getElementData({ id: selectedItem.id });
+            elementData = await API.getElementData({ Ecli: selectedItem.id });
           } catch (error) {
             alertRef.current.alert({
               text: JSON.stringify(error),

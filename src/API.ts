@@ -272,12 +272,12 @@ export type FetchNodeDataQuery = {
   } | null,
 };
 
-export type TestAuthQueryVariables = {
+export type TestQueryVariables = {
   Ecli?: string | null,
 };
 
-export type TestAuthQuery = {
-  testAuth?:  {
+export type TestQuery = {
+  test?:  {
     __typename: "Node",
     id?: string | null,
     data?: string | null,

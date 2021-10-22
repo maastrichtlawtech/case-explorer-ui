@@ -19,7 +19,7 @@ type Query {
   fetchNodeData(
     Ecli: String
   ): Node @function(name: "datafetcher-${env}")
-  testAuth(
+  test(
     Ecli: String
   ): Node @function(name: "test-${env}")
 }

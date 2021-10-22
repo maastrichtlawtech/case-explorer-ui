@@ -67,9 +67,9 @@ export const fetchNodeData = /* GraphQL */ `
     }
   }
 `;
-export const testAuth = /* GraphQL */ `
-  query TestAuth($Ecli: String) {
-    testAuth(Ecli: $Ecli) {
+export const test = /* GraphQL */ `
+  query Test($Ecli: String) {
+    test(Ecli: $Ecli) {
       id
       data
     }
