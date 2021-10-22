@@ -1,6 +1,6 @@
 import Amplify, { API } from "aws-amplify";
-import { queryNetworkByUserInput, fetchNodeData, test } from "../../src/graphql/queries";
-import { QueryNetworkByUserInputQueryVariables, FetchNodeDataQueryVariables, TestQueryVariables } from '../../src/API';
+import { queryNetworkByUserInput, fetchNodeData, computeNetworkStatistics, test } from "../../src/graphql/queries";
+import { QueryNetworkByUserInputQueryVariables, FetchNodeDataQueryVariables, ComputeNetworkStatisticsQueryVariables, TestQueryVariables } from '../../src/API';
 // import awsExports from "./aws-exports";
 
 const API_AUTH_MODE = {
@@ -61,6 +61,19 @@ export async function getElementData(variables: FetchNodeDataQueryVariables) {
     // }))
   } catch (err) {
     console.log('error getElementData node:', err)
+  }
+}
+
+export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQueryVariables) {
+  try {
+    const networkStatisticsResult = await API.graphql({
+      query: computeNetworkStatistics,
+      variables
+    })
+    const result = networkStatisticsResult.data.computeNetworkStatistics
+    return JSON.parse(result)
+  } catch (err) {
+    console.log('error getNetworkStatistics:', err)
   }
 }
 
