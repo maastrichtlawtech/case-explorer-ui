@@ -101,7 +101,7 @@ const AppContainer = ({
   const filteredDataRef = React.useRef({})
   const [state, updateState] = useImmer({
     queryBuilder: {
-      visible: true,
+      visible: false,
       query: {
         "DataSources": [
             "RS"
@@ -199,6 +199,18 @@ const AppContainer = ({
       isOpen: true,
       editable: false,
       header: DataBarHeader,
+      sort: (a, b) => {
+        const prioritizeKeys = ['ecli', 'cited_by',]
+        const aIndex = prioritizeKeys.findIndex((val) => val ===a.key)
+        const bIndex = prioritizeKeys.findIndex((val) => val ===b.key)
+        if (aIndex === -1 && bIndex === -1) {
+          return R.toLower(a.key) < R.toLower(b.key) ? -1 : 1
+        }
+        if (aIndex !== -1 && bIndex !== -1) {
+          return aIndex < bIndex ? -1 : 1
+        }
+        return aIndex > bIndex ? -1 : 1
+      }
     },
     actionBar: {
       // isOpen: true,
@@ -208,6 +220,40 @@ const AppContainer = ({
       actions: {
         // add: { visible: false },
         // delete: { visible: false },
+        layout: {
+          schema: {
+            title: 'Layout',
+            properties: {
+              name: {
+                type: 'string',
+                enum: [
+                  'cose', 'breadthfirst', 'circle', 'grid',
+                  'euler', 'dagre', 'spread',
+                ],
+              },
+              animationDuration: {
+                type: 'number',
+                minimum: 0,
+                maximum: 10000,
+              },
+              refresh: {
+                type: 'number',
+                minimum: 0,
+                maximum: 100,
+              },
+              maxIterations: {
+                type: 'number',
+                minimum: 0,
+                maximum: 1000,
+              },
+              maxSimulationTime: {
+                type: 'number',
+                minimum: 0,
+                maximum: 1000,
+              },
+            },
+          }
+        }
       },
       theming: {
         options: [

@@ -294,6 +294,24 @@ export const VIEW_CONFIG_SCHEMA = {
           'authorities',
           'hubs',
           'community',
+        ],
+        "enumNames": [
+          'Betweenness',
+          'Betweenness_centrality',
+          'Closeness Centrality',
+          'Closeness',
+          'Degree',
+          'Degree Centrality',
+          'In Degree',
+          'Out Degree',
+          'In Degree Centrality',
+          'Out Degree Centrality',
+          'Page Rank',
+          'Rel In Degree',
+          "Year",
+          'Authorities',
+          'Hubs',
+          'Community',
         ]
       },
       nodeColor: {
@@ -305,6 +323,13 @@ export const VIEW_CONFIG_SCHEMA = {
           "indegree",
           "community",
           "year",
+        ],
+        "enumNames": [
+          'Degree',
+          'Out Degree',
+          'In Degree',
+          'Community',
+          "Year",
         ]
       },
     },
