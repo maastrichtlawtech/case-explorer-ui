@@ -254,6 +254,7 @@ export type QueryNetworkByUserInputQuery = {
 export type ComputeNetworkStatisticsQueryVariables = {
   nodes?: Array< NodeInput | null > | null,
   edges?: Array< EdgeInput | null > | null,
+  subNodes?: Array< NodeInput | null > | null,
 };
 
 export type ComputeNetworkStatisticsQuery = {

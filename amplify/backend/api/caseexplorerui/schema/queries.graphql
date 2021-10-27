@@ -14,7 +14,8 @@ type Query {
   ): Network @function(name: "queryhandler-${env}")
   computeNetworkStatistics(
     nodes: [NodeInput],
-    edges: [EdgeInput]
+    edges: [EdgeInput],
+    subNodes: [NodeInput]
   ): AWSJSON @function(name: "networkstatistics-${env}")
   fetchNodeData(
     Ecli: String

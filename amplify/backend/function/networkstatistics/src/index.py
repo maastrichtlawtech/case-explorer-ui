@@ -4,6 +4,10 @@ import warnings
 import community
 import time
 import json
+from utils import get_key, format_node_data
+from clients.dynamodb_client import DynamodbClient
+from definitions import TABLE_NAME
+import os
 # taken from and modified: 
 # https://github.com/caselawanalytics/CaseLawAnalytics/blob/master/caselawnet/network_analysis.py
 
@@ -18,10 +22,30 @@ def handler(event, context):
             edges = json.load(f)
         with open('nodes.json') as f:
             nodes = json.load(f)
+        with open('subNodes.json') as f:
+            sub_nodes = json.load(f)
     else:
         network = event['arguments'].copy()
         nodes = network['nodes']
         edges = network['edges']
+        sub_nodes = network['subNodes']
+
+    # fetch missing meta data
+    start_p = time.time()
+    missing_node_keys = []
+    for node in nodes:
+        if 'date_decision' not in node['data']:
+            missing_node_keys.append(get_key(node['id']))
+    print(f'get missing node keys: took {time.time()-start_p} s.')
+    start_p = time.time()
+    ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
+    new_nodes = ddb_client.execute_batch(missing_node_keys, ['ecli', 'date_decision', 'date_decision_li'])
+    print(f'fetch missing nodes: took {time.time()-start_p} s.')
+    start_p = time.time()
+    new_nodes = [format_node_data(node, mode='essential') for node in new_nodes]
+    nodes.extend(new_nodes)
+    print(f'format missing nodes: took {time.time()-start_p} s.')
+    start_p = time.time()
 
     statistics = dict()
     if len(nodes) == 0:
@@ -55,7 +79,10 @@ def handler(event, context):
         out_degree_centrality = nx.out_degree_centrality(graph)
         print(f'get out degree centrality: took {time.time()-start_p} s.')
         start_p = time.time()
-        betweenness_centrality = nx.betweenness_centrality(graph, k=min(len(nodes), 2500))
+        if len(nodes) < 2500:
+            betweenness_centrality = nx.betweenness_centrality(graph)
+        else:
+            betweenness_centrality = nx.betweenness_centrality(graph, k=2500)
         print(f'get betweenness centrality: took {time.time()-start_p} s.')
         start_p = time.time()
         closeness_centrality = nx.closeness_centrality(graph)
@@ -109,14 +136,24 @@ def handler(event, context):
             statistics[node_id]['rel_in_degree'] = network_stats['in_degree'][node_id] / float(max(i, 1))
         if 'date_decision' in node['data']:
             statistics[node_id]['year'] = node['data']['date_decision'][:4]
-        # add year, authorities, hubs, community to node meta data:
-        for stat in ['year', 'authorities', 'hubs', 'community']:
-            if stat in statistics[node_id]:
-                node['data'][stat] = statistics[node_id][stat]
     print(f'STATS: add to nodes took: {time.time() - start} s.')
+
+    start_p = time.time()
+    sub_statistics = dict()
+    for node in sub_nodes:
+        node_id = node['id']
+        if node_id in statistics:
+            sub_statistics[node_id] = statistics[node_id]
+            # add year, authorities, hubs, community to node meta data:
+            for stat in ['year', 'authorities', 'hubs', 'community']:
+                if stat in statistics[node_id]:
+                    node['data'][stat] = statistics[node_id][stat]
+    print(f'select sub stats and nodes: took {time.time()-start_p} s.')
+    
     if TEST:
-        return len(statistics)
-    return statistics, nodes
+        return len(sub_statistics), len(sub_nodes)
+    
+    return sub_statistics, sub_nodes
 
 def get_network(nodes, edges):
     graph = json_graph.node_link_graph({'nodes': nodes, 'links': edges}, directed=True, multigraph=False)

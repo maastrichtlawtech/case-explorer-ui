@@ -101,6 +101,8 @@ def handler(event, context):
             json.dump(all_edges, f)
         with open('nodes.json', 'w') as f:
             json.dump(all_nodes, f)
+        with open('subNodes.json', 'w') as f:
+            json.dump(nodes, f)
 
     message = 'Query limit reached! Only partial result displayed.' if limit_reached else ''
     

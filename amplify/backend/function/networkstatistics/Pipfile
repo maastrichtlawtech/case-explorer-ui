@@ -10,6 +10,7 @@ src = {editable = true, path = "./src"}
 networkx = "*"
 scipy = "*"
 python-louvain = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.8"

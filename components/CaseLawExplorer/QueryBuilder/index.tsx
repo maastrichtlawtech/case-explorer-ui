@@ -118,9 +118,10 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                   throw new Error("No cases returned")
                 } else {
                   onFinish({
+                    allNodes: casesData.allNodes,
+                    allEdges: casesData.allEdges,
                     nodes: casesData.nodes,
                     edges: casesData.edges,
-                    networkStatistics: casesData.networkStatistics,
                     message: casesData.message,
                   })
                   const nodeIds = casesData?.nodes.map((node)=> ({
@@ -132,8 +133,9 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     target: edge.target
                   }))
                   let networkStatistics = await API.getNetworkStatistics({
-                    nodes: nodeIds,
-                    edges: edgeIds,
+                    nodes: casesData.allNodes,
+                    edges: casesData.allEdges,
+                    subNodes: casesData.nodes
                   })
                   console.log('AA', networkStatistics)
                   onNetworkStatisticsCalculated({
