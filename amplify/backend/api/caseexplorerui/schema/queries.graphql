@@ -12,29 +12,46 @@ type Query {
     Domains: [String],
     Doctypes: [String]
   ): Network @function(name: "queryhandler-${env}")
+  computeNetworkStatistics(
+    nodes: [NodeInput],
+    edges: [EdgeInput]
+  ): AWSJSON @function(name: "networkstatistics-${env}")
   fetchNodeData(
     Ecli: String
   ): Node @function(name: "datafetcher-${env}")
-  testAuth(
+  test(
     Ecli: String
   ): Node @function(name: "test-${env}")
 }
 
 type Network {
-    nodes: [Node]
-    edges: [Edge]
-    statistics: AWSJSON
-    message: String
+  allNodes: [Node]
+  allEdges: [Edge]
+  nodes: [Node]
+  edges: [Edge]
+  statistics: AWSJSON
+  message: String
 }
 
 type Node {
-    id: String
-    data: AWSJSON
+  id: String
+  data: AWSJSON
+}
+
+input NodeInput {
+  id: String
+  data: AWSJSON
 }
 
 type Edge {
-    id: String
-    source: String
-    target: String
-    data: AWSJSON
+  id: String
+  source: String
+  target: String
+  data: String
+}
+
+input EdgeInput {
+  id: String
+  source: String
+  target: String
 }

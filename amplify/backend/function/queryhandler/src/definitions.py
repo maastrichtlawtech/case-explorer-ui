@@ -22,34 +22,30 @@ DOCTYPES = 'Doctypes'
 # attributes essential to the perfect graph app functionality 
 # (to compute edges, network statistics and apply local filters)
 NODE_ESSENTIAL = [
-    'date_decision',
-    'document_type',
-    'domains',
     'ecli',
-    'instance',
-    'jurisdiction_country',
-    'legal_provisions',
-    'source',
+    'date_decision',
     'cites',
     'cited_by'
 ]
 
 NODE_ESSENTIAL_LI = NODE_ESSENTIAL + [
-    'date_decision_li',
-    'domains_li',
-    'instance_li',
-    'jurisdiction_country_li',
-    #'source_li'
+    'date_decision_li'
 ]
 
 # attributes to be displayed to the user when viewing a node
 NODE_FULL = NODE_ESSENTIAL + [
+    'document_type',
+    'domains',
+    'instance',
+    'source',
+    'legal_provisions',
     'url_publication',
     'summary',
     'procedure_type',
     'predecessor_successor_cases',
     'ecli_decision',
-    'ecli_opinion'
+    'ecli_opinion',
+    'jurisdiction_country'
 ]
 
 NODE_FULL_LI = NODE_FULL + [

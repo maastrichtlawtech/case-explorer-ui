@@ -1,4 +1,6 @@
 import Amplify, { API } from "aws-amplify";
+import { queryNetworkByUserInput, fetchNodeData, computeNetworkStatistics, test } from "../../src/graphql/queries";
+import { QueryNetworkByUserInputQueryVariables, FetchNodeDataQueryVariables, ComputeNetworkStatisticsQueryVariables, TestQueryVariables } from '../../src/API';
 // import awsExports from "./aws-exports";
 
 const API_AUTH_MODE = {
@@ -13,70 +15,11 @@ const convertJSONStringFields = (item) => {
   }
 }
 
-const LIST_CASES = `query QueryNetworkByUserInput(
-  $DataSources: [String]
-  $Keywords: String
-  $Articles: String
-  $Eclis: String
-  $DegreesSources: Int
-  $DegreesTargets: Int
-  $DateStart: AWSDate
-  $DateEnd: AWSDate
-  $Instances: [String]
-  $Domains: [String]
-  $Doctypes: [String]
-) {
-  queryNetworkByUserInput(
-    DataSources: $DataSources
-    Keywords: $Keywords
-    Articles: $Articles
-    Eclis: $Eclis
-    DegreesSources: $DegreesSources
-    DegreesTargets: $DegreesTargets
-    DateStart: $DateStart
-    DateEnd: $DateEnd
-    Instances: $Instances
-    Domains: $Domains
-    Doctypes: $Doctypes
-  ) {
-    nodes {
-      id
-      data
-    }
-    edges {
-      id
-      source
-      target
-      data
-    }
-    statistics
-    message
-  }
-}`
-
-const GET_ELEMENT_DATA = `query GetElementData($id: String) {
-  fetchNodeData(Ecli: $id) {
-    data
-    id
-  }
-}`
-
-const TEST_AUTH = `query TestAuth($id: String) {
-  testAuth(Ecli: $id) {
-    data
-    id
-  }
-}`
-
-type listCasesVariables = {
-  DataSources: string[];
-}
-
-export async function listCases(variables: listCasesVariables) {
+export async function listCases(variables: QueryNetworkByUserInputQueryVariables) {
   try {
     console.log(variables)
     const listCasesResult = await API.graphql({
-      query: LIST_CASES,
+      query: queryNetworkByUserInput,
       // authMode: API_AUTH_MODE.API_KEY,
       variables
     })
@@ -102,47 +45,10 @@ export async function listCases(variables: listCasesVariables) {
   }
 }
 
-const COMPLEX_QUERY = `query ListCases($query) {
-  complexQuery(query: $query) {
-    items {
-      abstract
-      country
-      court
-      date
-      doctype
-      id
-      subject
-    }
-  }
-}`
-
-export async function complexQuery(query: any) {
-  try {
-    const listCasesResult = await API.graphql({
-      query: COMPLEX_QUERY,
-      // authMode: API_AUTH_MODE.API_KEY,
-      variables: query
-    })
-    const caseResults = listCasesResult.data.listCaselaws.items
-    return caseResults
-    // return caseResults.map(project => ({
-    //   // ...project,
-    //   nodes: project.nodes.items.map(convertJSONStringFields),
-    //   // edges: project.edges.items.map(convertJSONStringFields),
-    // }))
-  } catch (err) {
-    console.log('error creating node:', err)
-  }
-}
-
-type GetElementDataVariables = {
-  id: string;
-}
-
-export async function getElementData(variables: GetElementDataVariables) {
+export async function getElementData(variables: FetchNodeDataQueryVariables) {
   try {
     const elementDataResult = await API.graphql({
-      query: GET_ELEMENT_DATA,
+      query: fetchNodeData,
       // authMode: API_AUTH_MODE.API_KEY,
       variables
     })
@@ -158,15 +64,27 @@ export async function getElementData(variables: GetElementDataVariables) {
   }
 }
 
+export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQueryVariables) {
+  try {
+    const networkStatisticsResult = await API.graphql({
+      query: computeNetworkStatistics,
+      variables
+    })
+    const result = networkStatisticsResult.data.computeNetworkStatistics
+    return JSON.parse(result)
+  } catch (err) {
+    console.log('error getNetworkStatistics:', err)
+  }
+}
 
-export async function testAuth(variables: GetElementDataVariables) {
+export async function testAuth(variables: TestQueryVariables) {
   try {
     const elementDataResult = await API.graphql({
-      query: TEST_AUTH,
+      query: test,
       // authMode: API_AUTH_MODE.API_KEY,
       variables
     })
-    const result = elementDataResult.data.testAuth.data
+    const result = elementDataResult.data.test.data
     return result ? JSON.parse(result) : {}
   } catch (err) {
     console.log('error testAuth:', err)

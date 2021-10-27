@@ -29,6 +29,16 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       Domains: $Domains
       Doctypes: $Doctypes
     ) {
+      allNodes {
+        id
+        data
+      }
+      allEdges {
+        id
+        source
+        target
+        data
+      }
       nodes {
         id
         data
@@ -44,6 +54,11 @@ export const queryNetworkByUserInput = /* GraphQL */ `
     }
   }
 `;
+export const computeNetworkStatistics = /* GraphQL */ `
+  query ComputeNetworkStatistics($nodes: [NodeInput], $edges: [EdgeInput]) {
+    computeNetworkStatistics(nodes: $nodes, edges: $edges)
+  }
+`;
 export const fetchNodeData = /* GraphQL */ `
   query FetchNodeData($Ecli: String) {
     fetchNodeData(Ecli: $Ecli) {
@@ -52,9 +67,9 @@ export const fetchNodeData = /* GraphQL */ `
     }
   }
 `;
-export const testAuth = /* GraphQL */ `
-  query TestAuth($Ecli: String) {
-    testAuth(Ecli: $Ecli) {
+export const test = /* GraphQL */ `
+  query Test($Ecli: String) {
+    test(Ecli: $Ecli) {
       id
       data
     }
