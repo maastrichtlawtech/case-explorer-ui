@@ -33,7 +33,8 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     onError,
     onFinish,
     query,
-    onClose
+    onClose,
+    onNetworkStatisticsCalculated,
   } = props
 
   const [state, setState] = React.useState(query)
@@ -115,16 +116,21 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                 console.log('logCasesData',casesData)
                 if (casesData.nodes.length == 0) {
                   throw new Error("No cases returned")
-                }
-                else {
+                } else {
                   onFinish({
                     nodes: casesData.nodes,
                     edges: casesData.edges,
                     networkStatistics: casesData.networkStatistics,
                     message: casesData.message,
                   })
-                  const nodeIds = casesData?.nodes.map((node)=> node.id)
-                  const edgeIds = casesData?.edges.map((edge)=> edge.id)
+                  const nodeIds = casesData?.nodes.map((node)=> ({
+                    id: node.id
+                  }))
+                  const edgeIds = casesData?.edges.map((edge)=> ({ 
+                    id: edge.id,
+                    source: edge.source,
+                    target: edge.target
+                  }))
                   let networkStatistics = await API.getNetworkStatistics({
                     nodes: nodeIds,
                     edges: edgeIds,
