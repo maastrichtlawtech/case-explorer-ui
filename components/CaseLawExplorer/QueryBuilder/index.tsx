@@ -11,6 +11,7 @@ export type QueryBuilderProps = {
   onStart: () => void;
   onError: (e: Error) => void;
   onFinish: (data: any) => void;
+  onNetworkStatisticsCalculated: (data: any) => void;
   onClose: () => void;
   isOpen: boolean;
 }
@@ -120,6 +121,17 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     nodes: casesData.nodes,
                     edges: casesData.edges,
                     networkStatistics: casesData.networkStatistics,
+                    message: casesData.message,
+                  })
+                  const nodeIds = casesData?.nodes.map((node)=> node.id)
+                  const edgeIds = casesData?.edges.map((edge)=> edge.id)
+                  let networkStatistics = await API.getNetworkStatistics({
+                    nodes: nodeIds,
+                    edges: edgeIds,
+                  })
+                  console.log('AA', networkStatistics)
+                  onNetworkStatisticsCalculated({
+                    networkStatistics: networkStatistics,
                     message: casesData.message,
                   })
                 }

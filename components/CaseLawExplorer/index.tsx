@@ -475,6 +475,15 @@ const AppContainer = ({
             text: error.message
           })
         }}
+        onNetworkStatisticsCalculated={({
+          networkStatistics
+        }) => {
+          controller.update((draft) => {
+            draft.networkStatistics = {
+              local: networkStatistics
+            }
+          })
+        }}
         onFinish={({
           nodes: nodes_ = [],
           edges= [],
