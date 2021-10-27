@@ -38,7 +38,7 @@ export const ACTIONS = {
   TEST_API: 'TEST_API',
 }
 
-const NODE_LIMIT = 100
+const NODE_LIMIT = 200
 const HELP_VIDEO_ID = "OrzMIhLpVps"
 
 const MUIDarkTheme = createMuiTheme({

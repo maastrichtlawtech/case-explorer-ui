@@ -297,7 +297,7 @@ export const VIEW_CONFIG_SCHEMA = {
         ],
         "enumNames": [
           'Betweenness',
-          'Betweenness_centrality',
+          'Betweenness Centrality',
           'Closeness Centrality',
           'Closeness',
           'Degree',
