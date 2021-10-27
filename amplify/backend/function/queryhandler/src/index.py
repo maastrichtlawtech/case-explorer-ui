@@ -24,7 +24,7 @@ import pandas as pd
 import json
 
 
-TEST = True                        # returns number of nodes instead of nodes
+TEST = False                        # returns number of nodes instead of nodes
 HARD_LIMIT = 5000                  
 SUBNET_LIMIT = 100
 
