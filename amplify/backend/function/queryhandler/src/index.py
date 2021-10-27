@@ -114,16 +114,14 @@ def handler(event, context):
             'allNodes': all_nodes[:til], 
             'allEdges': all_edges[:til], 
             'nodes': nodes[:til], 
-            'edges': edges[:til], 
-            'statistics': {},
+            'edges': edges[:til],
             'message': message
         }
     return {
         'allNodes': all_nodes, 
         'allEdges': all_edges, 
         'nodes': nodes, 
-        'edges': edges, 
-        'statistics': {},
+        'edges': edges,
         'message': message
     }
     

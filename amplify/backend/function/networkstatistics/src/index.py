@@ -21,35 +21,39 @@ def handler(event, context):
         with open('edges.json') as f:
             edges = json.load(f)
         with open('nodes.json') as f:
-            nodes = json.load(f)
+            old_nodes = json.load(f)
         with open('subNodes.json') as f:
             sub_nodes = json.load(f)
     else:
         network = event['arguments'].copy()
-        nodes = network['nodes']
+        old_nodes = network['nodes']
         edges = network['edges']
         sub_nodes = network['subNodes']
 
     # fetch missing meta data
     start_p = time.time()
     missing_node_keys = []
-    for node in nodes:
+    nodes = []
+    for node in old_nodes:
         if 'date_decision' not in node['data']:
+            print(True)
             missing_node_keys.append(get_key(node['id']))
+        else:
+            nodes.append(node)
     print(f'get missing node keys: took {time.time()-start_p} s.')
     start_p = time.time()
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
-    new_nodes = ddb_client.execute_batch(missing_node_keys, ['ecli', 'date_decision', 'date_decision_li'])
+    missing_nodes = ddb_client.execute_batch(missing_node_keys, ['ecli', 'date_decision', 'date_decision_li'])
     print(f'fetch missing nodes: took {time.time()-start_p} s.')
     start_p = time.time()
-    new_nodes = [format_node_data(node, mode='essential') for node in new_nodes]
-    nodes.extend(new_nodes)
+    missing_nodes = [format_node_data(node, mode='essential') for node in missing_nodes]
+    nodes.extend(missing_nodes)
     print(f'format missing nodes: took {time.time()-start_p} s.')
     start_p = time.time()
 
     statistics = dict()
     if len(nodes) == 0:
-        return statistics, nodes
+        return statistics  #, nodes
     start_p = time.time()
     graph = get_network(nodes, edges)
     print(f'get network: took {time.time()-start_p} s.')
@@ -153,7 +157,7 @@ def handler(event, context):
     if TEST:
         return len(sub_statistics), len(sub_nodes)
     
-    return sub_statistics, sub_nodes
+    return sub_statistics  #, sub_nodes
 
 def get_network(nodes, edges):
     graph = json_graph.node_link_graph({'nodes': nodes, 'links': edges}, directed=True, multigraph=False)

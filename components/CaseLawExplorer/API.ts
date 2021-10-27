@@ -28,11 +28,12 @@ export async function listCases(variables: QueryNetworkByUserInputQueryVariables
     console.log(caseResults)
 
     return {
+      allNodes: caseResults.allNodes.map(convertJSONStringFields),
+      allEdges: caseResults.allEdges.map(convertJSONStringFields),
       nodes: caseResults.nodes.map(convertJSONStringFields),
       edges: caseResults.edges.map(convertJSONStringFields),
-      networkStatistics: JSON.parse(caseResults.statistics),
+      //networkStatistics: JSON.parse(caseResults.statistics),
       message: caseResults.message,
-      // edges: project.edges.items.map(convertJSONStringFields),
     }
 
     // return caseResults.map(project => ({

@@ -30,7 +30,6 @@ type Network {
   allEdges: [Edge]
   nodes: [Node]
   edges: [Edge]
-  statistics: AWSJSON
   message: String
 }
 

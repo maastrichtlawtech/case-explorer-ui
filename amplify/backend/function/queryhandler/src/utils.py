@@ -25,6 +25,8 @@ def format_node_data(item, mode='full'):
         data = {}
         if 'date_decision' in item:
             data['date_decision'] = item['date_decision']
+        elif 'date_decision_li' in item:
+            data['date_decision'] = item['date_decision_li']
         return {'id': item['ecli'], 'data': data}
     if mode == 'full':
         atts = list(item.keys())

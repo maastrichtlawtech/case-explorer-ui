@@ -89,7 +89,6 @@ export type Network = {
   allEdges?:  Array<Edge | null > | null,
   nodes?:  Array<Node | null > | null,
   edges?:  Array<Edge | null > | null,
-  statistics?: string | null,
   message?: string | null,
 };
 
@@ -246,7 +245,6 @@ export type QueryNetworkByUserInputQuery = {
       target?: string | null,
       data?: string | null,
     } | null > | null,
-    statistics?: string | null,
     message?: string | null,
   } | null,
 };
