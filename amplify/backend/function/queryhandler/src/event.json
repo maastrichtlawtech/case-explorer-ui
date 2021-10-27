@@ -6,10 +6,10 @@
         "DateEnd": "2021-12-31",
         
         "Eclis": "",
-        "Instances": [],
+        "Instances": ["Hoge Raad"],
         "Domains": [],
 
-        "Keywords": "voorwaardelijk opzet",
+        "Keywords": "",
         "Articles": "",
         
         "DegreesSources": 1,

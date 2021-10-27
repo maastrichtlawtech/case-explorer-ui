@@ -24,9 +24,9 @@ import pandas as pd
 import json
 
 
-TEST = False                        # returns number of nodes instead of nodes
+TEST = True                        # returns number of nodes instead of nodes
 HARD_LIMIT = 5000                  
-
+SUBNET_LIMIT = 100
 
 
 # set up DynamoDB client
@@ -349,7 +349,7 @@ def fetch_edges(nodes, helper):
 
 def get_subnet(nodes, edges):
     if len(edges) == 0:
-        return [{'id': node['id'], 'data': {}} for node in nodes[:200]], edges
+        return [{'id': node['id'], 'data': {}} for node in nodes[:SUBNET_LIMIT]], edges
 
     df = pd.DataFrame(edges)
     sources = df.groupby('source').agg(list)
@@ -365,11 +365,11 @@ def get_subnet(nodes, edges):
     node_eclis = set()
     edge_ids = set()
     for index, row in full.iterrows():
-        if row['degree'] >= 200:
+        if row['degree'] >= SUBNET_LIMIT:
             continue
         node_eclis_peak = node_eclis.union(set(ecli for ecli in row['index'] + row['source'] + row['target']))
         edge_ids_peak = edge_ids.union(set(edge_id for edge_id in row['id1'] + row['id2']))
-        if len(node_eclis_peak) > 200:
+        if len(node_eclis_peak) > SUBNET_LIMIT:
             break
         node_eclis = node_eclis_peak
         edge_ids = edge_ids_peak

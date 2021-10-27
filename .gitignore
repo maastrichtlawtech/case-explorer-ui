@@ -138,3 +138,6 @@ amplifytools.xcconfig
 amplify/backend/function/networkstatistics/edges.json
 amplify/backend/function/networkstatistics/nodes.json
 amplify/backend/function/networkstatistics/subNodes.json
+amplify/backend/function/queryhandler/edges.json
+amplify/backend/function/queryhandler/nodes.json
+amplify/backend/function/queryhandler/subNodes.json
