@@ -35,7 +35,7 @@
         },
         "networkstatistics": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/networkstatistics-374d523263745854314d-build.zip"
+          "s3Key": "amplify-builds/networkstatistics-664b2b57635147323164-build.zip"
         }
       },
       "auth": {

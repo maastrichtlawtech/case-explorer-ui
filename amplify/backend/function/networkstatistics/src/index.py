@@ -36,7 +36,6 @@ def handler(event, context):
     nodes = []
     for node in old_nodes:
         if 'date_decision' not in node['data']:
-            print(True)
             missing_node_keys.append(get_key(node['id']))
         else:
             nodes.append(node)
