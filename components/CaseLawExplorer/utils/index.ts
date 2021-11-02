@@ -9,7 +9,21 @@ export const filterEdges = (nodes: { id: string }[]) => (edges: { source: string
     (edge) => nodeMap[edge.source] && nodeMap[edge.target]
   )(edges)
 }
+
 const CHUNK_COUNT = 3
+export const createMockData = (nodeSize: number, edgeSize: number) => {
+  const nodes = R.range(0, nodeSize).map((index) => ({ id: `node-${index}` }) )
+  const edges = R.range(0, edgeSize).map((index) => ({ 
+    id: `edge-${index}`,
+    source: `node-${Math.floor(Math.random() * nodeSize)}`,
+    target: `node-${Math.floor(Math.random() * nodeSize)}`,
+  }))
+  return {
+    nodes,
+    edges
+  }
+}
+
 export const prepareData = (data) => {
   const {
     nodes,

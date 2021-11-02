@@ -31,7 +31,8 @@ import { RenderEdge } from './RenderEdge'
 import { RenderNode } from './RenderNode'
 import { useUser } from './useUser'
 import {
-   filterEdges, prepareData
+   filterEdges, prepareData,
+   createMockData,
 } from './utils'
 
 export const ACTIONS = {
@@ -52,9 +53,9 @@ const MUILightTheme = createMuiTheme({
   },
 });
 
-const CHUNK_COUNT = 3
 
 const data = prepareData(defaultData)
+// const data = createMockData(150, 150)
 type Props = Partial<GraphEditorProps>
 
 
