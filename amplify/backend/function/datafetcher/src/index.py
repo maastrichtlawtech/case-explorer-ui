@@ -2,7 +2,7 @@ import os
 from clients.dynamodb_client import DynamodbClient
 from queryhelper import build_ddb_projection_expression
 from utils import format_node_data, get_key, is_authorized
-from definitions import TABLE_NAME, NODE_FULL, NODE_FULL_LI
+from definitions import TABLE_NAME, get_full_attributes
 
 
 def handler(event, context):
@@ -10,12 +10,7 @@ def handler(event, context):
 
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
     
-    if authorized:
-        return_attributes = NODE_FULL_LI
-    else:
-        return_attributes = NODE_FULL
-
-    projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
+    projection_expression, expression_attribute_names = build_ddb_projection_expression(get_full_attributes(authorized))
 
     response = ddb_client.table.get_item(
         Key=get_key(event["arguments"]["node"]["id"]),
