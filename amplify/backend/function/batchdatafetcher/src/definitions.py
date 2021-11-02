@@ -19,21 +19,31 @@ DOCTYPES = 'Doctypes'
 
 
 # ATTRIBUTES:
-# attributes essential to the perfect graph app functionality 
-# (to compute edges, network statistics and apply local filters)
-NODE_ESSENTIAL = [
-    'ecli',
+# attributes that are both in legal intelligence and rechtspraak data
+shared_attributes = [
     'date_decision',
+    'domains',
+    'instance',
+    'jurisdiction_country',
+    'summary',
+    'source'
+]
+
+# attributes needed for network statistics computation
+node_attributes_networkstatistics = [
+    'ecli',
+    'date_decision'
+]
+
+# attributes needed for queryhandler functionality
+# (to compute edges, prepare network statistics computation)
+node_attributes_queryhandler = node_attributes_networkstatistics + [
     'cites',
     'cited_by'
 ]
 
-NODE_ESSENTIAL_LI = NODE_ESSENTIAL + [
-    'date_decision_li'
-]
-
 # attributes to be displayed to the user when viewing a node
-NODE_FULL = NODE_ESSENTIAL + [
+node_attributes_full = node_attributes_queryhandler + [
     'document_type',
     'domains',
     'instance',
@@ -48,38 +58,46 @@ NODE_FULL = NODE_ESSENTIAL + [
     'jurisdiction_country'
 ]
 
-NODE_FULL_LI = NODE_FULL + [
-    'date_decision_li',
-    'domains_li',
-    'instance_li',
-    'jurisdiction_country_li',
-    'summary_li',
-    'source_li'
-]
-
 # attributes to be searched for keywords by Elasticsearch
-KEYWORD_SEARCH = [
+node_attributes_keyword_search = [
     'summary',
     'procedure_type',
     'full_text',
     'predecessor_successor_cases'
 ]
 
-KEYWORD_SEARCH_LI = KEYWORD_SEARCH + [
-    'summary_li',
-]
-
 # attributes to be searched for legal provisions by Elasticsearch
-ARTICLE_SEARCH = [
+node_attributes_article_search = [
     'legal_provisions'
 ]
 
-def get_essential_attributes(authorized):
-    if authorized:
-        return NODE_ESSENTIAL_LI
-    return NODE_ESSENTIAL
+def _add_li_attributes(attributes):
+    result = attributes.copy()
+    for att in shared_attributes:
+        if att in attributes:
+            result.append(att + '_li')
+    return result
 
-def get_full_attributes(authorized):
+def get_networkstatistics_attributes(authorized=True):
     if authorized:
-        return NODE_FULL_LI
-    return NODE_FULL
+        return _add_li_attributes(node_attributes_networkstatistics)
+    return node_attributes_networkstatistics
+
+def get_queryhandler_attributes(authorized=True):
+    if authorized:
+        return _add_li_attributes(node_attributes_queryhandler)
+    return node_attributes_queryhandler
+
+def get_full_attributes(authorized=True):
+    if authorized:
+        return _add_li_attributes(node_attributes_full)
+    return node_attributes_full
+
+def get_keyword_search_attributes(authorized=True):
+    if authorized:
+        return _add_li_attributes(node_attributes_keyword_search)
+    return node_attributes_keyword_search
+
+def get_article_search_attributes():
+    return node_attributes_article_search
+

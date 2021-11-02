@@ -23,11 +23,11 @@
         },
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/datafetcher-6d424673456e4c794d74-build.zip"
+          "s3Key": "amplify-builds/datafetcher-30582b45726f576f4650-build.zip"
         },
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/queryhandler-756367344e6948786369-build.zip"
+          "s3Key": "amplify-builds/queryhandler-6d766c576b65714f4e63-build.zip"
         },
         "test": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
@@ -35,11 +35,11 @@
         },
         "networkstatistics": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/networkstatistics-596a4275523077486835-build.zip"
+          "s3Key": "amplify-builds/networkstatistics-4f666232517148354d6b-build.zip"
         },
         "batchdatafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/batchdatafetcher-45483758524a45544c42-build.zip"
+          "s3Key": "amplify-builds/batchdatafetcher-307938686c724a6a4457-build.zip"
         }
       },
       "auth": {

@@ -6,7 +6,7 @@ import time
 import json
 from utils import get_key, format_node_data
 from clients.dynamodb_client import DynamodbClient
-from definitions import TABLE_NAME
+from definitions import TABLE_NAME, get_networkstatistics_attributes
 import os
 # taken from and modified: 
 # https://github.com/caselawanalytics/CaseLawAnalytics/blob/master/caselawnet/network_analysis.py
@@ -42,10 +42,11 @@ def handler(event, context):
     print(f'get missing node keys: took {time.time()-start_p} s.')
     start_p = time.time()
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
-    missing_nodes = ddb_client.execute_batch(missing_node_keys, ['ecli', 'date_decision', 'date_decision_li'])
+    return_attributes = get_networkstatistics_attributes()
+    missing_nodes = ddb_client.execute_batch(missing_node_keys, return_attributes)
     print(f'fetch missing nodes: took {time.time()-start_p} s.')
     start_p = time.time()
-    missing_nodes = [format_node_data(node, mode='essential') for node in missing_nodes]
+    missing_nodes = [format_node_data(node, return_attributes) for node in missing_nodes]
     nodes.extend(missing_nodes)
     print(f'format missing nodes: took {time.time()-start_p} s.')
     start_p = time.time()

@@ -19,7 +19,8 @@ from clients.dynamodb_client import DynamodbClient
 from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
-from definitions import *
+from definitions import TABLE_NAME, OPENSEARCH_ENDPOINT, OPENSEARCH_INDEX_NAME, ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
+    DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS, get_networkstatistics_attributes
 import pandas as pd
 import json
 
@@ -84,7 +85,7 @@ def handler(event, context):
     # 2. FETCH EDGES AND NEW TARGET NODES
     start_p = time.time()
     all_edges, new_nodes, edges_limit_reached = fetch_edges(all_nodes[:HARD_LIMIT], query_helper)
-    all_nodes = [format_node_data(node, mode='essential') for node in all_nodes]
+    all_nodes = [format_node_data(node, get_networkstatistics_attributes(authorized)) for node in all_nodes]
     #if not TEST:
     all_nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached

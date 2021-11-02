@@ -9,8 +9,10 @@ def handler(event, context):
     authorized = is_authorized(event)
 
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
+
+    return_attributes = get_full_attributes(authorized)
     
-    projection_expression, expression_attribute_names = build_ddb_projection_expression(get_full_attributes(authorized))
+    projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
 
     response = ddb_client.table.get_item(
         Key=get_key(event["arguments"]["node"]["id"]),
@@ -22,4 +24,4 @@ def handler(event, context):
     if 'Item' in response:
         item = response['Item']
     
-    return format_node_data(item)
+    return format_node_data(item, return_attributes)

@@ -1,6 +1,6 @@
 from boto3.dynamodb.conditions import Attr, Key
-from definitions import DATA_SOURCES, KEYWORDS, ARTICLES, ECLIS, DATE_START, \
-    DATE_END, INSTANCES, DOMAINS, DOCTYPES, NODE_ESSENTIAL, NODE_ESSENTIAL_LI, KEYWORD_SEARCH, KEYWORD_SEARCH_LI, ARTICLE_SEARCH
+from definitions import DATA_SOURCES, KEYWORDS, ARTICLES, ECLIS, DATE_START, DATE_END, INSTANCES, DOMAINS, DOCTYPES, \
+    get_queryhandler_attributes, get_keyword_search_attributes, get_article_search_attributes
 
 
 def build_ddb_projection_expression(return_attributes):
@@ -36,13 +36,9 @@ class QueryHelper:
     def __init__(self, search_params, authorized):
         self.search_params = search_params
         self.authorized = authorized
-        self.article_search_attributes = ARTICLE_SEARCH
-        if self.authorized:
-            self.return_attributes = NODE_ESSENTIAL_LI
-            self.keyword_search_attributes = KEYWORD_SEARCH_LI
-        else:
-            self.return_attributes = NODE_ESSENTIAL
-            self.keyword_search_attributes = KEYWORD_SEARCH
+        self.article_search_attributes = get_article_search_attributes()
+        self.return_attributes = get_queryhandler_attributes(self.authorized)
+        self.keyword_search_attributes = get_keyword_search_attributes(self.authorized)
 
     def get_ddb_projection_expression(self):
         return build_ddb_projection_expression(self.return_attributes)

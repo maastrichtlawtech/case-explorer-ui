@@ -1,5 +1,4 @@
 import boto3
-from boto3.dynamodb.conditions import Key, Attr
 import time
 from queryhelper import build_ddb_projection_expression
 
