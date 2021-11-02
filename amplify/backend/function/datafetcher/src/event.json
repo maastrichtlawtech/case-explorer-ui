@@ -1,5 +1,8 @@
 {
     "arguments": {
-        "Ecli": "ECLI:NL:HR:2012:BR2342"
+        "node": {
+            "id": "ECLI:NL:HR:2012:BR2342", 
+            "data": {}
+        }
     }
 }

@@ -18,7 +18,7 @@ type Query {
     subNodes: [NodeInput]
   ): AWSJSON @function(name: "networkstatistics-${env}")
   fetchNodeData(
-    Ecli: String
+    node: NodeInput
   ): Node @function(name: "datafetcher-${env}")
   test(
     Ecli: String

@@ -63,8 +63,8 @@ export const computeNetworkStatistics = /* GraphQL */ `
   }
 `;
 export const fetchNodeData = /* GraphQL */ `
-  query FetchNodeData($Ecli: String) {
-    fetchNodeData(Ecli: $Ecli) {
+  query FetchNodeData($node: NodeInput) {
+    fetchNodeData(node: $node) {
       id
       data
     }

@@ -18,7 +18,7 @@ def handler(event, context):
     projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
 
     response = ddb_client.table.get_item(
-        Key=get_key(event["arguments"]["Ecli"]),
+        Key=get_key(event["arguments"]["node"]["id"]),
         ProjectionExpression=projection_expression,
         ExpressionAttributeNames=expression_attribute_names
     )

@@ -260,7 +260,7 @@ export type ComputeNetworkStatisticsQuery = {
 };
 
 export type FetchNodeDataQueryVariables = {
-  Ecli?: string | null,
+  node?: NodeInput | null,
 };
 
 export type FetchNodeDataQuery = {
