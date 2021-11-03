@@ -1,10 +1,4 @@
 {
   "lambdaLayers": [],
-  "permissions": {
-    "storage": {
-      "Caselaw:@model(appsync)": [
-        "read"
-      ]
-    }
-  }
+  "permissions": {}
 }

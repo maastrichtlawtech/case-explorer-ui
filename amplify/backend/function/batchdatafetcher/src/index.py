@@ -1,5 +1,5 @@
 import os
-from clients.dynamodb_client import DynamodbClient
+from dynamodb_client import DynamodbClient
 from utils import format_node_data, get_key, is_authorized
 from definitions import TABLE_NAME, get_networkstatistics_attributes
 

@@ -15,23 +15,23 @@
       "function": {
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/datafetcher-51533646784f64384e58-build.zip"
+          "s3Key": "amplify-builds/datafetcher-5635666c50686b456c51-build.zip"
         },
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/queryhandler-5a4a327830454e4d2f43-build.zip"
+          "s3Key": "amplify-builds/queryhandler-316f7a55506366676131-build.zip"
         },
         "test": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/test-4678516e75616c306c2b-build.zip"
+          "s3Key": "amplify-builds/test-527a3846447462527262-build.zip"
         },
         "networkstatistics": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/networkstatistics-56764e48687a3153397a-build.zip"
+          "s3Key": "amplify-builds/networkstatistics-34426156567136456c45-build.zip"
         },
         "batchdatafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/batchdatafetcher-722f51587846344e3853-build.zip"
+          "s3Key": "amplify-builds/batchdatafetcher-6e5362334e4639503142-build.zip"
         }
       },
       "auth": {

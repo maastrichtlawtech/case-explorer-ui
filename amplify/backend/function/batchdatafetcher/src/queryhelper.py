@@ -2,7 +2,6 @@ from boto3.dynamodb.conditions import Attr, Key
 from definitions import DATA_SOURCES, KEYWORDS, ARTICLES, ECLIS, DATE_START, DATE_END, INSTANCES, DOMAINS, DOCTYPES, \
     get_queryhandler_attributes, get_keyword_search_attributes, get_article_search_attributes
 
-
 def build_ddb_projection_expression(return_attributes):
     """
     converts list of attribute names to token substitutes to avoid conflicts with DynamoDB reserved words
@@ -30,6 +29,7 @@ def get_datasource_names(datasource_codes):
         if datasource == 'RS':
             datasources.append('Rechtspraak')
     return datasources
+
 
 class QueryHelper:
 

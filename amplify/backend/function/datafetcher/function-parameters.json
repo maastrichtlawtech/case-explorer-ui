@@ -1,10 +1,5 @@
 {
   "permissions": {
-    "api": {
-      "caseexplorerui": [
-        "Query"
-      ]
-    },
     "storage": {
       "Caselaw:@model(appsync)": [
         "read"

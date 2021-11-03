@@ -14,8 +14,8 @@ import os
 import time
 from warnings import resetwarnings
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
-from clients.opensearch_client import OpenSearchClient
-from clients.dynamodb_client import DynamodbClient
+from opensearch_client import OpenSearchClient
+from dynamodb_client import DynamodbClient
 from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types

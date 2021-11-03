@@ -19,6 +19,14 @@
     "apicaseexploreruiGraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apicaseexploreruiGraphQLAPIIdOutput"
+    },
+    "functioncaseexploreruidynamodbaccessArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruidynamodbaccessArn"
+    },
+    "functioncaseexploreruiutilsArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruiutilsArn"
     }
   },
   "Conditions": {

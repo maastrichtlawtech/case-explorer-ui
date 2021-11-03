@@ -36,9 +36,7 @@
           "category": "api",
           "resourceName": "caseexplorerui",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "GraphQLAPIIdOutput"
           ]
         }
       ]
@@ -52,16 +50,7 @@
           "category": "api",
           "resourceName": "caseexplorerui",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "caseexploreruiauth",
-          "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput"
           ]
         }
       ]
@@ -75,9 +64,7 @@
           "category": "api",
           "resourceName": "caseexplorerui",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "GraphQLAPIIdOutput"
           ]
         }
       ]
@@ -86,15 +73,7 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
+      "dependsOn": []
     },
     "batchdatafetcher": {
       "build": true,

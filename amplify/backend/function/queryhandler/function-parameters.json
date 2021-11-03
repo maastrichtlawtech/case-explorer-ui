@@ -1,21 +1,8 @@
 {
   "permissions": {
-    "api": {
-      "caseexplorerui": [
-        "Query",
-        "Mutation"
-      ]
-    },
-    "auth": {
-      "caseexploreruiauth": [
-        "read"
-      ]
-    },
     "storage": {
       "Caselaw:@model(appsync)": [
-        "create",
-        "read",
-        "update"
+        "read"
       ]
     }
   },

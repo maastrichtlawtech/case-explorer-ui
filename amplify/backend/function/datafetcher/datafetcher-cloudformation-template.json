@@ -16,18 +16,6 @@
     "s3Key": {
       "Type": "String"
     },
-    "apicaseexploreruiGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apicaseexploreruiGraphQLAPIIdOutput"
-    },
-    "apicaseexploreruiGraphQLAPIEndpointOutput": {
-      "Type": "String",
-      "Default": "apicaseexploreruiGraphQLAPIEndpointOutput"
-    },
-    "apicaseexploreruiGraphQLAPIKeyOutput": {
-      "Type": "String",
-      "Default": "apicaseexploreruiGraphQLAPIKeyOutput"
-    },
     "functioncaseexploreruidataaccesslayerArn": {
       "Type": "String",
       "Default": "functioncaseexploreruidataaccesslayerArn"
@@ -35,6 +23,18 @@
     "functioncaseexploreruiglobalsettingslayerArn": {
       "Type": "String",
       "Default": "functioncaseexploreruiglobalsettingslayerArn"
+    },
+    "apicaseexploreruiGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apicaseexploreruiGraphQLAPIIdOutput"
+    },
+    "functioncaseexploreruidynamodbaccessArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruidynamodbaccessArn"
+    },
+    "functioncaseexploreruiutilsArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruiutilsArn"
     }
   },
   "Conditions": {
@@ -90,15 +90,6 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
-            },
-            "API_CASEEXPLORERUI_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apicaseexploreruiGraphQLAPIEndpointOutput"
-            },
-            "API_CASEEXPLORERUI_GRAPHQLAPIKEYOUTPUT": {
-              "Ref": "apicaseexploreruiGraphQLAPIKeyOutput"
-            },
             "API_CASEEXPLORERUI_CASELAWTABLE_NAME": {
               "Fn::ImportValue": {
                 "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
@@ -124,6 +115,9 @@
                   }
                 ]
               ]
+            },
+            "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
             }
           }
         },
@@ -235,34 +229,6 @@
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "appsync:GraphQL"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
-                      },
-                      "/types/Query/*"
-                    ]
-                  ]
-                }
-              ]
-            },
             {
               "Effect": "Allow",
               "Action": [
