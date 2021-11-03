@@ -13,14 +13,6 @@
     },
     "categories": {
       "function": {
-        "caseexploreruidataaccesslayer": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/caseexploreruidataaccesslayer-LambdaLayerVersione4fa15a1-build.zip"
-        },
-        "caseexploreruiglobalsettingslayer": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/caseexploreruiglobalsettingslayer-LambdaLayerVersion4062ae87-build.zip"
-        },
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/datafetcher-51533646784f64384e58-build.zip"

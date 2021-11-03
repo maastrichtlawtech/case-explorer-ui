@@ -27,16 +27,6 @@
   },
   "hosting": {},
   "function": {
-    "caseexploreruidataaccesslayer": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "caseexploreruiglobalsettingslayer": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
     "datafetcher": {
       "build": true,
       "providerPlugin": "awscloudformation",
