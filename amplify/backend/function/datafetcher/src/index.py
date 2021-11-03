@@ -6,12 +6,10 @@ from definitions import TABLE_NAME, get_full_attributes
 
 
 def handler(event, context):
-    authorized = is_authorized(event)
-
     ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
 
+    authorized = is_authorized(event)
     return_attributes = get_full_attributes(authorized)
-    
     projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
 
     response = ddb_client.table.get_item(

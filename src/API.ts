@@ -271,6 +271,18 @@ export type FetchNodeDataQuery = {
   } | null,
 };
 
+export type BatchFetchNodeDataQueryVariables = {
+  nodes?: Array< NodeInput | null > | null,
+};
+
+export type BatchFetchNodeDataQuery = {
+  batchFetchNodeData?:  Array< {
+    __typename: "Node",
+    id?: string | null,
+    data?: string | null,
+  } | null > | null,
+};
+
 export type TestQueryVariables = {
   Ecli?: string | null,
 };

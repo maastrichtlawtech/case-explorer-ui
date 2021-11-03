@@ -4,10 +4,6 @@ import warnings
 import community
 import time
 import json
-from utils import get_key, format_node_data
-from clients.dynamodb_client import DynamodbClient
-from definitions import TABLE_NAME, get_networkstatistics_attributes
-import os
 # taken from and modified: 
 # https://github.com/caselawanalytics/CaseLawAnalytics/blob/master/caselawnet/network_analysis.py
 
@@ -21,39 +17,19 @@ def handler(event, context):
         with open('edges.json') as f:
             edges = json.load(f)
         with open('nodes.json') as f:
-            old_nodes = json.load(f)
+            nodes = json.load(f)
         with open('subNodes.json') as f:
             sub_nodes = json.load(f)
     else:
         network = event['arguments'].copy()
-        old_nodes = network['nodes']
+        nodes = network['nodes']
         edges = network['edges']
         sub_nodes = network['subNodes']
 
-    # fetch missing meta data
     start_p = time.time()
-    missing_node_keys = []
-    nodes = []
-    for node in old_nodes:
-        if 'date_decision' not in node['data']:
-            missing_node_keys.append(get_key(node['id']))
-        else:
-            nodes.append(node)
-    print(f'get missing node keys: took {time.time()-start_p} s.')
-    start_p = time.time()
-    ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
-    return_attributes = get_networkstatistics_attributes()
-    missing_nodes = ddb_client.execute_batch(missing_node_keys, return_attributes)
-    print(f'fetch missing nodes: took {time.time()-start_p} s.')
-    start_p = time.time()
-    missing_nodes = [format_node_data(node, return_attributes) for node in missing_nodes]
-    nodes.extend(missing_nodes)
-    print(f'format missing nodes: took {time.time()-start_p} s.')
-    start_p = time.time()
-
     statistics = dict()
     if len(nodes) == 0:
-        return statistics  #, nodes
+        return statistics
     start_p = time.time()
     graph = get_network(nodes, edges)
     print(f'get network: took {time.time()-start_p} s.')
@@ -148,16 +124,12 @@ def handler(event, context):
         node_id = node['id']
         if node_id in statistics:
             sub_statistics[node_id] = statistics[node_id]
-            # add year, authorities, hubs, community to node meta data:
-            for stat in ['year', 'authorities', 'hubs', 'community']:
-                if stat in statistics[node_id]:
-                    node['data'][stat] = statistics[node_id][stat]
     print(f'select sub stats and nodes: took {time.time()-start_p} s.')
     
     if TEST:
-        return len(sub_statistics), len(sub_nodes)
+        return len(sub_statistics)
     
-    return sub_statistics  #, sub_nodes
+    return sub_statistics
 
 def get_network(nodes, edges):
     graph = json_graph.node_link_graph({'nodes': nodes, 'links': edges}, directed=True, multigraph=False)

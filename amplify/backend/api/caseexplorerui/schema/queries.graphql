@@ -20,6 +20,9 @@ type Query {
   fetchNodeData(
     node: NodeInput
   ): Node @function(name: "datafetcher-${env}")
+  batchFetchNodeData(
+    nodes: [NodeInput]
+  ): [Node] @function(name: "batchdatafetcher-${env}")
   test(
     Ecli: String
   ): Node @function(name: "test-${env}")

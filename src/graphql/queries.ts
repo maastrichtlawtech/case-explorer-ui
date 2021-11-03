@@ -70,6 +70,14 @@ export const fetchNodeData = /* GraphQL */ `
     }
   }
 `;
+export const batchFetchNodeData = /* GraphQL */ `
+  query BatchFetchNodeData($nodes: [NodeInput]) {
+    batchFetchNodeData(nodes: $nodes) {
+      id
+      data
+    }
+  }
+`;
 export const test = /* GraphQL */ `
   query Test($Ecli: String) {
     test(Ecli: $Ecli) {

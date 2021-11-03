@@ -1,6 +1,18 @@
 import Amplify, { API } from "aws-amplify";
-import { queryNetworkByUserInput, fetchNodeData, computeNetworkStatistics, test } from "../../src/graphql/queries";
-import { QueryNetworkByUserInputQueryVariables, FetchNodeDataQueryVariables, ComputeNetworkStatisticsQueryVariables, TestQueryVariables } from '../../src/API';
+import { 
+  queryNetworkByUserInput, 
+  fetchNodeData, 
+  batchFetchNodeData,
+  computeNetworkStatistics, 
+  test 
+} from "../../src/graphql/queries";
+import { 
+  QueryNetworkByUserInputQueryVariables, 
+  FetchNodeDataQueryVariables, 
+  BatchFetchNodeDataQueryVariables,
+  ComputeNetworkStatisticsQueryVariables, 
+  TestQueryVariables 
+} from '../../src/API';
 // import awsExports from "./aws-exports";
 
 const API_AUTH_MODE = {
@@ -62,6 +74,20 @@ export async function getElementData(variables: FetchNodeDataQueryVariables) {
     // }))
   } catch (err) {
     console.log('error getElementData node:', err)
+  }
+}
+
+export async function batchGetElementData(variables: BatchFetchNodeDataQueryVariables) {
+  try {
+    const batchElementDataResult = await API.graphql({
+      query: batchFetchNodeData,
+      // authMode: API_AUTH_MODE.API_KEY,
+      variables
+    })
+    const result = batchElementDataResult.data.batchFetchNodeData
+    return result.map(convertJSONStringFields)
+  } catch (err) {
+    console.log('error batchGetElementData:', err)
   }
 }
 
