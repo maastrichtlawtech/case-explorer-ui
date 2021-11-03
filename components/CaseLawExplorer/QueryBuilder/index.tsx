@@ -150,7 +150,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     edges: allEdges,
                     subNodes: subNodes
                   })
-                  console.log('AA', networkStatistics)
+                  console.log('logNetworkStatistics', networkStatistics)
                   onNetworkStatisticsCalculated({
                     networkStatistics: networkStatistics,
                     message: casesData.message,

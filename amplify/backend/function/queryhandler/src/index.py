@@ -27,7 +27,7 @@ import json
 
 TEST = False                        # returns number of nodes instead of nodes
 HARD_LIMIT = 5000                  
-SUBNET_LIMIT = 100
+SUBNET_LIMIT = 700
 
 
 # set up DynamoDB client
