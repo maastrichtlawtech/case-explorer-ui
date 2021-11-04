@@ -1,10 +1,10 @@
-import os
+from os import getenv
 from dynamodb_client import DynamodbClient
 from utils import format_node_data, get_key, is_authorized
 from definitions import get_networkstatistics_attributes
 
 
-ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{os.getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'))
+ddb_client = DynamodbClient(table_name=getenv(f'API_CASEEXPLORERUI_{getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'))
 
 def handler(event, context):
     authorized = is_authorized(event)

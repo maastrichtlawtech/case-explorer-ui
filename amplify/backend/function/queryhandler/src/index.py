@@ -10,9 +10,8 @@ It handles the following tasks:
 5. format output
 """
 
-import os
-import time
-from warnings import resetwarnings
+from os import getenv
+from time import time
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
 from opensearch_client import OpenSearchClient
 from dynamodb_client import DynamodbClient
@@ -21,18 +20,17 @@ from utils import get_key, format_node_data, verify_input_string_list, verify_ec
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
 from definitions import ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
     DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS, get_networkstatistics_attributes
-import pandas as pd
-import json
+from pandas import DataFrame, concat
 
 
-TEST = True                        # returns number of nodes instead of nodes
+TEST = False                        # returns number of nodes instead of nodes
 HARD_LIMIT = 5000                  
 SUBNET_LIMIT = 700
 
 
 # set up DynamoDB client
 ddb_client = DynamodbClient(
-    table_name=os.getenv(f'API_CASEEXPLORERUI_{os.getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'),
+    table_name=getenv(f'API_CASEEXPLORERUI_{getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'),
     item_limit=1000,            # max number of items to scan per page (not necessarily matches)
     page_limit=50,            # max number of pages to scan (1 page = 1 DDB query)
     max_hits=HARD_LIMIT                   # max number of matching items to return
@@ -40,8 +38,8 @@ ddb_client = DynamodbClient(
 
 # set up Elasticsearch client
 es_client = OpenSearchClient(
-    endpoint=os.getenv('OS_ENDPOINT'),
-    index=os.getenv('OS_INDEX_NAME'),
+    endpoint=getenv('OS_ENDPOINT'),
+    index=getenv('OS_INDEX_NAME'),
     max_hits=1000,             # max number of hits (matching items) per query (page)
     page_limit=HARD_LIMIT/1000,                    # max number of queries (pages)
     #timeout= 5                    # request timeout in s
@@ -54,7 +52,7 @@ def handler(event, context):
     :param context: dict containing context information of triggered event
     :return: dict of nodes (id, data) and edges (edge_id, source_node_id, target_node_id, data)
     """
-    start = time.time()
+    start = time()
 
     # CHECK USER AUTHORIZATION
     authorized = is_authorized(event)
@@ -78,36 +76,37 @@ def handler(event, context):
     query_helper = QueryHelper(search_params, authorized)
 
     # 1. QUERY NODES MATCHING SEARCH INPUT
-    start_p = time.time()
+    start_p = time()
     all_nodes, limit_reached = query_nodes(query_helper)
-    print(f'NODES:\t took {time.time() - start_p} s.')
+    print(f'NODES:\t took {time() - start_p} s.')
 
     # 2. FETCH EDGES AND NEW TARGET NODES
-    start_p = time.time()
+    start_p = time()
     all_edges, new_nodes, edges_limit_reached = fetch_edges(all_nodes[:HARD_LIMIT], query_helper)
     all_nodes = [format_node_data(node, get_networkstatistics_attributes(authorized)) for node in all_nodes]
     #if not TEST:
     all_nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
-    print(f'EDGES:\t took {time.time() - start_p} s.')
+    print(f'EDGES:\t took {time() - start_p} s.')
 
     # 3. GENERATE SUBNETWORK
-    start_p = time.time()
+    start_p = time()
     nodes, edges = get_subnet(all_nodes, all_edges)
-    print(f'SUBNET:\t took {time.time() - start_p} s.')
+    print(f'SUBNET:\t took {time() - start_p} s.')
 
     # @TODO: remove after testing
     if TEST:
+        from json import dump
         with open('edges.json', 'w') as f:
-            json.dump(all_edges, f)
+            dump(all_edges, f)
         with open('nodes.json', 'w') as f:
-            json.dump(all_nodes, f)
+            dump(all_nodes, f)
         with open('subNodes.json', 'w') as f:
-            json.dump(nodes, f)
+            dump(nodes, f)
 
     message = 'Query limit reached! Only partial result displayed.' if limit_reached else ''
     
-    print('Duration total:\t', time.time() - start)
+    print('Duration total:\t', time() - start)
     if TEST:
         print(f'allNodes: {len(all_nodes)}\nallEdges: {len(all_edges)}\nnodes: {len(nodes)}\nedges: {len(edges)}\nmessage: {message}')
         til = 10
@@ -350,10 +349,10 @@ def get_subnet(nodes, edges):
     if len(edges) == 0:
         return [{'id': node['id'], 'data': {}} for node in nodes[:SUBNET_LIMIT]], edges
 
-    df = pd.DataFrame(edges)
+    df = DataFrame(edges)
     sources = df.groupby('source').agg(list)
     targets = df.groupby('target').agg(list)
-    full = pd.concat([sources, targets], axis=1)
+    full = concat([sources, targets], axis=1)
     full.columns = ['id1', 'target', 'id2', 'source']
     full.reset_index(level=0, inplace=True)
     full['index'] = full['index'].apply(lambda x: [x])

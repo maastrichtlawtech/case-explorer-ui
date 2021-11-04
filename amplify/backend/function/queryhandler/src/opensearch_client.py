@@ -1,7 +1,7 @@
 from opensearchpy import OpenSearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
-import os
-import time
+from os import getenv
+from time import time
 
 
 class OpenSearchClient:
@@ -14,11 +14,11 @@ class OpenSearchClient:
         self.index=index
 
         awsauth = AWS4Auth(
-            os.getenv('AWS_ACCESS_KEY_ID'), 
-            os.getenv('AWS_SECRET_ACCESS_KEY'), 
-            os.getenv('AWS_REGION'), 
+            getenv('AWS_ACCESS_KEY_ID'), 
+            getenv('AWS_SECRET_ACCESS_KEY'), 
+            getenv('AWS_REGION'), 
             'es', 
-            session_token=os.getenv('AWS_SESSION_TOKEN'))
+            session_token=getenv('AWS_SESSION_TOKEN'))
 
         self.es = OpenSearch(
             hosts = [{'host': endpoint, 'port': 443}],
@@ -41,7 +41,7 @@ class OpenSearchClient:
         total_hits = []
         limit_reached = False
         #pit_id = es.open_point_in_time(index='caselaw4', keep_alive= f'{timeout/60}m')
-        start = time.time()
+        start = time()
         result = self.es.search(
             index=[self.index],
             body={
@@ -84,9 +84,9 @@ class OpenSearchClient:
         
         #es.close_point_in_time(body={'id': pit_id})
 
-        #print('Duration es search:', time.time() - start)
+        #print('Duration es search:', time() - start)
         print(f'OS: {len(total_hits)}/{self.max_hits*self.page_limit} items fetched.')
         print(f'OS: {int(page_count)}/{self.page_limit} pages scanned.')
-        print(f'OS: took {time.time()-start} s.')
+        print(f'OS: took {time()-start} s.')
 
         return total_hits, limit_reached

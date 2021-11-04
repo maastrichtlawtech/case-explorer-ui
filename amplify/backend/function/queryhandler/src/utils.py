@@ -1,4 +1,4 @@
-import warnings
+from warnings import warn
 from datetime import datetime, date
 
 def is_authorized(event):
@@ -54,44 +54,44 @@ def get_key(ecli):
     return {'ecli': ecli, 'ItemType': 'DATA'}
 
 
-def verify_input_string_list(key, params, warn=True):
+def verify_input_string_list(key, params, warning=True):
     # checks string list input types for validity and returns default value if invalid
     if not key in params or not params[key] or params[key] == []:
         return None
     if not params[key] \
         or not isinstance(params[key], list) \
         or not all(isinstance(elem, str) for elem in params[key]):
-        if warn:
-            warnings.warn(f"Invalid input: argument '{key}' of type list of strings expected. Setting '{key}' to None.")
+        if warning:
+            warn(f"Invalid input: argument '{key}' of type list of strings expected. Setting '{key}' to None.")
         return None
     return params[key]
 
 
-def verify_input_string(key, params, warn=True):
+def verify_input_string(key, params, warning=True):
     if not key in params or not params[key] or params[key] == '':
         return None
     if not isinstance(params[key], str):
-        if warn:
-            warnings.warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to None.")
+        if warning:
+            warn(f"Invalid input: argument '{key}' of type string expected. Setting '{key}' to None.")
         return None
     return params[key].strip()
 
 
 def verify_data_sources(key, params):
-    params[key] = verify_input_string_list(key, params, warn=False)
+    params[key] = verify_input_string_list(key, params, warning=False)
     # add datasources if  needed
     available_datasources = {'RS'}
     if not params[key] or set(params[key]).intersection(available_datasources) == {}:
-        warnings.warn(f"Invalid input: argument '{key}' must be list subset of {available_datasources}. Setting '{key}' to ['RS'].")
+        warn(f"Invalid input: argument '{key}' must be list subset of {available_datasources}. Setting '{key}' to ['RS'].")
         return ['RS']
     return params[key]
 
 
 def verify_doc_types(key, params):
-    params[key] = verify_input_string_list(key, params, warn=False)
+    params[key] = verify_input_string_list(key, params, warning=False)
     available_doctypes = {'DEC', 'OPI'}
     if not params[key] or set(params[key]).intersection(available_doctypes) == {}:
-        warnings.warn(f"Invalid input: argument '{key}' must be list subset of {available_doctypes}. Setting '{key}' to ['DEC'].")
+        warn(f"Invalid input: argument '{key}' must be list subset of {available_doctypes}. Setting '{key}' to ['DEC'].")
         return ['DEC']
     return params[key]
 
@@ -107,7 +107,7 @@ def verify_date_start(key, params):
     if not key in params \
             or not isinstance(params[key], str) \
             or not datetime.strptime(params[key], '%Y-%m-%d'):
-        warnings.warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected. Setting '{key}' to '1900-01-01'.")
+        warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected. Setting '{key}' to '1900-01-01'.")
         return '1900-01-01'
     return params[key]
 
@@ -117,7 +117,7 @@ def verify_date_end(key, params):
             or not isinstance(params[key], str) \
             or not datetime.strptime(params[key], '%Y-%m-%d') \
             or not date.fromisoformat(params['DateStart']) < date.fromisoformat(params[key]):
-        warnings.warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected "
+        warn(f"Invalid input: argument '{key}' of type AWSDate ('YYYY-MM-DD') expected "
                       f"and '{key}' must be after 'DateStart'. Setting '{key}' to '{date.today().strftime('%Y-%m-%d')}'.")
         return date.today().strftime('%Y-%m-%d')
     return params[key]
@@ -127,7 +127,7 @@ def verify_degrees(key, params):
     if not key in params \
             or not isinstance(params[key], int) \
             or not 0 <= params[key] <= 5:
-        warnings.warn(f"Invalid input: argument '{key}' of type Int between 0 and 5 expected."
+        warn(f"Invalid input: argument '{key}' of type Int between 0 and 5 expected."
                       f"Setting '{key}' to 0.")
         return 0
     return params[key]
