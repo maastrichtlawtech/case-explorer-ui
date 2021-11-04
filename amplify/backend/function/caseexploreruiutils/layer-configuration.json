@@ -1,0 +1,21 @@
+{
+  "permissions": [
+    {
+      "type": "AwsAccounts",
+      "accounts": [
+        "275192370238"
+      ]
+    },
+    {
+      "type": "Private"
+    }
+  ],
+  "runtimes": [
+    {
+      "value": "python",
+      "name": "Python",
+      "runtimePluginId": "amplify-python-function-runtime-provider",
+      "layerExecutablePath": "python"
+    }
+  ]
+}

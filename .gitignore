@@ -141,3 +141,6 @@ amplify/backend/function/networkstatistics/subNodes.json
 amplify/backend/function/queryhandler/edges.json
 amplify/backend/function/queryhandler/nodes.json
 amplify/backend/function/queryhandler/subNodes.json
+amplify/backend/function/caseexploreruidynamodbaccess/lib/python/lib
+amplify/backend/function/caseexploreruiopensearchaccess/lib/python/lib
+amplify/backend/function/caseexploreruiutils/lib/python/lib

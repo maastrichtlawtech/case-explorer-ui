@@ -88,6 +88,21 @@
           ]
         }
       ]
+    },
+    "caseexploreruidynamodbaccess": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "caseexploreruiopensearchaccess": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "caseexploreruiutils": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
     }
   },
   "storage": {}

@@ -37,6 +37,18 @@
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/batchdatafetcher-654a6b4e67762b374f76-build.zip",
           "ddbTableName": "Caselaw"
+        },
+        "caseexploreruidynamodbaccess": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/caseexploreruidynamodbaccess-LambdaLayerVersion11fc72ea-build.zip"
+        },
+        "caseexploreruiopensearchaccess": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/caseexploreruiopensearchaccess-LambdaLayerVersion15150228-build.zip"
+        },
+        "caseexploreruiutils": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/caseexploreruiutils-LambdaLayerVersione940434f-build.zip"
         }
       },
       "auth": {
