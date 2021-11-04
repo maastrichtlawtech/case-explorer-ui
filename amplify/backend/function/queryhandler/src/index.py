@@ -375,7 +375,6 @@ def get_subnet(nodes, edges):
 
     result_nodes = [{'id': ecli, 'data': {}} for ecli in node_eclis]
     result_edges = [{'id': edge_id, 'source': edge_id.split('_')[0], 'target': edge_id.split('_')[1]} for edge_id in edge_ids]
-
     
     return result_nodes, result_edges
 

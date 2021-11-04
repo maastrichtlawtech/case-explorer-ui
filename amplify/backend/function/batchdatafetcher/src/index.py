@@ -4,9 +4,9 @@ from utils import format_node_data, get_key, is_authorized
 from definitions import TABLE_NAME, get_networkstatistics_attributes
 
 
-def handler(event, context):
-    ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
+ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
 
+def handler(event, context):
     authorized = is_authorized(event)
     input_attributes = get_networkstatistics_attributes(False)
     return_attributes = get_networkstatistics_attributes(authorized)
