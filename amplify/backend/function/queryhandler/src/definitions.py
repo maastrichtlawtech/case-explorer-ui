@@ -1,9 +1,3 @@
-# RESOURCES:
-TABLE_NAME = 'Caselaw'
-OPENSEARCH_INDEX_NAME = 'caselawexplorer_rechtspraak'
-OPENSEARCH_ENDPOINT = 'search-caselawexplorer-j72amls6ucledpopoyyxzyujqi.eu-central-1.es.amazonaws.com'
-
-
 # SEARCH PARAMETERS:
 DATA_SOURCES = 'DataSources'
 KEYWORDS = 'Keywords'

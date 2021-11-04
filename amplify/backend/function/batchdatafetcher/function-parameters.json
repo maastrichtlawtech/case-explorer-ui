@@ -6,5 +6,11 @@
       ]
     }
   },
-  "lambdaLayers": []
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "ddbTableName",
+      "environmentVariableName": "DDB_TABLE_NAME"
+    }
+  ]
 }

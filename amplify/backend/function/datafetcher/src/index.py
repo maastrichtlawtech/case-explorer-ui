@@ -2,10 +2,10 @@ import os
 from dynamodb_client import DynamodbClient
 from queryhelper import build_ddb_projection_expression
 from utils import format_node_data, get_key, is_authorized
-from definitions import TABLE_NAME, get_full_attributes
+from definitions import get_full_attributes
 
 
-ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'))
+ddb_client = DynamodbClient(table_name=os.getenv(f'API_CASEEXPLORERUI_{os.getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'))
 
 def handler(event, context):
     authorized = is_authorized(event)

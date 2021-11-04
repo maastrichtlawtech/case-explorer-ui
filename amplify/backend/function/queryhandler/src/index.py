@@ -19,20 +19,20 @@ from dynamodb_client import DynamodbClient
 from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
-from definitions import TABLE_NAME, OPENSEARCH_ENDPOINT, OPENSEARCH_INDEX_NAME, ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
+from definitions import ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
     DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS, get_networkstatistics_attributes
 import pandas as pd
 import json
 
 
-TEST = False                        # returns number of nodes instead of nodes
+TEST = True                        # returns number of nodes instead of nodes
 HARD_LIMIT = 5000                  
 SUBNET_LIMIT = 700
 
 
 # set up DynamoDB client
 ddb_client = DynamodbClient(
-    table_name=os.getenv(f'API_CASEEXPLORERUI_{TABLE_NAME.upper()}TABLE_NAME'),
+    table_name=os.getenv(f'API_CASEEXPLORERUI_{os.getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'),
     item_limit=1000,            # max number of items to scan per page (not necessarily matches)
     page_limit=50,            # max number of pages to scan (1 page = 1 DDB query)
     max_hits=HARD_LIMIT                   # max number of matching items to return
@@ -40,8 +40,8 @@ ddb_client = DynamodbClient(
 
 # set up Elasticsearch client
 es_client = OpenSearchClient(
-    endpoint=OPENSEARCH_ENDPOINT,
-    index=OPENSEARCH_INDEX_NAME,
+    endpoint=os.getenv('OS_ENDPOINT'),
+    index=os.getenv('OS_INDEX_NAME'),
     max_hits=1000,             # max number of hits (matching items) per query (page)
     page_limit=HARD_LIMIT/1000,                    # max number of queries (pages)
     #timeout= 5                    # request timeout in s

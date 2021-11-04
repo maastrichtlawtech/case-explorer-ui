@@ -39,6 +39,15 @@
     "functioncaseexploreruiutilsArn": {
       "Type": "String",
       "Default": "functioncaseexploreruiutilsArn"
+    },
+    "ddbTableName": {
+      "Type": "String"
+    },
+    "osIndexName": {
+      "Type": "String"
+    },
+    "osEndpoint": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -122,6 +131,15 @@
             },
             "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
               "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
+            },
+            "DDB_TABLE_NAME": {
+              "Ref": "ddbTableName"
+            },
+            "OS_INDEX_NAME": {
+              "Ref": "osIndexName"
+            },
+            "OS_ENDPOINT": {
+              "Ref": "osEndpoint"
             }
           }
         },

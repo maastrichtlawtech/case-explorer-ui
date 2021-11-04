@@ -27,6 +27,9 @@
     "functioncaseexploreruiutilsArn": {
       "Type": "String",
       "Default": "functioncaseexploreruiutilsArn"
+    },
+    "ddbTableName": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -110,6 +113,9 @@
             },
             "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
               "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
+            },
+            "DDB_TABLE_NAME": {
+              "Ref": "ddbTableName"
             }
           }
         },
