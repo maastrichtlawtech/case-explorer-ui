@@ -112,14 +112,14 @@ export const getQueryBuilderSchema = () => {
         DegreesSources: {
           type: 'integer',
           title: 'Degrees Sources',
-          minimum: 1,
-          maximum: 5,
+          minimum: 0,
+          maximum: 1,
         },
         DegreesTargets: {
           type: 'integer',
           title: 'Degrees Targets',
-          minimum: 1,
-          maximum: 5,
+          minimum: 0,
+          maximum: 1,
         },
       },
     },

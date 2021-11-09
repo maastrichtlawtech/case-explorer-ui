@@ -119,14 +119,10 @@ const AppContainer = ({
             1900,
             2021
         ],
-        "Instances": [
-            "Hoge Raad"
-        ],
         "Doctypes": [
-            "DEC",
-            "OPI"
+            "DEC"
         ],
-        "DegreesSources": 1,
+        "DegreesSources": 0,
         "DegreesTargets": 1
       },
     },
