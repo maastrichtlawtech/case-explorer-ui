@@ -54,16 +54,16 @@ const MUILightTheme = createMuiTheme({
   },
 });
 
-PIXI.settings.ROUND_PIXELS = false// true
-// @ts-ignore
-PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.LOW
-PIXI.settings.RESOLUTION = 1// 32// 64// window.devicePixelRatio
-PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
-PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
+// PIXI.settings.ROUND_PIXELS = false// true
+// // @ts-ignore
+// PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.LOW
+// PIXI.settings.RESOLUTION = 1// 32// 64// window.devicePixelRatio
+// PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
+// PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
 
 const COUNT  = 700
-// const data = prepareData(defaultData)
-const data = createMockData(COUNT, COUNT)
+const data = prepareData(defaultData)
+// const data = createMockData(COUNT, COUNT)
 type Props = Partial<GraphEditorProps>
 
 

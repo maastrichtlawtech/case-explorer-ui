@@ -3,6 +3,11 @@ import { AmplifyAuthenticator,  } from '@aws-amplify/ui-react';
 import { Button } from "@mui/material";
 import Amplify, { Auth }  from "aws-amplify";
 import React from 'react';
+import cytoscape from 'cytoscape'
+import euler from 'cytoscape-euler'
+import cola from 'cytoscape-cola'
+import dagre from 'cytoscape-dagre'
+import spread from 'cytoscape-spread'
 import GraphEditor, {
   ACTIONS
 } from "./components/CaseLawExplorer";
@@ -10,10 +15,13 @@ import * as API from './components/CaseLawExplorer/API';
 import {TermsOfService} from './components/CaseLawExplorer/components/TermsOfService';
 import * as R from 'colay/ramda';
 import {useMeasure, View} from 'colay-ui';
-import {
-  CircularProgress
-} from '@mui/material';
+
 // import { TermsOfService } from './components/TermsOfService';
+
+spread(cytoscape)
+cytoscape.use(dagre)
+cytoscape.use(euler)
+cytoscape.use(cola)
 
 const AWS_PROD_CONFIG = {
   "aws_project_region": "eu-central-1",
