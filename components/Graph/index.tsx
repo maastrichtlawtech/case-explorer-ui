@@ -6,7 +6,7 @@ import {
   useTheme as useMuiTheme,
    ThemeProvider as MuiThemeProvider,
    createMuiTheme
-} from '@material-ui/core'
+} from '@mui/material'
 import {  View } from 'colay-ui'
 import { 
   DarkTheme,

@@ -1,4 +1,4 @@
-import { Button, Typography, Divider } from '@material-ui/core'
+import { Button, Typography, Divider } from '@mui/material'
 import { Auth } from 'aws-amplify'
 import { View } from 'colay-ui'
 import React from 'react'

@@ -2,7 +2,7 @@ import {
   Alert,
   AlertTitle, Slide,
   Snackbar
-} from '@material-ui/core'
+} from '@mui/material'
 import { useForwardRef } from 'colay-ui'
 import * as R from 'colay/ramda'
 import React from 'react'

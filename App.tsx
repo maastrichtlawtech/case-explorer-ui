@@ -1,6 +1,6 @@
 import { AuthState, onAuthUIStateChange, } from '@aws-amplify/ui-components';
 import { AmplifyAuthenticator,  } from '@aws-amplify/ui-react';
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import Amplify, { Auth }  from "aws-amplify";
 import React from 'react';
 import GraphEditor, {
@@ -12,7 +12,7 @@ import * as R from 'colay/ramda';
 import {useMeasure, View} from 'colay-ui';
 import {
   CircularProgress
-} from '@material-ui/core';
+} from '@mui/material';
 // import { TermsOfService } from './components/TermsOfService';
 
 const AWS_PROD_CONFIG = {

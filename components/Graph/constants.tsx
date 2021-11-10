@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Slider } from '@material-ui/core'
+import {Button, Slider } from '@mui/material'
 
 export const getFilterSchema  = (props: {onPopupPress: () => void}) => {
   const {

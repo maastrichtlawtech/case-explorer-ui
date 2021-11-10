@@ -4,7 +4,7 @@ import {
 } from 'colay-ui'
 import {
   Button
-} from '@material-ui/core'
+} from '@mui/material'
 
 type P = {
   type: string;

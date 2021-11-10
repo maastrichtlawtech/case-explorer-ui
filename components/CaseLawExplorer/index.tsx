@@ -2,7 +2,7 @@
 // @ts-nocheck
 import {
   Backdrop, Button, CircularProgress, createTheme as createMuiTheme, ThemeProvider as MuiThemeProvider, Typography
-} from '@material-ui/core'
+} from '@mui/material'
 import { Auth } from 'aws-amplify'
 import { View } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
