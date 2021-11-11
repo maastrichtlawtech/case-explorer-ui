@@ -119,42 +119,48 @@ const NODE_SIZE_RANGE_MAP = {
   betweenness: [0, 10],
   betweenness_centrality: [0, 1],
   closeness: [0, 10],
+  closeness_centrality: [0, 1],
   degree: [0, 20],
-  indegree: [0, 10],
-  outdegree: [0, 10],
-  pageRank: [0, 1],
+  degree_centrality: [0, 1],
+  in_degree: [0, 10],
+  in_degree_centrality: [0, 1],
+  out_degree: [0, 10],
+  out_degree_centrality: [0, 10],
+  page_rank: [0, 1],
   rel_in_degree: [0, 1],
+  community: [0, 10],
   year: [
     1969,
     2015
   ],
   authorities: [0, 1],
-  community: [0, 10],
   hubs: [0, 1],
 }
 
 const NETWORK_STATISTICS_NAMES = [
   'betweenness',
   'betweenness_centrality',
-  'closeness_centrality',
   'closeness',
+  'closeness_centrality',
   'degree',
   'degree_centrality',
   'in_degree',
-  'out_degree',
   'in_degree_centrality',
-'out_degree_centrality',
+  'out_degree',
+  'out_degree_centrality',
   'page_rank',
   'rel_in_degree',
+  'community'
 ]
 const calculateNodeSize = (item: object, graphEditorRef: GraphEditorRef, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
   if (!fieldName) {
     return NODE_SIZE_RANGE_MAP.size[0]
   }
-  
-  const value = NETWORK_STATISTICS_NAMES.includes(fieldName)
-    ? graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
-    : item.data[fieldName]
+  const value = graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
+    ??  item.data[fieldName]
+  // NETWORK_STATISTICS_NAMES.includes(fieldName)
+  //   ? graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
+  //   : item.data[fieldName]
   const fieldRange = NODE_SIZE_RANGE_MAP[fieldName]
   const sizeRangeGap = NODE_SIZE_RANGE_MAP.size[1] - NODE_SIZE_RANGE_MAP.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]

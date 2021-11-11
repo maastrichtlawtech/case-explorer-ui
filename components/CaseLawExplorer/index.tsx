@@ -71,6 +71,17 @@ const AUTO_CREATED_SCHEMA = {
   schema: createSchema(data.nodes)
 }
 
+const DEFAULT_FILTERING = {
+  year: [1900, 2021],
+  degree: [0, 100],
+  indegree: [0, 100],
+  outdegree: [0, 100]
+}
+
+const DEFAULT_VISUALIZATION = {
+  nodeSize: null,
+  nodeColor: null
+}
 
 const AppContainer = ({
   changeMUITheme,
@@ -82,16 +93,8 @@ const AppContainer = ({
   const [user] = useUser()
   const alertRef= React.useRef(null)
   const configRef = React.useRef({
-    visualization: {
-      nodeSize: null,
-      nodeColor: null
-    },
-    filtering: {
-      year: [1900, 2021],
-      degree: [0, 100],
-      indegree: [0, 100],
-      outdegree: [0, 100]
-    }
+    visualization: DEFAULT_VISUALIZATION,
+    filtering: DEFAULT_FILTERING
   })
 
   const FILTER_SCHEMA = React.useMemo(() => getFilterSchema(), [])
@@ -110,7 +113,7 @@ const AppContainer = ({
   const filteredDataRef = React.useRef({})
   const [state, updateState] = useImmer({
     queryBuilder: {
-      visible: false,
+      visible: true,
       query: {
         "DataSources": [
             "RS"
@@ -118,6 +121,12 @@ const AppContainer = ({
         "Date": [
             1900,
             2021
+        ],
+        "Instances": [
+          'Hoge Raad',
+        ],
+        "Domains": [
+          "Civiel recht"
         ],
         "Doctypes": [
             "DEC"
@@ -434,6 +443,7 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
+console.log('STATE_', controllerProps.nodes.length)
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
@@ -465,12 +475,20 @@ const AppContainer = ({
           draft.queryBuilder.visible = false
         })}
         onStart={() => {
+          configRef.current = {
+            filtering: DEFAULT_FILTERING,
+            visualization: DEFAULT_VISUALIZATION
+          }
           controller.update((draft) => {
             draft.isLoading = true
+            draft.graphConfig.nodes.filter = null
+            draft.settingsBar.forms[1].formData = configRef.current.filtering
+            draft.settingsBar.forms[2].formData = configRef.current.visualization
           })
           updateState((draft) => {
             draft.queryBuilder.visible = false
           })
+          
         }}
         onError={(error) => {
           controller.update((draft) => {
@@ -492,6 +510,10 @@ const AppContainer = ({
               local: networkStatistics
             }
           })
+          alertRef.current.alert({
+            type: 'warning',
+            text: `Network Statistics Calculated!`
+          })
         }}
         onFinish={({
           nodes: nodes_ = [],
@@ -499,6 +521,12 @@ const AppContainer = ({
           networkStatistics,
           message
         } = {}) => {
+          PIXI.settings.ROUND_PIXELS = false// true
+          // @ts-ignore
+          PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.LOW
+          PIXI.settings.RESOLUTION = 1// 32// 64// window.devicePixelRatio
+          PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
+          PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
           controller.update((draft) => {
             const nodes = R.take(NODE_LIMIT, nodes_)
             draft.nodes = nodes

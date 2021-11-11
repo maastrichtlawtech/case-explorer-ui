@@ -37,7 +37,7 @@ export const AlertContent = React.forwardRef((props: AlertContentProps,forwarded
       <Slide 
         {...props}
         direction="down"
-          handleExited={() => {
+        onExited={() => {
           setMessageInfo(undefined);
         }}
       />
