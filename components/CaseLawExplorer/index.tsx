@@ -511,7 +511,7 @@ console.log('STATE_', controllerProps.nodes.length)
             }
           })
           alertRef.current.alert({
-            type: 'warning',
+            type: 'success',
             text: `Network Statistics Calculated!`
           })
         }}
