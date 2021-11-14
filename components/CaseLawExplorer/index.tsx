@@ -125,9 +125,7 @@ const AppContainer = ({
         "Instances": [
           'Hoge Raad',
         ],
-        "Domains": [
-          "Civiel recht"
-        ],
+        "Domains": [],
         "Doctypes": [
             "DEC"
         ],
@@ -166,7 +164,7 @@ const AppContainer = ({
     // edges: [],
     // events: RECORDED_EVENTS,
     graphConfig: {
-      layout: Graph.Layouts.eular,
+      layout: Graph.Layouts.cose,
       zoom: 0.2,
       nodes: {},
       // clusters: [
@@ -200,7 +198,7 @@ const AppContainer = ({
       // forms: [AUTO_CREATED_SCHEMA,FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
       forms: [
         { ...FETCH_SCHEMA, formData: configRef.current.fetching },
-        VIEW_CONFIG_SCHEMA,
+        {...VIEW_CONFIG_SCHEMA, formData: configRef.current.visualization},
         { ...FILTER_SCHEMA, formData: configRef.current.filtering },
       ],
       createClusterForm: {
@@ -365,6 +363,7 @@ const AppContainer = ({
           return false
         }
         case EVENT.SETTINGS_FORM_CHANGED: {
+          console.log('FORM_CHANGED', payload)
           draft.settingsBar.forms[payload.index].formData = payload.value
           if (payload.form.schema.title === FILTER_SCHEMA.schema.title) {
             configRef.current = {
@@ -443,7 +442,7 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
-console.log('STATE_', controllerProps.nodes.length)
+console.log('STATE_', controllerProps.settingsBar)
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
@@ -482,8 +481,8 @@ console.log('STATE_', controllerProps.nodes.length)
           controller.update((draft) => {
             draft.isLoading = true
             draft.graphConfig.nodes.filter = null
-            draft.settingsBar.forms[1].formData = configRef.current.filtering
-            draft.settingsBar.forms[2].formData = configRef.current.visualization
+            draft.settingsBar.forms[1].formData = configRef.current.visualization
+            draft.settingsBar.forms[2].formData = configRef.current.filtering
           })
           updateState((draft) => {
             draft.queryBuilder.visible = false
