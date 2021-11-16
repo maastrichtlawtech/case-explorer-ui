@@ -79,8 +79,8 @@ const DEFAULT_FILTERING = {
 }
 
 const DEFAULT_VISUALIZATION = {
-  nodeSize: null,
-  nodeColor: null
+  // nodeSize: null,
+  // nodeColor: null
 }
 
 const AppContainer = ({
@@ -194,7 +194,7 @@ const AppContainer = ({
       // isOpen: true,
     },
     settingsBar: {
-      opened: true,
+      isOpen: true,
       // forms: [AUTO_CREATED_SCHEMA,FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
       forms: [
         { ...FETCH_SCHEMA, formData: configRef.current.fetching },
@@ -281,7 +281,7 @@ const AppContainer = ({
         value: 'Default'
       },
     },
-    onEvent: async ({
+    onEvent: ({
       type,
       payload,
       elementId,
@@ -312,25 +312,33 @@ const AppContainer = ({
             id: selectedItem.id,
             data: JSON.stringify(selectedItem.data)
           }
-          let elementData = null
-          try {
-            elementData = await API.getElementData({ node: node });
-          } catch (error) {
-            alertRef.current.alert({
-              text: JSON.stringify(error),
-              type: 'error'
-            })
-            console.error(error)
+          const call = async () => {
+            let elementData = null
+            try {
+              elementData = await API.getElementData({ node: node });
+            } catch (error) {
+              alertRef.current.alert({
+                text: JSON.stringify(error),
+                type: 'error'
+              })
+              console.error(error)
+            }
+            
+            if (elementData && !R.isEmpty(elementData)) {
+              controller.update((draft, { graphEditorRef }) =>{
+                const {
+                  selectedItem
+                } = getSelectedElementInfo(draft, graphEditorRef.current)
+                selectedItem.data = elementData
+              })
+            } else {
+              // alertRef.current.alert({
+              //   type: 'warning',
+              //   text: 'Data is not available!'
+              // })
+            }
           }
-          
-          if (elementData && !R.isEmpty(elementData)) {
-            selectedItem.data = elementData
-          } else {
-            // alertRef.current.alert({
-            //   type: 'warning',
-            //   text: 'Data is not available!'
-            // })
-          }
+          call()
           break
         }
         case EVENT.CREATE_CLUSTER_FORM_SUBMIT: {
@@ -442,7 +450,6 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
-console.log('STATE_', controllerProps.settingsBar)
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
