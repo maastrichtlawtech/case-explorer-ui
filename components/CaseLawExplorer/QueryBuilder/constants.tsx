@@ -64,14 +64,24 @@ export const getQueryBuilderSchema = () => {
           type: 'string',
           title: 'Articles'
         },
-        Date: {
-          type: 'array',
-          title: 'Date',
-          items: {
-            type: 'number',
-          },
-          minimum: 1900,
-          maximum: 2021,
+        // Date: {
+        //   type: 'array',
+        //   title: 'Date',
+        //   items: {
+        //     type: 'number',
+        //   },
+        //   minimum: 1900,
+        //   maximum: 2021,
+        // },
+        DateStart:{
+          title: "Date start",
+          type: 'string',
+          format: 'date'
+        },
+        DateEnd:{
+          title: "Date end",
+          type: 'string',
+          format: 'date'
         },
         Instances: {
           type: 'array',
@@ -124,9 +134,9 @@ export const getQueryBuilderSchema = () => {
       },
     },
     uiSchema: {
-      Date: {
-        'ui:field': SliderUIField,
-      },
+      // Date: {
+      //   'ui:field': SliderUIField,
+      // },
       Domains: {
         'ui:enumDisabled': domainsList.domains
       },

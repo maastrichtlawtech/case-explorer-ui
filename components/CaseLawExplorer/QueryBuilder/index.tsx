@@ -17,13 +17,17 @@ export type QueryBuilderProps = {
 }
 
 const transformData = (data) => {
-  const date = data.Date;
-  console.log(date)
-  return {
-    "DateStart": `${date[0]}-01-01`,
-    "DateEnd": `${date[1]}-12-31`,
-    ...data
-  }
+  // console.log(data)
+
+  // const date = data.Date;
+  // console.log(date)
+  // return {
+  //   "DateStart": `${date[0]}-01-01`,
+  //   "DateEnd": `${date[1]}-12-31`,
+  //   ...data
+  // }
+
+  return data;
 }
 
 export const QueryBuilder = (props: QueryBuilderProps) => {
