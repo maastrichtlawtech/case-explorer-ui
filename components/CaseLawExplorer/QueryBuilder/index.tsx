@@ -44,6 +44,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       const  event = new Event('click')
       event.persist = ()=>{}
       formRef.current.onSubmit(event)
+      console.log('ON_SUBMIT')
     }, 1000)
   }, [])
   return (

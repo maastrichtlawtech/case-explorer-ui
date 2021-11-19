@@ -62,7 +62,11 @@ const MUILightTheme = createMuiTheme({
 // PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
 
 const COUNT  = 700
-const data = prepareData(defaultData)
+const data = {
+  nodes: [],
+  edges: [],
+}
+// prepareData(defaultData)
 // const data = createMockData(COUNT, COUNT)
 type Props = Partial<GraphEditorProps>
 
@@ -386,6 +390,7 @@ const AppContainer = ({
                   indegree,
                   outdegree
                 } = payload.value
+                // TODO: Change to network statistics data
                 return (
                   R.inBetween(year[0], year[1])(item.data.year)
                   && R.inBetween(degree[0], degree[1])(element.degree())
@@ -544,7 +549,10 @@ const AppContainer = ({
           })
           setTimeout(() => {
             controller.update((draft) => {
-            draft.graphConfig!.layout = {...Graph.Layouts.circle}
+            draft.graphConfig!.layout = {
+              ...Graph.Layouts.cose,
+              componentSpacing: 80
+            }
             })
           },250)
           if (message) {

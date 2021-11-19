@@ -26,7 +26,8 @@ export const RenderNode = (props: RenderNodeProps) => {
  }
   const size = calculateNodeSize(item, graphEditorRef, visualization.nodeSize)
   const color = visualization.nodeColor ? calculateColor(
-    item.data,
+    item,
+    graphEditorRef,
     visualization.nodeColor
   ) : theme.palette.background.paper
   const hasSelectedEdge = element.connectedEdges(':selected').length > 0
@@ -157,7 +158,7 @@ const calculateNodeSize = (item: object, graphEditorRef: GraphEditorRef, fieldNa
     return NODE_SIZE_RANGE_MAP.size[0]
   }
   const value = graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
-    ??  item.data[fieldName]
+  ??  item.data[fieldName]
   // NETWORK_STATISTICS_NAMES.includes(fieldName)
   //   ? graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
   //   : item.data[fieldName]
@@ -165,17 +166,20 @@ const calculateNodeSize = (item: object, graphEditorRef: GraphEditorRef, fieldNa
   const sizeRangeGap = NODE_SIZE_RANGE_MAP.size[1] - NODE_SIZE_RANGE_MAP.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
   const fieldRangeValue = (value ?? fieldRange[0]) - fieldRange[0]
+  console.log('AA',((fieldRangeValue / fieldRangeGap) * sizeRangeGap) + NODE_SIZE_RANGE_MAP.size[0], value, fieldRange, fieldRangeValue)
   return  ((fieldRangeValue / fieldRangeGap) * sizeRangeGap) + NODE_SIZE_RANGE_MAP.size[0]
 }
 
-const calculateColor = (data: object, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
+const calculateColor = (item: object, graphEditorRef: GraphEditorRef, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
   if (!fieldName) {
     return perc2color(0)
   }
   const fieldRange = NODE_SIZE_RANGE_MAP[fieldName]
   const sizeRangeGap = NODE_SIZE_RANGE_MAP.size[1] - NODE_SIZE_RANGE_MAP.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
-  const fieldRangeValue = (data[fieldName] ?? fieldRange[0]) - fieldRange[0]
+  const value = graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
+  ??  item.data[fieldName]
+  const fieldRangeValue = (value ?? fieldRange[0]) - fieldRange[0]
   return  perc2color((fieldRangeValue / fieldRangeGap) * 100)
 }
 const perc2color = (
