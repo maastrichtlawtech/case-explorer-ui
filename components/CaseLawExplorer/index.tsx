@@ -122,10 +122,12 @@ const AppContainer = ({
         "DataSources": [
             "RS"
         ],
-        "Date": [
-            1900,
-            2021
-        ],
+        // "Date": [
+        //     1900,
+        //     2021
+        // ],
+        "DateStart": "1900-01-01",
+        "DateEnd": "2021-01-01",
         "Instances": [
           'Hoge Raad',
         ],
