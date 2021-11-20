@@ -31,8 +31,9 @@ import { QueryBuilder } from './QueryBuilder'
 import { RenderEdge } from './RenderEdge'
 import { RenderNode } from './RenderNode'
 import { useUser } from './useUser'
+import { filterEdges, } from 'perfect-graph/utils'
 import {
-   filterEdges, prepareData,
+   prepareData,
    createMockData,
 } from './utils'
 
