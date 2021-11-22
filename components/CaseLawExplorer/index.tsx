@@ -146,13 +146,25 @@ const AppContainer = ({
   })
   const ActionBarRightWrapped = React.useMemo(() => () => (
       <ActionBarRight
-        dispatch={({ type }) => {
+        dispatch={async ({ type }) => {
           switch (type) {
             case 'help':
               updateState((draft) => {
                 draft.helpModal.isOpen = true
               })
               break;
+            case 'downloadMetaData':{
+              console.log('downloadMetaData')
+              // const withMetaData = await API.downloadAllMetaData({
+              //   nodes: controllerProps.nodes.map(({ id }) => id),
+              //   edges: controllerProps.edges.map(({ id }) => id),
+              // })
+              // controller.update((draft) =>{
+              //   draft.nodes = withMetaData.nodes
+              //   draft.edges = withMetaData.edges
+              // })
+              break;
+            }
             case 'testAPI':
               updateState((draft) => {
                 draft.helpModal.isOpen = true

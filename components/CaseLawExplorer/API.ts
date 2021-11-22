@@ -117,3 +117,36 @@ export async function testAuth(variables: TestQueryVariables) {
     console.log('error testAuth:', err)
   }
 }
+
+type DownloadAllMetaData = {
+  nodes: string[];
+  edges: string[];
+}
+
+const downloadAllMetaDataQuery = `
+query DownloadAllMetaData ($nodes: [String!]!, $edges: [String!]!) {
+  downloadAllMetaData(nodes: $nodes, edges: $edges){
+    nodes {
+      id
+      data
+    }
+    edges {
+      id
+      data
+    }
+  }
+}
+`
+
+export async function downloadAllMetaData(variables: DownloadAllMetaData) {
+  try {
+    const elementDataResult = await API.graphql({
+      query: downloadAllMetaDataQuery,
+      variables
+    })
+    const result = elementDataResult.data.downloadAllMetaData
+    return result ? JSON.parse(result) : {}
+  } catch (err) {
+    console.log('error downloadAllMetaData:', err)
+  }
+}

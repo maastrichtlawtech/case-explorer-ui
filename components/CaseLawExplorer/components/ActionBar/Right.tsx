@@ -29,6 +29,11 @@ export const ActionBarRight = (props: ActionBarRightProps) => {
         Help
       </Button>
       <Button
+        onClick={() => dispatch({ type: 'downloadMetaData'})}
+      >
+        Download MetaData
+      </Button>
+      <Button
         onClick={() =>  dispatch({ type: 'testAPI'})}
       >
         Test the API
