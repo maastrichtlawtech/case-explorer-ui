@@ -160,8 +160,28 @@ const AppContainer = ({
               //   edges: controllerProps.edges.map(({ id }) => id),
               // })
               // controller.update((draft) =>{
-              //   draft.nodes = withMetaData.nodes
-              //   draft.edges = withMetaData.edges
+              //   const nodeMap = R.indexBy(R.prop('id'), withMetaData.nodes)
+              //   const edgeMap = R.indexBy(R.prop('id'), withMetaData.edges)
+              //   draft.nodes = withMetaData.nodes.map(({ id, data,...rest }) => {
+              //     return {
+              //       id,
+              //       data: {
+              //         ...data,
+              //         ...(nodeMap[id].data?? {})
+              //       },
+              //       ...rest,
+              //     }
+              //   })
+              //   draft.edges = withMetaData.edges.map(({ id, data,...rest }) => {
+              //     return {
+              //       id,
+              //       data: {
+              //         ...data,
+              //         ...(edgeMap[id].data?? {})
+              //       },
+              //       ...rest,
+              //     }
+              //   })
               // })
               break;
             }
@@ -348,7 +368,10 @@ const AppContainer = ({
                 const {
                   selectedItem
                 } = getSelectedElementInfo(draft, graphEditorRef.current)
-                selectedItem.data = elementData
+                selectedItem.data = {
+                  ...selectedItem.data,
+                  ...elementData
+                }
               })
             } else {
               // alertRef.current.alert({
@@ -426,7 +449,6 @@ const AppContainer = ({
             }
           }
           return false
-          break
         }
 
         case EVENT.CHANGE_THEME: {
@@ -437,7 +459,6 @@ const AppContainer = ({
           changeMUITheme(value)
           draft.actionBar.theming.value = value
           return false
-          break
         }
         default:
           break;
