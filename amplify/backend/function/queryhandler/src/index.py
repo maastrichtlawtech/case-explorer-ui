@@ -84,6 +84,11 @@ def handler(event, context):
     start_p = time()
     all_edges, new_nodes, edges_limit_reached = fetch_edges(all_nodes[:HARD_LIMIT], query_helper)
     all_nodes = [format_node_data(node, get_networkstatistics_attributes(authorized)) for node in all_nodes]
+    # add flag to distinguish search result nodes and appended citation nodes
+    for node in all_nodes:
+        node['data']['isResult'] = True
+    for node in new_nodes:
+        node['data']['isResult'] = False
     #if not TEST:
     all_nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
@@ -347,7 +352,8 @@ def fetch_edges(nodes, helper):
 
 def get_subnet(nodes, edges):
     if len(edges) == 0:
-        return [{'id': node['id'], 'data': {}} for node in nodes[:SUBNET_LIMIT]], edges
+        result_nodes = [{'id': node['id'], 'data': {'isResult': node['data']['isResult']}} for node in nodes[:SUBNET_LIMIT]]
+        return result_nodes, edges
 
     df = DataFrame(edges)
     sources = df.groupby('source').agg(list)
@@ -372,7 +378,15 @@ def get_subnet(nodes, edges):
         node_eclis = node_eclis_peak
         edge_ids = edge_ids_peak
 
-    result_nodes = [{'id': ecli, 'data': {}} for ecli in node_eclis]
+    result_nodes = []
+    for node in nodes:
+        if node['id'] in node_eclis:
+            result_nodes.append({
+                'id': node['id'],
+                'data': {
+                    'isResult': node['data']['isResult']
+                }
+            })
     result_edges = [{'id': edge_id, 'source': edge_id.split('_')[0], 'target': edge_id.split('_')[1]} for edge_id in edge_ids]
     
     return result_nodes, result_edges
