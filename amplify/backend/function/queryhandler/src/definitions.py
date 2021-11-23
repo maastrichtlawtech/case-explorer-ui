@@ -55,7 +55,7 @@ node_attributes_full = node_attributes_queryhandler + [
 # attributes to be searched for keywords by Elasticsearch
 node_attributes_keyword_search = [
     'summary',
-    'procedure_type',
+    #'procedure_type',      ES field mapping needs to be changed to 'text' to be phrase searchable
     'full_text',
     'predecessor_successor_cases'
 ]

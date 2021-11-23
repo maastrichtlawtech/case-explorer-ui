@@ -86,9 +86,9 @@ def handler(event, context):
     all_nodes = [format_node_data(node, get_networkstatistics_attributes(authorized)) for node in all_nodes]
     # add flag to distinguish search result nodes and appended citation nodes
     for node in all_nodes:
-        node['data']['isResult'] = True
+        node['data']['isResult'] = "True"
     for node in new_nodes:
-        node['data']['isResult'] = False
+        node['data']['isResult'] = "False"
     #if not TEST:
     all_nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
