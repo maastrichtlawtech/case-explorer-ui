@@ -13,11 +13,11 @@ attributes = {
 
 def handler(event, context):
     authorized = is_authorized(event)
-    if 'attributesToFetch' in event['arguments']:
+    if event['arguments']['attributesToFetch']:
         get_attributes = attributes.get(event['arguments']['attributesToFetch'])
     else:
         get_attributes = attributes.get("ALL")
-        
+
     input_attributes = get_attributes(authorized=False)
     return_attributes = get_attributes(authorized=authorized)
 
@@ -26,7 +26,7 @@ def handler(event, context):
     for node in event["arguments"]["nodes"]:
         append = False
         for att in input_attributes:
-            if 'data' not in node or (att != 'ecli' and att not in node['data']):
+            if not node['data'] or (att != 'ecli' and att not in node['data']):
                 append = True
         if append:
             missing_node_keys.append(get_key(node['id']))
