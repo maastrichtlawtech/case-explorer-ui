@@ -4,17 +4,17 @@
 
 export const queryNetworkByUserInput = /* GraphQL */ `
   query QueryNetworkByUserInput(
-    $DataSources: [String]
+    $DataSources: [DataSource!]!
     $Keywords: String
     $Articles: String
     $Eclis: String
-    $DegreesSources: Int
-    $DegreesTargets: Int
-    $DateStart: AWSDate
-    $DateEnd: AWSDate
+    $DegreesSources: Int!
+    $DegreesTargets: Int!
+    $DateStart: AWSDate!
+    $DateEnd: AWSDate!
     $Instances: [String]
     $Domains: [String]
-    $Doctypes: [String]
+    $Doctypes: [DocType!]!
   ) {
     queryNetworkByUserInput(
       DataSources: $DataSources
@@ -55,15 +55,15 @@ export const queryNetworkByUserInput = /* GraphQL */ `
 `;
 export const computeNetworkStatistics = /* GraphQL */ `
   query ComputeNetworkStatistics(
-    $nodes: [NodeInput]
-    $edges: [EdgeInput]
-    $subNodes: [NodeInput]
+    $nodes: [NodeInput!]!
+    $edges: [EdgeInput!]!
+    $subNodes: [NodeInput!]!
   ) {
     computeNetworkStatistics(nodes: $nodes, edges: $edges, subNodes: $subNodes)
   }
 `;
 export const fetchNodeData = /* GraphQL */ `
-  query FetchNodeData($attributesToFetch: NodeAttributes, $node: NodeInput) {
+  query FetchNodeData($attributesToFetch: NodeAttributes, $node: NodeInput!) {
     fetchNodeData(attributesToFetch: $attributesToFetch, node: $node) {
       id
       data

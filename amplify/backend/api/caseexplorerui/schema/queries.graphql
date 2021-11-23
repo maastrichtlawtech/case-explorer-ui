@@ -1,25 +1,25 @@
 type Query {
   queryNetworkByUserInput(
-    DataSources: [String],
+    DataSources: [DataSource!]!,
     Keywords: String,
     Articles: String,
     Eclis: String,
-    DegreesSources: Int,
-    DegreesTargets: Int,
-    DateStart: AWSDate,
-    DateEnd: AWSDate,
+    DegreesSources: Int!,
+    DegreesTargets: Int!,
+    DateStart: AWSDate!,
+    DateEnd: AWSDate!,
     Instances: [String],
     Domains: [String],
-    Doctypes: [String]
+    Doctypes: [DocType!]!
   ): Network @function(name: "queryhandler-${env}")
   computeNetworkStatistics(
-    nodes: [NodeInput],
-    edges: [EdgeInput],
-    subNodes: [NodeInput]
+    nodes: [NodeInput!]!,
+    edges: [EdgeInput!]!,
+    subNodes: [NodeInput!]!
   ): AWSJSON @function(name: "networkstatistics-${env}")
   fetchNodeData(
     attributesToFetch: NodeAttributes
-    node: NodeInput
+    node: NodeInput!
   ): Node @function(name: "datafetcher-${env}")
   batchFetchNodeData(
     attributesToFetch: NodeAttributes,

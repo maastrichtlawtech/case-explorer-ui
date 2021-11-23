@@ -83,6 +83,20 @@ export type DeleteCaselawInput = {
   ItemType: string,
 };
 
+export enum DataSource {
+  RS = "RS",
+  ECHR = "ECHR",
+  EURLEX = "EURLEX",
+  CJEU = "CJEU",
+}
+
+
+export enum DocType {
+  OPI = "OPI",
+  DEC = "DEC",
+}
+
+
 export type Network = {
   __typename: "Network",
   allNodes?:  Array<Node | null > | null,
@@ -211,17 +225,17 @@ export type DeleteCaselawMutation = {
 };
 
 export type QueryNetworkByUserInputQueryVariables = {
-  DataSources?: Array< string | null > | null,
+  DataSources: Array< DataSource >,
   Keywords?: string | null,
   Articles?: string | null,
   Eclis?: string | null,
-  DegreesSources?: number | null,
-  DegreesTargets?: number | null,
-  DateStart?: string | null,
-  DateEnd?: string | null,
+  DegreesSources: number,
+  DegreesTargets: number,
+  DateStart: string,
+  DateEnd: string,
   Instances?: Array< string | null > | null,
   Domains?: Array< string | null > | null,
-  Doctypes?: Array< string | null > | null,
+  Doctypes: Array< DocType >,
 };
 
 export type QueryNetworkByUserInputQuery = {
@@ -256,9 +270,9 @@ export type QueryNetworkByUserInputQuery = {
 };
 
 export type ComputeNetworkStatisticsQueryVariables = {
-  nodes?: Array< NodeInput | null > | null,
-  edges?: Array< EdgeInput | null > | null,
-  subNodes?: Array< NodeInput | null > | null,
+  nodes: Array< NodeInput >,
+  edges: Array< EdgeInput >,
+  subNodes: Array< NodeInput >,
 };
 
 export type ComputeNetworkStatisticsQuery = {
@@ -267,7 +281,7 @@ export type ComputeNetworkStatisticsQuery = {
 
 export type FetchNodeDataQueryVariables = {
   attributesToFetch?: NodeAttributes | null,
-  node?: NodeInput | null,
+  node: NodeInput,
 };
 
 export type FetchNodeDataQuery = {

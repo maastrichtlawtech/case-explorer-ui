@@ -37,6 +37,7 @@ enum NodeAttributes {
 enum DataSource {
   RS
   ECHR
+  EURLEX
   CJEU
 }
 
