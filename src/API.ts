@@ -121,14 +121,14 @@ export type Edge = {
 };
 
 export type NodeInput = {
-  id?: string | null,
+  id: string,
   data?: string | null,
 };
 
 export type EdgeInput = {
-  id?: string | null,
-  source?: string | null,
-  target?: string | null,
+  id: string,
+  source: string,
+  target: string,
 };
 
 export enum NodeAttributes {

@@ -155,9 +155,9 @@ const AppContainer = ({
               break;
             case 'downloadMetaData':{
               console.log('downloadMetaData')
-              // const withMetaData = await API.downloadAllMetaData({
-              //   nodes: controllerProps.nodes.map(({ id }) => id),
-              //   edges: controllerProps.edges.map(({ id }) => id),
+              // const withMetaData = await API.batchGetElementData({
+              //   nodes: controllerProps.nodes.map(({ id }) => id),  // needs to be in the format [{id: String}, {id: String}, ...]
+              //   //edges: controllerProps.edges.map(({ id }) => id),
               // })
               // controller.update((draft) =>{
               //   const nodeMap = R.indexBy(R.prop('id'), withMetaData.nodes)

@@ -12,7 +12,7 @@ type Node {
 }
 
 input NodeInput {
-  id: String
+  id: String!
   data: AWSJSON
 }
 
@@ -24,9 +24,9 @@ type Edge {
 }
 
 input EdgeInput {
-  id: String
-  source: String
-  target: String
+  id: String!
+  source: String!
+  target: String!
 }
 
 enum NodeAttributes {

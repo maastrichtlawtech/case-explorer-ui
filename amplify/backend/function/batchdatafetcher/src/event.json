@@ -2,7 +2,7 @@
     "arguments": {
         "attributesToFetch": "NETWORKSTATS",
         "nodes": [
-            {"id": "ECLI:NL:GHAMS:2018:1093", "data": {}}, 
+            {"id": "ECLI:NL:GHAMS:2018:1093"},
             {"id": "ECLI:NL:GHSHE:2018:1512", "data": {}}, 
             {"id": "ECLI:NL:RBGEL:2018:5796", "data": {}}, 
             {"id": "ECLI:NL:RBAMS:2018:2489", "data": {}}, 

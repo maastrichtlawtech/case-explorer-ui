@@ -25,7 +25,7 @@ def handler(event, context):
     for node in event["arguments"]["nodes"]:
         append = False
         for att in input_attributes:
-            if att != 'ecli' and att not in node['data']:
+            if 'data' not in node or (att != 'ecli' and att not in node['data']):
                 append = True
         if append:
             missing_node_keys.append(get_key(node['id']))
