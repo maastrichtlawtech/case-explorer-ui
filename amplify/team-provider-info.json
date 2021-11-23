@@ -35,7 +35,7 @@
         },
         "batchdatafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/batchdatafetcher-36586e4b647952503548-build.zip",
+          "s3Key": "amplify-builds/batchdatafetcher-7869646930795463646b-build.zip",
           "ddbTableName": "Caselaw"
         },
         "caseexploreruidynamodbaccess": {

@@ -13,10 +13,11 @@ attributes = {
 
 def handler(event, context):
     authorized = is_authorized(event)
-    if not 'attributesToFetch' in event['arguments']:
-        get_attributes = attributes.get("ALL")
-    else:
+    if 'attributesToFetch' in event['arguments']:
         get_attributes = attributes.get(event['arguments']['attributesToFetch'])
+    else:
+        get_attributes = attributes.get("ALL")
+        
     input_attributes = get_attributes(authorized=False)
     return_attributes = get_attributes(authorized=authorized)
 
