@@ -156,28 +156,16 @@ const AppContainer = ({
             case 'downloadMetaData':{
               console.log('downloadMetaData')
               // const withMetaData = await API.batchGetElementData({
-              //   nodes: controllerProps.nodes.map(({ id }) => id),  // needs to be in the format [{id: String}, {id: String}, ...]
-              //   //edges: controllerProps.edges.map(({ id }) => id),
+              //   nodes: controllerProps.nodes.map(({ id }) => ({id})),  // needs to be in the format [{id: String}, {id: String}, ...]
               // })
               // controller.update((draft) =>{
               //   const nodeMap = R.indexBy(R.prop('id'), withMetaData.nodes)
-              //   const edgeMap = R.indexBy(R.prop('id'), withMetaData.edges)
               //   draft.nodes = withMetaData.nodes.map(({ id, data,...rest }) => {
               //     return {
               //       id,
               //       data: {
               //         ...data,
               //         ...(nodeMap[id].data?? {})
-              //       },
-              //       ...rest,
-              //     }
-              //   })
-              //   draft.edges = withMetaData.edges.map(({ id, data,...rest }) => {
-              //     return {
-              //       id,
-              //       data: {
-              //         ...data,
-              //         ...(edgeMap[id].data?? {})
               //       },
               //       ...rest,
               //     }
