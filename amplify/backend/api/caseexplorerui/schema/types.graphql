@@ -1,0 +1,46 @@
+type Network {
+  allNodes: [Node]
+  allEdges: [Edge]
+  nodes: [Node]
+  edges: [Edge]
+  message: String
+}
+
+type Node {
+  id: String
+  data: AWSJSON
+}
+
+input NodeInput {
+  id: String
+  data: AWSJSON
+}
+
+type Edge {
+  id: String
+  source: String
+  target: String
+  data: String
+}
+
+input EdgeInput {
+  id: String
+  source: String
+  target: String
+}
+
+enum NodeAttributes {
+  ALL
+  NETWORKSTATS
+}
+
+enum DataSource {
+  RS
+  ECHR
+  CJEU
+}
+
+enum DocType {
+  OPI
+  DEC
+}

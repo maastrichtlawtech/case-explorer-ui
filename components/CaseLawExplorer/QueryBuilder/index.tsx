@@ -5,6 +5,7 @@ import * as API from '../API'
 import { Modal, Button, Box, Typography, TextField, Paper,IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import { getQueryBuilderSchema } from './constants'
+import { NodeAttributes } from '../../../src/API'
 
 export type QueryBuilderProps = {
   query: any;
@@ -142,6 +143,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     data: JSON.stringify(node.data)
                   }))
                   let allNodesWithData = await API.batchGetElementData({
+                    attributesToFetch: NodeAttributes.NETWORKSTATS,
                     nodes: allNodes
                   })
                   console.log('logBatchFetchData', allNodesWithData)

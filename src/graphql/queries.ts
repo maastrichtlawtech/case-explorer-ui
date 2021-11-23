@@ -63,16 +63,19 @@ export const computeNetworkStatistics = /* GraphQL */ `
   }
 `;
 export const fetchNodeData = /* GraphQL */ `
-  query FetchNodeData($node: NodeInput) {
-    fetchNodeData(node: $node) {
+  query FetchNodeData($attributesToFetch: NodeAttributes, $node: NodeInput) {
+    fetchNodeData(attributesToFetch: $attributesToFetch, node: $node) {
       id
       data
     }
   }
 `;
 export const batchFetchNodeData = /* GraphQL */ `
-  query BatchFetchNodeData($nodes: [NodeInput]) {
-    batchFetchNodeData(nodes: $nodes) {
+  query BatchFetchNodeData(
+    $attributesToFetch: NodeAttributes
+    $nodes: [NodeInput!]!
+  ) {
+    batchFetchNodeData(attributesToFetch: $attributesToFetch, nodes: $nodes) {
       id
       data
     }

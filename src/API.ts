@@ -117,6 +117,12 @@ export type EdgeInput = {
   target?: string | null,
 };
 
+export enum NodeAttributes {
+  ALL = "ALL",
+  NETWORKSTATS = "NETWORKSTATS",
+}
+
+
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -146,7 +152,7 @@ export enum ModelSortDirection {
 
 export type ModelCaselawConnection = {
   __typename: "ModelCaselawConnection",
-  items?:  Array<Caselaw | null > | null,
+  items:  Array<Caselaw >,
   nextToken?: string | null,
 };
 
@@ -260,6 +266,7 @@ export type ComputeNetworkStatisticsQuery = {
 };
 
 export type FetchNodeDataQueryVariables = {
+  attributesToFetch?: NodeAttributes | null,
   node?: NodeInput | null,
 };
 
@@ -272,7 +279,8 @@ export type FetchNodeDataQuery = {
 };
 
 export type BatchFetchNodeDataQueryVariables = {
-  nodes?: Array< NodeInput | null > | null,
+  attributesToFetch?: NodeAttributes | null,
+  nodes: Array< NodeInput >,
 };
 
 export type BatchFetchNodeDataQuery = {
@@ -325,7 +333,7 @@ export type ListCaselawsQueryVariables = {
 export type ListCaselawsQuery = {
   listCaselaws?:  {
     __typename: "ModelCaselawConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Caselaw",
       ItemType: string,
       SourceDocDate?: string | null,
@@ -334,7 +342,7 @@ export type ListCaselawsQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -351,7 +359,7 @@ export type QueryByItemTypeQueryVariables = {
 export type QueryByItemTypeQuery = {
   queryByItemType?:  {
     __typename: "ModelCaselawConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Caselaw",
       ItemType: string,
       SourceDocDate?: string | null,
@@ -360,7 +368,7 @@ export type QueryByItemTypeQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -377,7 +385,7 @@ export type QueryByInstanceQueryVariables = {
 export type QueryByInstanceQuery = {
   queryByInstance?:  {
     __typename: "ModelCaselawConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Caselaw",
       ItemType: string,
       SourceDocDate?: string | null,
@@ -386,7 +394,7 @@ export type QueryByInstanceQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
@@ -403,7 +411,7 @@ export type QueryByInstanceLiQueryVariables = {
 export type QueryByInstanceLiQuery = {
   queryByInstanceLi?:  {
     __typename: "ModelCaselawConnection",
-    items?:  Array< {
+    items:  Array< {
       __typename: "Caselaw",
       ItemType: string,
       SourceDocDate?: string | null,
@@ -412,7 +420,7 @@ export type QueryByInstanceLiQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } | null > | null,
+    } >,
     nextToken?: string | null,
   } | null,
 };
