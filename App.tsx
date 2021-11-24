@@ -1,7 +1,7 @@
-import { AuthState, onAuthUIStateChange, } from '@aws-amplify/ui-components';
+import { AuthState,onAuthUIStateChange, } from '@aws-amplify/ui-components';
 import { AmplifyAuthenticator,  } from '@aws-amplify/ui-react';
 import { Button } from "@mui/material";
-import Amplify, { Auth }  from "aws-amplify";
+import Amplify, { Auth,  Hub,  }  from "aws-amplify";
 import React from 'react';
 import cytoscape from 'cytoscape'
 import euler from 'cytoscape-euler'
@@ -55,6 +55,11 @@ const AWS_DEV_CONFIG_OVERRIDE = {
   },
 }
 
+function getUser() {
+  return Auth.currentAuthenticatedUser()
+    .then(userData => userData)
+    .catch(() => console.log('Not signed in'));
+}
 const AWS_CONFIG = __DEV__
   ? R.mergeDeepRight(AWS_PROD_CONFIG, AWS_DEV_CONFIG_OVERRIDE)
   : AWS_PROD_CONFIG
@@ -105,19 +110,43 @@ const AppWithAuth = () => {
   // const [authState, setAuthState] = React.useState(AuthState.SignedIn);
   // const [user, setUser] = React.useState({});
   const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
-    React.useEffect(() => {
-      return onAuthUIStateChange((nextAuthState, authData) => {
-            setAuthState(nextAuthState);
-            setUser(authData)
-        });
-    }, []);
 
+  React.useEffect(() => {
+    Hub.listen('auth', ({ payload: { event, data } }) => {
+      console.log(event, data)
+      switch (event) {
+        case 'signIn':
+        case 'cognitoHostedUI':
+          getUser().then(userData => setUser(userData));
+          break;
+        case 'signOut':
+          setUser(null);
+          break;
+        case 'signIn_failure':
+        case 'cognitoHostedUI_failure':
+          console.log('Sign in failure', data);
+          break;
+      }
+    });
+
+    getUser().then(userData => setUser(userData));
+  }, []);
+    // React.useEffect(() => {
+    //   return onAuthUIStateChange((nextAuthState, authData) => {
+    //         setAuthState(nextAuthState);
+    //         setUser(authData)
+    //     });
+    // }, []);
+    //authState === AuthState.SignedIn && 
   return  <>
   {
-    authState === AuthState.SignedIn && user ? (
+    user ? (
       <App />
     ) : (
-        <AmplifyAuthenticator />
+        // <AmplifyAuthenticator />
+        <Button
+          onClick={() => Auth.federatedSignIn()}
+        >Signin</Button>
       // <AmplifyAuthenticator>
       //   <AmplifySignIn
       //     // headerText="My Custom Sign In Text"
