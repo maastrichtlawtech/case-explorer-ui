@@ -15,7 +15,7 @@ import * as API from './components/CaseLawExplorer/API';
 import {TermsOfService} from './components/CaseLawExplorer/components/TermsOfService';
 import * as R from 'colay/ramda';
 import {useMeasure, View} from 'colay-ui';
-
+import { Signin  }from './components/CaseLawExplorer/Signin'
 // import { TermsOfService } from './components/TermsOfService';
 
 spread(cytoscape)
@@ -143,10 +143,11 @@ const AppWithAuth = () => {
     user ? (
       <App />
     ) : (
+      <Signin/>
         // <AmplifyAuthenticator />
-        <Button
-          onClick={() => Auth.federatedSignIn()}
-        >Signin</Button>
+        // <Button
+        //   onClick={() => Auth.federatedSignIn()}
+        // >Signin</Button>
       // <AmplifyAuthenticator>
       //   <AmplifySignIn
       //     // headerText="My Custom Sign In Text"
