@@ -21,12 +21,14 @@ def handler(event, context):
     input_attributes = get_attributes(authorized=False)
     return_attributes = get_attributes(authorized=authorized)
 
+    print(event)
+
     nodes = []
     missing_node_keys = []
     for node in event["arguments"]["nodes"]:
         append = False
         for att in input_attributes:
-            if not node['data'] or (att != 'ecli' and att not in node['data']):
+            if 'data' not in node or not node['data'] or (att != 'ecli' and att not in node['data']):
                 append = True
         if append:
             missing_node_keys.append(get_key(node['id']))
