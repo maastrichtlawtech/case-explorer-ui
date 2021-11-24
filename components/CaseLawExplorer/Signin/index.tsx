@@ -32,7 +32,7 @@ export const Signin = () => {
             }}
             style={{
               width: '100%',
-              height: '80%',
+              height: 550,
             }}
             resizeMode="cover"
           />
