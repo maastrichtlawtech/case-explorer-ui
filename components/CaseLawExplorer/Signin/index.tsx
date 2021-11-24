@@ -3,7 +3,8 @@ import {
     Button,
   Typography,
 } from '@mui/material'
-import{ View } from 'colay-ui'
+import{ View,  } from 'colay-ui'
+import{  Lottie } from 'colay-ui/lab/Lottie'
 import{ Auth } from 'aws-amplify'
 import{ Illustration } from './Illustration'
 
@@ -11,19 +12,30 @@ export const Signin = () => {
   return (
     <View
       style={{
-        backgroundColor: '#f9f9f9',
         alignItems: 'center'
       }}
     >
        <Typography
          variant="h6"
+         fontSize={36}
+         fontWeight="extrabold"
          style={{
-          marginBottom: 30,
+          marginBottom: -57,
           marginTop: 30,
          }}
        >
           Working with Graphs made easy
-       </Typography>
+       </Typography> 
+       <Lottie
+            source={{
+              uri: 'https://assets2.lottiefiles.com/packages/lf20_nkmkuqhm.json',
+            }}
+            style={{
+              width: '100%',
+              height: '80%',
+            }}
+            resizeMode="cover"
+          />
        <View
         style={{
           alignItems: 'center',
@@ -36,7 +48,8 @@ export const Signin = () => {
           <Button variant="contained" onClick={() => Auth.federatedSignIn()}>Signup</Button>
           </View>
        </View>
-       <Illustration/>
+       {/* <Illustration/> */}
+      
     </View>
   )
 }
