@@ -79,6 +79,7 @@ export async function getElementData(variables: FetchNodeDataQueryVariables) {
 
 export async function batchGetElementData(variables: BatchFetchNodeDataQueryVariables) {
   try {
+    console.log('batchGetElementData',variables)
     const batchElementDataResult = await API.graphql({
       query: batchFetchNodeData,
       // authMode: API_AUTH_MODE.API_KEY,

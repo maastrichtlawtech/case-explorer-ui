@@ -16,6 +16,7 @@ import {
 } from 'perfect-graph/core/theme'
 import { useController } from 'perfect-graph/plugins/controller'
 import { createSchema } from 'perfect-graph/plugins/createSchema'
+import { useGraphEditor } from 'perfect-graph/hooks'
 import { getSelectedElementInfo, getSelectedItemByElement } from 'perfect-graph/utils'
 import React from 'react'
 import * as API from './API'
@@ -144,7 +145,17 @@ const AppContainer = ({
       isOpen: false,
     }
   })
-  const ActionBarRightWrapped = React.useMemo(() => () => (
+  const ActionBarRightWrapped = React.useMemo(() => () => {
+    const [
+      {
+        nodes,
+      },
+    ] = useGraphEditor(
+      ({ nodes }) => ({
+        nodes,
+      }),
+    )
+    return(
       <ActionBarRight
         dispatch={async ({ type }) => {
           switch (type) {
@@ -156,7 +167,7 @@ const AppContainer = ({
             case 'downloadMetaData':{
               console.log('downloadMetaData')
               const nodesWithMetaData = await API.batchGetElementData({
-                nodes: controllerProps.nodes.map(({ id }) => ({id})),  // needs to be in the format [{id: String}, {id: String}, ...]
+                nodes: nodes.map(({ id }) => ({id})),  // needs to be in the format [{id: String}, {id: String}, ...]
               })
               console.log('WithMetaData',nodesWithMetaData)
               controller.update((draft) =>{
@@ -186,7 +197,7 @@ const AppContainer = ({
           }
         }}
       />
-      ), [dispatch])
+      )}, [dispatch])
   const [controllerProps, controller] = useController({
     ...data,
     // nodes: [],
