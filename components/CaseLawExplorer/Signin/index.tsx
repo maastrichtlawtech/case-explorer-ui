@@ -24,7 +24,7 @@ export const Signin = () => {
           marginTop: 30,
          }}
        >
-          Working with Graphs made easy
+          Case Law Explorer
        </Typography> 
        <Lottie
             source={{
