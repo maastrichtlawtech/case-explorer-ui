@@ -74,8 +74,15 @@ export const getFilterSchema = (props: {} = {}) => {
       },
     },
     uiSchema: {
-      'year': {
-        'ui:field': SliderUIField,
+      // 'year': {
+      //   'ui:field': SliderUIField,
+      // },
+      year: {
+        "ui:options": {
+          "addable": false,
+          "orderable": false,
+          "removable": false
+        }
       },
       'degree': {
         'ui:field': SliderUIField,

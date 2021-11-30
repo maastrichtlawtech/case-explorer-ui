@@ -106,7 +106,7 @@ const App = () => {
 
 const AppWithAuth = () => {
   const [authState, setAuthState] = React.useState();
-  const [user, setUser] = React.useState();
+  const [user, setUser] = React.useState({});
   // const [authState, setAuthState] = React.useState(AuthState.SignedIn);
   // const [user, setUser] = React.useState({});
   const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
@@ -129,7 +129,7 @@ const AppWithAuth = () => {
       }
     });
 
-    getUser().then(userData => setUser(userData));
+    // getUser().then(userData => setUser(userData));
   }, []);
     // React.useEffect(() => {
     //   return onAuthUIStateChange((nextAuthState, authData) => {
@@ -138,6 +138,7 @@ const AppWithAuth = () => {
     //     });
     // }, []);
     //authState === AuthState.SignedIn && 
+    console.log('USER: ', user)
   return  <>
   {
     user ? (

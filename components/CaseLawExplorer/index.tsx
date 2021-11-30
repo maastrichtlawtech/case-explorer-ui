@@ -414,7 +414,6 @@ const AppContainer = ({
           return false
         }
         case EVENT.SETTINGS_FORM_CHANGED: {
-          console.log('FORM_CHANGED', payload)
           draft.settingsBar.forms[payload.index].formData = payload.value
           if (payload.form.schema.title === FILTER_SCHEMA.schema.title) {
             configRef.current = {
@@ -427,15 +426,20 @@ const AppContainer = ({
                   year,
                   degree,
                   indegree,
-                  outdegree
+                  outdegree,
                 } = payload.value
+                const {
+                  networkStatistics: {
+                    local: localNetworkStatistics,
+                  }
+                } = graphEditor.context
+                const stats = localNetworkStatistics?.[item.id] ?? {}
                 // TODO: Change to network statistics data
                 return (
-                  R.inBetween(year[0], year[1])(item.data.year)
-                  && R.inBetween(degree[0], degree[1])(element.degree())
-                  && R.inBetween(indegree[0], indegree[1])(element.indegree())
-                  && R.inBetween(outdegree[0], outdegree[1])(element.outdegree())
-
+                  R.inBetween(year[0], year[1])(stats.year)
+                  && R.inBetween(degree[0], degree[1])(stats.degree)
+                  && R.inBetween(indegree[0], indegree[1])(stats.in_degree)
+                  && R.inBetween(outdegree[0], outdegree[1])(stats.out_degree)
                 )
               },
               settings: {
@@ -600,7 +604,7 @@ const AppContainer = ({
           }
         }}
       />
-      <HelpModal 
+      {/* <HelpModal 
         isOpen={state.helpModal.isOpen}
         onClose={() => updateState((draft) => {
           draft.helpModal.isOpen = false
@@ -620,7 +624,7 @@ const AppContainer = ({
           // onDisagree={() => {
           //   alert('To proceed on signin, you need to accept the Terms of Usage!')
           // }}
-        />
+        /> */}
         <AlertContent 
           ref={alertRef}
         />

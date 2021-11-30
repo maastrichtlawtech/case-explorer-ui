@@ -18,6 +18,7 @@ export const RenderNode = (props: RenderNodeProps) => {
     label,
    graphRef ,
    graphEditorRef,
+   config,
  } = props
  let text =  R.takeLast(6, `${label}`)//item.id
  if (labelPath[0] === 'id' ) {
@@ -68,27 +69,30 @@ export const RenderNode = (props: RenderNodeProps) => {
       }
     }
   }, [graphRef.current.viewport])
+  const {
+    view: {
+      width,
+      height,
+      radius,
+      fill,
+      labelVisible,
+    },
+  } = config
   return (
     <Graph.View
-      style={{
-        width: size,
-        height: size,
-        justifyContent: 'center',
-        alignItems: 'center',
-        display: 'flex',
-        backgroundColor: hasSelectedEdge
-        ? theme.palette.secondary.main
-        : (
-          element.selected()
-          ? theme.palette.primary.main
+      width={width}
+      height={height}
+      fill={hasSelectedEdge
+        ? fill.edgeSelected
+        : (element.selected()
+          ? fill.selected
           : (
             element.hovered()
-            ? theme.palette.secondary.main
-            : color
-            )
-          ),
-        borderRadius: size,
-      }}
+              ? fill.hovered
+              : fill.default
+          )
+        )}
+      radius={radius}
       pointertap={(e) => {
         cy.$(':selected').unselect()
         element.select()
@@ -96,16 +100,17 @@ export const RenderNode = (props: RenderNodeProps) => {
     >
       <Graph.Text
         ref={textRef}
-        style={{
-          position: 'absolute',
-          left: localDataRef.current.text.left,
-          top: localDataRef.current.text.top  - size/3,
-          fontSize: DEFAULT_FONT_SIZE
-        }}
-        isSprite
-      >
-        {text}
-      </Graph.Text>
+        x={localDataRef.current.text.left}
+        y={localDataRef.current.text.top - size/3}
+        // style={{
+        //   position: 'absolute',
+        //   left: localDataRef.current.text.left,
+        //   top: localDataRef.current.text.top  - size/3,
+        //   fontSize: DEFAULT_FONT_SIZE
+        // }}
+        // isSprite
+        text={"text"}
+      />
     </Graph.View>
   )
 }

@@ -50,12 +50,6 @@ export const RenderEdge = ({
   return (
     <Graph.View
               interactive
-              style={{
-                position: 'absolute',
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-              }}
               pointertap={() => {
                 cy.$(':selected').unselect()
                 element.select()
@@ -63,16 +57,15 @@ export const RenderEdge = ({
             >
               <Graph.Text
                 ref={textRef}
-                style={{
-                  // position: 'absolute',
-                  // top: -40,
-                  // backgroundColor: DefaultTheme.palette.background.paper,
-                  fontSize: DEFAULT_FONT_SIZE
-                }}
-                isSprite
-              >
-                {text}
-              </Graph.Text>
+                text={text}
+                // style={{
+                //   // position: 'absolute',
+                //   // top: -40,
+                //   // backgroundColor: DefaultTheme.palette.background.paper,
+                //   fontSize: DEFAULT_FONT_SIZE
+                // }}
+                // isSprite
+              />
             </Graph.View>
   )
 }
