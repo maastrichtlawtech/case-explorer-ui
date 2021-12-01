@@ -24,8 +24,8 @@ from pandas import DataFrame, concat
 
 
 TEST = False                        # returns number of nodes instead of nodes
-HARD_LIMIT = 5000                  
-SUBNET_LIMIT = 700
+HARD_LIMIT = 10000                  
+SUBNET_LIMIT = 1000
 
 
 # set up DynamoDB client
