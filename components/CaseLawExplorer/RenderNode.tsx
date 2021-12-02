@@ -98,19 +98,23 @@ export const RenderNode = (props: RenderNodeProps) => {
         element.select()
       }}
     >
-      <Graph.Text
-        ref={textRef}
-        x={localDataRef.current.text.left}
-        y={localDataRef.current.text.top - size/3}
-        // style={{
-        //   position: 'absolute',
-        //   left: localDataRef.current.text.left,
-        //   top: localDataRef.current.text.top  - size/3,
-        //   fontSize: DEFAULT_FONT_SIZE
-        // }}
-        // isSprite
-        text={"text"}
-      />
+      {
+        labelVisible && (
+          <Graph.Text
+            ref={textRef}
+            x={localDataRef.current.text.left}
+            y={localDataRef.current.text.top - size/3}
+            // style={{
+            //   position: 'absolute',
+            //   left: localDataRef.current.text.left,
+            //   top: localDataRef.current.text.top  - size/3,
+            //   fontSize: DEFAULT_FONT_SIZE
+            // }}
+            // isSprite
+            text={"text"}
+          />
+        )
+      }
     </Graph.View>
   )
 }

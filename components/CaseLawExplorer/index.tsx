@@ -100,7 +100,8 @@ const AppContainer = ({
   const alertRef= React.useRef(null)
   const configRef = React.useRef({
     visualization: DEFAULT_VISUALIZATION,
-    filtering: DEFAULT_FILTERING
+    filtering: DEFAULT_FILTERING,
+    // fetching: ,
   })
 
   const FILTER_SCHEMA = React.useMemo(() => getFilterSchema(), [])
@@ -111,12 +112,16 @@ const AppContainer = ({
       })
     }
   }), [])
+
   const THEMES = {
     Dark: DarkTheme,
     Default: DefaultTheme
   }
+
   const NODE_ID = 'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
+
   const filteredDataRef = React.useRef({})
+  
   const [state, updateState] = useImmer({
     queryBuilder: {
       visible: true,
@@ -140,6 +145,42 @@ const AppContainer = ({
         "DegreesSources": 0,
         "DegreesTargets": 1
       },
+      // {
+      //   "DataSources": [
+      //       "RS"
+      //   ],
+      //   "Instances": [
+      //       "Hoge Raad",
+      //       "Raad van State",
+      //       "Centrale Raad van Beroep",
+      //       "College van Beroep voor het bedrijfsleven",
+      //       "Gerechtshof Amsterdam",
+      //       "Gerechtshof Arnhem-Leeuwarden",
+      //       "Gerechtshof 's-Gravenhage",
+      //       "Gerechtshof 's-Hertogenbosch",
+      //       "Rechtbank Amsterdam",
+      //       "Rechtbank 's-Gravenhage",
+      //       "Rechtbank Gelderland",
+      //       "Rechtbank Limburg",
+      //       "Rechtbank Midden-Nederland",
+      //       "Rechtbank Noord-Holland",
+      //       "Rechtbank Noord-Nederland",
+      //       "Rechtbank Oost-Brabant",
+      //       "Rechtbank Overijssel",
+      //       "Rechtbank Rotterdam",
+      //       "Rechtbank Zeeland-West-Brabant"
+      //   ],
+      //   "Domains": [],
+      //   "Doctypes": [
+      //       "DEC"
+      //   ],
+      //   "DateStart": "1900-01-01",
+      //   "DateEnd": "2021-01-01",
+      //   "DegreesSources": 0,
+      //   "DegreesTargets": 1,
+      //   "Keywords": "werkgever* + aansprake* + BW"
+      // }
+      
     },
     helpModal: {
       isOpen: false,
@@ -638,11 +679,11 @@ const AppContainer = ({
   )
 }
 
-
 const MUI_THEMES = {
   Dark: MUIDarkTheme,
   Light: MUILightTheme,
 }
+
 
 export default (props: Props) => {
   const [theme, setTheme] = React.useState(MUI_THEMES.Light)

@@ -254,3 +254,39 @@ const instancesList = {
     'Raad van Beroep voor Belastingzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba'
   ]
 }
+
+export const DEFAULT_FORM_DATA = {
+  "DataSources": [
+      "RS"
+  ],
+  "Instances": [
+      "Hoge Raad",
+      "Raad van State",
+      "Centrale Raad van Beroep",
+      "College van Beroep voor het bedrijfsleven",
+      "Gerechtshof Amsterdam",
+      "Gerechtshof Arnhem-Leeuwarden",
+      "Gerechtshof 's-Gravenhage",
+      "Gerechtshof 's-Hertogenbosch",
+      "Rechtbank Amsterdam",
+      "Rechtbank 's-Gravenhage",
+      "Rechtbank Gelderland",
+      "Rechtbank Limburg",
+      "Rechtbank Midden-Nederland",
+      "Rechtbank Noord-Holland",
+      "Rechtbank Noord-Nederland",
+      "Rechtbank Oost-Brabant",
+      "Rechtbank Overijssel",
+      "Rechtbank Rotterdam",
+      "Rechtbank Zeeland-West-Brabant"
+  ],
+  "Domains": [],
+  "Doctypes": [
+      "DEC"
+  ],
+  "DateStart": "1900-01-01",
+  "DateEnd": "2021-01-01",
+  "DegreesSources": 0,
+  "DegreesTargets": 1,
+  "Keywords": "werkgever* + aansprake* + BW"
+}
