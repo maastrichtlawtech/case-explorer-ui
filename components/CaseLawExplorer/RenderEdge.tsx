@@ -15,7 +15,8 @@ export const RenderEdge = ({
    filtering,
    label,
    labelPath,
-  graphRef 
+  graphRef ,
+  config,
 }: RenderEdgeProps) => {
   let text =  R.takeLast(6, `${label}`)//item.id
  if (labelPath[0] === 'id' ) {
@@ -46,7 +47,15 @@ export const RenderEdge = ({
     }
     
   }, [graphRef.current.viewport])
-  
+  const {
+    view: {
+      width,
+      height,
+      radius,
+      fill,
+      labelVisible,
+    },
+  } = config
   return (
     <Graph.View
               interactive
@@ -55,17 +64,21 @@ export const RenderEdge = ({
                 element.select()
               }}
             >
-              <Graph.Text
-                ref={textRef}
-                text={text}
-                // style={{
-                //   // position: 'absolute',
-                //   // top: -40,
-                //   // backgroundColor: DefaultTheme.palette.background.paper,
-                //   fontSize: DEFAULT_FONT_SIZE
-                // }}
-                // isSprite
-              />
+              {
+                labelVisible && (
+                  <Graph.Text
+                    ref={textRef}
+                    text={text}
+                    // style={{
+                    //   // position: 'absolute',
+                    //   // top: -40,
+                    //   // backgroundColor: DefaultTheme.palette.background.paper,
+                    //   fontSize: DEFAULT_FONT_SIZE
+                    // }}
+                    // isSprite
+                  />
+                )
+              }
             </Graph.View>
   )
 }

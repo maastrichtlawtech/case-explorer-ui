@@ -4,7 +4,7 @@ import Form from '@rjsf/material-ui'
 import * as API from '../API'
 import { Modal, Button, Box, Typography, TextField, Paper,IconButton } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { getQueryBuilderSchema } from './constants'
+import { getQueryBuilderSchema, DEFAULT_FORM_DATA } from './constants'
 import { NodeAttributes } from '../../../src/API'
 
 export type QueryBuilderProps = {
