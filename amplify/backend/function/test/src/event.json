@@ -1,1 +1,5 @@
-{ "test": "event" }
+{
+    "arguments": {
+        "ecli": "ECLI:NL:HR:2012:BV5128"
+    }
+}

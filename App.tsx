@@ -68,7 +68,7 @@ Amplify.configure(AWS_CONFIG);
 
 const runQuery = async ()=> {
   const result = await API.testAuth({
-    "id": "ECLI:NL:HR:2012:BV5128"
+    "ecli": "ECLI:NL:HR:2012:BV5128"
   })
   console.log('API RESULT: ', result)
 }
