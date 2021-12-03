@@ -26,7 +26,12 @@ import { HelpModal } from './components/HelpModal'
 import { TermsOfService } from './components/TermsOfService'
 import { DataBarHeader } from './components/DataBar/Header'
 import { ActionBarRight } from './components/ActionBar/Right'
-import { getFetchSchema, getFilterSchema, VIEW_CONFIG_SCHEMA } from './constants'
+import { 
+  getFetchSchema,
+   getFilterSchema,
+    VIEW_CONFIG_SCHEMA,
+    NODE_SIZE_RANGE_MAP,
+   } from './constants'
 import defaultData from './data'
 import { QueryBuilder } from './QueryBuilder'
 import { RenderEdge } from './RenderEdge'
@@ -36,6 +41,10 @@ import { filterEdges, } from 'perfect-graph/utils'
 import {
    prepareData,
    createMockData,
+   calculateNodeSize,
+  calculateColor,
+  perc2color,
+  calculateNetworkStatisticsRange,
 } from './utils'
 
 export const ACTIONS = {
@@ -100,6 +109,7 @@ const AppContainer = ({
   const alertRef= React.useRef(null)
   const configRef = React.useRef({
     visualization: DEFAULT_VISUALIZATION,
+    visualizationRangeMap: {},
     filtering: DEFAULT_FILTERING,
     // fetching: ,
   })
@@ -125,7 +135,8 @@ const AppContainer = ({
   const [state, updateState] = useImmer({
     queryBuilder: {
       visible: true,
-      query: {
+      query: 
+      {
         "DataSources": [
             "RS"
         ],
@@ -410,9 +421,11 @@ const AppContainer = ({
                 const {
                   selectedItem
                 } = getSelectedElementInfo(draft, graphEditorRef.current)
-                selectedItem.data = {
+                if (selectedItem) {
+                  selectedItem.data = {
                   ...selectedItem.data,
                   ...elementData
+                }
                 }
               })
             } else {
@@ -570,7 +583,8 @@ const AppContainer = ({
         onStart={() => {
           configRef.current = {
             filtering: DEFAULT_FILTERING,
-            visualization: DEFAULT_VISUALIZATION
+            visualization: DEFAULT_VISUALIZATION,
+            visualizationRangeMap: NODE_SIZE_RANGE_MAP,
           }
           controller.update((draft) => {
             draft.isLoading = true
@@ -600,9 +614,10 @@ const AppContainer = ({
         }) => {
           controller.update((draft) => {
             draft.networkStatistics = {
-              local: networkStatistics
+              local: networkStatistics,
             }
           })
+          configRef.current.visualizationRangeMap = calculateNetworkStatisticsRange(networkStatistics)
           alertRef.current.alert({
             type: 'success',
             text: `Network Statistics Calculated!`

@@ -274,6 +274,20 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
     }
   }
 }
+// authorities
+// betweenness_centrality
+// closeness_centrality
+// community:
+// degree:
+// degree_centrality:
+// hubs:
+// in_degree
+// in_degree_centrality
+// out_degree:
+// out_degree_centrality:
+// page_rank:
+// rel_in_degree
+// year:
 export const VIEW_CONFIG_SCHEMA = {
   schema: {
     title: 'Visualisation',
@@ -285,55 +299,53 @@ export const VIEW_CONFIG_SCHEMA = {
         "type": "string",
         "title": "Node Size",
         "enum": [
-          'betweenness',
           'betweenness_centrality',
           'closeness_centrality',
-          'closeness',
           'degree',
           'degree_centrality',
           'in_degree',
-          'out_degree',
           'in_degree_centrality',
+          'out_degree',
           'out_degree_centrality',
           'page_rank',
           'rel_in_degree',
           "year",
-          'authorities',
-          'hubs',
-          'community',
+          // 'betweenness',
+          // 'closeness',
+          // 'authorities',
+          // 'hubs',
+          // 'community',
         ],
         "enumNames": [
-          'Betweenness',
           'Betweenness Centrality',
           'Closeness Centrality',
-          'Closeness',
           'Degree',
           'Degree Centrality',
           'In Degree',
-          'Out Degree',
           'In Degree Centrality',
+          'Out Degree',
           'Out Degree Centrality',
           'Page Rank',
           'Rel In Degree',
           "Year",
-          'Authorities',
-          'Hubs',
-          'Community',
+          // 'Betweenness',
+          // 'Closeness',
+          // 'Authorities',
+          // 'Hubs',
+          // 'Community',
         ]
       },
       nodeColor: {
         "type": "string",
         "title": "Node Color",
         "enum": [
-          'betweenness',
           'betweenness_centrality',
           'closeness_centrality',
-          'closeness',
           'degree',
           'degree_centrality',
           'in_degree',
-          'out_degree',
           'in_degree_centrality',
+          'out_degree',
           'out_degree_centrality',
           'page_rank',
           'rel_in_degree',
@@ -341,17 +353,17 @@ export const VIEW_CONFIG_SCHEMA = {
           'authorities',
           'hubs',
           'community',
+          // 'betweenness',
+          // 'closeness',
         ],
         "enumNames": [
-          'Betweenness',
           'Betweenness Centrality',
           'Closeness Centrality',
-          'Closeness',
           'Degree',
           'Degree Centrality',
           'In Degree',
-          'Out Degree',
           'In Degree Centrality',
+          'Out Degree',
           'Out Degree Centrality',
           'Page Rank',
           'Rel In Degree',
@@ -359,83 +371,35 @@ export const VIEW_CONFIG_SCHEMA = {
           'Authorities',
           'Hubs',
           'Community',
+          // 'Betweenness',
+          // 'Closeness',
         ]
       },
     },
   },
 }
 
-export const RECORDED_EVENTS = [
-  {
-    "type": "@",
-    "data": {
-      "type": "PRESS_BACKGROUND",
-      "payload": {
-        "x": 1552.63671875,
-        "y": 2627.20703125
-      },
-      "event": {}
-    },
-    "date": "2021-02-26T07:59:37.065Z",
-  },
-  {
-    "type": "@",
-    "data": {
-      "type": "ELEMENT_SELECTED",
-      "elementId": "http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2009:BF8875",
-      "event": {
-        "data": {
-          "originalEvent": {
-            "metaKey": false
-          }
-        }
-      }
-    },
-    "date": "2021-02-26T07:59:37.992Z",
-  },
-  {
-    "type": "@",
-    "data": {
-      "type": "ELEMENT_SELECTED",
-      "elementId": "http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2009:BJ7832",
-      "event": {
-        "data": {
-          "originalEvent": {
-            "metaKey": false
-          }
-        }
-      }
-    },
-    "date": "2021-02-26T07:59:39.640Z",
-  },
-  {
-    "type": "@",
-    "data": {
-      "type": "ELEMENT_SELECTED",
-      "elementId": "http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2011:BR5223",
-      "event": {
-        "data": {
-          "originalEvent": {
-            "metaKey": false
-          }
-        }
-      }
-    },
-    "date": "2021-02-26T07:59:41.945Z",
-  },
-  {
-    "type": "@",
-    "data": {
-      "type": "ELEMENT_SELECTED",
-      "elementId": "http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2012:BV1295",
-      "event": {
-        "data": {
-          "originalEvent": {
-            "metaKey": false
-          }
-        }
-      }
-    },
-    "date": "2021-02-26T07:59:44.725Z",
-  }
-]
+
+
+export const NODE_SIZE_RANGE_MAP = {
+  size: [50, 100],
+  betweenness: [0, 10],
+  betweenness_centrality: [0, 1],
+  closeness: [0, 10],
+  closeness_centrality: [0, 1],
+  degree: [0, 20],
+  degree_centrality: [0, 1],
+  in_degree: [0, 10],
+  in_degree_centrality: [0, 1],
+  out_degree: [0, 10],
+  out_degree_centrality: [0, 10],
+  page_rank: [0, 1],
+  rel_in_degree: [0, 1],
+  community: [0, 10],
+  year: [
+    1969,
+    2015
+  ],
+  authorities: [0, 1],
+  hubs: [0, 1],
+}

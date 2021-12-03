@@ -45,7 +45,6 @@ export const RenderEdge = ({
         graphRef.current.viewport.off('zoomed', onZoom)
       }
     }
-    
   }, [graphRef.current.viewport])
   const {
     view: {
@@ -58,28 +57,33 @@ export const RenderEdge = ({
   } = config
   return (
     <Graph.View
-              interactive
-              pointertap={() => {
-                cy.$(':selected').unselect()
-                element.select()
-              }}
-            >
-              {
-                labelVisible && (
-                  <Graph.Text
-                    ref={textRef}
-                    text={text}
-                    // style={{
-                    //   // position: 'absolute',
-                    //   // top: -40,
-                    //   // backgroundColor: DefaultTheme.palette.background.paper,
-                    //   fontSize: DEFAULT_FONT_SIZE
-                    // }}
-                    // isSprite
-                  />
-                )
-              }
-            </Graph.View>
+      interactive
+      pointertap={() => {
+        cy.$(':selected').unselect()
+        element.select()
+      }}
+    >
+      {
+        labelVisible && (
+          <Graph.Text
+            ref={textRef}
+            text={text}
+            style={TEXT_STYLE}
+            // style={{
+            //   // position: 'absolute',
+            //   // top: -40,
+            //   // backgroundColor: DefaultTheme.palette.background.paper,
+            //   fontSize: DEFAULT_FONT_SIZE
+            // }}
+            // isSprite
+          />
+        )
+      }
+    </Graph.View>
   )
 }
 
+
+const TEXT_STYLE = new PIXI.TextStyle({
+  fontSize: DEFAULT_FONT_SIZE,
+})
