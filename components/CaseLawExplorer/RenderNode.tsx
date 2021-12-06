@@ -91,13 +91,15 @@ export const RenderNode = (props: RenderNodeProps) => {
   )
   const size = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
 
-  const color = visualization.nodeColor ? calculateColor(
+  const color = visualization.nodeColor
+  ?  calculateColor(
     fillColor,
     item,
     graphEditorRef,
     visualizationRangeMap,
     visualization.nodeColor
-  ) : theme.palette.background.paper
+  )
+   : fillColor
   console.log('AA,', size ,fillColor, color)
   return (
     <Graph.View

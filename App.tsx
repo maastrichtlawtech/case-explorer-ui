@@ -41,11 +41,29 @@ const AWS_PROD_CONFIG = {
           "profile",
           "aws.cognito.signin.user.admin"
       ],
-      "redirectSignIn": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
-      "redirectSignOut": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+      "redirectSignIn": "http://localhost:19006/",
+      "redirectSignOut": "http://localhost:19006/",
       "responseType": "code"
   },
-  "federationTarget": "COGNITO_USER_POOLS"
+  "federationTarget": "COGNITO_USER_POOLS",
+  "aws_cognito_username_attributes": [
+      "EMAIL"
+  ],
+  "aws_cognito_social_providers": [],
+  "aws_cognito_signup_attributes": [
+      "EMAIL"
+  ],
+  "aws_cognito_mfa_configuration": "OFF",
+  "aws_cognito_mfa_types": [
+      "SMS"
+  ],
+  "aws_cognito_password_protection_settings": {
+      "passwordPolicyMinLength": 8,
+      "passwordPolicyCharacters": []
+  },
+  "aws_cognito_verification_mechanisms": [
+      "EMAIL"
+  ]
 }
 
 const AWS_DEV_CONFIG_OVERRIDE = {
@@ -106,7 +124,7 @@ const App = () => {
 
 const AppWithAuth = () => {
   const [authState, setAuthState] = React.useState();
-  const [user, setUser] = React.useState({});
+  const [user, setUser] = React.useState();
   // const [authState, setAuthState] = React.useState(AuthState.SignedIn);
   // const [user, setUser] = React.useState({});
   const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
