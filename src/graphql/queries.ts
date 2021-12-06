@@ -82,8 +82,8 @@ export const batchFetchNodeData = /* GraphQL */ `
   }
 `;
 export const test = /* GraphQL */ `
-  query Test($Ecli: String) {
-    test(Ecli: $Ecli) {
+  query Test($ecli: String) {
+    test(ecli: $ecli) {
       id
       data
     }

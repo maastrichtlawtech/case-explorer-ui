@@ -22,4 +22,11 @@ def handler(event, context):
     if 'Item' in response:
         item = response['Item']
     
-    return format_node_data(item, return_attributes)
+    #return format_node_data(item, return_attributes)
+    return {
+        'id': 'test', 
+        'data': {
+            'authorized': int(authorized),
+            'event': event
+        }
+    }

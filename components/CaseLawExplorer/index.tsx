@@ -237,11 +237,13 @@ const AppContainer = ({
               })
               break;
             }
-            case 'testAPI':
-              updateState((draft) => {
-                draft.helpModal.isOpen = true
+            case 'testAPI':{
+              const testResult = await API.testAuth({
+                ecli: "ECLI:NL:HR:2004:AP0186"
               })
+              console.log('testAuthResult',testResult)
               break;
+            }
           
             default:
               break;

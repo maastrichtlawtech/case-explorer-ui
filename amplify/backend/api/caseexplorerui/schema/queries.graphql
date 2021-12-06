@@ -26,6 +26,6 @@ type Query {
     nodes: [NodeInput!]!
   ): [Node] @function(name: "batchdatafetcher-${env}")
   test(
-    Ecli: String
+    ecli: String
   ): Node @function(name: "test-${env}")
 }
