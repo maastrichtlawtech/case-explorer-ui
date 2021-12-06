@@ -23,15 +23,15 @@ export const calculateNetworkStatisticsRange  = (networkStatistics: any): any =>
   return nodeSizeRangeMap
 }
 
+const getStatisticsValue = (
+  item: any, graphEditorRef: GraphEditorRef, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP,
+  ) => graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
+??  item.data[fieldName]
 export const calculateNodeSize = (item: object, graphEditorRef: GraphEditorRef, rangeMap: any, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP, ) => {
   if (!fieldName) {
     return 0//rangeMap.size[0]
   }
-  const value = graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
-  ??  item.data[fieldName]
-  // NETWORK_STATISTICS_NAMES.includes(fieldName)
-  //   ? graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
-  //   : item.data[fieldName]
+  const value = getStatisticsValue(item, graphEditorRef, fieldName)
   const fieldRange = rangeMap[fieldName]
   const sizeRangeGap = rangeMap.size[1] - rangeMap.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
@@ -56,8 +56,7 @@ export const calculateColor = (
   const fieldRange = rangeMap[fieldName]
   const sizeRangeGap = rangeMap.size[1] - rangeMap.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
-  const value = graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName]
-  ??  item.data[fieldName]
+  const value = getStatisticsValue(item, graphEditorRef, fieldName)
   const fieldRangeValue = (value ?? fieldRange[0]) - fieldRange[0]
   if (fieldRangeGap === 0) { 
     return perc2color(color, 0)

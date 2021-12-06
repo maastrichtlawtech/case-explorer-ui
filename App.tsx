@@ -41,8 +41,8 @@ const AWS_PROD_CONFIG = {
           "profile",
           "aws.cognito.signin.user.admin"
       ],
-      "redirectSignIn": "http://localhost:19006/",
-      "redirectSignOut": "http://localhost:19006/",
+      "redirectSignIn": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+      "redirectSignOut": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
       "responseType": "code"
   },
   "federationTarget": "COGNITO_USER_POOLS",
