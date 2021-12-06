@@ -8,7 +8,7 @@ import{  Lottie } from 'colay-ui/lab/Lottie'
 import{ Auth } from 'aws-amplify'
 import{ Illustration } from './Illustration'
 
-export const Signin = () => {
+export const Signin = ({ onSignin, onSignup }) => {
   return (
     <View
       style={{
@@ -44,8 +44,8 @@ export const Signin = () => {
         }}
        >
         <View style={{ width: '25vw', flexDirection: 'row', justifyContent: 'space-around' }}>
-          <Button variant="contained" onClick={() => Auth.federatedSignIn()}>Signin</Button>
-          <Button variant="contained" onClick={() => Auth.federatedSignIn()}>Signup</Button>
+          <Button variant="contained" onClick={onSignin}>Signin</Button>
+          <Button variant="contained" onClick={onSignup}>Signup</Button>
           </View>
        </View>
        {/* <Illustration/> */}

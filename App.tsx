@@ -1,6 +1,5 @@
-import { AuthState,onAuthUIStateChange, } from '@aws-amplify/ui-components';
-import { AmplifyAuthenticator,  } from '@aws-amplify/ui-react';
-import { Button } from "@mui/material";
+import { AuthState,onAuthUIStateChange,  } from '@aws-amplify/ui-components';
+import { Button, CircularProgress } from "@mui/material";
 import Amplify, { Auth,  Hub,  }  from "aws-amplify";
 import React from 'react';
 import cytoscape from 'cytoscape'
@@ -15,7 +14,7 @@ import * as API from './components/CaseLawExplorer/API';
 import {TermsOfService} from './components/CaseLawExplorer/components/TermsOfService';
 import * as R from 'colay/ramda';
 import {useMeasure, View} from 'colay-ui';
-import { Signin  }from './components/CaseLawExplorer/Signin'
+import { Signin   }from './components/CaseLawExplorer/Signin'
 // import { TermsOfService } from './components/TermsOfService';
 
 spread(cytoscape)
@@ -122,23 +121,36 @@ const App = () => {
   )
 }
 
-const AppWithAuth = () => {
+const AppContainer = () => {
   const [authState, setAuthState] = React.useState();
-  const [user, setUser] = React.useState();
-  // const [authState, setAuthState] = React.useState(AuthState.SignedIn);
-  // const [user, setUser] = React.useState({});
+  const [state, setState] = React.useState({
+    user: null,
+    isLoading: true
+  })
   const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
 
   React.useEffect(() => {
     Hub.listen('auth', ({ payload: { event, data } }) => {
-      console.log(event, data)
       switch (event) {
         case 'signIn':
-        case 'cognitoHostedUI':
-          getUser().then(userData => setUser(userData));
+        case 'cognitoHostedUI':{
+          getUser().then(userData => {
+            setState({
+              ...state,
+              isLoading: false,
+              user: userData,
+            })
+          console.log('signIn', userData)
+          });
           break;
+        }
+          
         case 'signOut':
-          setUser(null);
+          setState({
+            ...state,
+            isLoading: false,
+            user: null
+          })
           break;
         case 'signIn_failure':
         case 'cognitoHostedUI_failure':
@@ -147,32 +159,35 @@ const AppWithAuth = () => {
       }
     });
 
-    // getUser().then(userData => setUser(userData));
+    getUser().then(userData => setState({
+      ...state,
+      isLoading: false,
+      user: userData,
+    }));
   }, []);
-    // React.useEffect(() => {
-    //   return onAuthUIStateChange((nextAuthState, authData) => {
-    //         setAuthState(nextAuthState);
-    //         setUser(authData)
-    //     });
-    // }, []);
-    //authState === AuthState.SignedIn && 
-    console.log('USER: ', user)
+  if (state.isLoading) {
+    return (
+      <View
+        style={{
+          width:'100%',
+          height:'100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <CircularProgress />
+      </View>
+    )
+  }
   return  <>
   {
-    user ? (
+    state.user ? (
       <App />
     ) : (
-      <Signin/>
-        // <AmplifyAuthenticator />
-        // <Button
-        //   onClick={() => Auth.federatedSignIn()}
-        // >Signin</Button>
-      // <AmplifyAuthenticator>
-      //   <AmplifySignIn
-      //     // headerText="My Custom Sign In Text"
-      //     slot="sign-in"
-      //   ></AmplifySignIn>
-      // </AmplifyAuthenticator>
+      <Signin
+        onSignin={() => Auth.federatedSignIn()}
+        onSignup={() => Auth.federatedSignIn()}
+      />
   )
   }
   {
@@ -189,7 +204,6 @@ const AppWithAuth = () => {
   }
   </>
 }
-// const AppWithAuth = withAuthenticator(App);
 
 // const AppContainer = () => {
 //   React.useEffect(() => {
@@ -232,7 +246,7 @@ const AppWithAuth = () => {
 //   )
 // }
 
-export default AppWithAuth // App
+export default AppContainer // App
 
 
 function detectBrowser() { 
@@ -250,8 +264,3 @@ function detectBrowser() {
       return 'Unknown';
   }
 } 
-const MySignin = () => {
-  return (
-    <Button>Hee</Button>
-  )
-}
