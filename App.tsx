@@ -185,8 +185,20 @@ const AppContainer = () => {
       <App />
     ) : (
       <Signin
-        onSignin={() => Auth.federatedSignIn()}
-        onSignup={() => Auth.federatedSignIn()}
+        onSignin={() => {
+          Auth.federatedSignIn()
+          setState({
+            ...state,
+            isLoading: true
+          })
+        }}
+        onSignup={() => {
+          Auth.federatedSignIn()
+          setState({
+            ...state,
+            isLoading: true
+          })
+        }}
       />
   )
   }
