@@ -94,8 +94,8 @@ const DEFAULT_FILTERING = {
 }
 
 const DEFAULT_VISUALIZATION = {
-  // nodeSize: null,
-  // nodeColor: null
+  nodeSize: 'in_degree',
+  nodeColor: 'community',
 }
 
 const AppContainer = ({
@@ -105,7 +105,6 @@ const AppContainer = ({
   height,
   ...rest
 }) => {
-  const [user] = useUser()
   const alertRef= React.useRef(null)
   const configRef = React.useRef({
     visualization: DEFAULT_VISUALIZATION,
@@ -259,35 +258,12 @@ const AppContainer = ({
       layout: Graph.Layouts.cose,
       zoom: 0.2,
       nodes: {},
-      // clusters: [
-      //   {
-      //     id: '123',
-      //     name: 'SimpleCluster',
-      //     ids: [
-      //       'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:3019',
-      //       'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:644',
-      //       'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
-      //     ],
-      //     childClusterIds: []
-      //   },
-      //   {
-      //     id: '1234',
-      //     name: 'SimpleCluster2',
-      //     ids: [
-      //       'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:3019',
-      //       'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2015:644',
-      //       'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
-      //     ],
-      //     childClusterIds: []
-      //   }
-      // ]
     },
     preferencesModal: {
       // isOpen: true,
     },
     settingsBar: {
-      isOpen: true,
-      // forms: [AUTO_CREATED_SCHEMA,FETCH_SCHEMA, VIEW_CONFIG_SCHEMA, {...FILTER_SCHEMA,  formData: configRef.current.filtering}, ],
+      // isOpen: true,
       forms: [
         { ...FETCH_SCHEMA, formData: configRef.current.fetching },
         {...VIEW_CONFIG_SCHEMA, formData: configRef.current.visualization},
@@ -300,7 +276,7 @@ const AppContainer = ({
       },
     },
     dataBar: {
-      isOpen: true,
+      // isOpen: true,
       editable: false,
       header: DataBarHeader,
       sort: (a, b) => {
@@ -322,8 +298,8 @@ const AppContainer = ({
       // autoOpen: true,
       eventRecording: false,
       actions: {
-        // add: { visible: false },
-        // delete: { visible: false },
+        add: { visible: false },
+        delete: { visible: false },
         layout: {
           schema: {
             title: 'Layout',
@@ -556,8 +532,11 @@ const AppContainer = ({
     >
       <GraphEditor
         {...controllerProps}
-        // {...R.omit(['eventHistory', ])(controllerProps)}
-        extraData={[configRef.current]}
+        extraData={[
+          configRef.current, 
+          configRef.current.visualizationRangeMap,
+          controllerProps.netowrkStatistics?.local
+        ]}
         style={{ width, height }}
         renderNode={(props) => (
           <RenderNode
@@ -612,12 +591,12 @@ const AppContainer = ({
         onNetworkStatisticsCalculated={({
           networkStatistics
         }) => {
+          configRef.current.visualizationRangeMap = calculateNetworkStatisticsRange(networkStatistics)
           controller.update((draft) => {
             draft.networkStatistics = {
               local: networkStatistics,
             }
           })
-          configRef.current.visualizationRangeMap = calculateNetworkStatisticsRange(networkStatistics)
           alertRef.current.alert({
             type: 'success',
             text: `Network Statistics Calculated!`

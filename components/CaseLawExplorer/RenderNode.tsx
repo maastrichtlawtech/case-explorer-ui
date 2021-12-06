@@ -4,6 +4,7 @@ import * as PIXI from 'pixi.js'
 import { Graph,  } from 'perfect-graph/components'
 import { RenderNode as RenderNodeType, GraphEditorRef } from 'perfect-graph/type'
 import { NODE_SIZE_RANGE_MAP } from './constants'
+import { useGraphEditor } from 'perfect-graph/hooks'
 import { 
   calculateNodeSize,
   calculateColor,
@@ -27,6 +28,7 @@ export const RenderNode = (props: RenderNodeProps) => {
    graphEditorRef,
    config,
  } = props
+ 
  let text =  R.takeLast(6, `${label}`)//item.id
  if (labelPath[0] === 'id' ) {
   const arr =  R.reverse(label.split(':'))
@@ -79,28 +81,28 @@ export const RenderNode = (props: RenderNodeProps) => {
       labelVisible,
     },
   } = config
-  const fillColor = hasSelectedEdge
+  const color = hasSelectedEdge
   ? fill.edgeSelected
   : (element.selected()
     ? fill.selected
     : (
       element.hovered()
         ? fill.hovered
-        : fill.default
+        : (
+          visualization.nodeColor
+            ?  calculateColor(
+              fill.default,
+              item,
+              graphEditorRef,
+              visualizationRangeMap,
+              visualization.nodeColor
+            )
+            : fill.default
+        )
     )
   )
   const size = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
 
-  const color = visualization.nodeColor
-  ?  calculateColor(
-    fillColor,
-    item,
-    graphEditorRef,
-    visualizationRangeMap,
-    visualization.nodeColor
-  )
-   : fillColor
-  console.log('AA,', size ,fillColor, color)
   return (
     <Graph.View
       width={width + (width * size)}
