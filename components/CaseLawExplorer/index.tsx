@@ -143,8 +143,8 @@ const AppContainer = ({
         "DataSources": [
             "RS"
         ],
-        Keywords: "werkgever* + aansprake* + BW",
-        Articles: "Wetboek van Strafrecht, Artikel 420bis",
+        // Keywords: "werkgever* + aansprake* + BW",
+        // Articles: "Wetboek van Strafrecht, Artikel 420bis",
         // "Date": [
         //     1900,
         //     2021
