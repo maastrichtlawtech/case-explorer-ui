@@ -27,6 +27,8 @@ def handler(event, context):
         'id': 'test', 
         'data': {
             'authorized': int(authorized),
-            'event': event
+            'event': event,
+            'context_cognito_id': context.identity.cognito_identity_id,
+            'context_pool_id': context.identity.cognito_identity_pool_id
         }
     }
