@@ -71,53 +71,32 @@ def handler(event, context):
         start_p = time()
         page_ranks = get_pagerank(graph)
         print(f'get page rank: took {time()-start_p} s.')
-        network_stats = {
-            'degree': degrees,
-            'in_degree': in_degrees,
-            'out_degree': out_degrees,
-            'degree_centrality': degree_centralities,
-            'in_degree_centrality': in_degree_centralities,
-            'out_degree_centrality': out_degree_centralities,
-            'betweenness_centrality': betweenness_centralities,
-            'closeness_centrality': closeness_centralities,
-            'page_rank': page_ranks,
-            'hubs': hubs,
-            'authorities': authorities
-        }
-        """
-        @TODO: after testing
-        network_stats = {
-            'degree': degree,
-            'in_degree': graph.in_degree(),
-            'out_degree': graph.out_degree(),
-            'degree_centrality': degree_centrality(graph),
-            'in_degree_centrality': in_degree_centrality(graph),
-            'out_degree_centrality': out_degree_centrality(graph),
-            'betweenness_centrality': betweenness_centrality(graph),
-            'closeness_centrality': closeness_centrality(graph),
-            'page_rank': get_pagerank(graph),
-            'hubs': hubs,
-            'authorities': authorities
-        }
-        """
-        print(f'get other stats: took {time()-start_p} s.')
-    else:
-        network_stats = {}
+
+        start_p = time()
+        # for relative in-degree we sort on date
+        derive_date = lambda k: k['data']['date_decision'] if 'date_decision' in k['data'] and k['data']['date_decision'] != '' else '1900-01-01' # @ TODO: which default date?
+        nodes.sort(key=derive_date, reverse=True)
+        for i, node in enumerate(nodes):
+            node_id = node['id']
+            statistics[node_id] = {
+                'degree': degrees[node_id],
+                'in-degree': in_degrees[node_id],
+                'out-degree': out_degrees[node_id],
+                'degree centrality': degree_centralities[node_id],
+                'in-degree centrality': in_degree_centralities[node_id],
+                'out-degree centrality': out_degree_centralities[node_id],
+                'relative in-degree': in_degrees[node_id] / float(max(i, 1)),
+                'pageRank': page_ranks[node_id],
+                'authorities': authorities[node_id],
+                'hubs': hubs[node_id],
+                'betweenness centrality': betweenness_centralities[node_id],
+                'closeness centrality': closeness_centralities[node_id],
+                'community': str(partition[node_id])
+            }
+            if 'date_decision' in node['data']:
+                statistics[node_id]['year'] = node['data']['date_decision'][:4]
+        print(f'STATS: add to nodes took: {time() - start_p} s.')
     print(f'STATS: compute network took: {time() - start} s.')
-    start = time()
-    # for relative in-degree we sort on date
-    derive_date = lambda k: k['data']['date_decision'] if 'date_decision' in k['data'] and k['data']['date_decision'] != '' else '1900-01-01' # @ TODO: which default date?
-    nodes.sort(key=derive_date, reverse=True)
-    for i, node in enumerate(nodes):
-        node_id = node['id']
-        statistics[node_id] = {'community': str(partition[node_id])}
-        for var in network_stats.keys():
-            statistics[node_id][var] = network_stats[var][node_id]
-        if 'in_degree' in network_stats:
-            statistics[node_id]['rel_in_degree'] = network_stats['in_degree'][node_id] / float(max(i, 1))
-        if 'date_decision' in node['data']:
-            statistics[node_id]['year'] = node['data']['date_decision'][:4]
-    print(f'STATS: add to nodes took: {time() - start} s.')
 
     start_p = time()
     sub_statistics = dict()
