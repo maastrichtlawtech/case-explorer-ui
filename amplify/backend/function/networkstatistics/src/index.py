@@ -91,7 +91,7 @@ def handler(event, context):
                 'hubs': hubs[node_id],
                 'betweenness centrality': betweenness_centralities[node_id],
                 'closeness centrality': closeness_centralities[node_id],
-                'community': str(partition[node_id])
+                'community': partition[node_id]
             }
             if 'date_decision' in node['data']:
                 statistics[node_id]['year'] = node['data']['date_decision'][:4]
