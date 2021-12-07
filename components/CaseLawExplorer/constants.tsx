@@ -289,20 +289,7 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
     }
   }
 }
-// authorities
-// betweenness_centrality
-// closeness_centrality
-// community:
-// degree:
-// degree_centrality:
-// hubs:
-// in_degree
-// in_degree_centrality
-// out_degree:
-// out_degree_centrality:
-// page_rank:
-// rel_in_degree
-// year:
+
 export const VIEW_CONFIG_SCHEMA = {
   schema: {
     title: 'Visualisation',
