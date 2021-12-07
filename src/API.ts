@@ -306,7 +306,7 @@ export type BatchFetchNodeDataQuery = {
 };
 
 export type TestQueryVariables = {
-  Ecli?: string | null,
+  ecli?: string | null,
 };
 
 export type TestQuery = {
