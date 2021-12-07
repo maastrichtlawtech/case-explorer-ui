@@ -143,21 +143,6 @@ const NODE_SIZE = {
 
 
 
-const NETWORK_STATISTICS_NAMES = [
-  'betweenness',
-  'betweenness_centrality',
-  'closeness',
-  'closeness_centrality',
-  'degree',
-  'degree_centrality',
-  'in_degree',
-  'in_degree_centrality',
-  'out_degree',
-  'out_degree_centrality',
-  'page_rank',
-  'rel_in_degree',
-  'community'
-]
 
 const TEXT_STYLE = new PIXI.TextStyle({
   fontSize: DEFAULT_FONT_SIZE,

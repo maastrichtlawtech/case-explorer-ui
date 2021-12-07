@@ -97,7 +97,7 @@ const DEFAULT_FILTERING = {
 }
 
 const DEFAULT_VISUALIZATION = {
-  nodeSize: 'in_degree',
+  nodeSize: 'in-degree',
   nodeColor: 'community',
 }
 
@@ -269,17 +269,17 @@ const AppContainer = ({
         local:(a, b) => {
           const prioritizeKeys = [
             'degree',
-            'in_degree',
-            'out_degree',
-            'degree_centrality',
-            'in_degree_centrality',
-            'out_degree_centrality',
-            'rel_in_degree',
-            'page_rank',
+            'in-degree',
+            'out-degree',
+            'degree centrality',
+            'in-degree centrality',
+            'out-degree centrality',
+            'relative in-degree',
+            'pageRank',
             'authorities',
             'hubs',
-            'betweenness_centrality',
-            'closeness_centrality',
+            'betweenness centrality',
+            'closeness centrality',
             'community',
             'year',
           ]
@@ -484,8 +484,8 @@ const AppContainer = ({
                 return (
                   R.inBetween(year[0], year[1])(stats.year)
                   && R.inBetween(degree[0], degree[1])(stats.degree)
-                  && R.inBetween(indegree[0], indegree[1])(stats.in_degree)
-                  && R.inBetween(outdegree[0], outdegree[1])(stats.out_degree)
+                  && R.inBetween(indegree[0], indegree[1])(stats['in-degree'])
+                  && R.inBetween(outdegree[0], outdegree[1])(stats['out-degree'])
                 )
               },
               settings: {
