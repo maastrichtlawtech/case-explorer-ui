@@ -12,7 +12,9 @@ export const Signin = ({ onSignin, onSignup }) => {
   return (
     <View
       style={{
-        alignItems: 'center'
+        alignItems: 'center',
+        overflow: 'scroll',
+        flex: 1,
       }}
     >
        <Typography

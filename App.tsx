@@ -31,6 +31,7 @@ const AWS_PROD_CONFIG = {
   "aws_cognito_region": "eu-central-1",
   "aws_user_pools_id": "eu-central-1_Iia5Ube9G",
   "aws_user_pools_web_client_id": "529do26g6icslepgrvcelapu8v",
+  "aws_cognito_identity_pool_id": "eu-central-1:9d57866c-018c-48e4-989f-55050d6be4b8",
   "oauth": {
       "domain": "case-law-explorer-dev.auth.eu-central-1.amazoncognito.com",
       "scope": [
@@ -44,7 +45,7 @@ const AWS_PROD_CONFIG = {
       "redirectSignOut": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
       "responseType": "code"
   },
-  "federationTarget": "COGNITO_USER_POOLS",
+  "federationTarget": "COGNITO_IDENTITY_POOLS",
   "aws_cognito_username_attributes": [
       "EMAIL"
   ],
@@ -185,8 +186,13 @@ const AppContainer = () => {
       <App />
     ) : (
       <Signin
-        onSignin={() => {
-          Auth.federatedSignIn()
+        onSignin={async () => {
+          await Auth.federatedSignIn(
+          //   {
+          //   customProvider: 'COGNITO_IDENTITY_POOLS',
+          //   provider: 'COGNITO',
+          // }
+          )
           setState({
             ...state,
             isLoading: true

@@ -29,12 +29,14 @@ export const RenderEdge = ({
   })
   React.useEffect(() => {
     const onZoom = () => {
-      const xScale = 1/graphRef.current.viewport.scale.x
+      if (textRef.current) {
+        const xScale = 1/graphRef.current.viewport.scale.x
         const yScale = 1/graphRef.current.viewport.scale.y
         if (xScale >= 1 && xScale <= 5){
           textRef.current.scale.x = xScale
           textRef.current.scale.y = yScale
         }
+      }
     }
     if (graphRef.current.viewport) {
       onZoom()

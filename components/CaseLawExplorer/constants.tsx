@@ -85,13 +85,28 @@ export const getFilterSchema = (props: {} = {}) => {
         }
       },
       'degree': {
-        'ui:field': SliderUIField,
+        "ui:options": {
+          "addable": false,
+          "orderable": false,
+          "removable": false
+        }
+        // 'ui:field': SliderUIField,
       },
       'indegree': {
-        'ui:field': SliderUIField,
+        "ui:options": {
+          "addable": false,
+          "orderable": false,
+          "removable": false
+        }
+        // 'ui:field': SliderUIField,
       },
       'outdegree': {
-        'ui:field': SliderUIField,
+        "ui:options": {
+          "addable": false,
+          "orderable": false,
+          "removable": false
+        }
+        // 'ui:field': SliderUIField,
       },
     }
   }
@@ -321,12 +336,12 @@ export const VIEW_CONFIG_SCHEMA = {
           'Closeness Centrality',
           'Degree',
           'Degree Centrality',
-          'In Degree',
-          'In Degree Centrality',
-          'Out Degree',
-          'Out Degree Centrality',
-          'Page Rank',
-          'Rel In Degree',
+          'In-Degree',
+          'In-Degree Centrality',
+          'Out-Degree',
+          'Out-Degree Centrality',
+          'PageRank',
+          'Rel In-Degree',
           "Year",
           // 'Betweenness',
           // 'Closeness',
@@ -361,12 +376,12 @@ export const VIEW_CONFIG_SCHEMA = {
           'Closeness Centrality',
           'Degree',
           'Degree Centrality',
-          'In Degree',
-          'In Degree Centrality',
-          'Out Degree',
-          'Out Degree Centrality',
-          'Page Rank',
-          'Rel In Degree',
+          'In-Degree',
+          'In-Degree Centrality',
+          'Out-Degree',
+          'Out-Degree Centrality',
+          'PageRank',
+          'Rel In-Degree',
           "Year",
           'Authorities',
           'Hubs',
@@ -382,7 +397,7 @@ export const VIEW_CONFIG_SCHEMA = {
 
 
 export const NODE_SIZE_RANGE_MAP = {
-  size: [50, 100],
+  size: [50, 200],
   betweenness: [0, 10],
   betweenness_centrality: [0, 1],
   closeness: [0, 10],
@@ -402,4 +417,45 @@ export const NODE_SIZE_RANGE_MAP = {
   ],
   authorities: [0, 1],
   hubs: [0, 1],
+}
+
+
+export const LAYOUT_SCHEMA = {
+  schema: {
+    title: 'Layout',
+    properties: {
+      name: {
+        type: 'string',
+        enum: [
+          'cose', 'breadthfirst', 'circle', 'grid',
+          'euler', 'dagre', 'spread',
+        ],
+      },
+      animationDuration: {
+        type: 'number',
+        minimum: 0,
+        maximum: 10000,
+      },
+      refresh: {
+        type: 'number',
+        minimum: 0,
+        maximum: 100,
+      },
+      maxIterations: {
+        type: 'number',
+        minimum: 0,
+        maximum: 1000,
+      },
+      maxSimulationTime: {
+        type: 'number',
+        minimum: 0,
+        maximum: 1000,
+      },
+      expansion: {
+        type: 'number',
+        minimum: 0,
+        maximum: 1,
+      },
+    },
+  }
 }

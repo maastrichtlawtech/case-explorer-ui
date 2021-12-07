@@ -16,6 +16,8 @@ export type RenderNodeProps = Parameters<RenderNodeType>[0]
 
 const DEFAULT_FONT_SIZE = 20
 const TOP_SCALE = 3.1
+const SIZE_MULTIPLIER = 2
+
 export const RenderNode = (props: RenderNodeProps) => {
   const {
     item, element, cy, theme,
@@ -48,6 +50,7 @@ export const RenderNode = (props: RenderNodeProps) => {
   })
   React.useEffect(() => {
     const onZoom = () => {
+      if (textRef.current) {
         const xScale = 1/graphRef.current.viewport.scale.x
         const yScale = 1/graphRef.current.viewport.scale.y
         localDataRef.current.scale.x = xScale
@@ -61,6 +64,7 @@ export const RenderNode = (props: RenderNodeProps) => {
           textRef.current.y = top
           return
         }
+      }
     }
     if (graphRef.current.viewport) {
       onZoom()
@@ -101,14 +105,16 @@ export const RenderNode = (props: RenderNodeProps) => {
         )
     )
   )
-  const size = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
-
+  const sizePerc = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
+  const calcWidth = width + (width * sizePerc * SIZE_MULTIPLIER)
+  const calcHeight = height + (height * sizePerc * SIZE_MULTIPLIER)
+  const calcRadius = radius + (radius * sizePerc * SIZE_MULTIPLIER)
   return (
     <Graph.View
-      width={width + (width * size)}
-      height={height + (height * size)}
+      width={calcWidth}
+      height={calcHeight}
+      radius={calcRadius}
       fill={color}
-      radius={radius}
       pointertap={(e) => {
         cy.$(':selected').unselect()
         element.select()
@@ -119,7 +125,7 @@ export const RenderNode = (props: RenderNodeProps) => {
           <Graph.Text
             ref={textRef}
             x={localDataRef.current.text.left}
-            y={localDataRef.current.text.top - size/3}
+            y={localDataRef.current.text.top - calcHeight/3}
             style={TEXT_STYLE}
             text={text}
             // isSprite

@@ -8,6 +8,7 @@ import { View } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
 import * as R from 'colay/ramda'
 import { Graph } from 'perfect-graph/components'
+import { getHitAreaCenter } from 'perfect-graph/utils'
 import { GraphEditor, GraphEditorProps } from 'perfect-graph/components/GraphEditor'
 import { EVENT } from 'perfect-graph/constants'
 import {
@@ -31,6 +32,7 @@ import {
    getFilterSchema,
     VIEW_CONFIG_SCHEMA,
     NODE_SIZE_RANGE_MAP,
+    LAYOUT_SCHEMA,
    } from './constants'
 import defaultData from './data'
 import { QueryBuilder } from './QueryBuilder'
@@ -51,6 +53,7 @@ export const ACTIONS = {
   TEST_API: 'TEST_API',
 }
 
+const DEFAULT_LAYOUT = Graph.Layouts.cose
 const NODE_LIMIT = 1000
 const HELP_VIDEO_ID = "OrzMIhLpVps"
 
@@ -122,6 +125,7 @@ const AppContainer = ({
     }
   }), [])
 
+
   const THEMES = {
     Dark: DarkTheme,
     Default: DefaultTheme
@@ -139,6 +143,8 @@ const AppContainer = ({
         "DataSources": [
             "RS"
         ],
+        Keywords: "werkgever* + aansprake* + BW",
+        Articles: "Wetboek van Strafrecht, Artikel 420bis",
         // "Date": [
         //     1900,
         //     2021
@@ -254,10 +260,49 @@ const AppContainer = ({
     // nodes: [],
     // edges: [],
     // events: RECORDED_EVENTS,
+    networkStatistics: {
+      local: {},
+      global: {},
+      sort: {
+        local:(a, b) => {
+          const prioritizeKeys = [
+            'degree',
+            'in_degree',
+            'out_degree',
+            'degree_centrality',
+            'in_degree_centrality',
+            'out_degree_centrality',
+            'rel_in_degree',
+            'page_rank',
+            'authorities',
+            'hubs',
+            'betweenness_centrality',
+            'closeness_centrality',
+            'community',
+            'year',
+          ]
+          const aIndex = prioritizeKeys.findIndex((val) => val ===a.key)
+          const bIndex = prioritizeKeys.findIndex((val) => val ===b.key)
+          if (aIndex === -1 && bIndex === -1) {
+            return R.toLower(a.key) < R.toLower(b.key) ? -1 : 1
+          }
+          if (aIndex !== -1 && bIndex !== -1) {
+            return aIndex < bIndex ? -1 : 1
+          }
+          return aIndex > bIndex ? -1 : 1
+        }
+      }
+    },
     graphConfig: {
-      layout: Graph.Layouts.cose,
-      zoom: 0.2,
+      layout: DEFAULT_LAYOUT,
+      zoom: 0.1,
       nodes: {},
+      edges: {
+        view: {
+          labelVisible: false
+        }
+      },
+     
     },
     preferencesModal: {
       // isOpen: true,
@@ -280,7 +325,7 @@ const AppContainer = ({
       editable: false,
       header: DataBarHeader,
       sort: (a, b) => {
-        const prioritizeKeys = ['ecli', 'cited_by',]
+        const prioritizeKeys = ['ecli_opinion', 'cited_by','summary', 'url_publication']
         const aIndex = prioritizeKeys.findIndex((val) => val ===a.key)
         const bIndex = prioritizeKeys.findIndex((val) => val ===b.key)
         if (aIndex === -1 && bIndex === -1) {
@@ -300,40 +345,7 @@ const AppContainer = ({
       actions: {
         add: { visible: false },
         delete: { visible: false },
-        layout: {
-          schema: {
-            title: 'Layout',
-            properties: {
-              name: {
-                type: 'string',
-                enum: [
-                  'cose', 'breadthfirst', 'circle', 'grid',
-                  'euler', 'dagre', 'spread',
-                ],
-              },
-              animationDuration: {
-                type: 'number',
-                minimum: 0,
-                maximum: 10000,
-              },
-              refresh: {
-                type: 'number',
-                minimum: 0,
-                maximum: 100,
-              },
-              maxIterations: {
-                type: 'number',
-                minimum: 0,
-                maximum: 1000,
-              },
-              maxSimulationTime: {
-                type: 'number',
-                minimum: 0,
-                maximum: 1000,
-              },
-            },
-          }
-        }
+        layout: LAYOUT_SCHEMA,
       },
       theming: {
         options: [
@@ -342,7 +354,7 @@ const AppContainer = ({
             value: 'Dark',
           },
           {
-            name: 'Default',
+            name: 'Bright',
             value: 'Default',
           }
         ],
@@ -360,6 +372,7 @@ const AppContainer = ({
     }, draft) => {
       const {
         cy,
+        context: graphEditorContext
       } = graphEditor
       const element = cy.$id(elementId)
       const {
@@ -428,7 +441,7 @@ const AppContainer = ({
           const clusterItemIds = draft.nodes.filter((item) => {
             const element = cy.$id(item.id)
             return (
-              R.inBetween(year[0], year[1])(item.data.year)
+              R.inBetween(year[0], year[1])(graphEditorContext.networkStatistics?.local?.[item.id]?.year)
               && R.inBetween(degree[0], degree[1])(element.degree())
               && R.inBetween(indegree[0], indegree[1])(element.indegree())
               && R.inBetween(outdegree[0], outdegree[1])(element.outdegree())
@@ -439,7 +452,8 @@ const AppContainer = ({
             id: R.uuid(),
             name,
             ids: clusterItemIds,
-            childClusterIds: []
+            childClusterIds: [],
+            position: getHitAreaCenter(graphEditor)
           })
           return false
         }
@@ -490,6 +504,7 @@ const AppContainer = ({
           const {
             value
           } = payload
+          console.log('CHANGE_THEME',payload,value)
           draft.graphConfig.theme = THEMES[value]
           changeMUITheme(value)
           draft.actionBar.theming.value = value
@@ -514,7 +529,7 @@ const AppContainer = ({
             w: hitArea.width - 2*margin,
             h: hitArea.height - 2*margin,
           }
-          const layout = Graph.Layouts.cose
+          const layout = DEFAULT_LAYOUT
             draft.graphConfig!.layout = {
               ...layout,
               animationDuration: 0,
@@ -593,9 +608,7 @@ const AppContainer = ({
         }) => {
           configRef.current.visualizationRangeMap = calculateNetworkStatisticsRange(networkStatistics)
           controller.update((draft) => {
-            draft.networkStatistics = {
-              local: networkStatistics,
-            }
+            draft.networkStatistics.local  = networkStatistics
           })
           alertRef.current.alert({
             type: 'success',
@@ -618,15 +631,13 @@ const AppContainer = ({
             const nodes = R.take(NODE_LIMIT, nodes_)
             draft.nodes = nodes
             draft.edges = filterEdges(nodes)(edges)
-            draft.networkStatistics = {
-              local: networkStatistics
-            }
+            draft.networkStatistics.local = networkStatistics
             draft.isLoading = false
           })
           setTimeout(() => {
             controller.update((draft) => {
             draft.graphConfig!.layout = {
-              ...Graph.Layouts.cose,
+              ...DEFAULT_LAYOUT,
               componentSpacing: 80
             }
             })
@@ -675,12 +686,12 @@ const AppContainer = ({
 
 const MUI_THEMES = {
   Dark: MUIDarkTheme,
-  Light: MUILightTheme,
+  Default: MUILightTheme,
 }
 
 
 export default (props: Props) => {
-  const [theme, setTheme] = React.useState(MUI_THEMES.Light)
+  const [theme, setTheme] = React.useState(MUI_THEMES.Default)
   return (
     <MuiThemeProvider theme={theme}>
       <AppContainer
