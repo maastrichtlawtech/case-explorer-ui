@@ -1,5 +1,10 @@
 {
   "permissions": {
+    "auth": {
+      "caseexploreruiauth": [
+        "read"
+      ]
+    },
     "storage": {
       "Caselaw:@model(appsync)": [
         "read"

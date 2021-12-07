@@ -12,7 +12,14 @@
               "description": "caselawexplorer-api"
             }
           },
-          "additionalAuthenticationProviders": []
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+              "userPoolConfig": {
+                "userPoolId": "authcaseexploreruiauth"
+              }
+            }
+          ]
         }
       }
     }
@@ -60,6 +67,13 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruiauth",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
         {
           "category": "api",
           "resourceName": "caseexplorerui",
