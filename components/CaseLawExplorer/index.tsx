@@ -271,7 +271,7 @@ const AppContainer = ({
             'degree',
             'in-degree',
             'out-degree',
-            'degree-centrality',
+            'degree centrality',
             'in-degree centrality',
             'out-degree centrality',
             'relative in-degree',
