@@ -32,6 +32,14 @@
       "Type": "String",
       "Default": "authcaseexploreruiauthUserPoolId"
     },
+    "apicaseexploreruiGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apicaseexploreruiGraphQLAPIEndpointOutput"
+    },
+    "apicaseexploreruiGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apicaseexploreruiGraphQLAPIKeyOutput"
+    },
     "ddbTableName": {
       "Type": "String"
     }
@@ -120,6 +128,12 @@
             },
             "AUTH_CASEEXPLORERUIAUTH_USERPOOLID": {
               "Ref": "authcaseexploreruiauthUserPoolId"
+            },
+            "API_CASEEXPLORERUI_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apicaseexploreruiGraphQLAPIEndpointOutput"
+            },
+            "API_CASEEXPLORERUI_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apicaseexploreruiGraphQLAPIKeyOutput"
             },
             "DDB_TABLE_NAME": {
               "Ref": "ddbTableName"
@@ -234,6 +248,34 @@
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "appsync:GraphQL"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:appsync:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":apis/",
+                      {
+                        "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
+                      },
+                      "/types/Query/*"
+                    ]
+                  ]
+                }
+              ]
+            },
             {
               "Effect": "Allow",
               "Action": [

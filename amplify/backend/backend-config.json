@@ -9,7 +9,8 @@
             "authenticationType": "API_KEY",
             "apiKeyConfig": {
               "apiKeyExpirationDays": 365,
-              "description": "caselawexplorer-api"
+              "apiKeyExpirationDate": "2022-12-09T13:45:56.793Z",
+              "description": ""
             }
           },
           "additionalAuthenticationProviders": [
@@ -17,6 +18,19 @@
               "authenticationType": "AMAZON_COGNITO_USER_POOLS",
               "userPoolConfig": {
                 "userPoolId": "authcaseexploreruiauth"
+              }
+            },
+            {
+              "authenticationType": "AWS_IAM"
+            },
+            {
+              "authenticationType": "OPENID_CONNECT",
+              "openIDConnectConfig": {
+                "name": "SURFconext",
+                "issuerUrl": "https://connect.test.surfconext.nl/",
+                "clientId": "dev.d11iy22xsphp3a.amplifyapp.com",
+                "authTTL": "100",
+                "iatTTL": "100"
               }
             }
           ]
@@ -68,17 +82,19 @@
       "service": "Lambda",
       "dependsOn": [
         {
+          "category": "api",
+          "resourceName": "caseexplorerui",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        },
+        {
           "category": "auth",
           "resourceName": "caseexploreruiauth",
           "attributes": [
             "UserPoolId"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
           ]
         }
       ]
