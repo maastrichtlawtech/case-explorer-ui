@@ -3,30 +3,12 @@
   "serviceConfiguration": {
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "API_KEY",
-      "expirationTime": 365,
-      "apiKeyExpirationDate": "2022-12-09T13:45:56.793Z",
-      "keyDescription": ""
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authcaseexploreruiauth"
     },
-    "additionalAuthTypes": [
-      {
-        "mode": "AMAZON_COGNITO_USER_POOLS",
-        "cognitoUserPoolId": "authcaseexploreruiauth"
-      },
-      {
-        "mode": "AWS_IAM"
-      },
-      {
-        "mode": "OPENID_CONNECT",
-        "openIDProviderName": "SURFconext",
-        "openIDIssuerURL": "https://connect.test.surfconext.nl/",
-        "openIDClientID": "dev.d11iy22xsphp3a.amplifyapp.com",
-        "openIDAuthTTL": "100",
-        "openIDIatTTL": "100"
-      }
-    ],
+    "additionalAuthTypes": [],
     "conflictResolution": {},
     "apiName": "caseexplorerui",
-    "gqlSchemaPath": "/home/maxine/Documents/Law+Tech/Comenius/case-explorer-ui/amplify/backend/api/caseexplorerui/schema.graphql"
+    "gqlSchemaPath": "/Users/turgaysaba/Desktop/projects/case-explorer-ui/amplify/backend/api/caseexplorerui/schema.graphql"
   }
 }
