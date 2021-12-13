@@ -2,7 +2,7 @@ import Amplify from 'aws-amplify'
 import * as R from 'colay/ramda'
 
 const AWS_PROD_CONFIG = {
-  "aws_project_region": "eu-central-1",
+    "aws_project_region": "eu-central-1",
     "aws_appsync_graphqlEndpoint": "https://mqnkmzj5ezd7vcdqxjp5lzdjj4.appsync-api.eu-central-1.amazonaws.com/graphql",
     "aws_appsync_region": "eu-central-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
@@ -18,8 +18,8 @@ const AWS_PROD_CONFIG = {
             "profile",
             "aws.cognito.signin.user.admin"
         ],
-        "redirectSignIn": "http://localhost:19006/",
-        "redirectSignOut": "http://localhost:19006/",
+        "redirectSignIn": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+        "redirectSignOut": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
         "responseType": "code"
     },
     "federationTarget": "COGNITO_USER_POOLS",
