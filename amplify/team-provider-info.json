@@ -27,7 +27,7 @@
         },
         "test": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/test-413358772f693979712b-build.zip",
+          "s3Key": "amplify-builds/test-4e564658396232757179-build.zip",
           "ddbTableName": "Caselaw"
         },
         "networkstatistics": {

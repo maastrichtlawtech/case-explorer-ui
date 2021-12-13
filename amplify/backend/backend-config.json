@@ -11,7 +11,21 @@
               "userPoolId": "authcaseexploreruiauth"
             }
           },
-          "additionalAuthenticationProviders": []
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            },
+            {
+              "authenticationType": "OPENID_CONNECT",
+              "openIDConnectConfig": {
+                "name": "SURFconext",
+                "issuerUrl": "https://connect.test.surfconext.nl/",
+                "clientId": "dev.d11iy22xsphp3a.amplifyapp.com",
+                "authTTL": "100",
+                "iatTTL": "100"
+              }
+            }
+          ]
         }
       }
     }
@@ -63,16 +77,7 @@
           "category": "api",
           "resourceName": "caseexplorerui",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "caseexploreruiauth",
-          "attributes": [
-            "UserPoolId"
+            "GraphQLAPIIdOutput"
           ]
         }
       ]
