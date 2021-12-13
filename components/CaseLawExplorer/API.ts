@@ -1,4 +1,4 @@
-import Amplify, { API } from "aws-amplify";
+import Amplify, { API, Auth } from "aws-amplify";
 import { 
   queryNetworkByUserInput, 
   fetchNodeData, 
@@ -13,11 +13,20 @@ import {
   ComputeNetworkStatisticsQueryVariables, 
   TestQueryVariables 
 } from '../../src/API';
-// import awsExports from "./aws-exports";
+import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import gql from 'graphql-tag';
+import { AWS_CONFIG } from './config';
 
-const API_AUTH_MODE = {
-  API_KEY: 'API_KEY'
-} as const
+Amplify.configure(AWS_CONFIG);
+
+const graphqlClient = new AWSAppSyncClient({
+  url: AWS_CONFIG.aws_appsync_graphqlEndpoint,
+  region: AWS_CONFIG.aws_appsync_region,
+  auth: {
+    type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
+    jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken(),
+  },
+});
 
 const convertJSONStringFields = (item) => {
   return {
@@ -30,15 +39,13 @@ const convertJSONStringFields = (item) => {
 export async function listCases(variables: QueryNetworkByUserInputQueryVariables) {
   try {
     console.log(variables)
-    const listCasesResult = await API.graphql({
-      query: queryNetworkByUserInput,
-      // authMode: API_AUTH_MODE.API_KEY,
+    const listCasesResult = await graphqlClient.query({
+      query: gql(queryNetworkByUserInput),
       variables
     })
 
     const caseResults = listCasesResult.data.queryNetworkByUserInput
     console.log(caseResults)
-
     return {
       allNodes: caseResults.allNodes.map(convertJSONStringFields),
       allEdges: caseResults.allEdges.map(convertJSONStringFields),
@@ -60,9 +67,8 @@ export async function listCases(variables: QueryNetworkByUserInputQueryVariables
 
 export async function getElementData(variables: FetchNodeDataQueryVariables) {
   try {
-    const elementDataResult = await API.graphql({
-      query: fetchNodeData,
-      // authMode: API_AUTH_MODE.API_KEY,
+    const elementDataResult = await graphqlClient.query({
+      query: gql(fetchNodeData),
       variables
     })
     const result = elementDataResult.data.fetchNodeData.data
@@ -80,10 +86,9 @@ export async function getElementData(variables: FetchNodeDataQueryVariables) {
 export async function batchGetElementData(variables: BatchFetchNodeDataQueryVariables) {
   try {
     console.log('batchGetElementData',variables)
-    const batchElementDataResult = await API.graphql({
-      query: batchFetchNodeData,
-      // authMode: API_AUTH_MODE.API_KEY,
-      variables
+    const batchElementDataResult = await graphqlClient.query({
+      query: gql(batchFetchNodeData),
+      variables,
     })
     const result = batchElementDataResult.data.batchFetchNodeData
     return result.map(convertJSONStringFields)
@@ -94,9 +99,8 @@ export async function batchGetElementData(variables: BatchFetchNodeDataQueryVari
 
 export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQueryVariables) {
   try {
-    const networkStatisticsResult = await API.graphql({
-      query: computeNetworkStatistics,
-      // authMode: API_AUTH_MODE.API_KEY,
+    const networkStatisticsResult = await graphqlClient.query({
+      query: gql(computeNetworkStatistics),
       variables
     })
     const result = networkStatisticsResult.data.computeNetworkStatistics
@@ -108,9 +112,8 @@ export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQu
 
 export async function testAuth(variables: TestQueryVariables) {
   try {
-    const elementDataResult = await API.graphql({
-      query: test,
-      // authMode: API_AUTH_MODE.API_KEY,
+    const elementDataResult = await graphqlClient.query({
+      query: gql(test),
       variables
     })
     const result = elementDataResult.data.test.data
