@@ -8,25 +8,25 @@ from definitions import get_full_attributes
 ddb_client = DynamodbClient(table_name=getenv(f'API_CASEEXPLORERUI_{getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'))
 
 def handler(event, context):
-    authorized = is_authorized(event)
-    return_attributes = get_full_attributes(authorized)
-    projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
+    #authorized = is_authorized(event)
+    #return_attributes = get_full_attributes(authorized)
+    #projection_expression, expression_attribute_names = build_ddb_projection_expression(return_attributes)
 
-    response = ddb_client.table.get_item(
-        Key=get_key(event["arguments"]["ecli"]),
-        ProjectionExpression=projection_expression,
-        ExpressionAttributeNames=expression_attribute_names
-    )
+    #response = ddb_client.table.get_item(
+    #    Key=get_key(event["arguments"]["ecli"]),
+    #    ProjectionExpression=projection_expression,
+    #    ExpressionAttributeNames=expression_attribute_names
+    #)
 
-    item = dict()
-    if 'Item' in response:
-        item = response['Item']
+    #item = dict()
+    #if 'Item' in response:
+    #    item = response['Item']
     
     #return format_node_data(item, return_attributes)
     return {
         'id': 'test', 
         'data': {
-            'authorized': int(authorized),
+            #'authorized': int(authorized),
             'event': event,
             'context_identity_cognito_identity_id': context.identity.cognito_identity_id,
             'context_identity_cognito_identity_pool_id': context.identity.cognito_identity_pool_id

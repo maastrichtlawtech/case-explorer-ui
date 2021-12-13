@@ -4,7 +4,7 @@ from datetime import datetime, date
 def is_authorized(event):
     authorized = False
     if "identity" in event and event["identity"]:
-        user_id = event['identity']['claims']['username']
+        user_id = event['identity']['username']
         if user_id.startswith('surfconext'):
             authorized = True
     return authorized
