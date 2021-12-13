@@ -48,7 +48,7 @@ const convertJSONStringFields = (item) => {
 export async function listCases(variables: QueryNetworkByUserInputQueryVariables) {
   try {
     console.log(variables)
-    const listCasesResult = await API.graphql({
+    const listCasesResult = await graphqlClient.query({
       query: gql(queryNetworkByUserInput),
       variables
     })
@@ -76,7 +76,7 @@ export async function listCases(variables: QueryNetworkByUserInputQueryVariables
 
 export async function getElementData(variables: FetchNodeDataQueryVariables) {
   try {
-    const elementDataResult = await API.graphql({
+    const elementDataResult = await graphqlClient.query({
       query: gql(fetchNodeData),
       variables
     })
@@ -95,7 +95,7 @@ export async function getElementData(variables: FetchNodeDataQueryVariables) {
 export async function batchGetElementData(variables: BatchFetchNodeDataQueryVariables) {
   try {
     console.log('batchGetElementData',variables)
-    const batchElementDataResult = await API.graphql({
+    const batchElementDataResult = await graphqlClient.query({
       query: gql(batchFetchNodeData),
       variables,
     })
@@ -108,7 +108,7 @@ export async function batchGetElementData(variables: BatchFetchNodeDataQueryVari
 
 export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQueryVariables) {
   try {
-    const networkStatisticsResult = await API.graphql({
+    const networkStatisticsResult = await graphqlClient.query({
       query: gql(computeNetworkStatistics),
       variables
     })
@@ -121,7 +121,7 @@ export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQu
 
 export async function testAuth(variables: TestQueryVariables) {
   try {
-    const elementDataResult = await API.graphql({
+    const elementDataResult = await graphqlClient.query({
       query: gql(test),
       variables
     })
