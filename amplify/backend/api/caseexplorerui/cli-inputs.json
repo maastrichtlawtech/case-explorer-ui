@@ -9,6 +9,6 @@
     "additionalAuthTypes": [],
     "conflictResolution": {},
     "apiName": "caseexplorerui",
-    "gqlSchemaPath": "/Users/turgaysaba/Desktop/projects/case-explorer-ui/amplify/backend/api/caseexplorerui/schema.graphql"
+    "gqlSchemaPath": "/home/maxine/Documents/Law+Tech/Comenius/case-explorer-ui/amplify/backend/api/caseexplorerui/schema.graphql"
   }
 }
