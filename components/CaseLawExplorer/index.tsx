@@ -1,7 +1,10 @@
 /* eslint-disable */
 // @ts-nocheck
 import {
-  Backdrop, Button, CircularProgress, createTheme as createMuiTheme, ThemeProvider as MuiThemeProvider, Typography
+  Backdrop, Button, CircularProgress, 
+  createTheme as createMuiTheme, 
+  ThemeProvider as MuiThemeProvider, Typography,
+  
 } from '@mui/material'
 import { Auth } from 'aws-amplify'
 import { View } from 'colay-ui'
@@ -57,16 +60,70 @@ const DEFAULT_LAYOUT = Graph.Layouts.cose
 const NODE_LIMIT = 1000
 const HELP_VIDEO_ID = "OrzMIhLpVps"
 
-const MUIDarkTheme = createMuiTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
-const MUILightTheme = createMuiTheme({
-  palette: {
-    mode: 'light',
-  },
-});
+const overrideTheme = (theme) => {
+  Object.keys(theme.typography).forEach((key) => {
+    if (theme.typography[key]?.fontSize) {
+      theme.typography[key].fontSize = Number(
+        theme.typography[key].fontSize.replace('rem', '')
+        ) * 16  * 0.8
+    }
+  })
+  return theme
+}
+const MUIDarkTheme = overrideTheme(
+  createMuiTheme({
+    palette: {
+      mode: 'dark',
+    },
+  })
+)
+
+const MUILightTheme = overrideTheme(
+  createMuiTheme({
+    palette: {
+      mode: 'light',
+    },
+  })
+)
+
+console.log('AA', MUIDarkTheme)
+// typography: {
+//   htmlFontSize: 10,
+//   fontSize: 10,
+//   h1: {
+//     fontSize: '5rem',
+//   },
+//   h2: {
+//     fontSize: '2.75rem',
+//   },
+//   h3: {
+//     fontSize: '2rem',
+//   },
+//   h4: {
+//     fontSize: '1.125rem',
+//   },
+//   h5: {
+//     fontSize: '0.5rem',
+//   },
+//   h6: {
+//     fontSize: '0.25rem',
+//   },
+//   subtitle1: {
+//     fontSize: '0.5rem',
+//   },
+//   subtitle2: {
+//     fontSize: '0.375rem',
+//   },
+//   body1: {
+//     fontSize: '0.5rem',
+//   },
+//   body2: {
+//     fontSize: '0.375rem',
+//   },
+//   button: {
+//     fontSize: '0.375rem',
+//   },
+// }
 
 // PIXI.settings.ROUND_PIXELS = false// true
 // // @ts-ignore
