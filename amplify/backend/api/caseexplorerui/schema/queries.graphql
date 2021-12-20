@@ -12,17 +12,22 @@ type Query {
     Domains: [String],
     Doctypes: [DocType!]!
   ): Network @function(name: "queryhandler-${env}")
+  computeSubnetwork(
+    nodes: [NodeInput!]!,
+    edges: [EdgeInput!]!,
+    maxNodes: Int
+  ): Network @function(name: "subnetwork-${env}")
   computeNetworkStatistics(
     nodes: [NodeInput!]!,
     edges: [EdgeInput!]!
   ): AWSJSON @function(name: "networkstatistics-${env}")
   fetchNodeData(
-    attributesToFetch: NodeAttributes
     node: NodeInput!
+    attributesToFetch: NodeAttributes
   ): Node @function(name: "datafetcher-${env}")
   batchFetchNodeData(
-    attributesToFetch: NodeAttributes,
     nodes: [NodeInput!]!
+    attributesToFetch: NodeAttributes,
   ): [Node] @function(name: "batchdatafetcher-${env}")
   test(
     ecli: String

@@ -32,7 +32,7 @@
         },
         "networkstatistics": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/networkstatistics-42684b33654777646f34-build.zip"
+          "s3Key": "amplify-builds/networkstatistics-704c674449596f67656b-build.zip"
         },
         "batchdatafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
@@ -50,6 +50,10 @@
         "caseexploreruiutils": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/caseexploreruiutils-LambdaLayerVersion69b5927f-build.zip"
+        },
+        "subnetwork": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/subnetwork-6a48314b647175467779-build.zip"
         }
       },
       "auth": {

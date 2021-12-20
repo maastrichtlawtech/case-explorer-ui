@@ -47,14 +47,12 @@ const convertJSONStringFields = (item) => {
 
 export async function listCases(variables: QueryNetworkByUserInputQueryVariables) {
   try {
-    console.log(variables)
     const listCasesResult = await API.graphql({
       query: gql(queryNetworkByUserInput),
       variables
     })
 
     const caseResults = listCasesResult.data.queryNetworkByUserInput
-    console.log(caseResults)
     return {
       allNodes: caseResults.allNodes.map(convertJSONStringFields),
       allEdges: caseResults.allEdges.map(convertJSONStringFields),
@@ -94,7 +92,6 @@ export async function getElementData(variables: FetchNodeDataQueryVariables) {
 
 export async function batchGetElementData(variables: BatchFetchNodeDataQueryVariables) {
   try {
-    console.log('batchGetElementData',variables)
     const batchElementDataResult = await API.graphql({
       query: gql(batchFetchNodeData),
       variables,

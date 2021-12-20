@@ -101,8 +101,8 @@ export type Network = {
   __typename: "Network",
   allNodes?:  Array<Node | null > | null,
   allEdges?:  Array<Edge | null > | null,
-  nodes?:  Array<Node | null > | null,
-  edges?:  Array<Edge | null > | null,
+  nodes:  Array<Node >,
+  edges:  Array<Edge >,
   message?: string | null,
 };
 
@@ -253,18 +253,55 @@ export type QueryNetworkByUserInputQuery = {
       target: string,
       data?: string | null,
     } | null > | null,
-    nodes?:  Array< {
+    nodes:  Array< {
+      __typename: "Node",
+      id: string,
+      data?: string | null,
+    } >,
+    edges:  Array< {
+      __typename: "Edge",
+      id: string,
+      source: string,
+      target: string,
+      data?: string | null,
+    } >,
+    message?: string | null,
+  } | null,
+};
+
+export type ComputeSubnetworkQueryVariables = {
+  nodes: Array< NodeInput >,
+  edges: Array< EdgeInput >,
+  maxNodes?: number | null,
+};
+
+export type ComputeSubnetworkQuery = {
+  computeSubnetwork?:  {
+    __typename: "Network",
+    allNodes?:  Array< {
       __typename: "Node",
       id: string,
       data?: string | null,
     } | null > | null,
-    edges?:  Array< {
+    allEdges?:  Array< {
       __typename: "Edge",
       id: string,
       source: string,
       target: string,
       data?: string | null,
     } | null > | null,
+    nodes:  Array< {
+      __typename: "Node",
+      id: string,
+      data?: string | null,
+    } >,
+    edges:  Array< {
+      __typename: "Edge",
+      id: string,
+      source: string,
+      target: string,
+      data?: string | null,
+    } >,
     message?: string | null,
   } | null,
 };
@@ -279,8 +316,8 @@ export type ComputeNetworkStatisticsQuery = {
 };
 
 export type FetchNodeDataQueryVariables = {
-  attributesToFetch?: NodeAttributes | null,
   node: NodeInput,
+  attributesToFetch?: NodeAttributes | null,
 };
 
 export type FetchNodeDataQuery = {
@@ -292,8 +329,8 @@ export type FetchNodeDataQuery = {
 };
 
 export type BatchFetchNodeDataQueryVariables = {
-  attributesToFetch?: NodeAttributes | null,
   nodes: Array< NodeInput >,
+  attributesToFetch?: NodeAttributes | null,
 };
 
 export type BatchFetchNodeDataQuery = {

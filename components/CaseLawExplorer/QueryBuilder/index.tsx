@@ -6,6 +6,7 @@ import { Modal, Button, Box, Typography, TextField, Paper,IconButton } from '@mu
 import CloseIcon from '@mui/icons-material/Close'
 import { getQueryBuilderSchema, DEFAULT_FORM_DATA } from './constants'
 import { NodeAttributes } from '../../../src/API'
+import { NODE_LIMIT } from '..'
 
 export type QueryBuilderProps = {
   query: any;
@@ -151,6 +152,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     nodes: allNodesData,
                     edges: allEdges
                   })
+                  console.log('NODE_LIMIT', NODE_LIMIT)
                   console.log('logNetworkStatistics', networkStatistics)
                   onNetworkStatisticsCalculated({
                     networkStatistics: networkStatistics,

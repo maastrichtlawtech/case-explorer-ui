@@ -55,6 +55,12 @@ export type AmplifyDependentResourcesAttributes = {
         },
         "caseexploreruiutils": {
             "Arn": "string"
+        },
+        "subnetwork": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     }
 }
