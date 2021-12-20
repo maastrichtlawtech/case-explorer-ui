@@ -20,13 +20,9 @@ from utils import get_key, format_node_data, verify_input_string_list, verify_ec
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
 from definitions import ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
     DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS, get_networkstatistics_attributes
-from pandas import DataFrame, concat
-
 
 TEST = False                        # returns number of nodes instead of nodes
-HARD_LIMIT = 10000                  
-SUBNET_LIMIT = 1000
-
+HARD_LIMIT = 10000
 
 # set up DynamoDB client
 ddb_client = DynamodbClient(
@@ -77,54 +73,43 @@ def handler(event, context):
 
     # 1. QUERY NODES MATCHING SEARCH INPUT
     start_p = time()
-    all_nodes, limit_reached = query_nodes(query_helper)
+    nodes, limit_reached = query_nodes(query_helper)
     print(f'NODES:\t took {time() - start_p} s.')
 
     # 2. FETCH EDGES AND NEW TARGET NODES
     start_p = time()
-    all_edges, new_nodes, edges_limit_reached = fetch_edges(all_nodes[:HARD_LIMIT], query_helper)
-    all_nodes = [format_node_data(node, get_networkstatistics_attributes(authorized)) for node in all_nodes]
+    edges, new_nodes, edges_limit_reached = fetch_edges(nodes[:HARD_LIMIT], query_helper)
+    nodes = [format_node_data(node, get_networkstatistics_attributes(authorized)) for node in nodes]
     # add flag to distinguish search result nodes and appended citation nodes
-    for node in all_nodes:
+    for node in nodes:
         node['data']['isResult'] = "True"
     for node in new_nodes:
         node['data']['isResult'] = "False"
     #if not TEST:
-    all_nodes += new_nodes
+    nodes += new_nodes
     limit_reached = limit_reached or edges_limit_reached
     print(f'EDGES:\t took {time() - start_p} s.')
-
-    # 3. GENERATE SUBNETWORK
-    start_p = time()
-    nodes, edges = get_subnet(all_nodes, all_edges)
-    print(f'SUBNET:\t took {time() - start_p} s.')
 
     # @TODO: remove after testing
     if TEST:
         from json import dump
         with open('edges.json', 'w') as f:
-            dump(all_edges, f)
+            dump(edges, f)
         with open('nodes.json', 'w') as f:
-            dump(all_nodes, f)
-        with open('subNodes.json', 'w') as f:
             dump(nodes, f)
 
     message = 'Query limit reached! Only partial result displayed.' if limit_reached else ''
     
     print('Duration total:\t', time() - start)
     if TEST:
-        print(f'allNodes: {len(all_nodes)}\nallEdges: {len(all_edges)}\nnodes: {len(nodes)}\nedges: {len(edges)}\nmessage: {message}')
+        print(f'nodes: {len(nodes)}\nedges: {len(edges)}\nmessage: {message}')
         til = 10
         return {
-            'allNodes': all_nodes[:til], 
-            'allEdges': all_edges[:til], 
             'nodes': nodes[:til], 
             'edges': edges[:til],
             'message': message
         }
     return {
-        'allNodes': all_nodes, 
-        'allEdges': all_edges, 
         'nodes': nodes, 
         'edges': edges,
         'message': message
@@ -348,46 +333,3 @@ def fetch_edges(nodes, helper):
     new_nodes = [{'id': ecli, 'data': {}} for ecli in new_node_eclis]
 
     return edges_sources + edges_targets, new_nodes, sources_limit_reached or targets_limit_reached
-
-
-def get_subnet(nodes, edges):
-    if len(edges) == 0:
-        result_nodes = [{'id': node['id'], 'data': {'isResult': node['data']['isResult']}} for node in nodes[:SUBNET_LIMIT]]
-        return result_nodes, edges
-
-    df = DataFrame(edges)
-    sources = df.groupby('source').agg(list)
-    targets = df.groupby('target').agg(list)
-    full = concat([sources, targets], axis=1)
-    full.columns = ['id1', 'target', 'id2', 'source']
-    full.reset_index(level=0, inplace=True)
-    full['index'] = full['index'].apply(lambda x: [x])
-    full = full.fillna("").applymap(list)
-    full['degree'] = (full.source + full.target).apply(len)
-    full.sort_values(by='degree', ascending=False, inplace=True)
-
-    node_eclis = set()
-    edge_ids = set()
-    for index, row in full.iterrows():
-        if row['degree'] >= SUBNET_LIMIT:
-            continue
-        node_eclis_peak = node_eclis.union(set(ecli for ecli in row['index'] + row['source'] + row['target']))
-        edge_ids_peak = edge_ids.union(set(edge_id for edge_id in row['id1'] + row['id2']))
-        if len(node_eclis_peak) > SUBNET_LIMIT:
-            break
-        node_eclis = node_eclis_peak
-        edge_ids = edge_ids_peak
-
-    result_nodes = []
-    for node in nodes:
-        if node['id'] in node_eclis:
-            result_nodes.append({
-                'id': node['id'],
-                'data': {
-                    'isResult': node['data']['isResult']
-                }
-            })
-    result_edges = [{'id': edge_id, 'source': edge_id.split('_')[0], 'target': edge_id.split('_')[1]} for edge_id in edge_ids]
-    
-    return result_nodes, result_edges
-

@@ -123,11 +123,11 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                 if (casesData.nodes.length == 0) {
                   throw new Error("No cases returned")
                 } else {
-                  const allNodes = casesData?.allNodes.map((node)=> ({
+                  const allNodes = casesData?.nodes.map((node)=> ({
                     id: node.id,
                     data: JSON.stringify(node.data)
                   }))
-                  const allEdges = casesData?.allEdges.map((edge)=> ({ 
+                  const allEdges = casesData?.edges.map((edge)=> ({ 
                     id: edge.id,
                     source: edge.source,
                     target: edge.target

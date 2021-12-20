@@ -1,6 +1,4 @@
 type Network {
-  allNodes: [Node]
-  allEdges: [Edge]
   nodes: [Node!]!
   edges: [Edge!]!
   message: String

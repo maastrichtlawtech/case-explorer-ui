@@ -53,14 +53,10 @@ export async function listCases(variables: QueryNetworkByUserInputQueryVariables
       query: gql(queryNetworkByUserInput),
       variables
     })
-
     const caseResults = listCasesResult.data.queryNetworkByUserInput
     return {
-      allNodes: caseResults.allNodes.map(convertJSONStringFields),
-      allEdges: caseResults.allEdges.map(convertJSONStringFields),
       nodes: caseResults.nodes.map(convertJSONStringFields),
       edges: caseResults.edges.map(convertJSONStringFields),
-      //networkStatistics: JSON.parse(caseResults.statistics),
       message: caseResults.message,
     }
 
