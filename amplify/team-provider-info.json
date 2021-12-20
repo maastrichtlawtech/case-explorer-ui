@@ -53,7 +53,7 @@
         },
         "subnetwork": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/subnetwork-6a48314b647175467779-build.zip"
+          "s3Key": "amplify-builds/subnetwork-34685176784777485661-build.zip"
         }
       },
       "auth": {

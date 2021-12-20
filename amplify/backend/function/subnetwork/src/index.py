@@ -15,8 +15,8 @@ def handler(event, context):
         edges = event['arguments']['edges']
     
     if 'maxNodes' in event['arguments'] and \
-        event['arguments']['maxNodes'] and \
-        event['arguments']['maxNodes'] < len(nodes):
+        event['arguments']['maxNodes']:
+        # and event['arguments']['maxNodes'] < len(nodes):
         max_nodes = event['arguments']['maxNodes']
     else:
         return {

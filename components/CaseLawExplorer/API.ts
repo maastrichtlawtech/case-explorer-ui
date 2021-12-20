@@ -3,6 +3,7 @@ import {
   queryNetworkByUserInput, 
   fetchNodeData, 
   batchFetchNodeData,
+  computeSubnetwork,
   computeNetworkStatistics, 
   test 
 } from "../../src/graphql/queries";
@@ -10,6 +11,7 @@ import {
   QueryNetworkByUserInputQueryVariables, 
   FetchNodeDataQueryVariables, 
   BatchFetchNodeDataQueryVariables,
+  ComputeSubnetworkQueryVariables,
   ComputeNetworkStatisticsQueryVariables, 
   TestQueryVariables 
 } from '../../src/API';
@@ -100,6 +102,22 @@ export async function batchGetElementData(variables: BatchFetchNodeDataQueryVari
     return result.map(convertJSONStringFields)
   } catch (err) {
     console.log('error batchGetElementData:', err)
+  }
+}
+
+export async function getSubnetwork(variables: ComputeSubnetworkQueryVariables) {
+  try {
+    const subnetworkResult = await API.graphql({
+      query: gql(computeSubnetwork),
+      variables
+    })
+    const result = subnetworkResult.data.computeSubnetwork
+    return {
+      nodes: result.nodes.map(convertJSONStringFields),
+      edges: result.edges.map(convertJSONStringFields),
+    }
+  } catch (err) {
+    console.log('error getSubnetwork:', err)
   }
 }
 

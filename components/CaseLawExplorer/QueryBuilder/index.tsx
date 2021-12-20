@@ -119,17 +119,10 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
               try {
                 let casesData = await API.listCases(transformData(e.formData))
                 // let casesData = prepareData(cases)
-                console.log('logCasesData',casesData)
+                console.log('RESULT getCases', casesData)
                 if (casesData.nodes.length == 0) {
                   throw new Error("No cases returned")
                 } else {
-                  onFinish({
-                    allNodes: casesData.allNodes,
-                    allEdges: casesData.allEdges,
-                    nodes: casesData.nodes,
-                    edges: casesData.edges,
-                    message: casesData.message,
-                  })
                   const allNodes = casesData?.allNodes.map((node)=> ({
                     id: node.id,
                     data: JSON.stringify(node.data)
@@ -139,11 +132,22 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     source: edge.source,
                     target: edge.target
                   }))
+                  let subNetwork = await API.getSubnetwork({
+                    nodes: allNodes,
+                    edges: allEdges,
+                    maxNodes: NODE_LIMIT
+                  })
+                  console.log('RESULT getSubnetwork', subNetwork)
+                  onFinish({
+                    nodes: subNetwork.nodes,
+                    edges: subNetwork.edges,
+                    message: casesData.message,
+                  })
                   let allNodesWithData = await API.batchGetElementData({
                     attributesToFetch: NodeAttributes.NETWORKSTATS,
                     nodes: allNodes
                   })
-                  console.log('logBatchFetchData', allNodesWithData)
+                  console.log('RESULT batchFetchData', allNodesWithData)
                   const allNodesData = allNodesWithData?.map((node)=> ({
                     id: node.id,
                     data: JSON.stringify(node.data)
@@ -152,8 +156,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     nodes: allNodesData,
                     edges: allEdges
                   })
-                  console.log('NODE_LIMIT', NODE_LIMIT)
-                  console.log('logNetworkStatistics', networkStatistics)
+                  console.log('RESULT getNetworkStatistics', networkStatistics)
                   onNetworkStatisticsCalculated({
                     networkStatistics: networkStatistics,
                     message: casesData.message,
