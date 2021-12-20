@@ -29,16 +29,6 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       Domains: $Domains
       Doctypes: $Doctypes
     ) {
-      allNodes {
-        id
-        data
-      }
-      allEdges {
-        id
-        source
-        target
-        data
-      }
       nodes {
         id
         data
@@ -60,16 +50,6 @@ export const computeSubnetwork = /* GraphQL */ `
     $maxNodes: Int
   ) {
     computeSubnetwork(nodes: $nodes, edges: $edges, maxNodes: $maxNodes) {
-      allNodes {
-        id
-        data
-      }
-      allEdges {
-        id
-        source
-        target
-        data
-      }
       nodes {
         id
         data

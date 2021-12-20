@@ -99,8 +99,6 @@ export enum DocType {
 
 export type Network = {
   __typename: "Network",
-  allNodes?:  Array<Node | null > | null,
-  allEdges?:  Array<Edge | null > | null,
   nodes:  Array<Node >,
   edges:  Array<Edge >,
   message?: string | null,
@@ -241,18 +239,6 @@ export type QueryNetworkByUserInputQueryVariables = {
 export type QueryNetworkByUserInputQuery = {
   queryNetworkByUserInput?:  {
     __typename: "Network",
-    allNodes?:  Array< {
-      __typename: "Node",
-      id: string,
-      data?: string | null,
-    } | null > | null,
-    allEdges?:  Array< {
-      __typename: "Edge",
-      id: string,
-      source: string,
-      target: string,
-      data?: string | null,
-    } | null > | null,
     nodes:  Array< {
       __typename: "Node",
       id: string,
@@ -278,18 +264,6 @@ export type ComputeSubnetworkQueryVariables = {
 export type ComputeSubnetworkQuery = {
   computeSubnetwork?:  {
     __typename: "Network",
-    allNodes?:  Array< {
-      __typename: "Node",
-      id: string,
-      data?: string | null,
-    } | null > | null,
-    allEdges?:  Array< {
-      __typename: "Edge",
-      id: string,
-      source: string,
-      target: string,
-      data?: string | null,
-    } | null > | null,
     nodes:  Array< {
       __typename: "Node",
       id: string,
