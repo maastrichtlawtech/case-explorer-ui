@@ -138,10 +138,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     source: edge.source,
                     target: edge.target
                   }))
-                  const subNodes = casesData?.nodes.map((node)=> ({
-                    id: node.id,
-                    data: JSON.stringify(node.data)
-                  }))
                   let allNodesWithData = await API.batchGetElementData({
                     attributesToFetch: NodeAttributes.NETWORKSTATS,
                     nodes: allNodes
@@ -153,8 +149,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                   }))
                   let networkStatistics = await API.getNetworkStatistics({
                     nodes: allNodesData,
-                    edges: allEdges,
-                    subNodes: subNodes
+                    edges: allEdges
                   })
                   console.log('logNetworkStatistics', networkStatistics)
                   onNetworkStatisticsCalculated({

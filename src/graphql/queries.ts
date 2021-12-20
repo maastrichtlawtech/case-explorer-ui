@@ -54,12 +54,8 @@ export const queryNetworkByUserInput = /* GraphQL */ `
   }
 `;
 export const computeNetworkStatistics = /* GraphQL */ `
-  query ComputeNetworkStatistics(
-    $nodes: [NodeInput!]!
-    $edges: [EdgeInput!]!
-    $subNodes: [NodeInput!]!
-  ) {
-    computeNetworkStatistics(nodes: $nodes, edges: $edges, subNodes: $subNodes)
+  query ComputeNetworkStatistics($nodes: [NodeInput!]!, $edges: [EdgeInput!]!) {
+    computeNetworkStatistics(nodes: $nodes, edges: $edges)
   }
 `;
 export const fetchNodeData = /* GraphQL */ `

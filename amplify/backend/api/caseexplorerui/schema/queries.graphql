@@ -14,8 +14,7 @@ type Query {
   ): Network @function(name: "queryhandler-${env}")
   computeNetworkStatistics(
     nodes: [NodeInput!]!,
-    edges: [EdgeInput!]!,
-    subNodes: [NodeInput!]!
+    edges: [EdgeInput!]!
   ): AWSJSON @function(name: "networkstatistics-${env}")
   fetchNodeData(
     attributesToFetch: NodeAttributes

@@ -108,15 +108,15 @@ export type Network = {
 
 export type Node = {
   __typename: "Node",
-  id?: string | null,
+  id: string,
   data?: string | null,
 };
 
 export type Edge = {
   __typename: "Edge",
-  id?: string | null,
-  source?: string | null,
-  target?: string | null,
+  id: string,
+  source: string,
+  target: string,
   data?: string | null,
 };
 
@@ -243,26 +243,26 @@ export type QueryNetworkByUserInputQuery = {
     __typename: "Network",
     allNodes?:  Array< {
       __typename: "Node",
-      id?: string | null,
+      id: string,
       data?: string | null,
     } | null > | null,
     allEdges?:  Array< {
       __typename: "Edge",
-      id?: string | null,
-      source?: string | null,
-      target?: string | null,
+      id: string,
+      source: string,
+      target: string,
       data?: string | null,
     } | null > | null,
     nodes?:  Array< {
       __typename: "Node",
-      id?: string | null,
+      id: string,
       data?: string | null,
     } | null > | null,
     edges?:  Array< {
       __typename: "Edge",
-      id?: string | null,
-      source?: string | null,
-      target?: string | null,
+      id: string,
+      source: string,
+      target: string,
       data?: string | null,
     } | null > | null,
     message?: string | null,
@@ -272,7 +272,6 @@ export type QueryNetworkByUserInputQuery = {
 export type ComputeNetworkStatisticsQueryVariables = {
   nodes: Array< NodeInput >,
   edges: Array< EdgeInput >,
-  subNodes: Array< NodeInput >,
 };
 
 export type ComputeNetworkStatisticsQuery = {
@@ -287,7 +286,7 @@ export type FetchNodeDataQueryVariables = {
 export type FetchNodeDataQuery = {
   fetchNodeData?:  {
     __typename: "Node",
-    id?: string | null,
+    id: string,
     data?: string | null,
   } | null,
 };
@@ -300,7 +299,7 @@ export type BatchFetchNodeDataQueryVariables = {
 export type BatchFetchNodeDataQuery = {
   batchFetchNodeData?:  Array< {
     __typename: "Node",
-    id?: string | null,
+    id: string,
     data?: string | null,
   } | null > | null,
 };
@@ -312,7 +311,7 @@ export type TestQueryVariables = {
 export type TestQuery = {
   test?:  {
     __typename: "Node",
-    id?: string | null,
+    id: string,
     data?: string | null,
   } | null,
 };
