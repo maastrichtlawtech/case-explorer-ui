@@ -62,7 +62,7 @@ export const ACTIONS = {
 }
 
 const DEFAULT_LAYOUT = Graph.Layouts.cose
-const NODE_LIMIT = 1000
+export const NODE_LIMIT = 1000
 const HELP_VIDEO_ID = "OrzMIhLpVps"
 
 const overrideTheme = (theme) => {

@@ -20,7 +20,7 @@
         },
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/queryhandler-384b3551786861764a65-build.zip",
+          "s3Key": "amplify-builds/queryhandler-577642704c7151503232-build.zip",
           "ddbTableName": "Caselaw",
           "osIndexName": "caselawexplorer_rechtspraak",
           "osEndpoint": "search-caselawexplorer-j72amls6ucledpopoyyxzyujqi.eu-central-1.es.amazonaws.com"
@@ -32,7 +32,7 @@
         },
         "networkstatistics": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/networkstatistics-75456939307333636577-build.zip"
+          "s3Key": "amplify-builds/networkstatistics-704c674449596f67656b-build.zip"
         },
         "batchdatafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
@@ -50,6 +50,10 @@
         "caseexploreruiutils": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/caseexploreruiutils-LambdaLayerVersion69b5927f-build.zip"
+        },
+        "subnetwork": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/subnetwork-34685176784777485661-build.zip"
         }
       },
       "auth": {

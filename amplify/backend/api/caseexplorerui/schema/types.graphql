@@ -1,13 +1,11 @@
 type Network {
-  allNodes: [Node]
-  allEdges: [Edge]
-  nodes: [Node]
-  edges: [Edge]
+  nodes: [Node!]!
+  edges: [Edge!]!
   message: String
 }
 
 type Node {
-  id: String
+  id: String!
   data: AWSJSON
 }
 
@@ -17,10 +15,10 @@ input NodeInput {
 }
 
 type Edge {
-  id: String
-  source: String
-  target: String
-  data: String
+  id: String!
+  source: String!
+  target: String!
+  data: AWSJSON
 }
 
 input EdgeInput {

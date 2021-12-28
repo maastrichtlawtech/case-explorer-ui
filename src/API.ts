@@ -99,24 +99,22 @@ export enum DocType {
 
 export type Network = {
   __typename: "Network",
-  allNodes?:  Array<Node | null > | null,
-  allEdges?:  Array<Edge | null > | null,
-  nodes?:  Array<Node | null > | null,
-  edges?:  Array<Edge | null > | null,
+  nodes:  Array<Node >,
+  edges:  Array<Edge >,
   message?: string | null,
 };
 
 export type Node = {
   __typename: "Node",
-  id?: string | null,
+  id: string,
   data?: string | null,
 };
 
 export type Edge = {
   __typename: "Edge",
-  id?: string | null,
-  source?: string | null,
-  target?: string | null,
+  id: string,
+  source: string,
+  target: string,
   data?: string | null,
 };
 
@@ -241,30 +239,43 @@ export type QueryNetworkByUserInputQueryVariables = {
 export type QueryNetworkByUserInputQuery = {
   queryNetworkByUserInput?:  {
     __typename: "Network",
-    allNodes?:  Array< {
+    nodes:  Array< {
       __typename: "Node",
-      id?: string | null,
+      id: string,
       data?: string | null,
-    } | null > | null,
-    allEdges?:  Array< {
+    } >,
+    edges:  Array< {
       __typename: "Edge",
-      id?: string | null,
-      source?: string | null,
-      target?: string | null,
+      id: string,
+      source: string,
+      target: string,
       data?: string | null,
-    } | null > | null,
-    nodes?:  Array< {
+    } >,
+    message?: string | null,
+  } | null,
+};
+
+export type ComputeSubnetworkQueryVariables = {
+  nodes: Array< NodeInput >,
+  edges: Array< EdgeInput >,
+  maxNodes?: number | null,
+};
+
+export type ComputeSubnetworkQuery = {
+  computeSubnetwork?:  {
+    __typename: "Network",
+    nodes:  Array< {
       __typename: "Node",
-      id?: string | null,
+      id: string,
       data?: string | null,
-    } | null > | null,
-    edges?:  Array< {
+    } >,
+    edges:  Array< {
       __typename: "Edge",
-      id?: string | null,
-      source?: string | null,
-      target?: string | null,
+      id: string,
+      source: string,
+      target: string,
       data?: string | null,
-    } | null > | null,
+    } >,
     message?: string | null,
   } | null,
 };
@@ -272,7 +283,6 @@ export type QueryNetworkByUserInputQuery = {
 export type ComputeNetworkStatisticsQueryVariables = {
   nodes: Array< NodeInput >,
   edges: Array< EdgeInput >,
-  subNodes: Array< NodeInput >,
 };
 
 export type ComputeNetworkStatisticsQuery = {
@@ -280,27 +290,27 @@ export type ComputeNetworkStatisticsQuery = {
 };
 
 export type FetchNodeDataQueryVariables = {
-  attributesToFetch?: NodeAttributes | null,
   node: NodeInput,
+  attributesToFetch?: NodeAttributes | null,
 };
 
 export type FetchNodeDataQuery = {
   fetchNodeData?:  {
     __typename: "Node",
-    id?: string | null,
+    id: string,
     data?: string | null,
   } | null,
 };
 
 export type BatchFetchNodeDataQueryVariables = {
-  attributesToFetch?: NodeAttributes | null,
   nodes: Array< NodeInput >,
+  attributesToFetch?: NodeAttributes | null,
 };
 
 export type BatchFetchNodeDataQuery = {
   batchFetchNodeData?:  Array< {
     __typename: "Node",
-    id?: string | null,
+    id: string,
     data?: string | null,
   } | null > | null,
 };
@@ -312,7 +322,7 @@ export type TestQueryVariables = {
 export type TestQuery = {
   test?:  {
     __typename: "Node",
-    id?: string | null,
+    id: string,
     data?: string | null,
   } | null,
 };

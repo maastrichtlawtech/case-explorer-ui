@@ -19,13 +19,10 @@ def handler(event, context):
             edges = load(f)
         with open('nodes.json') as f:
             nodes = load(f)
-        with open('subNodes.json') as f:
-            sub_nodes = load(f)
     else:
         network = event['arguments'].copy()
         nodes = network['nodes']
         edges = network['edges']
-        sub_nodes = network['subNodes']
 
     start_p = time()
     statistics = dict()
@@ -97,19 +94,11 @@ def handler(event, context):
                 statistics[node_id]['year'] = node['data']['date_decision'][:4]
         print(f'STATS: add to nodes took: {time() - start_p} s.')
     print(f'STATS: compute network took: {time() - start} s.')
-
-    start_p = time()
-    sub_statistics = dict()
-    for node in sub_nodes:
-        node_id = node['id']
-        if node_id in statistics:
-            sub_statistics[node_id] = statistics[node_id]
-    print(f'select sub stats and nodes: took {time()-start_p} s.')
     
     if TEST:
-        return len(sub_statistics)
+        return len(statistics)
     
-    return sub_statistics
+    return statistics
 
 def get_network(nodes, edges):
     graph = json_graph.node_link_graph({'nodes': nodes, 'links': edges}, directed=True, multigraph=False)

@@ -29,16 +29,27 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       Domains: $Domains
       Doctypes: $Doctypes
     ) {
-      allNodes {
+      nodes {
         id
         data
       }
-      allEdges {
+      edges {
         id
         source
         target
         data
       }
+      message
+    }
+  }
+`;
+export const computeSubnetwork = /* GraphQL */ `
+  query ComputeSubnetwork(
+    $nodes: [NodeInput!]!
+    $edges: [EdgeInput!]!
+    $maxNodes: Int
+  ) {
+    computeSubnetwork(nodes: $nodes, edges: $edges, maxNodes: $maxNodes) {
       nodes {
         id
         data
@@ -54,17 +65,13 @@ export const queryNetworkByUserInput = /* GraphQL */ `
   }
 `;
 export const computeNetworkStatistics = /* GraphQL */ `
-  query ComputeNetworkStatistics(
-    $nodes: [NodeInput!]!
-    $edges: [EdgeInput!]!
-    $subNodes: [NodeInput!]!
-  ) {
-    computeNetworkStatistics(nodes: $nodes, edges: $edges, subNodes: $subNodes)
+  query ComputeNetworkStatistics($nodes: [NodeInput!]!, $edges: [EdgeInput!]!) {
+    computeNetworkStatistics(nodes: $nodes, edges: $edges)
   }
 `;
 export const fetchNodeData = /* GraphQL */ `
-  query FetchNodeData($attributesToFetch: NodeAttributes, $node: NodeInput!) {
-    fetchNodeData(attributesToFetch: $attributesToFetch, node: $node) {
+  query FetchNodeData($node: NodeInput!, $attributesToFetch: NodeAttributes) {
+    fetchNodeData(node: $node, attributesToFetch: $attributesToFetch) {
       id
       data
     }
@@ -72,10 +79,10 @@ export const fetchNodeData = /* GraphQL */ `
 `;
 export const batchFetchNodeData = /* GraphQL */ `
   query BatchFetchNodeData(
-    $attributesToFetch: NodeAttributes
     $nodes: [NodeInput!]!
+    $attributesToFetch: NodeAttributes
   ) {
-    batchFetchNodeData(attributesToFetch: $attributesToFetch, nodes: $nodes) {
+    batchFetchNodeData(nodes: $nodes, attributesToFetch: $attributesToFetch) {
       id
       data
     }

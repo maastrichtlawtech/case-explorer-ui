@@ -3,6 +3,7 @@ import {
   queryNetworkByUserInput, 
   fetchNodeData, 
   batchFetchNodeData,
+  computeSubnetwork,
   computeNetworkStatistics, 
   test 
 } from "../../src/graphql/queries";
@@ -10,6 +11,7 @@ import {
   QueryNetworkByUserInputQueryVariables, 
   FetchNodeDataQueryVariables, 
   BatchFetchNodeDataQueryVariables,
+  ComputeSubnetworkQueryVariables,
   ComputeNetworkStatisticsQueryVariables, 
   TestQueryVariables 
 } from '../../src/API';
@@ -47,20 +49,14 @@ const convertJSONStringFields = (item) => {
 
 export async function listCases(variables: QueryNetworkByUserInputQueryVariables) {
   try {
-    console.log(variables)
     const listCasesResult = await API.graphql({
       query: gql(queryNetworkByUserInput),
       variables
     })
-
     const caseResults = listCasesResult.data.queryNetworkByUserInput
-    console.log(caseResults)
     return {
-      allNodes: caseResults.allNodes.map(convertJSONStringFields),
-      allEdges: caseResults.allEdges.map(convertJSONStringFields),
       nodes: caseResults.nodes.map(convertJSONStringFields),
       edges: caseResults.edges.map(convertJSONStringFields),
-      //networkStatistics: JSON.parse(caseResults.statistics),
       message: caseResults.message,
     }
 
@@ -94,7 +90,6 @@ export async function getElementData(variables: FetchNodeDataQueryVariables) {
 
 export async function batchGetElementData(variables: BatchFetchNodeDataQueryVariables) {
   try {
-    console.log('batchGetElementData',variables)
     const batchElementDataResult = await API.graphql({
       query: gql(batchFetchNodeData),
       variables,
@@ -103,6 +98,22 @@ export async function batchGetElementData(variables: BatchFetchNodeDataQueryVari
     return result.map(convertJSONStringFields)
   } catch (err) {
     console.log('error batchGetElementData:', err)
+  }
+}
+
+export async function getSubnetwork(variables: ComputeSubnetworkQueryVariables) {
+  try {
+    const subnetworkResult = await API.graphql({
+      query: gql(computeSubnetwork),
+      variables
+    })
+    const result = subnetworkResult.data.computeSubnetwork
+    return {
+      nodes: result.nodes.map(convertJSONStringFields),
+      edges: result.edges.map(convertJSONStringFields),
+    }
+  } catch (err) {
+    console.log('error getSubnetwork:', err)
   }
 }
 

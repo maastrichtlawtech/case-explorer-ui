@@ -7,9 +7,7 @@ verify_ssl = true
 
 [packages]
 src = {editable = true, path = "./src"}
-opensearch-py = "*"
-boto3 = "*"
-requests-aws4auth = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.8"

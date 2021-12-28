@@ -1,5 +1,6 @@
 {
     "arguments": {
+        "maxNodes": 1000,
         "nodes": [
             {"id": "ECLI:NL:GHAMS:2018:1093", "data": {}}, 
             {"id": "ECLI:NL:GHSHE:2018:1512", "data": {}}, 
