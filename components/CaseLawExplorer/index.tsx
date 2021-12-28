@@ -30,6 +30,7 @@ import { HelpModal } from './components/HelpModal'
 import { TermsOfService } from './components/TermsOfService'
 import { DataBarHeader } from './components/DataBar/Header'
 import { ActionBarRight } from './components/ActionBar/Right'
+import { DeveloperSettings } from './components/DeveloperSettings'
 import { 
   getFetchSchema,
    getFilterSchema,
@@ -43,6 +44,10 @@ import { RenderEdge } from './RenderEdge'
 import { RenderNode } from './RenderNode'
 import { useUser } from './useUser'
 import { filterEdges, } from 'perfect-graph/utils'
+import { 
+  DefaultSidebarData,
+  DefaultComponents,
+ } from 'perfect-graph/components/GraphEditor/PreferencesModal'
 import {
    prepareData,
    createMockData,
@@ -364,7 +369,21 @@ const AppContainer = ({
      
     },
     preferencesModal: {
-      // isOpen: true,
+      isOpen: true,
+        sidebar: [
+          ...DefaultSidebarData, 
+          {
+            id:  'Developer',
+            icon: null,
+            label: 'Developer',
+          }
+        ],
+        components: {
+          ...DefaultComponents,
+          Developer: () => (
+            <DeveloperSettings />
+          )
+        }
     },
     settingsBar: {
       // isOpen: true,
