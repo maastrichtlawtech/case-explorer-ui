@@ -24,17 +24,17 @@ export function TermsOfService(props: TermsOfServiceProps) {
     },
     user
   } = props
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setOpen] = React.useState(true);
   
   const handleClose = () => {
     setOpen(false);
   };
 
-  React.useEffect(() => { 
-    setTimeout(() => {
-      setOpen(true)
-    }, 1000)
-  }, [])
+  // React.useEffect(() => { 
+  //   setTimeout(() => {
+  //     setOpen(true)
+  //   }, 1000)
+  // }, [])
 
   return (
     <>

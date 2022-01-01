@@ -15,7 +15,6 @@ import {TermsOfService} from './components/CaseLawExplorer/components/TermsOfSer
 import * as R from 'colay/ramda';
 import {useMeasure, View} from 'colay-ui';
 import { Signin   }from './components/CaseLawExplorer/Signin'
-// import { TermsOfService } from './components/TermsOfService';
 
 spread(cytoscape)
 cytoscape.use(dagre)
@@ -128,7 +127,31 @@ const AppContainer = () => {
   return  <>
   {
     state.user ? (
-      <App />
+        state.user?.attributes?.['custom:isOldUser'] !== 'yes'
+        ? (
+          <TermsOfService 
+          user={state.user}
+          onAgree={async () => {
+            await Auth.updateUserAttributes(state.user, {
+              'custom:isOldUser': 'yes'
+            })
+            setState({
+              ...state,
+              user: {
+                ...state.user,
+                attributes: {
+                  ...(state.user?.attributes ?? {}),
+                  'custom:isOldUser': 'yes'
+                }
+              },
+            })
+          }}
+          onDisagree={() => {
+            alert('To proceed on signin, you need to accept the Terms of Usage!')
+          }}
+          />
+        )
+        : <App />
     ) : (
       <Signin
         onSignin={async () => {
@@ -151,20 +174,23 @@ const AppContainer = () => {
           })
         }}
       />
+      // <TermsOfService
+          // user={user}
+          // onAgree={async () => {
+          //   updateState((draft) => {
+          //     draft.helpModal.isOpen = true
+          //   })
+          //   await Auth.updateUserAttributes(user, {
+          //     'custom:isOldUser': 'yes'
+          //   })
+          // }}
+          // onDisagree={() => {
+          //   alert('To proceed on signin, you need to accept the Terms of Usage!')
+          // }}
+      //   />
   )
   }
-  {
-    authState === AuthState.SignUp && (
-      <TermsOfService 
-        user={termsOfServiceUser}
-        onAgree={() => setTermsOfServiceUser({
-          attributes: {
-            'custom:isOldUser': 'yes'
-          }
-        })}
-      />
-  )
-  }
+  
   </>
 }
 

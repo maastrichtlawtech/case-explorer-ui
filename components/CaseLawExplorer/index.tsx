@@ -27,7 +27,6 @@ import * as API from './API'
 import * as PIXI from 'pixi.js'
 import { AlertContent } from './components/AlertContent'
 import { HelpModal } from './components/HelpModal'
-import { TermsOfService } from './components/TermsOfService'
 import { DataBarHeader } from './components/DataBar/Header'
 import { ActionBarRight } from './components/ActionBar/Right'
 import { DeveloperSettings } from './components/DeveloperSettings'
@@ -728,27 +727,14 @@ const AppContainer = ({
           }
         }}
       />
-      {/* <HelpModal 
+      <HelpModal 
         isOpen={state.helpModal.isOpen}
         onClose={() => updateState((draft) => {
           draft.helpModal.isOpen = false
         })}
         videoId={HELP_VIDEO_ID}
       />
-      <TermsOfService
-          user={user}
-          onAgree={async () => {
-            updateState((draft) => {
-              draft.helpModal.isOpen = true
-            })
-            await Auth.updateUserAttributes(user, {
-              'custom:isOldUser': 'yes'
-            })
-          }}
-          // onDisagree={() => {
-          //   alert('To proceed on signin, you need to accept the Terms of Usage!')
-          // }}
-        /> */}
+      
         <AlertContent 
           ref={alertRef}
         />
