@@ -669,7 +669,7 @@ const AppContainer = ({
                 community: {
                   enum: communityStats.map((item) => item.key),
                   enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-                  type: 'string'
+                  type: 'number'
                 },
               }
             }
