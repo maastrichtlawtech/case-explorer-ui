@@ -28,7 +28,9 @@ input EdgeInput {
 }
 
 enum NodeAttributes {
+  ID
   ALL
+  QUERYHANDLER
   NETWORKSTATS
 }
 
