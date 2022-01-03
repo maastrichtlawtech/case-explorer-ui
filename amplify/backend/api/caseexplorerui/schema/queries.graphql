@@ -11,6 +11,7 @@ type Query {
     Instances: [String],
     Domains: [String],
     Doctypes: [DocType!]!
+    attributesToFetch: NodeAttributes
   ): Network @function(name: "queryhandler-${env}")
   computeSubnetwork(
     nodes: [NodeInput!]!,
