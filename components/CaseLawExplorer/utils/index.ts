@@ -73,7 +73,7 @@ export const calculateNetworkStatisticsRange  = (
   return {
     nodeSizeRangeMap,
     communityStats: Object.keys(communityStats).map((key) => ({
-      key,
+      key: Number(key),
       value: communityStats[key]
     })).sort((a, b) => b.value - a.value)
   }

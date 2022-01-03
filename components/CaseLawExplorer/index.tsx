@@ -522,10 +522,11 @@ const AppContainer = ({
                 // TODO: Change to network statistics data
                 return (
                   R.inBetween(year[0], year[1])(stats.year)
-                  && R.inBetween(degree[0], degree[1])(stats.degree)
+                  &&
+                   R.inBetween(degree[0], degree[1])(stats.degree)
                   && R.inBetween(indegree[0], indegree[1])(stats['in-degree'])
                   && R.inBetween(outdegree[0], outdegree[1])(stats['out-degree'])
-                  && !(R.isNotNil(isResult) && !item.data.isResult)
+                  && !(isResult && !(item.data.isResult === "True"))
                   && !(R.isNotNil(community) && stats.community !== community)
                 )
               },
