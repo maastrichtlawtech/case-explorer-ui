@@ -650,23 +650,29 @@ const AppContainer = ({
           networkStatistics,
           allNodes,
           allEdges,
+          subNetwork,
         }) => {
-          const result = calculateNetworkStatisticsRange(networkStatistics)
-          configRef.current.visualizationRangeMap = result.nodeSizeRangeMap
+          const {
+            nodeSizeRangeMap,
+            communityStats,
+          } = calculateNetworkStatisticsRange(networkStatistics, subNetwork)
+          console.log('communityStats', communityStats)
+          configRef.current.visualizationRangeMap = nodeSizeRangeMap
           controller.update((draft) => {
             draft.networkStatistics.local  = networkStatistics
             draft.allNodes  = allNodes
             draft.allEdges  = allEdges
-            // draft.settingsBar.forms[2].schema = {
-            //   ...draft.settingsBar.forms[2].schema,
-            //   properties: {
-            //     ...draft.settingsBar.forms[2].schema.properties,
-            //     community: {
-            //       enum: communityStats.map((item) => item.key),
-            //       enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-            //     },
-            //   }
-            // }
+            draft.settingsBar.forms[2].schema = {
+              ...draft.settingsBar.forms[2].schema,
+              properties: {
+                ...draft.settingsBar.forms[2].schema.properties,
+                community: {
+                  enum: communityStats.map((item) => item.key),
+                  enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
+                  type: 'string'
+                },
+              }
+            }
           })
           console.log('All', allNodes, allEdges)
           alertRef.current.alert({

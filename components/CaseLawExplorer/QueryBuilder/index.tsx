@@ -161,6 +161,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                     message: casesData.message,
                     allNodes: allNodesData,
                     allEdges,
+                    subNetwork,
                   })
                 }
               } catch (e) {

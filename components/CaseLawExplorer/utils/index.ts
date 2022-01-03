@@ -39,16 +39,24 @@ export const prepareData = (data) => {
   }
 }
 
-export const calculateNetworkStatisticsRange  = (networkStatistics: any) => {
+export const calculateNetworkStatisticsRange  = (
+  networkStatistics: any,
+  subNetwork: {
+    nodes: any[],
+    edges: any[]
+  }
+) => {
   const nodeSizeRangeMap = R.clone(NODE_SIZE_RANGE_MAP)
-  const values = Object.values(networkStatistics);
+  const nodeIds = Object.keys(networkStatistics);
+  const subNetworkNodeIds = subNetwork.nodes.map(R.prop('id'))
   const communityStats = {}
-  values.forEach((nodeStatistics, index) => {
-    if (nodeStatistics?.community) {
-      if (!communityStats[nodeStatistics.community]) {
+  nodeIds.forEach((id, index) => {
+    const nodeStatistics = networkStatistics[id]
+    if (nodeStatistics?.community && subNetworkNodeIds.includes(id)) {
+      if (R.isNotNil(communityStats[nodeStatistics.community])) {
         communityStats[nodeStatistics.community] += 1 
       } else {
-        communityStats[nodeStatistics.community] = 0
+        communityStats[nodeStatistics.community] = 1
       }
     }
     Object.keys(nodeStatistics).forEach((key) => {
