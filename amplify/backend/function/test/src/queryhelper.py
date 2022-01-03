@@ -1,6 +1,5 @@
 from boto3.dynamodb.conditions import Attr, Key
-from definitions import DATA_SOURCES, KEYWORDS, ARTICLES, ECLIS, DATE_START, DATE_END, INSTANCES, DOMAINS, DOCTYPES, \
-    get_queryhandler_attributes, get_keyword_search_attributes, get_article_search_attributes
+from definitions import DATA_SOURCES, KEYWORDS, ARTICLES, ECLIS, DATE_START, DATE_END, INSTANCES, DOMAINS, DOCTYPES, AttributesList
 
 def build_ddb_projection_expression(return_attributes):
     """
@@ -36,9 +35,18 @@ class QueryHelper:
     def __init__(self, search_params, authorized):
         self.search_params = search_params
         self.authorized = authorized
-        self.article_search_attributes = get_article_search_attributes()
-        self.return_attributes = get_queryhandler_attributes(self.authorized)
-        self.keyword_search_attributes = get_keyword_search_attributes(self.authorized)
+        self.article_search_attributes = AttributesList.ARTICLESEARCH(self.authorized)
+        if 'attributesToFetch' in self.search_params and self.search_params['attributesToFetch']:
+            attributes_to_fetch = AttributesList.__dict__[self.search_params['attributesToFetch']](self.authorized)
+            if set(AttributesList.QUERYHANDLER(self.authorized)).issubset(set(attributes_to_fetch)):
+                self.return_attributes = attributes_to_fetch
+            else:
+                self.return_attributes = AttributesList.QUERYHANDLER(self.authorized)
+            self.keep_attributes = self.return_attributes.copy()
+        else:
+            self.return_attributes = AttributesList.QUERYHANDLER(self.authorized)
+            self.keep_attributes = AttributesList.NETWORKSTATS(self.authorized)
+        self.keyword_search_attributes = AttributesList.KEYWORDSEARCH(self.authorized)
 
     def get_ddb_projection_expression(self):
         return build_ddb_projection_expression(self.return_attributes)

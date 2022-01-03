@@ -19,7 +19,7 @@ from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
 from definitions import ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
-    DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS, get_networkstatistics_attributes
+    DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS, AttributesList
 
 TEST = False                        # returns number of nodes instead of nodes
 HARD_LIMIT = 10000
@@ -79,7 +79,7 @@ def handler(event, context):
     # 2. FETCH EDGES AND NEW TARGET NODES
     start_p = time()
     edges, new_nodes, edges_limit_reached = fetch_edges(nodes[:HARD_LIMIT], query_helper)
-    nodes = [format_node_data(node, get_networkstatistics_attributes(authorized)) for node in nodes]
+    nodes = [format_node_data(node, query_helper.keep_attributes) for node in nodes]
     # add flag to distinguish search result nodes and appended citation nodes
     for node in nodes:
         node['data']['isResult'] = "True"

@@ -2,7 +2,7 @@ from os import getenv
 from dynamodb_client import DynamodbClient
 from queryhelper import build_ddb_projection_expression
 from utils import format_node_data, get_key, is_authorized
-from definitions import get_full_attributes
+from definitions import AttributesList
 
 
 ddb_client = DynamodbClient(table_name=getenv(f'API_CASEEXPLORERUI_{getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'))

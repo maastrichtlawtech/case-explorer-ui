@@ -1,27 +1,20 @@
 from os import getenv
 from dynamodb_client import DynamodbClient
 from utils import format_node_data, get_key, is_authorized
-from definitions import get_full_attributes, get_networkstatistics_attributes
+from definitions import AttributesList
 
 
 ddb_client = DynamodbClient(table_name=getenv(f'API_CASEEXPLORERUI_{getenv("DDB_TABLE_NAME").upper()}TABLE_NAME'))
 
-attributes = {
-    "ALL": get_full_attributes,
-    "NETWORKSTATS": get_networkstatistics_attributes
-}
-
 def handler(event, context):
     authorized = is_authorized(event)
-    if event['arguments']['attributesToFetch']:
-        get_attributes = attributes.get(event['arguments']['attributesToFetch'])
+    if 'attributesToFetch' in event and event['arguments']['attributesToFetch']:
+        get_attributes = AttributesList.__dict__[event['arguments']['attributesToFetch']]
     else:
-        get_attributes = attributes.get("ALL")
+        get_attributes = AttributesList.ALL
 
     input_attributes = get_attributes(authorized=False)
     return_attributes = get_attributes(authorized=authorized)
-
-    print(event)
 
     nodes = []
     missing_node_keys = []
