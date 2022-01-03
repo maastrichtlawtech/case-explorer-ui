@@ -50,7 +50,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       const  event = new Event('click')
       event.persist = ()=>{}
       formRef.current.onSubmit(event)
-      console.log('ON_SUBMIT')
     }, 1000)
   }, [])
   return (
@@ -160,6 +159,8 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
                   onNetworkStatisticsCalculated({
                     networkStatistics: networkStatistics,
                     message: casesData.message,
+                    allNodes: allNodesData,
+                    allEdges,
                   })
                 }
               } catch (e) {

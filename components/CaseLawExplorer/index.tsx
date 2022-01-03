@@ -90,44 +90,6 @@ const MUILightTheme = overrideTheme(
   })
 )
 
-console.log('AA', MUIDarkTheme)
-// typography: {
-//   htmlFontSize: 10,
-//   fontSize: 10,
-//   h1: {
-//     fontSize: '5rem',
-//   },
-//   h2: {
-//     fontSize: '2.75rem',
-//   },
-//   h3: {
-//     fontSize: '2rem',
-//   },
-//   h4: {
-//     fontSize: '1.125rem',
-//   },
-//   h5: {
-//     fontSize: '0.5rem',
-//   },
-//   h6: {
-//     fontSize: '0.25rem',
-//   },
-//   subtitle1: {
-//     fontSize: '0.5rem',
-//   },
-//   subtitle2: {
-//     fontSize: '0.375rem',
-//   },
-//   body1: {
-//     fontSize: '0.5rem',
-//   },
-//   body2: {
-//     fontSize: '0.375rem',
-//   },
-//   button: {
-//     fontSize: '0.375rem',
-//   },
-// }
 
 // PIXI.settings.ROUND_PIXELS = false// true
 // // @ts-ignore
@@ -154,7 +116,7 @@ const DEFAULT_FILTERING = {
   year: [1900, 2021],
   degree: [0, 100],
   indegree: [0, 100],
-  outdegree: [0, 100]
+  outdegree: [0, 100],
 }
 
 const DEFAULT_VISUALIZATION = {
@@ -368,7 +330,7 @@ const AppContainer = ({
      
     },
     preferencesModal: {
-      isOpen: true,
+      // isOpen: true,
         sidebar: [
           ...DefaultSidebarData, 
           {
@@ -548,6 +510,8 @@ const AppContainer = ({
                   degree,
                   indegree,
                   outdegree,
+                  isResult,
+                  community,
                 } = payload.value
                 const {
                   networkStatistics: {
@@ -561,6 +525,8 @@ const AppContainer = ({
                   && R.inBetween(degree[0], degree[1])(stats.degree)
                   && R.inBetween(indegree[0], indegree[1])(stats['in-degree'])
                   && R.inBetween(outdegree[0], outdegree[1])(stats['out-degree'])
+                  && !(R.isNotNil(isResult) && !item.data.isResult)
+                  && !(R.isNotNil(community) && stats.community !== community)
                 )
               },
               settings: {
@@ -681,12 +647,28 @@ const AppContainer = ({
           })
         }}
         onNetworkStatisticsCalculated={({
-          networkStatistics
+          networkStatistics,
+          allNodes,
+          allEdges,
         }) => {
-          configRef.current.visualizationRangeMap = calculateNetworkStatisticsRange(networkStatistics)
+          const result = calculateNetworkStatisticsRange(networkStatistics)
+          configRef.current.visualizationRangeMap = result.nodeSizeRangeMap
+          draft.settingsBar.forms[2].schema = {
+            ...draft.settingsBar.forms[2].schema,
+            properties: {
+              ...draft.settingsBar.forms[2].schema.properties,
+              community: {
+                enum: communityStats.map((item) => item.key),
+                enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
+              },
+            }
+          }
           controller.update((draft) => {
             draft.networkStatistics.local  = networkStatistics
+            draft.allNodes  = allNodes
+            draft.allEdges  = allEdges
           })
+          console.log('All', allNodes, allEdges)
           alertRef.current.alert({
             type: 'success',
             text: `Network Statistics Calculated!`

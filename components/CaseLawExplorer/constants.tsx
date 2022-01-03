@@ -71,6 +71,9 @@ export const getFilterSchema = (props: {} = {}) => {
           minimum: 0,
           maximum: 100,
         },
+        isResult: {
+          type: 'boolean',
+        },
       },
     },
     uiSchema: {

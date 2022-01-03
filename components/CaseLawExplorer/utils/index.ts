@@ -39,11 +39,18 @@ export const prepareData = (data) => {
   }
 }
 
-export const calculateNetworkStatisticsRange  = (networkStatistics: any): any => {
-
+export const calculateNetworkStatisticsRange  = (networkStatistics: any) => {
   const nodeSizeRangeMap = R.clone(NODE_SIZE_RANGE_MAP)
   const values = Object.values(networkStatistics);
-  values.forEach((nodeStatistics, index) =>{
+  const communityStats = {}
+  values.forEach((nodeStatistics, index) => {
+    if (nodeStatistics?.community) {
+      if (!communityStats[nodeStatistics.community]) {
+        communityStats[nodeStatistics.community] += 1 
+      } else {
+        communityStats[nodeStatistics.community] = 0
+      }
+    }
     Object.keys(nodeStatistics).forEach((key) => {
       const statisticValue = nodeStatistics[key]; // the value of the statistic
       if (index === 0) {
@@ -53,11 +60,15 @@ export const calculateNetworkStatisticsRange  = (networkStatistics: any): any =>
         nodeSizeRangeMap[key][0] = Math.min(statisticValue, nodeSizeRangeMap[key][0]);
         nodeSizeRangeMap[key][1] = Math.max(statisticValue, nodeSizeRangeMap[key][1]);
       }
-      
     })
   })
-  console.log('nodeSizeRangeMap',nodeSizeRangeMap)
-  return nodeSizeRangeMap
+  return {
+    nodeSizeRangeMap,
+    communityStats: Object.keys(communityStats).map((key) => ({
+      key,
+      value: communityStats[key]
+    })).sort((a, b) => b.value - a.value)
+  }
 }
 
 const getStatisticsValue = (
