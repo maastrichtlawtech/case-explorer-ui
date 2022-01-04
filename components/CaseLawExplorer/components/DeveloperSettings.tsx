@@ -44,6 +44,13 @@ export const DeveloperSettings = () => {
       >
         {apiKey}
       </Typography>
+      <Divider />
+      <a
+        href="https://docs.python-requests.org/en/latest/user/quickstart/"
+        target="_blank"
+      >
+        Example Script
+      </a>
     </View>
     
   )
