@@ -527,7 +527,7 @@ const AppContainer = ({
                   && R.inBetween(indegree[0], indegree[1])(stats['in-degree'])
                   && R.inBetween(outdegree[0], outdegree[1])(stats['out-degree'])
                   && !(isResult && !(item.data.isResult === "True"))
-                  && !(R.isNotNil(community) && stats.community !== community)
+                  && !(R.isNotNil(community) && !R.isEmpty(community) && community.includes(stats.community))
                 )
               },
               settings: {
@@ -585,6 +585,7 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
+console.log('AAAController', controllerProps)
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
@@ -663,17 +664,41 @@ const AppContainer = ({
             draft.networkStatistics.local  = networkStatistics
             draft.allNodes  = allNodes
             draft.allEdges  = allEdges
-            draft.settingsBar.forms[2].schema = {
-              ...draft.settingsBar.forms[2].schema,
-              properties: {
-                ...draft.settingsBar.forms[2].schema.properties,
-                community: {
-                  enum: communityStats.map((item) => item.key),
-                  enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-                  type: 'number'
-                },
-              }
+            const filterSchema  = draft.settingsBar.forms[2].schema
+            const filterFormData  = draft.settingsBar.forms[2].formData
+            filterSchema.properties.community = {
+              type: 'array',
+              uniqueItems: true,
+              items: {
+                enum: communityStats.map((item) => item.key),
+                enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
+                type: 'number'
+              },
+              default: []
             }
+            filterSchema.properties.year.items.minimum = nodeSizeRangeMap.year[0]
+            filterSchema.properties.year.items.maximum = nodeSizeRangeMap.year[1]
+            filterSchema.properties.degree.items.minimum = nodeSizeRangeMap.degree[0]
+            filterSchema.properties.degree.items.maximum = nodeSizeRangeMap.degree[1]
+            filterSchema.properties.indegree.items.minimum = nodeSizeRangeMap['in-degree'][0]
+            filterSchema.properties.indegree.items.maximum = nodeSizeRangeMap['in-degree'][1]
+            filterSchema.properties.outdegree.items.minimum = nodeSizeRangeMap['out-degree'][0]
+            filterSchema.properties.outdegree.items.maximum = nodeSizeRangeMap['out-degree'][1]
+            filterFormData.year = nodeSizeRangeMap.year
+            filterFormData.degree = nodeSizeRangeMap.degree
+            filterFormData.indegree = nodeSizeRangeMap['in-degree']
+            filterFormData.outdegree = nodeSizeRangeMap['out-degree']
+            // draft.settingsBar.forms[2].schema = {
+            //   ...filterSchema,
+            //   properties: {
+            //     ...filterSchema.properties,
+                // community: {
+                //   enum: communityStats.map((item) => item.key),
+                //   enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
+                //   type: 'number'
+                // },
+            //   }
+            // }
           })
           console.log('All', allNodes, allEdges)
           alertRef.current.alert({

@@ -43,33 +43,33 @@ export const getFilterSchema = (props: {} = {}) => {
           type: 'array',
           items: {
             type: 'number',
+            minimum: 1900,
+            maximum: 2021,
           },
-          minimum: 1900,
-          maximum: 2021,
         },
         degree: {
           type: 'array',
           items: {
             type: 'number',
+            minimum: 0,
+            maximum: 100,
           },
-          minimum: 0,
-          maximum: 100,
         },
         indegree: {
           type: 'array',
           items: {
             type: 'number',
+            minimum: 0,
+            maximum: 100,
           },
-          minimum: 0,
-          maximum: 100,
         },
         outdegree: {
           type: 'array',
           items: {
             type: 'number',
+            minimum: 0,
+            maximum: 100,
           },
-          minimum: 0,
-          maximum: 100,
         },
         isResult: {
           type: 'boolean',

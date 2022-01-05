@@ -14,7 +14,7 @@ type TermsOfServiceProps = {
   user: object
 }
 
-const TERMS_OF_SERVICE_URL = `https://en.wikipedia.org/wiki/Terms_of_service#:~:text=Terms%20of%20service%20(also%20known,to%20use%20the%20offered%20service.`
+const TERMS_OF_SERVICE_URL = `https://drive.google.com/file/d/1HAFcVmZrjHsypmOiwaDIZvubyBTFXg2j/view?usp=sharing`
 
 export function TermsOfService(props: TermsOfServiceProps) {
   const {

@@ -5,6 +5,9 @@ import {
 } from '@mui/material'
 import { View, useClipboard } from 'colay-ui'
 import { Auth } from 'aws-amplify'
+
+const EXAMPLE_SCRIPT_URI = `https://github.com/maastrichtlawtech/case-law-explorer/blob/master/notebooks/api/query_API.ipynb`
+
 export const DeveloperSettings = () => { 
   const [, setClipboard] = useClipboard()
   const [apiKey, setApiKey] = React.useState('')
@@ -46,7 +49,7 @@ export const DeveloperSettings = () => {
       </Typography>
       <Divider />
       <a
-        href="https://docs.python-requests.org/en/latest/user/quickstart/"
+        href={EXAMPLE_SCRIPT_URI}
         target="_blank"
       >
         Example Script
