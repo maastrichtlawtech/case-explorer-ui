@@ -156,6 +156,11 @@ const AppContainer = () => {
       <Signin
         onSignin={async () => {
           await Auth.federatedSignIn(
+            // undefined,
+            // { 
+            //   expires_at: new Date().getTime() + 1000 * 60 * 60 * 12 * 3 ,
+
+            // }
           //   {
           //   customProvider: 'COGNITO_IDENTITY_POOLS',
           //   provider: 'COGNITO',

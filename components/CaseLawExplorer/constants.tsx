@@ -73,6 +73,7 @@ export const getFilterSchema = (props: {} = {}) => {
         },
         isResult: {
           type: 'boolean',
+          title: 'Query Input Only',
         },
       },
     },
@@ -413,6 +414,7 @@ export const NODE_SIZE_RANGE_MAP = {
 export const LAYOUT_SCHEMA = {
   schema: {
     title: 'Layout',
+    type: 'object',
     properties: {
       name: {
         type: 'string',

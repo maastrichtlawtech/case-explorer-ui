@@ -1,59 +1,44 @@
 /* eslint-disable */
 // @ts-nocheck
 import {
-  Backdrop, Button, CircularProgress, 
-  createTheme as createMuiTheme, 
-  ThemeProvider as MuiThemeProvider, Typography,
-  
+  Backdrop, CircularProgress,
+  createTheme as createMuiTheme,
+  ThemeProvider as MuiThemeProvider
 } from '@mui/material'
-import { Auth } from 'aws-amplify'
 import { View } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
 import * as R from 'colay/ramda'
 import { Graph } from 'perfect-graph/components'
-import { getHitAreaCenter } from 'perfect-graph/utils'
 import { GraphEditor, GraphEditorProps } from 'perfect-graph/components/GraphEditor'
+import {
+  DefaultComponents, DefaultSidebarData
+} from 'perfect-graph/components/GraphEditor/PreferencesModal'
 import { EVENT } from 'perfect-graph/constants'
 import {
   DarkTheme,
   DefaultTheme
 } from 'perfect-graph/core/theme'
+import { useGraphEditor } from 'perfect-graph/hooks'
 import { useController } from 'perfect-graph/plugins/controller'
 import { createSchema } from 'perfect-graph/plugins/createSchema'
-import { useGraphEditor } from 'perfect-graph/hooks'
-import { getSelectedElementInfo, getSelectedItemByElement } from 'perfect-graph/utils'
+import { filterEdges, getHitAreaCenter, getSelectedElementInfo, getSelectedItemByElement } from 'perfect-graph/utils'
+import * as PIXI from 'pixi.js'
 import React from 'react'
 import * as API from './API'
-import * as PIXI from 'pixi.js'
-import { AlertContent } from './components/AlertContent'
-import { HelpModal } from './components/HelpModal'
-import { DataBarHeader } from './components/DataBar/Header'
 import { ActionBarRight } from './components/ActionBar/Right'
+import { AlertContent } from './components/AlertContent'
+import { DataBarHeader } from './components/DataBar/Header'
 import { DeveloperSettings } from './components/DeveloperSettings'
-import { 
+import { HelpModal } from './components/HelpModal'
+import {
   getFetchSchema,
-   getFilterSchema,
-    VIEW_CONFIG_SCHEMA,
-    NODE_SIZE_RANGE_MAP,
-    LAYOUT_SCHEMA,
-   } from './constants'
-import defaultData from './data'
-import { QueryBuilder } from './QueryBuilder'
+  getFilterSchema, LAYOUT_SCHEMA, NODE_SIZE_RANGE_MAP, VIEW_CONFIG_SCHEMA
+} from './constants'
+import { QueryBuilder } from './MultipleQueryBuilder'
 import { RenderEdge } from './RenderEdge'
 import { RenderNode } from './RenderNode'
-import { useUser } from './useUser'
-import { filterEdges, } from 'perfect-graph/utils'
-import { 
-  DefaultSidebarData,
-  DefaultComponents,
- } from 'perfect-graph/components/GraphEditor/PreferencesModal'
 import {
-   prepareData,
-   createMockData,
-   calculateNodeSize,
-  calculateColor,
-  perc2color,
-  calculateNetworkStatisticsRange,
+  calculateNetworkStatisticsRange
 } from './utils'
 
 export const ACTIONS = {
@@ -79,6 +64,14 @@ const MUIDarkTheme = overrideTheme(
     palette: {
       mode: 'dark',
     },
+    spacing: 4,
+    components: {
+      MuiTextField: {
+        defaultProps: {
+          size: 'small'
+        }
+      }
+    }
   })
 )
 
@@ -87,6 +80,14 @@ const MUILightTheme = overrideTheme(
     palette: {
       mode: 'light',
     },
+    spacing: 4,
+    components: {
+      MuiTextField: {
+        defaultProps: {
+          size: 'small'
+        }
+      }
+    }
   })
 )
 
@@ -117,6 +118,7 @@ const DEFAULT_FILTERING = {
   degree: [0, 100],
   indegree: [0, 100],
   outdegree: [0, 100],
+  community: []
 }
 
 const DEFAULT_VISUALIZATION = {
@@ -358,6 +360,11 @@ const AppContainer = ({
         schema: { ...FILTER_SCHEMA.schema, title: 'Create Cluster', },
         formData: configRef.current.filtering
       },
+      defaults: {
+        layout: {
+          ...LAYOUT_SCHEMA,
+        }
+      }
     },
     dataBar: {
       // isOpen: true,
@@ -384,7 +391,6 @@ const AppContainer = ({
       actions: {
         add: { visible: false },
         delete: { visible: false },
-        layout: LAYOUT_SCHEMA,
       },
       theming: {
         options: [
@@ -475,15 +481,29 @@ const AppContainer = ({
             year,
             degree,
             indegree,
-            outdegree
+            outdegree,
+            community,
           } = formData
+          const {
+            networkStatistics: {
+              local: localNetworkStatistics,
+            }
+          } = graphEditor.context
+          const stats = localNetworkStatistics?.[item.id] ?? {}
           const clusterItemIds = draft.nodes.filter((item) => {
             const element = cy.$id(item.id)
             return (
-              R.inBetween(year[0], year[1])(graphEditorContext.networkStatistics?.local?.[item.id]?.year)
-              && R.inBetween(degree[0], degree[1])(element.degree())
-              && R.inBetween(indegree[0], indegree[1])(element.indegree())
-              && R.inBetween(outdegree[0], outdegree[1])(element.outdegree())
+              R.inBetween(year[0], year[1])(stats.year)
+                  &&
+                   R.inBetween(degree[0], degree[1])(stats.degree)
+                  && R.inBetween(indegree[0], indegree[1])(stats['in-degree'])
+                  && R.inBetween(outdegree[0], outdegree[1])(stats['out-degree'])
+                  // && !(isResult && !(item.data.isResult === "True"))
+                  && !(R.isNotNil(community) && !R.isEmpty(community) && !community.includes(`${stats.community}`))
+              // R.inBetween(year[0], year[1])(graphEditorContext.networkStatistics?.local?.[item.id]?.year)
+              // && R.inBetween(degree[0], degree[1])(element.degree())
+              // && R.inBetween(indegree[0], indegree[1])(element.indegree())
+              // && R.inBetween(outdegree[0], outdegree[1])(element.outdegree())
 
             )
           }).map((item) => item.id)
@@ -527,7 +547,7 @@ const AppContainer = ({
                   && R.inBetween(indegree[0], indegree[1])(stats['in-degree'])
                   && R.inBetween(outdegree[0], outdegree[1])(stats['out-degree'])
                   && !(isResult && !(item.data.isResult === "True"))
-                  && !(R.isNotNil(community) && !R.isEmpty(community) && community.includes(stats.community))
+                  && !(R.isNotNil(community) && !R.isEmpty(community) && !community.includes(`${stats.community}`))
                 )
               },
               settings: {
@@ -552,6 +572,69 @@ const AppContainer = ({
           draft.graphConfig.theme = THEMES[value]
           changeMUITheme(value)
           draft.actionBar.theming.value = value
+          return false
+        }
+        case EVENT.LAYOUT_CHANGED: {
+          break
+          if (payload.value.expansion)  { 
+            graphEditor.viewport.setZoom(payload.value.expansion, true)
+          }
+          const layoutName = payload.value.name
+          const nodes = draft.nodes.map((item) => ({
+            id: item.id,
+          }))
+          const edges = draft.edges.map((item) => ({
+            id: item.id,
+            source: item.source,
+            target: item.target,
+          }))
+          let layout: any
+            if (layoutName) {
+              layout = R.pickBy((val) => R.isNotNil(val))({
+                // @ts-ignore
+                ...Graph.Layouts[layoutName],
+                ...payload.value,
+                runLayout: false,
+              })
+            }
+            draft.graphConfig!.layout = layout
+          setTimeout(() => {
+            const { hitArea } = graphEditor.viewport
+            const boundingBox = {
+              x1: hitArea.x,
+              y1: hitArea.y,
+              w: hitArea.width,
+              h: hitArea.height,
+            }
+              const body = {
+                nodes,
+                edges,
+                layoutName,
+                boundingBox,
+              }
+              fetch('http://localhost:8080/layout', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }).then(res => res.json()).then(res => {
+                console.log('layout res', res)
+                Object.keys(res).forEach((key) => {
+                  const {
+                    x,
+                    y,
+                  } = res[key]
+                  const element = cy.$id(key)
+                  element.position({
+                    x,
+                    y,
+                  })
+                })
+              }).catch((err) => {
+                console.log('layout err', err)
+              })
+            }, 200)
           return false
         }
         default:
@@ -585,7 +668,6 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
-console.log('AAAController', controllerProps)
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
@@ -593,7 +675,7 @@ console.log('AAAController', controllerProps)
       <GraphEditor
         {...controllerProps}
         extraData={[
-          configRef.current, 
+          configRef.current,
           configRef.current.visualizationRangeMap,
           controllerProps.netowrkStatistics?.local
         ]}
@@ -672,7 +754,7 @@ console.log('AAAController', controllerProps)
               items: {
                 enum: communityStats.map((item) => item.key),
                 enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-                type: 'number'
+                type: 'string'
               },
               default: []
             }
@@ -688,6 +770,10 @@ console.log('AAAController', controllerProps)
             filterFormData.degree = nodeSizeRangeMap.degree
             filterFormData.indegree = nodeSizeRangeMap['in-degree']
             filterFormData.outdegree = nodeSizeRangeMap['out-degree']
+
+            const createClusterForm = draft.settingsBar?.createClusterForm!
+            createClusterForm.schema.properties.community = filterSchema.properties.community
+            // createClusterForm?.schema.properties.community = filterSchema.properties.community
             // draft.settingsBar.forms[2].schema = {
             //   ...filterSchema,
             //   properties: {
@@ -726,11 +812,17 @@ console.log('AAAController', controllerProps)
             draft.isLoading = false
           })
           setTimeout(() => {
-            controller.update((draft) => {
-            draft.graphConfig!.layout = {
-              ...DEFAULT_LAYOUT,
-              componentSpacing: 80
-            }
+            // controller.update((draft) => {
+            // draft.graphConfig!.layout = {
+            //   ...DEFAULT_LAYOUT,
+            //   componentSpacing: 80
+            //   }
+            // })
+            controller.onEvent({
+              type: EVENT.LAYOUT_CHANGED,
+              payload: {
+                value: {...DEFAULT_LAYOUT,}
+              }
             })
           },250)
           if (message) {
