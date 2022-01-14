@@ -1,4 +1,4 @@
-import { calculateLayout } from './layoutCalculator'
+const { calculateLayout }  = require('./layoutCalculator')
 
 exports.handler = async (event, context, callback) => {
   const {

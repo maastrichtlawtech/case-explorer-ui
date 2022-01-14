@@ -1,9 +1,9 @@
-import cytoscape from 'cytoscape'
-import { Layouts } from './layouts'
-import euler from 'cytoscape-euler'
-import cola from 'cytoscape-cola'
-import dagre from 'cytoscape-dagre'
-import spread from 'cytoscape-spread'
+const cytoscape = require('cytoscape')
+const { Layouts } = require('./layouts')
+const euler = require('cytoscape-euler')
+const cola = require('cytoscape-cola')
+const dagre = require('cytoscape-dagre')
+const spread = require('cytoscape-spread')
 
 spread(cytoscape)
 cytoscape.use(dagre)
