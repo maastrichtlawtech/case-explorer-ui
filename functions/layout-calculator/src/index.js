@@ -17,5 +17,6 @@ exports.handler = async (event, context, callback) => {
     layoutName,
   })
   console.log('result', result)
-  callback(null, result)
+  // callback(null, result)
+  return result
 }
