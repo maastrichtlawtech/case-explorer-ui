@@ -38,6 +38,8 @@ exports.calculateLayout =  async (params) => {
     ...Layouts[layoutName],
     boundingBox,
   })
+  console.log('layout', layout)
+
   const result = await new Promise((resolve, reject) => {
     try {
       layout.on('layoutstop', () => {
@@ -47,13 +49,17 @@ exports.calculateLayout =  async (params) => {
         cy.nodes().forEach((node) => {
           nodePositions[node.id()] = node.position()
         })
+        console.log('nodePositions', nodePositions)
         resolve(nodePositions)
         // FOR CULLING
       })
       layout.start()
     } catch (error) {
+      console.log('error', error)
       reject(error)
     }
   })
+  console.log('nodePositionsResult', result)
+
   return result
 }
