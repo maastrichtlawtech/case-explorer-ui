@@ -10,7 +10,7 @@ cytoscape.use(dagre)
 cytoscape.use(euler)
 cytoscape.use(cola)
 
-export const calculateLayout = async (params) => {
+exports.calculateLayout =  async (params) => {
   const {
     graph,
     layoutName,

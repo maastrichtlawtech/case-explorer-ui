@@ -1,7 +1,7 @@
 // @ts-nocheck
 const animationOptions = { animateFilter: () => false }
 
-export const Layouts = {
+exports.Layouts = {
   cose: {
     name: 'cose',
 
