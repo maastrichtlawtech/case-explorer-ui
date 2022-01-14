@@ -2,7 +2,7 @@
   "name": "nativestarterserver",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "start": "npm run shell"
   },
