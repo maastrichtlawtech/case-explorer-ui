@@ -97,6 +97,14 @@ export enum DocType {
 }
 
 
+export enum NodeAttributes {
+  ID = "ID",
+  ALL = "ALL",
+  QUERYHANDLER = "QUERYHANDLER",
+  NETWORKSTATS = "NETWORKSTATS",
+}
+
+
 export type Network = {
   __typename: "Network",
   nodes:  Array<Node >,
@@ -129,12 +137,6 @@ export type EdgeInput = {
   target: string,
 };
 
-export enum NodeAttributes {
-  ALL = "ALL",
-  NETWORKSTATS = "NETWORKSTATS",
-}
-
-
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -164,7 +166,7 @@ export enum ModelSortDirection {
 
 export type ModelCaselawConnection = {
   __typename: "ModelCaselawConnection",
-  items:  Array<Caselaw >,
+  items:  Array<Caselaw | null >,
   nextToken?: string | null,
 };
 
@@ -234,6 +236,7 @@ export type QueryNetworkByUserInputQueryVariables = {
   Instances?: Array< string | null > | null,
   Domains?: Array< string | null > | null,
   Doctypes: Array< DocType >,
+  attributesToFetch?: NodeAttributes | null,
 };
 
 export type QueryNetworkByUserInputQuery = {
@@ -315,6 +318,17 @@ export type BatchFetchNodeDataQuery = {
   } | null > | null,
 };
 
+export type CalculateLayoutQueryVariables = {
+  nodes: Array< NodeInput >,
+  edges: Array< EdgeInput >,
+  layoutName: string,
+  boundingBox?: string | null,
+};
+
+export type CalculateLayoutQuery = {
+  calculateLayout?: string | null,
+};
+
 export type TestQueryVariables = {
   ecli?: string | null,
 };
@@ -366,7 +380,7 @@ export type ListCaselawsQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -392,7 +406,7 @@ export type QueryByItemTypeQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -418,7 +432,7 @@ export type QueryByInstanceQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };
@@ -444,7 +458,7 @@ export type QueryByInstanceLiQuery = {
       instance_li?: string | null,
       createdAt: string,
       updatedAt: string,
-    } >,
+    } | null >,
     nextToken?: string | null,
   } | null,
 };

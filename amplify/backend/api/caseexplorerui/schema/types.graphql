@@ -1,3 +1,10 @@
+input  BoundingBoxInput  {
+  x1: Float!
+  y1: Float!
+  w: Float!
+  h: Float!
+}
+
 type Network {
   nodes: [Node!]!
   edges: [Edge!]!

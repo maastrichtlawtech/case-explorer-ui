@@ -11,5 +11,5 @@ type Query {
     edges: [EdgeInput!]!,
     layoutName: String!,
     boundingBox: AWSJSON,
-  ): AWSJSON @function(name: "layout-calculator-${env}")
+  ): AWSJSON @function(name: "layoutcalculator-${env}")
 }

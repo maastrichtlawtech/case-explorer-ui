@@ -15,6 +15,7 @@ export const queryNetworkByUserInput = /* GraphQL */ `
     $Instances: [String]
     $Domains: [String]
     $Doctypes: [DocType!]!
+    $attributesToFetch: NodeAttributes
   ) {
     queryNetworkByUserInput(
       DataSources: $DataSources
@@ -28,6 +29,7 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       Instances: $Instances
       Domains: $Domains
       Doctypes: $Doctypes
+      attributesToFetch: $attributesToFetch
     ) {
       nodes {
         id
@@ -86,6 +88,21 @@ export const batchFetchNodeData = /* GraphQL */ `
       id
       data
     }
+  }
+`;
+export const calculateLayout = /* GraphQL */ `
+  query CalculateLayout(
+    $nodes: [NodeInput!]!
+    $edges: [EdgeInput!]!
+    $layoutName: String!
+    $boundingBox: AWSJSON
+  ) {
+    calculateLayout(
+      nodes: $nodes
+      edges: $edges
+      layoutName: $layoutName
+      boundingBox: $boundingBox
+    )
   }
 `;
 export const test = /* GraphQL */ `

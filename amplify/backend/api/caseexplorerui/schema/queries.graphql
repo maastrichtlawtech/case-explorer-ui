@@ -30,6 +30,12 @@ type Query {
     nodes: [NodeInput!]!
     attributesToFetch: NodeAttributes,
   ): [Node] @function(name: "batchdatafetcher-${env}")
+  calculateLayout(
+    nodes: [NodeInput!]!,
+    edges: [EdgeInput!]!,
+    layoutName: String!,
+    boundingBox: AWSJSON,
+  ): AWSJSON @function(name: "layoutcalculator-${env}")
   test(
     ecli: String
   ): Node @function(name: "test-${env}")
