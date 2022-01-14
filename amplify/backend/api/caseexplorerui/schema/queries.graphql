@@ -34,7 +34,7 @@ type Query {
     nodes: [NodeInput!]!,
     edges: [EdgeInput!]!,
     layoutName: String!,
-    boundingBox: AWSJSON,
+    boundingBox: BoundingBoxInput,
   ): AWSJSON @function(name: "layoutcalculator-${env}")
   test(
     ecli: String

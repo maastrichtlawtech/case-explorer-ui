@@ -95,7 +95,7 @@ export const calculateLayout = /* GraphQL */ `
     $nodes: [NodeInput!]!
     $edges: [EdgeInput!]!
     $layoutName: String!
-    $boundingBox: AWSJSON
+    $boundingBox: BoundingBoxInput
   ) {
     calculateLayout(
       nodes: $nodes

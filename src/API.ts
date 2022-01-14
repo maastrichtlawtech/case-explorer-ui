@@ -137,6 +137,13 @@ export type EdgeInput = {
   target: string,
 };
 
+export type BoundingBoxInput = {
+  x1: number,
+  y1: number,
+  w: number,
+  h: number,
+};
+
 export type ModelStringKeyConditionInput = {
   eq?: string | null,
   le?: string | null,
@@ -322,7 +329,7 @@ export type CalculateLayoutQueryVariables = {
   nodes: Array< NodeInput >,
   edges: Array< EdgeInput >,
   layoutName: string,
-  boundingBox?: string | null,
+  boundingBox?: BoundingBoxInput | null,
 };
 
 export type CalculateLayoutQuery = {
