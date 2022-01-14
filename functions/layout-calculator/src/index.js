@@ -1,4 +1,4 @@
-const { calculateLayout }  = require('./src/layoutCalculator')
+const { calculateLayout }  = require('./layoutCalculator')
 
 exports.handler = async (event, context, callback) => {
   const {
