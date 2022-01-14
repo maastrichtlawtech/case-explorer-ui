@@ -5,7 +5,8 @@ import {
   batchFetchNodeData,
   computeSubnetwork,
   computeNetworkStatistics, 
-  test 
+  test,
+  calculateLayout as calculateLayoutQuery,
 } from "../../src/graphql/queries";
 import { 
   QueryNetworkByUserInputQueryVariables, 
@@ -13,7 +14,8 @@ import {
   BatchFetchNodeDataQueryVariables,
   ComputeSubnetworkQueryVariables,
   ComputeNetworkStatisticsQueryVariables, 
-  TestQueryVariables 
+  TestQueryVariables,
+  CalculateLayoutQueryVariables,
 } from '../../src/API';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import gql from 'graphql-tag';
@@ -127,6 +129,25 @@ export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQu
     return JSON.parse(result)
   } catch (err) {
     console.log('error getNetworkStatistics:', err)
+  }
+}
+
+export async function calculateLayout(variables: CalculateLayoutQueryVariables) {
+  try {
+    console.log('calculateLayout variables:', 
+    variables,
+    gql(calculateLayoutQuery),
+    )
+    const calculateLayoutResult = await API.graphql({
+      query: gql(calculateLayoutQuery),
+      variables
+    })
+    console.log('result', calculateLayoutResult)
+
+    const result = calculateLayoutResult.data.calculateLayout
+    return JSON.parse(result)
+  } catch (err) {
+    console.log('error calculateLayout:', err)
   }
 }
 

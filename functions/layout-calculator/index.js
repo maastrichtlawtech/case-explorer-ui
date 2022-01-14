@@ -7,6 +7,7 @@ exports.handler = async (event, context, callback) => {
     layoutName,
     boundingBox,
   } = event.arguments
+  console.log('event', event)
   const result = await calculateLayout({
     boundingBox,
     graph: {
@@ -15,5 +16,6 @@ exports.handler = async (event, context, callback) => {
     },
     layoutName,
   })
+  console.log('result', result)
   callback(null, result)
 }

@@ -575,7 +575,7 @@ const AppContainer = ({
           return false
         }
         case EVENT.LAYOUT_CHANGED: {
-          break
+          // break
           if (payload.value.expansion)  { 
             graphEditor.viewport.setZoom(payload.value.expansion, true)
           }
@@ -606,19 +606,13 @@ const AppContainer = ({
               w: hitArea.width,
               h: hitArea.height,
             }
-              const body = {
+             
+              API.calculateLayout({
                 nodes,
                 edges,
                 layoutName,
-                boundingBox,
-              }
-              fetch('http://localhost:8080/layout', {
-                method: 'POST',
-                body: JSON.stringify(body),
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }).then(res => res.json()).then(res => {
+                boundingBox//: JSON.stringify(boundingBox),
+              }).then((res) => {
                 console.log('layout res', res)
                 Object.keys(res).forEach((key) => {
                   const {
@@ -632,8 +626,36 @@ const AppContainer = ({
                   })
                 })
               }).catch((err) => {
-                console.log('layout err', err)
-              })
+                  console.log('layout err', err)
+                })
+              // const body = {
+              //   nodes,
+              //   edges,
+              //   layoutName,
+              //   boundingBox,
+              // }
+              // fetch('http://localhost:8080/layout', {
+              //   method: 'POST',
+              //   body: JSON.stringify(body),
+              //   headers: {
+              //     'Content-Type': 'application/json',
+              //   },
+              // }).then(res => res.json()).then(res => {
+              //   console.log('layout res', res)
+              //   Object.keys(res).forEach((key) => {
+              //     const {
+              //       x,
+              //       y,
+              //     } = res[key]
+              //     const element = cy.$id(key)
+              //     element.position({
+              //       x,
+              //       y,
+              //     })
+              //   })
+              // }).catch((err) => {
+              //   console.log('layout err', err)
+              // })
             }, 200)
           return false
         }
