@@ -193,9 +193,9 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
   //     formRef.current.onSubmit(event)
   //   }, 1000)
   // }, [])
-  React.useEffect(() => {
-    onSubmit()
-  }, [])
+  // React.useEffect(() => {
+  //   onSubmit()
+  // }, [])
   return (
     <Modal
       open={isOpen}
