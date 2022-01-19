@@ -102,6 +102,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
   const formRef= React.useRef()
   const onSubmit = React.useCallback(async e => {
     onStart()
+    console.log('START', state)
     const casesDataList = await Promise.all(
       state.tabs.map(async (tab, index) => {
         try {
@@ -185,7 +186,12 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       allEdges,
       subNetwork,
     })
-  }, [onNetworkStatisticsCalculated, onFinish, onStart, onError, ])
+  }, [
+    onNetworkStatisticsCalculated,
+     onFinish,
+      onStart,
+       onError,
+      state, ])
   // React.useEffect(() => {
   //   setTimeout(()=> {
   //     const  event = new Event('click')
