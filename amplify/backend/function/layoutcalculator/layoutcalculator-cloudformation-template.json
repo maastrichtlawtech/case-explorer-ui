@@ -80,7 +80,8 @@
         },
         "Runtime": "nodejs14.x",
         "Layers": [],
-        "Timeout": 25
+        "Timeout": 30,
+        "MemorySize": "1024"
       }
     },
     "LambdaExecutionRole": {

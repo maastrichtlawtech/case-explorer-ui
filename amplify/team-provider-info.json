@@ -36,7 +36,7 @@
         },
         "batchdatafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/batchdatafetcher-4e366f562f754a576872-build.zip",
+          "s3Key": "amplify-builds/batchdatafetcher-527055587532746a6166-build.zip",
           "ddbTableName": "Caselaw"
         },
         "caseexploreruidynamodbaccess": {
@@ -53,7 +53,7 @@
         },
         "subnetwork": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/subnetwork-34685176784777485661-build.zip"
+          "s3Key": "amplify-builds/subnetwork-7a5343717a626d2f7672-build.zip"
         },
         "layoutcalculator": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
