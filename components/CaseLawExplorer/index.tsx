@@ -159,7 +159,6 @@ const AppContainer = ({
   const NODE_ID = 'http://deeplink.rechtspraak.nl/uitspraak?id=ECLI:NL:HR:2014:3519'
 
   const filteredDataRef = React.useRef({})
-  
   const [state, updateState] = useImmer({
     queryBuilder: {
       visible: true,
@@ -690,6 +689,69 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
+  const nodeIdsRef = React.useRef<any>()
+  const edgeIdsRef = React.useRef<any>()
+  React.useEffect(() => {
+    const nodeIds = controllerProps.nodes.map((item) => item.id).sort().join('.')
+    const edgeIds = controllerProps.edges.map((item) => item.id).sort().join('.')
+    if ((nodeIdsRef.current === nodeIds && edgeIds === edgeIdsRef.current) || controllerProps.nodes.length === 0) {
+      return () => {}
+    }
+    console.log('There is a new update!!!')
+    nodeIdsRef.current = nodeIds
+    edgeIdsRef.current = edgeIds
+    const call  = async () => {
+      let networkStatistics = await API.getNetworkStatistics({
+        nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
+        edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
+      })
+      const {
+        nodeSizeRangeMap,
+        communityStats,
+      } = calculateNetworkStatisticsRange(networkStatistics, {
+        nodes: controllerProps.nodes,
+        edges: controllerProps.edges,
+      })
+      console.log('communityStats', communityStats)
+      configRef.current.visualizationRangeMap = nodeSizeRangeMap
+      controller.update((draft) => {
+        draft.networkStatistics.local  = networkStatistics
+        const filterSchema  = draft.settingsBar.forms[2].schema
+        const filterFormData  = draft.settingsBar.forms[2].formData
+        filterSchema.properties.community = {
+          type: 'array',
+          uniqueItems: true,
+          items: {
+            enum: communityStats.map((item) => item.key),
+            enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
+            type: 'string'
+          },
+          default: []
+        }
+        filterSchema.properties.year.items.minimum = nodeSizeRangeMap.year[0]
+        filterSchema.properties.year.items.maximum = nodeSizeRangeMap.year[1]
+        filterSchema.properties.degree.items.minimum = nodeSizeRangeMap.degree[0]
+        filterSchema.properties.degree.items.maximum = nodeSizeRangeMap.degree[1]
+        filterSchema.properties.indegree.items.minimum = nodeSizeRangeMap['in-degree'][0]
+        filterSchema.properties.indegree.items.maximum = nodeSizeRangeMap['in-degree'][1]
+        filterSchema.properties.outdegree.items.minimum = nodeSizeRangeMap['out-degree'][0]
+        filterSchema.properties.outdegree.items.maximum = nodeSizeRangeMap['out-degree'][1]
+        filterFormData.year = nodeSizeRangeMap.year
+        filterFormData.degree = nodeSizeRangeMap.degree
+        filterFormData.indegree = nodeSizeRangeMap['in-degree']
+        filterFormData.outdegree = nodeSizeRangeMap['out-degree']
+
+        const createClusterForm = draft.settingsBar?.createClusterForm!
+        createClusterForm.schema.properties.community = filterSchema.properties.community
+      })
+      alertRef.current.alert({
+        type: 'success',
+        text: `Network Statistics Calculated!`
+      })
+    }
+    call()
+  }, [controllerProps.nodes, controllerProps.edges])
+ 
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
@@ -753,67 +815,77 @@ const AppContainer = ({
           })
         }}
         onNetworkStatisticsCalculated={({
-          networkStatistics,
           allNodes,
           allEdges,
-          subNetwork,
         }) => {
-          const {
-            nodeSizeRangeMap,
-            communityStats,
-          } = calculateNetworkStatisticsRange(networkStatistics, subNetwork)
-          console.log('communityStats', communityStats)
-          configRef.current.visualizationRangeMap = nodeSizeRangeMap
           controller.update((draft) => {
-            draft.networkStatistics.local  = networkStatistics
             draft.allNodes  = allNodes
             draft.allEdges  = allEdges
-            const filterSchema  = draft.settingsBar.forms[2].schema
-            const filterFormData  = draft.settingsBar.forms[2].formData
-            filterSchema.properties.community = {
-              type: 'array',
-              uniqueItems: true,
-              items: {
-                enum: communityStats.map((item) => item.key),
-                enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-                type: 'string'
-              },
-              default: []
-            }
-            filterSchema.properties.year.items.minimum = nodeSizeRangeMap.year[0]
-            filterSchema.properties.year.items.maximum = nodeSizeRangeMap.year[1]
-            filterSchema.properties.degree.items.minimum = nodeSizeRangeMap.degree[0]
-            filterSchema.properties.degree.items.maximum = nodeSizeRangeMap.degree[1]
-            filterSchema.properties.indegree.items.minimum = nodeSizeRangeMap['in-degree'][0]
-            filterSchema.properties.indegree.items.maximum = nodeSizeRangeMap['in-degree'][1]
-            filterSchema.properties.outdegree.items.minimum = nodeSizeRangeMap['out-degree'][0]
-            filterSchema.properties.outdegree.items.maximum = nodeSizeRangeMap['out-degree'][1]
-            filterFormData.year = nodeSizeRangeMap.year
-            filterFormData.degree = nodeSizeRangeMap.degree
-            filterFormData.indegree = nodeSizeRangeMap['in-degree']
-            filterFormData.outdegree = nodeSizeRangeMap['out-degree']
-
-            const createClusterForm = draft.settingsBar?.createClusterForm!
-            createClusterForm.schema.properties.community = filterSchema.properties.community
-            // createClusterForm?.schema.properties.community = filterSchema.properties.community
-            // draft.settingsBar.forms[2].schema = {
-            //   ...filterSchema,
-            //   properties: {
-            //     ...filterSchema.properties,
-                // community: {
-                //   enum: communityStats.map((item) => item.key),
-                //   enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-                //   type: 'number'
-                // },
-            //   }
-            // }
           })
           console.log('All', allNodes, allEdges)
-          alertRef.current.alert({
-            type: 'success',
-            text: `Network Statistics Calculated!`
-          })
         }}
+        // onNetworkStatisticsCalculated={({
+        //   networkStatistics,
+        //   allNodes,
+        //   allEdges,
+        //   subNetwork,
+        // }) => {
+        //   const {
+        //     nodeSizeRangeMap,
+        //     communityStats,
+        //   } = calculateNetworkStatisticsRange(networkStatistics, subNetwork)
+        //   console.log('communityStats', communityStats)
+        //   configRef.current.visualizationRangeMap = nodeSizeRangeMap
+        //   controller.update((draft) => {
+        //     draft.networkStatistics.local  = networkStatistics
+        //     draft.allNodes  = allNodes
+        //     draft.allEdges  = allEdges
+        //     const filterSchema  = draft.settingsBar.forms[2].schema
+        //     const filterFormData  = draft.settingsBar.forms[2].formData
+        //     filterSchema.properties.community = {
+        //       type: 'array',
+        //       uniqueItems: true,
+        //       items: {
+        //         enum: communityStats.map((item) => item.key),
+        //         enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
+        //         type: 'string'
+        //       },
+        //       default: []
+        //     }
+        //     filterSchema.properties.year.items.minimum = nodeSizeRangeMap.year[0]
+        //     filterSchema.properties.year.items.maximum = nodeSizeRangeMap.year[1]
+        //     filterSchema.properties.degree.items.minimum = nodeSizeRangeMap.degree[0]
+        //     filterSchema.properties.degree.items.maximum = nodeSizeRangeMap.degree[1]
+        //     filterSchema.properties.indegree.items.minimum = nodeSizeRangeMap['in-degree'][0]
+        //     filterSchema.properties.indegree.items.maximum = nodeSizeRangeMap['in-degree'][1]
+        //     filterSchema.properties.outdegree.items.minimum = nodeSizeRangeMap['out-degree'][0]
+        //     filterSchema.properties.outdegree.items.maximum = nodeSizeRangeMap['out-degree'][1]
+        //     filterFormData.year = nodeSizeRangeMap.year
+        //     filterFormData.degree = nodeSizeRangeMap.degree
+        //     filterFormData.indegree = nodeSizeRangeMap['in-degree']
+        //     filterFormData.outdegree = nodeSizeRangeMap['out-degree']
+
+        //     const createClusterForm = draft.settingsBar?.createClusterForm!
+        //     createClusterForm.schema.properties.community = filterSchema.properties.community
+        //     // createClusterForm?.schema.properties.community = filterSchema.properties.community
+        //     // draft.settingsBar.forms[2].schema = {
+        //     //   ...filterSchema,
+        //     //   properties: {
+        //     //     ...filterSchema.properties,
+        //         // community: {
+        //         //   enum: communityStats.map((item) => item.key),
+        //         //   enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
+        //         //   type: 'number'
+        //         // },
+        //     //   }
+        //     // }
+        //   })
+        //   console.log('All', allNodes, allEdges)
+        //   alertRef.current.alert({
+        //     type: 'success',
+        //     text: `Network Statistics Calculated!`
+        //   })
+        // }}
         onFinish={({
           nodes: nodes_ = [],
           edges= [],

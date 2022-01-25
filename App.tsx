@@ -14,6 +14,7 @@ import * as API from './components/CaseLawExplorer/API';
 import {TermsOfService} from './components/CaseLawExplorer/components/TermsOfService';
 import * as R from 'colay/ramda';
 import {useMeasure, View} from 'colay-ui';
+import {useImmer,} from 'colay-ui/hooks/useImmer';
 import { Signin   }from './components/CaseLawExplorer/Signin'
 
 spread(cytoscape)
@@ -241,7 +242,21 @@ const AppContainer = () => {
 // }
 
 export default AppContainer // App
-
+// export default () => {
+//   const xStateRef = React.useRef({
+//     nodes: [{ name: '2' }],
+//     edges: [{ source: '1', target: '2' }, { source: '2', target: '3' }],
+//   })
+//   const [xstate, updateXstate] = useImmer(xStateRef.current)
+//   console.log('xstate', xstate.nodes === xStateRef.current.nodes)
+//   React.useEffect(() => {
+//     updateXstate(draft => {
+//       // draft.nodes
+//       draft.nodes.push({ name: '3' })
+//     })
+//   }, [])
+//   return <View></View>
+// }
 
 function detectBrowser() { 
   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ) {

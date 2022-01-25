@@ -174,31 +174,29 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       id: node.id,
       data: JSON.stringify(node.data)
     }))
-    let networkStatistics = await API.getNetworkStatistics({
-      nodes: allNodesData,
-      edges: allEdges
-    })
-    console.log('RESULT getNetworkStatistics', networkStatistics)
+    // let networkStatistics = await API.getNetworkStatistics({
+    //   nodes: allNodesData,
+    //   edges: allEdges
+    // })
+    // console.log('RESULT getNetworkStatistics', networkStatistics)
+    console.log('All', allNodes, allEdges)
+
     onNetworkStatisticsCalculated({
-      networkStatistics: networkStatistics,
+      // networkStatistics: networkStatistics,
       message,
       allNodes: allNodesData,
       allEdges,
       subNetwork,
     })
-  }, [
-    onNetworkStatisticsCalculated,
-     onFinish,
+  }, 
+  [
+      onNetworkStatisticsCalculated,
+      onFinish,
       onStart,
-       onError,
-      state, ])
-  // React.useEffect(() => {
-  //   setTimeout(()=> {
-  //     const  event = new Event('click')
-  //     event.persist = ()=>{}
-  //     formRef.current.onSubmit(event)
-  //   }, 1000)
-  // }, [])
+      onError,
+      state, 
+    ]
+  )
   // React.useEffect(() => {
   //   onSubmit()
   // }, [])
