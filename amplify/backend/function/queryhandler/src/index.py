@@ -19,7 +19,7 @@ from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
 from definitions import ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
-    DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS, AttributesList
+    DEGREES_SOURCES, DEGREES_TARGETS, DOCTYPES, DOMAINS, ECLIS, INSTANCES, KEYWORDS
 
 TEST = False                        # returns number of nodes instead of nodes
 HARD_LIMIT = 10000

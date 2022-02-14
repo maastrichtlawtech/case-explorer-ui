@@ -10,7 +10,7 @@ ddb_client = DynamodbClient(table_name=getenv(f'API_CASEEXPLORERUI_{getenv("DDB_
 def handler(event, context):
     authorized = is_authorized(event)
 
-    if 'attributesToFetch' in event and event['arguments']['attributesToFetch']:
+    if 'attributesToFetch' in event['arguments'] and event['arguments']['attributesToFetch']:
         return_attributes = AttributesList.__dict__[event['arguments']['attributesToFetch']](authorized)
     else:
         return_attributes = AttributesList.ALL(authorized)

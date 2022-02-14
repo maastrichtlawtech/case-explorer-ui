@@ -15,12 +15,12 @@
       "function": {
         "datafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/datafetcher-616a4334697433567745-build.zip",
+          "s3Key": "amplify-builds/datafetcher-4a6c4c6f4e3247726551-build.zip",
           "ddbTableName": "Caselaw"
         },
         "queryhandler": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/queryhandler-45653139417554547a54-build.zip",
+          "s3Key": "amplify-builds/queryhandler-374b2b57695830686b33-build.zip",
           "ddbTableName": "Caselaw",
           "osIndexName": "caselawexplorer_rechtspraak",
           "osEndpoint": "search-caselawexplorer-j72amls6ucledpopoyyxzyujqi.eu-central-1.es.amazonaws.com"
@@ -36,7 +36,7 @@
         },
         "batchdatafetcher": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/batchdatafetcher-527055587532746a6166-build.zip",
+          "s3Key": "amplify-builds/batchdatafetcher-6e365654393466503763-build.zip",
           "ddbTableName": "Caselaw"
         },
         "caseexploreruidynamodbaccess": {
