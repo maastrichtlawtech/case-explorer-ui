@@ -32,7 +32,7 @@ exports.calculateLayout =  async (params) => {
       ...edges,
     ],
     headless: true,
-    styleEnabled: true,
+    styleEnabled: false,
   })
   const layout = cy.createLayout({
     ...Layouts[layoutName],
