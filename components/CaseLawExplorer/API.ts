@@ -151,6 +151,24 @@ export async function calculateLayout(variables: CalculateLayoutQueryVariables) 
   }
 }
 
+export async function calculateLayoutRest(variables: CalculateLayoutQueryVariables) {
+  try {
+    const apiName = 'GraphUtils'
+    const path = 'calculateLayout'
+    const result = await API
+      .post(apiName, path, {
+        body: variables,
+      })
+    console.log('calculateLayout variables:', 
+    variables,
+    )
+    console.log('result', result)
+    return result
+  } catch (err) {
+    console.log('error calculateLayoutRest:', err)
+  }
+}
+
 export async function testAuth(variables: TestQueryVariables) {
   try {
     const elementDataResult = await API.graphql({
