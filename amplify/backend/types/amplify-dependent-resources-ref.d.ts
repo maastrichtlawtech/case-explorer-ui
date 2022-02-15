@@ -3,17 +3,25 @@ export type AmplifyDependentResourcesAttributes = {
         "caseexplorerui": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
+        },
+        "GraphUtils": {
+            "RootUrl": "string",
+            "ApiName": "string",
+            "ApiId": "string"
         }
     },
     "auth": {
         "caseexploreruiauth": {
+            "IdentityPoolId": "string",
+            "IdentityPoolName": "string",
             "HostedUIDomain": "string",
             "OAuthMetadata": "string",
             "UserPoolId": "string",
             "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
-            "AppClientID": "string"
+            "AppClientID": "string",
+            "CreatedSNSRole": "string"
         }
     },
     "function": {
@@ -63,6 +71,12 @@ export type AmplifyDependentResourcesAttributes = {
             "LambdaExecutionRole": "string"
         },
         "layoutcalculator": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        },
+        "layoutcalculatorrest": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",

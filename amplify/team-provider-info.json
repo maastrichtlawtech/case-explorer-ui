@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-caseexplorerui-dev-133633-unauthRole",
       "StackName": "amplify-caseexplorerui-dev-133633",
       "StackId": "arn:aws:cloudformation:eu-central-1:275192370238:stack/amplify-caseexplorerui-dev-133633/a498dfe0-1090-11ec-9f45-06c163c7e882",
-      "AmplifyAppId": "d11iy22xsphp3a"
+      "AmplifyAppId": "d11iy22xsphp3a",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-caseexplorerui-dev-133633-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "function": {
@@ -58,10 +59,15 @@
         "layoutcalculator": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
           "s3Key": "amplify-builds/layoutcalculator-75704e492b57726f3277-build.zip"
+        },
+        "layoutcalculatorrest": {
+          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
+          "s3Key": "amplify-builds/layoutcalculatorrest-62344e3276347a494746-build.zip"
         }
       },
       "auth": {
-        "caseexploreruiauth": {}
+        "caseexploreruiauth": {},
+        "true": {}
       }
     }
   }

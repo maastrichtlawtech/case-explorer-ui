@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "paths": {
+    "/calculateLayout": {
+      "name": "/calculateLayout",
+      "lambdaFunction": "layoutcalculatorrest",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    }
+  }
+}
