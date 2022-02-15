@@ -43,11 +43,21 @@ app.post('/calculateLayout', async function(req, res) {
     layoutName,
   })
   console.log('result', result)
-  // callback(null, result)
-  // Add your code here
   res.json(result)
 });
 
+app.post('/calculateLayout/*', async function(req, res) {
+  res.json({success: 200, url: req.url});
+});
+app.get('/calculateLayout/*', async function(req, res) {
+  res.json({success: 200, url: req.url});
+});
+app.put('/calculateLayout/*', async function(req, res) {
+  res.json({success: 200, url: req.url});
+});
+app.delete('/calculateLayout/*', async function(req, res) {
+  res.json({success: 200, url: req.url});
+});
 
 app.listen(3000, function() {
     console.log("App started")

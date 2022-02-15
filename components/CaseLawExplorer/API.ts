@@ -155,9 +155,19 @@ export async function calculateLayoutRest(variables: CalculateLayoutQueryVariabl
   try {
     const apiName = 'GraphUtils'
     const path = 'calculateLayout'
+    const user =  await Auth.currentSession()
+    const token = user.getAccessToken().getJwtToken()
+    const headers = {
+      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Headers": '*',
+      "access-control-allow-origin": "*",
+      "content-type": "application/json;charset=UTF-8",
+      authorization: token
+    }
     const result = await API
       .post(apiName, path, {
         body: variables,
+        headers,
       })
     console.log('calculateLayout variables:', 
     variables,
