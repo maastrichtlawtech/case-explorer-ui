@@ -1,15 +1,22 @@
-const awsServerlessExpress = require('aws-serverless-express');
-const app = require('./app');
+const { calculateLayout }  = require('./layoutCalculator')
 
-/**
- * @type {import('http').Server}
- */
-const server = awsServerlessExpress.createServer(app);
-
-/**
- * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
- */
-exports.handler = (event, context) => {
-  console.log(`EVENT: ${JSON.stringify(event)}`);
-  return awsServerlessExpress.proxy(server, event, context);
-};
+exports.handler = async (event, context, callback) => {
+  const {
+    nodes,
+    edges,
+    layoutName,
+    boundingBox,
+  } = event
+  console.log('event', event)
+  const result = await calculateLayout({
+    boundingBox,
+    graph: {
+      edges,
+      nodes,
+    },
+    layoutName,
+  })
+  console.log('result', result)
+  // callback(null, result)
+  return result
+}
