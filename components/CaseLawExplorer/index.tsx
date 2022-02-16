@@ -606,7 +606,7 @@ const AppContainer = ({
               h: hitArea.height,
             }
              
-              API.calculateLayout({
+              API.calculateLayoutRest({
                 nodes,
                 edges,
                 layoutName,

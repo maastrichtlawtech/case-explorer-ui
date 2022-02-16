@@ -26,7 +26,8 @@ app.use(function(req, res, next) {
 });
 
 
-app.post('/calculateLayout', async function(req, res) {
+app.post('/calculateLayout', function (req, res) {
+  console.log('event-start', req)
   const {
     nodes,
     edges,
@@ -34,30 +35,33 @@ app.post('/calculateLayout', async function(req, res) {
     boundingBox,
   } = req.body
   console.log('event', req.body)
-  const result = await calculateLayout({
+  calculateLayout({
     boundingBox,
     graph: {
       edges,
       nodes,
     },
     layoutName,
+  }).then((result) => {
+    console.log('result', result)
+    res.json(result)
+  }).catch((error) => {
+    console.log('Error', error)
   })
-  console.log('result', result)
-  res.json(result)
 });
 
-app.post('/calculateLayout/*', async function(req, res) {
-  res.json({success: 200, url: req.url});
-});
-app.get('/calculateLayout/*', async function(req, res) {
-  res.json({success: 200, url: req.url});
-});
-app.put('/calculateLayout/*', async function(req, res) {
-  res.json({success: 200, url: req.url});
-});
-app.delete('/calculateLayout/*', async function(req, res) {
-  res.json({success: 200, url: req.url});
-});
+// app.post('/calculateLayout/*', async function(req, res) {
+//   res.json({success: 200, url: req.url});
+// });
+// app.get('/calculateLayout/*', async function(req, res) {
+//   res.json({success: 200, url: req.url});
+// });
+// app.put('/calculateLayout/*', async function(req, res) {
+//   res.json({success: 200, url: req.url});
+// });
+// app.delete('/calculateLayout/*', async function(req, res) {
+//   res.json({success: 200, url: req.url});
+// });
 
 app.listen(3000, function() {
     console.log("App started")

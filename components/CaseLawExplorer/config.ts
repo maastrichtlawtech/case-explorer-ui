@@ -10,7 +10,8 @@ const AWS_PROD_CONFIG = {
         {
             "name": "GraphUtils",
             "endpoint": "https://0bqvbsi8i7.execute-api.eu-central-1.amazonaws.com/dev",
-            "region": "eu-central-1"
+            "region": "eu-central-1",
+            "authorizationType": "NONE",
         }
     ],
     // "aws_cognito_identity_pool_id": "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
