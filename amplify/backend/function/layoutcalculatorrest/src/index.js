@@ -1,6 +1,7 @@
 const { calculateLayout }  = require('./layoutCalculator')
 
 exports.handler = async (event, context, callback) => {
+  console.log('event', event)
   const {
     nodes,
     edges,

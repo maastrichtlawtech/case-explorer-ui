@@ -1,18 +1,18 @@
 {
     "arguments": {
         "DataSources": ["RS"],
-        "Doctypes": ["DEC", "OPI"],
+        "Doctypes": ["DEC"],
         "DateStart": "1900-01-01",
-        "DateEnd": "2021-12-31",
+        "DateEnd": "2021-01-01",
         
-        "Eclis": "ECLI:NL:HR:2004:AP0186",
+        "Eclis": "",
         "Instances": [],
         "Domains": [],
 
-        "Keywords": "",
+        "Keywords": "gevaarzetting",
         "Articles": "",
         
-        "DegreesSources": 1,
+        "DegreesSources": 0,
         "DegreesTargets": 1
     }
 }
