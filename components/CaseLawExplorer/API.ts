@@ -153,10 +153,21 @@ export async function calculateLayout(variables: CalculateLayoutQueryVariables) 
 
 export async function calculateLayoutRest(variables: CalculateLayoutQueryVariables) {
   try {
-    const apiName = 'GraphUtils'
-    const path = '/calculateLayout'
-    const user =  await Auth.currentSession()
-    const token = user.getAccessToken().getJwtToken()
+    const response  = await fetch('https://4o2kv2ljs1.execute-api.eu-central-1.amazonaws.com/dev/', 
+    {
+      method: 'POST',
+      headers: {
+        // 'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(variables),
+    })
+    console.log('response', response)
+    const result = JSON.parse((await response.json()).body)
+    // const apiName = 'GraphUtils'
+    // const path = '/calculateLayout'
+    // const user =  await Auth.currentSession()
+    // const token = user.getAccessToken().getJwtToken()
     // const headers = {
     //   // 'Access-Control-Allow-Origin': '*',
     //   // "Access-Control-Allow-Headers": '*',
@@ -165,11 +176,11 @@ export async function calculateLayoutRest(variables: CalculateLayoutQueryVariabl
     //   // Authorization: token,
     //   'x-api-key': token
     // }
-    const result = await API
-      .post(apiName, path, {
-        body: variables,
-        // headers,
-      })
+    // const result = await API
+    //   .post(apiName, path, {
+    //     body: variables,
+    //     // headers,
+    //   })
     console.log('calculateLayout variables:', 
     variables,
     )
@@ -179,6 +190,34 @@ export async function calculateLayoutRest(variables: CalculateLayoutQueryVariabl
     console.log('error calculateLayoutRest:', err)
   }
 }
+// export async function calculateLayoutRest(variables: CalculateLayoutQueryVariables) {
+//   try {
+//     const apiName = 'GraphUtils'
+//     const path = '/calculateLayout'
+//     const user =  await Auth.currentSession()
+//     const token = user.getAccessToken().getJwtToken()
+//     // const headers = {
+//     //   // 'Access-Control-Allow-Origin': '*',
+//     //   // "Access-Control-Allow-Headers": '*',
+//     //   // "access-control-allow-origin": "*",
+//     //   // "content-type": "application/json;charset=UTF-8",
+//     //   // Authorization: token,
+//     //   'x-api-key': token
+//     // }
+//     const result = await API
+//       .post(apiName, path, {
+//         body: variables,
+//         // headers,
+//       })
+//     console.log('calculateLayout variables:', 
+//     variables,
+//     )
+//     console.log('result', result)
+//     return result
+//   } catch (err) {
+//     console.log('error calculateLayoutRest:', err)
+//   }
+// }
 
 export async function testAuth(variables: TestQueryVariables) {
   try {
