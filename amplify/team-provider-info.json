@@ -62,7 +62,7 @@
         },
         "layoutcalculatorrest": {
           "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/layoutcalculatorrest-55497756677676476c42-build.zip"
+          "s3Key": "amplify-builds/layoutcalculatorrest-303278416c5476316368-build.zip"
         }
       },
       "auth": {

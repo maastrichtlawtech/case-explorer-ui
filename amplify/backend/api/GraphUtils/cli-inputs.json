@@ -5,13 +5,7 @@
       "name": "/calculateLayout",
       "lambdaFunction": "layoutcalculatorrest",
       "permissions": {
-        "setting": "private",
-        "auth": [
-          "create",
-          "read",
-          "update",
-          "delete"
-        ]
+        "setting": "open"
       }
     }
   }
