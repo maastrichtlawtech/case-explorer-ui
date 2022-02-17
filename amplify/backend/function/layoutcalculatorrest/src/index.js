@@ -6,7 +6,7 @@ exports.handler = async (event, context, callback) => {
     edges,
     layoutName,
     boundingBox,
-  } = event
+  } = JSON.parse(event.body)
   console.log('event', event)
   const result = await calculateLayout({
     boundingBox,
