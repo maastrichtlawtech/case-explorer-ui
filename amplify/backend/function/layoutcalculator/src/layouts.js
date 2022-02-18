@@ -1,6 +1,9 @@
 // @ts-nocheck
-const animationOptions = { animateFilter: () => false }
-
+const animationOptions = { 
+  animateFilter: () => false,
+  animate: false
+ }
+const DEFAULT_REFRESH = 10
 exports.Layouts = {
   cose: {
     name: 'cose',
@@ -12,7 +15,7 @@ exports.Layouts = {
     stop() {},
 
     // // Number of iterations between consecutive screen positions update
-    refresh: 20,
+    refresh: DEFAULT_REFRESH,//20,
 
     // // Whether to fit the network view after when done
     fit: true,
@@ -51,7 +54,7 @@ exports.Layouts = {
     gravity: 1,
 
     // Maximum number of iterations to perform
-    numIter: 1000,
+    numIter: 200,//1000,
 
     // Initial temperature (maximum node displacement)
     initialTemp: 1000,
@@ -223,7 +226,7 @@ exports.Layouts = {
     // The number of ticks per frame for animate:true
     // - A larger value reduces rendering cost but can be jerky
     // - A smaller value increases rendering cost but is smoother
-    refresh: 10,
+    refresh: DEFAULT_REFRESH,// 10
 
     // Maximum iterations and time (in ms) before the layout will bail out
     // - A large value may allow for a better result
@@ -284,7 +287,7 @@ exports.Layouts = {
     animate: false,
 
     // number of ticks per frame; higher is faster but more jerky
-    refresh: 10,
+    refresh: DEFAULT_REFRESH,//10,
 
     // Animation duration used for animate:'end'
     animationDuration: undefined,
@@ -376,7 +379,7 @@ exports.Layouts = {
     stop() {
     },
     // number of ticks per frame; higher is faster but more jerky
-    refresh: 30,
+    refresh: DEFAULT_REFRESH,//30,
     // Whether to fit the network view after when done
     fit: true,
     // Padding on fit
