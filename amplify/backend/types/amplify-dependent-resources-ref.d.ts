@@ -3,11 +3,6 @@ export type AmplifyDependentResourcesAttributes = {
         "caseexplorerui": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
-        },
-        "GraphUtils": {
-            "RootUrl": "string",
-            "ApiName": "string",
-            "ApiId": "string"
         }
     },
     "auth": {
@@ -71,12 +66,6 @@ export type AmplifyDependentResourcesAttributes = {
             "LambdaExecutionRole": "string"
         },
         "layoutcalculator": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
-        "layoutcalculatorrest": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",

@@ -28,20 +28,6 @@
           ]
         }
       }
-    },
-    "GraphUtils": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "layoutcalculatorrest",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
     }
   },
   "auth": {
@@ -137,11 +123,6 @@
       "service": "Lambda"
     },
     "layoutcalculator": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "layoutcalculatorrest": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
