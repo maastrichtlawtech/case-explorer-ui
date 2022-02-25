@@ -52,7 +52,7 @@ export const calculateNetworkStatisticsRange  = (
   const communityStats = {}
   nodeIds.forEach((id, index) => {
     const nodeStatistics = networkStatistics[id]
-    if (nodeStatistics?.community && subNetworkNodeIds.includes(id)) {
+    if (R.isNotNil(nodeStatistics?.community) && subNetworkNodeIds.includes(id)) {
       if (R.isNotNil(communityStats[nodeStatistics.community])) {
         communityStats[nodeStatistics.community] += 1 
       } else {

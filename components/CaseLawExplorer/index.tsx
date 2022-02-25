@@ -488,8 +488,8 @@ const AppContainer = ({
               local: localNetworkStatistics,
             }
           } = graphEditor.context
-          const stats = localNetworkStatistics?.[item.id] ?? {}
           const clusterItemIds = draft.nodes.filter((item) => {
+            const stats = localNetworkStatistics?.[item.id] ?? {}
             const element = cy.$id(item.id)
             return (
               R.inBetween(year[0], year[1])(stats.year)
@@ -712,7 +712,7 @@ const AppContainer = ({
         nodes: controllerProps.nodes,
         edges: controllerProps.edges,
       })
-      console.log('communityStats', communityStats)
+      console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
         draft.networkStatistics.local  = networkStatistics

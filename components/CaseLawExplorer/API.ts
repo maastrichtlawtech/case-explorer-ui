@@ -153,17 +153,18 @@ export async function calculateLayout(variables: CalculateLayoutQueryVariables) 
 
 export async function calculateLayoutRest(variables: CalculateLayoutQueryVariables) {
   try {
-    const response  = await fetch('https://4o2kv2ljs1.execute-api.eu-central-1.amazonaws.com/dev/', 
+    console.log('calculateLayout variables:',variables)
+    const response  = await fetch('http://localhost:3000/', 
     {
       method: 'POST',
       headers: {
-        // 'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify(variables),
     })
     console.log('response', response)
-    const result = JSON.parse((await response.json()).body)
+    const result = await response.json()
     // const apiName = 'GraphUtils'
     // const path = '/calculateLayout'
     // const user =  await Auth.currentSession()

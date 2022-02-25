@@ -259,7 +259,7 @@ exports.Layouts = {
     // Whether to randomize the initial positions of the nodes
     // true : Use random positions within the bounding box
     // false : Use the current node positions as the initial positions
-    randomize: false,
+    randomize: true,
     ...animationOptions,
   },
   cise: {
