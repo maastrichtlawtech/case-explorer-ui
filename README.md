@@ -11,7 +11,7 @@ Materials for building a network analysis software platform for analyzing Dutch 
         <a href="https://github.com/sabaturgay">
             <img src="https://avatars.githubusercontent.com/u/22500853?v=4" width="100;" alt="sabaturgay"/>
             <br />
-            <sub><b>Bogdan Covrig</b></sub>
+            <sub><b>turgaysaba</b></sub>
         </a>
     </td>
     <td align="center">
