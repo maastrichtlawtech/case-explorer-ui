@@ -2,7 +2,7 @@ from networkx import Graph, degree, degree_centrality, in_degree_centrality, out
     betweenness_centrality, closeness_centrality, hits, pagerank, NetworkXError
 from networkx.readwrite import json_graph
 from warnings import warn
-from community import best_partition
+from community import community_louvain
 from time import time
 # taken from and modified: 
 # https://github.com/caselawanalytics/CaseLawAnalytics/blob/master/caselawnet/network_analysis.py
@@ -32,7 +32,7 @@ def handler(event, context):
     graph = get_network(nodes, edges)
     print(f'get network: took {time()-start_p} s.')
     start_p = time()
-    partition = best_partition(Graph(graph))
+    partition = community_louvain.best_partition(Graph(graph))
     print(f'get partition: took {time()-start_p} s.')
     start_p = time()
     degrees = degree(graph)
