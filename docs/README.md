@@ -13,6 +13,8 @@ The web application draws data from our data pipeline to extract, transform and 
   </a>
 </p>
 
+The Case Law Explorer UI is a tool for conducting network analysis on Dutch and European case law, directed at law students and legal researchers. It allows for searching and visualizing the network of case citations that depicts case law and facilitates insights such as the identifcation of landmark cases, or the detection of sub topics through clusters of case decisions.
+
 
 SETUP:
 - amplify add api:
