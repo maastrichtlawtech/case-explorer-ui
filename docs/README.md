@@ -16,6 +16,7 @@ The web application draws data from our data pipeline to extract, transform and 
 </p>
 
 SETUP:
+- install and configure the [amplify cli](https://docs.amplify.aws/cli/start/install/)
 - amplify add api:
     - add GraphQL schema to define table and queries
     after first pushing GraphQL table schema:
