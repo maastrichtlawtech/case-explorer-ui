@@ -1,5 +1,8 @@
 # User Guide
 
+## Case Law Explorer
+The Case Law Explorer tool can be found [here](https://dev.d11iy22xsphp3a.amplifyapp.com/). A handbook on legal network analysis is under development and will be released soon.
+
 ## Browser
 The software is designed for Google Chrome, but also seems to function well in FireFox. Running the software in Safari is ***not*** recommended.
 
