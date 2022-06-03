@@ -1,7 +1,7 @@
 # User Guide
 
 ## Case Law Explorer
-The Case Law Explorer tool can be found [here](https://dev.d11iy22xsphp3a.amplifyapp.com/). A handbook on legal network analysis is under development and will be released soon.
+The Case Law Explorer tool, which has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/), can be found [here](https://dev.d11iy22xsphp3a.amplifyapp.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students). A handbook on legal network analysis is under development and will be released soon.
 
 ## Browser
 The software is designed for Google Chrome, but also seems to function well in FireFox. Running the software in Safari is ***not*** recommended.
