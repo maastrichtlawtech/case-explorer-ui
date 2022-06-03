@@ -118,4 +118,15 @@ Under ***Preferences***, color schemes may be adjusted. Here, it is also possibl
 
 ***Import Events*** allows importing the actions you (or another user) carried out on a network. The data are exported to a JSON file, which can be shared with others, who can import the data with the import function. Because the metadata for a node is only fetched (and stored in your computer’s cache) for the node that you clicked on, you first need to download all metadata of the network. You can do this with the ‘DOWNLOAD METADATA’ option. If you then export, the JSON file will contain the metadata for all nodes of the network. The network statistics (which you find on the right-hand panel) should be included in the export file even without having performed the ‘DOWNLOAD METADATA’ operation.
 
-The metadata are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until limit reached). The network statistics are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until the limit is reached). The computation might take longer than the first display of network. A success message notifies the user about the completion of the network.
+The metadata are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until limit reached). The network statistics are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until the limit is reached). The computation might take longer t)han the first display of network. A success message notifies the user about the completion of the network.
+
+## Application examples
+
+### Dutch Case Law
+A detailed example (on 'Daderschap van rechtspersonen') can be found [here](https://docs.google.com/document/d/1xtqeVgLR6YJobhIMAwjozsU5lzvRJzDi/edit?usp=sharing&ouid=101337972402489378078&rtpof=true&sd=true). Additional tasks (and answers) can be found [here](https://drive.google.com/drive/folders/1cd9w2cuh-BpW-nHKYxKJecKBnB705F9B?usp=sharing) (on 'Voorwaardelijk opzet') and [here](https://drive.google.com/drive/folders/1V_UBoMwGAse0C2bB_YNRHzdOvZWCP5du?usp=sharing) (on 'Noodweer(exces)').
+
+### ECHR Case Law
+More information will be added once the case law is added to Case Law Explorer.
+
+### CJEU Case Law
+More information will be added once the case law is added to Case Law Explorer.
