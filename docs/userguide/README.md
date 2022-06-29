@@ -123,7 +123,10 @@ The metadata are computed on the backend network (all result nodes with or witho
 ## Examples
 
 ### Dutch Case Law
-A detailed example (on 'Daderschap van rechtspersonen') can be found [here](https://docs.google.com/document/d/1xtqeVgLR6YJobhIMAwjozsU5lzvRJzDi/edit?usp=sharing&ouid=101337972402489378078&rtpof=true&sd=true). Additional tasks (and answers) can be found [here](https://drive.google.com/drive/folders/1cd9w2cuh-BpW-nHKYxKJecKBnB705F9B?usp=sharing) (on 'Voorwaardelijk opzet') and [here](https://drive.google.com/drive/folders/1V_UBoMwGAse0C2bB_YNRHzdOvZWCP5du?usp=sharing) (on 'Noodweer(exces)').
+Detailed examples can be found for:
+- ['Daderschap van rechtspersonen'](https://docs.google.com/document/d/1xtqeVgLR6YJobhIMAwjozsU5lzvRJzDi/edit?usp=sharing&ouid=101337972402489378078&rtpof=true&sd=true)
+- ['Voorwaardelijk opzet'](https://drive.google.com/drive/folders/1cd9w2cuh-BpW-nHKYxKJecKBnB705F9B?usp=sharing) 
+- ['Noodweer(exces)'](https://drive.google.com/drive/folders/1V_UBoMwGAse0C2bB_YNRHzdOvZWCP5du?usp=sharing)
 
 ### ECHR Case Law
 More information will be added once the case law is added to Case Law Explorer.
