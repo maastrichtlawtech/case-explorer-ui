@@ -120,7 +120,7 @@ Under ***Preferences***, color schemes may be adjusted. Here, it is also possibl
 
 The metadata are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until limit reached). The network statistics are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until the limit is reached). The computation might take longer t)han the first display of network. A success message notifies the user about the completion of the network.
 
-## Application examples
+## Examples
 
 ### Dutch Case Law
 A detailed example (on 'Daderschap van rechtspersonen') can be found [here](https://docs.google.com/document/d/1xtqeVgLR6YJobhIMAwjozsU5lzvRJzDi/edit?usp=sharing&ouid=101337972402489378078&rtpof=true&sd=true). Additional tasks (and answers) can be found [here](https://drive.google.com/drive/folders/1cd9w2cuh-BpW-nHKYxKJecKBnB705F9B?usp=sharing) (on 'Voorwaardelijk opzet') and [here](https://drive.google.com/drive/folders/1V_UBoMwGAse0C2bB_YNRHzdOvZWCP5du?usp=sharing) (on 'Noodweer(exces)').
