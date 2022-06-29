@@ -1,7 +1,7 @@
 # User Guide
 
 ## Case Law Explorer
-The Case Law Explorer tool, which has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/), can be found [here](https://dev.d11iy22xsphp3a.amplifyapp.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students). 
+The [Case Law Explorer software](https://dev.d11iy22xsphp3a.amplifyapp.com/) has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students). 
 
 A handbook on legal network analysis is under development and will be released soon.
 
@@ -119,6 +119,14 @@ Under ***Preferences***, color schemes may be adjusted. Here, it is also possibl
 ***Import Events*** allows importing the actions you (or another user) carried out on a network. The data are exported to a JSON file, which can be shared with others, who can import the data with the import function. Because the metadata for a node is only fetched (and stored in your computer’s cache) for the node that you clicked on, you first need to download all metadata of the network. You can do this with the ‘DOWNLOAD METADATA’ option. If you then export, the JSON file will contain the metadata for all nodes of the network. The network statistics (which you find on the right-hand panel) should be included in the export file even without having performed the ‘DOWNLOAD METADATA’ operation.
 
 The metadata are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until limit reached). The network statistics are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until the limit is reached). The computation might take longer t)han the first display of network. A success message notifies the user about the completion of the network.
+
+## Videos
+
+### In Dutch
+Instruction videos will follow.
+
+### In English
+Instruction videos will follow.
 
 ## Examples
 
