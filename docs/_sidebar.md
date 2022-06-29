@@ -9,4 +9,5 @@
       * [Search Results](/userguide/?id=search-results)
     * [Interacting with the network](/userguide/?id=interacting-with-the-network)
     * [Tools](/userguide/?id=tools)
+    * [Videos](/userguide/?videos)
     * [Examples](/userguide/?examples)
