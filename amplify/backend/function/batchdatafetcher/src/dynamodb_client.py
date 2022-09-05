@@ -42,6 +42,7 @@ class DynamodbClient:
         print(f'DDB: {count}/{self.max_hits} items fetched.')
         print(f'DDB: {int(scanned_count/self.item_limit)}/{self.page_limit} pages scanned.')
         print(f'DDB: took {time()-start} s.')
+        print("Just adding this print statement to check how amplify push works")
         response['Count'] = count
         response['Items'] = items
         response['ScannedCount'] = scanned_count
