@@ -1,9 +1,1 @@
-{
-    "arguments": {
-        "attributesToFetch": "ALL",
-        "node": {
-            "id": "ECLI:NL:HR:2004:AP0186", 
-            "data": {}
-        }
-    }
-}
+{ "test": "event" }

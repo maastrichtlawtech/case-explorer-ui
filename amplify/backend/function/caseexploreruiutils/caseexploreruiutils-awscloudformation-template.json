@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda layer resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-LambdaLayer\",\"metadata\":{}}",
   "Parameters": {
     "env": {
       "Type": "String"
@@ -20,7 +20,7 @@
     }
   },
   "Resources": {
-    "LambdaLayerVersion69b5927f": {
+    "LambdaLayerVersion55dbb9f8": {
       "Type": "AWS::Lambda::LayerVersion",
       "Properties": {
         "CompatibleRuntimes": {
@@ -51,68 +51,13 @@
       "DeletionPolicy": "Delete",
       "UpdateReplacePolicy": "Retain"
     },
-    "LambdaLayerPermissionAwsAccounts27519237023869b5927f": {
+    "LambdaLayerPermissionPrivate55dbb9f8": {
       "Type": "AWS::Lambda::LayerVersionPermission",
       "Properties": {
         "Action": "lambda:GetLayerVersion",
         "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion69b5927f"
+          "Ref": "LambdaLayerVersion55dbb9f8"
         },
-        "Principal": "275192370238"
-      }
-    },
-    "LambdaLayerPermissionPrivate69b5927f": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": {
-          "Ref": "LambdaLayerVersion69b5927f"
-        },
-        "Principal": {
-          "Ref": "AWS::AccountId"
-        }
-      }
-    },
-    "LambdaLayerVersione940434f": {
-      "Type": "AWS::Lambda::LayerVersion",
-      "Properties": {
-        "CompatibleRuntimes": [
-          "python3.8"
-        ],
-        "Content": {
-          "S3Bucket": {
-            "Ref": "deploymentBucketName"
-          },
-          "S3Key": "amplify-builds/caseexploreruiutils-LambdaLayerVersione940434f-build.zip"
-        },
-        "Description": "Updated layer version 2021-11-04T14:23:41.198Z",
-        "LayerName": {
-          "Fn::Sub": [
-            "caseexploreruiutils-${env}",
-            {
-              "env": {
-                "Ref": "env"
-              }
-            }
-          ]
-        }
-      },
-      "DeletionPolicy": "Delete",
-      "UpdateReplacePolicy": "Retain"
-    },
-    "LambdaLayerPermissionAwsAccounts275192370238e940434f": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:eu-central-1:275192370238:layer:caseexploreruiutils-dev:2",
-        "Principal": "275192370238"
-      }
-    },
-    "LambdaLayerPermissionPrivatee940434f": {
-      "Type": "AWS::Lambda::LayerVersionPermission",
-      "Properties": {
-        "Action": "lambda:GetLayerVersion",
-        "LayerVersionArn": "arn:aws:lambda:eu-central-1:275192370238:layer:caseexploreruiutils-dev:2",
         "Principal": {
           "Ref": "AWS::AccountId"
         }
@@ -122,7 +67,7 @@
   "Outputs": {
     "Arn": {
       "Value": {
-        "Ref": "LambdaLayerVersion69b5927f"
+        "Ref": "LambdaLayerVersion55dbb9f8"
       }
     }
   }

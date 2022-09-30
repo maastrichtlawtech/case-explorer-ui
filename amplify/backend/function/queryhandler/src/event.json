@@ -1,18 +1,1 @@
-{
-    "arguments": {
-        "DataSources": ["RS"],
-        "Doctypes": ["DEC"],
-        "DateStart": "1900-01-01",
-        "DateEnd": "2021-01-01",
-        
-        "Eclis": "",
-        "Instances": [],
-        "Domains": [],
-
-        "Keywords": "gevaarzetting",
-        "Articles": "",
-        
-        "DegreesSources": 0,
-        "DegreesTargets": 1
-    }
-}
+{ "test": "event" }

@@ -1,24 +1,3 @@
 {
-  "permissions": {
-    "storage": {
-      "Caselaw:@model(appsync)": [
-        "read"
-      ]
-    }
-  },
-  "lambdaLayers": [],
-  "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "ddbTableName",
-      "environmentVariableName": "DDB_TABLE_NAME"
-    },
-    {
-      "cloudFormationParameterName": "osIndexName",
-      "environmentVariableName": "OS_INDEX_NAME"
-    },
-    {
-      "cloudFormationParameterName": "osEndpoint",
-      "environmentVariableName": "OS_ENDPOINT"
-    }
-  ]
+  "lambdaLayers": []
 }

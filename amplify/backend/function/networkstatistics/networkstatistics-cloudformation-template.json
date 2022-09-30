@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -15,10 +15,6 @@
     },
     "s3Key": {
       "Type": "String"
-    },
-    "apicaseexploreruiGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apicaseexploreruiGraphQLAPIIdOutput"
     }
   },
   "Conditions": {
@@ -73,9 +69,6 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
             }
           }
         },
@@ -87,8 +80,7 @@
         },
         "Runtime": "python3.8",
         "Layers": [],
-        "Timeout": 30,
-        "MemorySize": "1536"
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -97,12 +89,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "caseexploreruiLambdaRole906f8665",
+            "caseexploreruiLambdaRole7db8ccd7",
             {
               "Fn::Join": [
                 "",
                 [
-                  "caseexploreruiLambdaRole906f8665",
+                  "caseexploreruiLambdaRole7db8ccd7",
                   "-",
                   {
                     "Ref": "env"

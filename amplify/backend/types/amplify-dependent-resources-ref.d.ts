@@ -1,12 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
-    "api": {
-        "caseexplorerui": {
-            "GraphQLAPIIdOutput": "string",
-            "GraphQLAPIEndpointOutput": "string"
-        }
-    },
     "auth": {
-        "caseexploreruiauth": {
+        "caseexplorerui2faac137": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "HostedUIDomain": "string",
@@ -19,26 +13,14 @@ export type AmplifyDependentResourcesAttributes = {
             "CreatedSNSRole": "string"
         }
     },
+    "api": {
+        "caseexplorerui": {
+            "GraphQLAPIIdOutput": "string",
+            "GraphQLAPIEndpointOutput": "string"
+        }
+    },
     "function": {
         "datafetcher": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
-        "queryhandler": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
-        "test": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
-        "networkstatistics": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -59,13 +41,25 @@ export type AmplifyDependentResourcesAttributes = {
         "caseexploreruiutils": {
             "Arn": "string"
         },
-        "subnetwork": {
+        "layoutcalculator": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "layoutcalculator": {
+        "networkstatistics": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        },
+        "queryhandler": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        },
+        "subnetwork": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
