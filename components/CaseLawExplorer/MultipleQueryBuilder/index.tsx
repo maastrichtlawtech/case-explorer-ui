@@ -351,5 +351,5 @@ function highlightInputError(elem_id) {
   elem.setAttribute('style','border:red solid 1px !important;');
   setTimeout(() => {
     elem.setAttribute('style','')
-  }, 3000);
+  }, 3500);
 }

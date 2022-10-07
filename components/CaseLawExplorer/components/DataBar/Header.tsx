@@ -11,17 +11,29 @@ export const DataBarHeader = () => {
   const [
     {
       nodes,
-      edges
+      edges,
+      allNodes,
+      allEdges
     },
   ] = useGraphEditor(
     (editor) => {
       const {
         nodes,
-        edges
+        edges,
+        localDataRef: {
+          current: {
+            props: {
+              allNodes,
+              allEdges
+            }
+          }
+        }
       } = editor
       return {
         nodes,
-        edges
+        edges,
+        allNodes,
+        allEdges
       }
     }
   )
@@ -42,8 +54,15 @@ export const DataBarHeader = () => {
       <View
         style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 2 }}
       >
-        <Typography>{`Node Count: ${nodes.length}`}</Typography>
-        <Typography>{`Edge Count: ${edges.length}`}</Typography>
+        <Typography>{`Visible Nodes: ${nodes.length}`}</Typography>
+        <Typography>{`Visible Edges: ${edges.length}`}</Typography>
+      </View>
+      <Divider />
+      <View
+        style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 2 }}
+      >
+        <Typography>{`Retrieved Nodes: ${allNodes?.length}`}</Typography>
+        <Typography>{`Retrieved Edges: ${allEdges?.length}`}</Typography>
       </View>
     </View>
   )
