@@ -697,7 +697,7 @@ const AppContainer = ({
     if ((nodeIdsRef.current === nodeIds && edgeIds === edgeIdsRef.current) || controllerProps.nodes.length === 0) {
       return () => {}
     }
-    console.log('There is a new update!!!')
+    // console.log('There is a new update!!!')
     nodeIdsRef.current = nodeIds
     edgeIdsRef.current = edgeIds
     const call  = async () => {
@@ -712,7 +712,7 @@ const AppContainer = ({
         nodes: controllerProps.nodes,
         edges: controllerProps.edges,
       })
-      console.log('communityStats', communityStats,nodeSizeRangeMap)
+      // console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
         draft.networkStatistics.local  = networkStatistics
