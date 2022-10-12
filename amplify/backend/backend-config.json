@@ -54,7 +54,7 @@
         }
       ]
     },
-    "queryhandler": {
+    "queryhandler-opt": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
@@ -82,13 +82,13 @@
         }
       ]
     },
-    "networkstatistics": {
+    "networkstatistics-opt": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": []
     },
-    "batchdatafetcher": {
+    "batchdatafetcher-opt": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
@@ -117,12 +117,12 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "subnetwork": {
+    "subnetwork-opt": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "layoutcalculator": {
+    "layoutcalculator-opt": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
