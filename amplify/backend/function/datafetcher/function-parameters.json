@@ -1,3 +1,16 @@
 {
-  "lambdaLayers": []
+  "permissions": {
+    "storage": {
+      "Caselaw:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "ddbTableName",
+      "environmentVariableName": "DDB_TABLE_NAME"
+    }
+  ]
 }
