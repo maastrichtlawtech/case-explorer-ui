@@ -3,7 +3,7 @@ import * as R from 'colay/ramda'
 
 const AWS_PROD_CONFIG = {
     "aws_project_region": "eu-central-1",
-    "aws_appsync_graphqlEndpoint": "https://mqnkmzj5ezd7vcdqxjp5lzdjj4.appsync-api.eu-central-1.amazonaws.com/graphql",
+    "aws_appsync_graphqlEndpoint": "https://bxjbb3swx5g5xdkypdxwudyabe.appsync-api.eu-central-1.amazonaws.com/graphql",
     "aws_appsync_region": "eu-central-1",
     "aws_appsync_authenticationType": "AMAZON_COGNITO_USER_POOLS",
     "aws_cloud_logic_custom": [
@@ -19,7 +19,7 @@ const AWS_PROD_CONFIG = {
     "aws_user_pools_id": "eu-central-1_Iia5Ube9G",
     "aws_user_pools_web_client_id": "529do26g6icslepgrvcelapu8v",
     "oauth": {
-        "domain": "case-law-explorer-dev.auth.eu-central-1.amazoncognito.com",
+        "domain": "case-law-explorer-dev.eu-central-1.amazoncognito.com",
         "scope": [
             "phone",
             "email",
@@ -27,8 +27,8 @@ const AWS_PROD_CONFIG = {
             "profile",
             "aws.cognito.signin.user.admin"
         ],
-        "redirectSignIn": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
-        "redirectSignOut": "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+        "redirectSignIn": "https://optimisation.d11iy22xsphp3a.amplifyapp.com/",
+        "redirectSignOut": "https://optimisation.d11iy22xsphp3a.amplifyapp.com/",
         "responseType": "code"
     },
     "federationTarget": "COGNITO_USER_POOLS",
