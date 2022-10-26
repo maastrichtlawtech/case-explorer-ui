@@ -15,6 +15,9 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "region": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -68,7 +71,7 @@
               "Ref": "env"
             },
             "REGION": {
-              "Ref": "AWS::Region"
+              "Ref": "region"
             }
           }
         },

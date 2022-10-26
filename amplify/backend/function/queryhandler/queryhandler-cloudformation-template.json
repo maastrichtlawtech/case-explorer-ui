@@ -15,6 +15,19 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "apicaseexploreruiGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apicaseexploreruiGraphQLAPIIdOutput"
+    },
+    "ddbTableName": {
+      "Type": "String"
+    },
+    "osIndexName": {
+      "Type": "String"
+    },
+    "osEndpoint": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -69,6 +82,44 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "API_CASEEXPLORERUI_CASELAWTABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+              }
+            },
+            "API_CASEEXPLORERUI_CASELAWTABLE_ARN": {
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+                    }
+                  }
+                ]
+              ]
+            },
+            "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
+            },
+            "DDB_TABLE_NAME": {
+              "Ref": "ddbTableName"
+            },
+            "OS_INDEX_NAME": {
+              "Ref": "osIndexName"
+            },
+            "OS_ENDPOINT": {
+              "Ref": "osEndpoint"
             }
           }
         },
@@ -160,6 +211,81 @@
                   }
                 ]
               }
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+                        }
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }

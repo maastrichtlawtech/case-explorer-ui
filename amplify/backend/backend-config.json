@@ -1,106 +1,42 @@
 {
-  "api": {
-    "caseexplorerui": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
-      "output": {
-        "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authcaseexploreruiauth"
-            }
-          },
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            },
-            {
-              "authenticationType": "OPENID_CONNECT",
-              "openIDConnectConfig": {
-                "name": "SURFconext",
-                "issuerUrl": "https://connect.test.surfconext.nl/",
-                "clientId": "optimisation.d11iy22xsphp3a.amplifyapp.com",
-                "authTTL": "100",
-                "iatTTL": "100"
-              }
-            }
-          ]
-        }
-      }
-    }
-  },
   "auth": {
-    "caseexploreruiauth": {
+    "caseexploreruib94ade50": {
       "service": "Cognito",
+      "serviceType": "imported",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false
     }
   },
-  "hosting": {},
+  "api": {
+    "caseexplorerui": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 7
+            }
+          },
+          "additionalAuthenticationProviders": []
+        }
+      }
+    }
+  },
   "function": {
     "datafetcher": {
       "build": true,
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
+      "service": "Lambda"
     },
-    "queryhandler-opt": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
-    },
-    "test": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
-    },
-    "networkstatistics-opt": {
+    "batchdatafetcher": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": []
-    },
-    "batchdatafetcher-opt": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
     },
     "caseexploreruidynamodbaccess": {
       "providerPlugin": "awscloudformation",
@@ -117,16 +53,42 @@
       "service": "LambdaLayer",
       "build": true
     },
-    "subnetwork-opt": {
+    "layoutcalculator": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "layoutcalculator-opt": {
+    "networkstatistics": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "queryhandler": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "caseexplorerui",
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ]
+        }
+      ]
+    },
+    "subnetwork": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     }
   },
-  "storage": {}
+  "storage": {
+    "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev": {
+      "service": "DynamoDB",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    }
+  }
 }

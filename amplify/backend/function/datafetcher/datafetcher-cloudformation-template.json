@@ -15,6 +15,18 @@
     },
     "s3Key": {
       "Type": "String"
+    },
+    "ddbTableName": {
+      "Type": "String"
+    },
+    "apiCaseexploreruiCaselawtableArn": {
+      "Type": "String"
+    },
+    "apiCaseexploreruiCaselawtableName": {
+      "Type": "String"
+    },
+    "apiCaseexploreruiGraphqlapiidoutput": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -69,6 +81,18 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "DDB_TABLE_NAME": {
+              "Ref": "ddbTableName"
+            },
+            "API_CASEEXPLORERUI_CASELAWTABLE_ARN": {
+              "Ref": "apiCaseexploreruiCaselawtableArn"
+            },
+            "API_CASEEXPLORERUI_CASELAWTABLE_NAME": {
+              "Ref": "apiCaseexploreruiCaselawtableName"
+            },
+            "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apiCaseexploreruiGraphqlapiidoutput"
             }
           }
         },

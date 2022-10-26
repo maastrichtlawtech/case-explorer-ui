@@ -1,18 +1,4 @@
 export type AmplifyDependentResourcesAttributes = {
-    "auth": {
-        "caseexplorerui2faac137": {
-            "IdentityPoolId": "string",
-            "IdentityPoolName": "string",
-            "HostedUIDomain": "string",
-            "OAuthMetadata": "string",
-            "UserPoolId": "string",
-            "UserPoolArn": "string",
-            "UserPoolName": "string",
-            "AppClientIDWeb": "string",
-            "AppClientID": "string",
-            "CreatedSNSRole": "string"
-        }
-    },
     "api": {
         "caseexplorerui": {
             "GraphQLAPIIdOutput": "string",
