@@ -112,45 +112,46 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         try {
 
           var all_required_fields = true;
+          var error = `The following error(s) were found in Query-${index}:\n`
           
           // validating Data Sources
           if(tab.formData.DataSources.length === 0) {
-            onError(new Error(`Query-${index} requires one or more Data Sources`));
+            error += "* One or more Data Sources required\n"
             highlightInputError('root_DataSources');
             all_required_fields = false;
           }
 
           // validating Documents Types
           if(tab.formData.Doctypes.length === 0) {
-            onError(new Error(`Query-${index} requires one or more Document Types`));
+            error += "* One or more Document Types required\n"
             highlightInputError('root_Doctypes');
             all_required_fields = false;
           }
 
           // validating Date Start
           if(Number.isNaN(Date.parse(tab.formData.DateStart))) {
-            onError(new Error(`Query-${index} requires Date Start`));
+            error += `* Date Start required\n`
             highlightInputError('root_DateStart');
             all_required_fields = false;
           }
 
           // validating Date End
           if(Number.isNaN(Date.parse(tab.formData.DateEnd))) {
-            onError(new Error(`Query-${index} requires Date End`));
+            error += `* Date End required\n`
             highlightInputError('root_DateEnd');
             all_required_fields = false;
           }
 
           // validating Degrees Sources
           if(!Number.isFinite(tab.formData.DegreesSources)) {
-            onError(new Error(`Query-${index} requires Degree Sources`));
+            error += `* One or more Degree Sources required\n`
             highlightInputError('root_DegreesSources');
             all_required_fields = false;
           }
 
           // validating Degrees Target
           if(!Number.isFinite(tab.formData.DegreesTargets)) {
-            onError(new Error(`Query-${index} requires Degrees Target`));
+            error += `* One or more Degree Targets required\n`
             highlightInputError('root_DegreesTargets');
             all_required_fields = false;
           }
@@ -158,7 +159,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
           const at_least_one_of = tab.formData.Eclis?.length > 0 || tab.formData.Keywords?.length > 0 || tab.formData.Articles?.length > 0 || tab.formData.Domains?.length > 0 || tab.formData.Instances?.length > 0;
 
           if(!at_least_one_of) {
-            onError(new Error(`Query-${index} requires at least one of these parameters`));
+            error += `* At least one of these parameters required\n`
             highlightInputError('root_Eclis');
             highlightInputError('root_Keywords');
             highlightInputError('root_Articles');
@@ -171,6 +172,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             // let casesData = prepareData(cases)
             return casesData
           } else {
+            onError(new Error(error));
             invalid_query = true;
           }
         } catch (e) {

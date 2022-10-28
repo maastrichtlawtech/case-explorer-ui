@@ -176,7 +176,7 @@ const AppContainer = ({
         "DateStart": "1900-01-01",
         "DateEnd": "2021-01-01",
         "Instances": [
-          'Hoge Raad',
+          // 'Hoge Raad',
         ],
         "Domains": [],
         "Doctypes": [

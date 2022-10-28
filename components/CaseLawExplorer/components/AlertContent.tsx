@@ -58,6 +58,7 @@ export const AlertContent = React.forwardRef((props: AlertContentProps,forwarded
         <Alert 
           onClose={handleClose}
           severity={messageInfo?.type ?? 'error'}
+          style={{ whiteSpace: 'pre-wrap'}}
         >
           <AlertTitle>{messageInfo ? R.upperFirst(messageInfo.type): ''}</AlertTitle>
           {
