@@ -116,13 +116,14 @@ generated/
 
 amplify copy/
 
-#amplify
+functions/layout-calculator-express
+
+#amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
 amplify/logs
 amplify/mock-data
 amplify/backend/amplify-meta.json
-amplify/backend/awscloudformation
 amplify/backend/.temp
 build/
 dist/
@@ -135,14 +136,7 @@ amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
-amplify/backend/function/networkstatistics/edges.json
-amplify/backend/function/networkstatistics/nodes.json
-amplify/backend/function/networkstatistics/subNodes.json
-amplify/backend/function/queryhandler/edges.json
-amplify/backend/function/queryhandler/nodes.json
-amplify/backend/function/queryhandler/subNodes.json
-amplify/backend/function/caseexploreruidynamodbaccess/lib/python/lib
-amplify/backend/function/caseexploreruiopensearchaccess/lib/python/lib
-amplify/backend/function/caseexploreruiutils/lib/python/lib
+**.sample
+#amplify-do-not-edit-end
+amplify/team-provider-info.json
 
-functions/layout-calculator-express
