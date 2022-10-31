@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"10.3.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "Lambda Function resource stack creation using Amplify CLI",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -16,16 +16,19 @@
     "s3Key": {
       "Type": "String"
     },
+    "apicaseexploreruiGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apicaseexploreruiGraphQLAPIIdOutput"
+    },
+    "functioncaseexploreruidynamodbaccessArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruidynamodbaccessArn"
+    },
+    "functioncaseexploreruiutilsArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruiutilsArn"
+    },
     "ddbTableName": {
-      "Type": "String"
-    },
-    "apiCaseexploreruiCaselawtableArn": {
-      "Type": "String"
-    },
-    "apiCaseexploreruiCaselawtableName": {
-      "Type": "String"
-    },
-    "apiCaseexploreruiGraphqlapiidoutput": {
       "Type": "String"
     }
   },
@@ -82,17 +85,37 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "DDB_TABLE_NAME": {
-              "Ref": "ddbTableName"
+            "API_CASEEXPLORERUI_CASELAWTABLE_NAME": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+              }
             },
             "API_CASEEXPLORERUI_CASELAWTABLE_ARN": {
-              "Ref": "apiCaseexploreruiCaselawtableArn"
-            },
-            "API_CASEEXPLORERUI_CASELAWTABLE_NAME": {
-              "Ref": "apiCaseexploreruiCaselawtableName"
+              "Fn::Join": [
+                "",
+                [
+                  "arn:aws:dynamodb:",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ":",
+                  {
+                    "Ref": "AWS::AccountId"
+                  },
+                  ":table/",
+                  {
+                    "Fn::ImportValue": {
+                      "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+                    }
+                  }
+                ]
+              ]
             },
             "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apiCaseexploreruiGraphqlapiidoutput"
+              "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
+            },
+            "DDB_TABLE_NAME": {
+              "Ref": "ddbTableName"
             }
           }
         },
@@ -104,7 +127,8 @@
         },
         "Runtime": "python3.8",
         "Layers": [],
-        "Timeout": 25
+        "Timeout": 30,
+        "MemorySize": "512"
       }
     },
     "LambdaExecutionRole": {
@@ -113,12 +137,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "caseexploreruiLambdaRole8ab7edec",
+            "caseexploreruiLambdaRole15dce33d",
             {
               "Fn::Join": [
                 "",
                 [
-                  "caseexploreruiLambdaRole8ab7edec",
+                  "caseexploreruiLambdaRole15dce33d",
                   "-",
                   {
                     "Ref": "env"
@@ -184,6 +208,81 @@
                   }
                 ]
               }
+            }
+          ]
+        }
+      }
+    },
+    "AmplifyResourcesPolicy": {
+      "DependsOn": [
+        "LambdaExecutionRole"
+      ],
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "amplify-lambda-execution-policy",
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ],
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "dynamodb:Get*",
+                "dynamodb:BatchGetItem",
+                "dynamodb:List*",
+                "dynamodb:Describe*",
+                "dynamodb:Scan",
+                "dynamodb:Query"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+                        }
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:dynamodb:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":table/",
+                      {
+                        "Fn::ImportValue": {
+                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
+                        }
+                      },
+                      "/index/*"
+                    ]
+                  ]
+                }
+              ]
             }
           ]
         }

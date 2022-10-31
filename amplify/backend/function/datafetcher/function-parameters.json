@@ -11,18 +11,6 @@
     {
       "cloudFormationParameterName": "ddbTableName",
       "environmentVariableName": "DDB_TABLE_NAME"
-    },
-    {
-      "cloudFormationParameterName": "apiCaseexploreruiCaselawtableArn",
-      "environmentVariableName": "API_CASEEXPLORERUI_CASELAWTABLE_ARN"
-    },
-    {
-      "cloudFormationParameterName": "apiCaseexploreruiCaselawtableName",
-      "environmentVariableName": "API_CASEEXPLORERUI_CASELAWTABLE_NAME"
-    },
-    {
-      "cloudFormationParameterName": "apiCaseexploreruiGraphqlapiidoutput",
-      "environmentVariableName": "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT"
     }
   ]
 }
