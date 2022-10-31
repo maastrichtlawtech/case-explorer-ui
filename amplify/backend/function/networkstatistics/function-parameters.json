@@ -1,4 +1,10 @@
 {
   "lambdaLayers": [],
-  "permissions": {}
+  "permissions": {},
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "apiCaseexploreruiGraphqlapiidoutput",
+      "environmentVariableName": "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT"
+    }
+  ]
 }

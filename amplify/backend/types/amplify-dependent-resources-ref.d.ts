@@ -5,34 +5,14 @@ export type AmplifyDependentResourcesAttributes = {
             "GraphQLAPIEndpointOutput": "string"
         }
     },
-    "auth": {
-        "caseexploreruiauth": {
-            "IdentityPoolId": "string",
-            "IdentityPoolName": "string",
-            "HostedUIDomain": "string",
-            "OAuthMetadata": "string",
-            "UserPoolId": "string",
-            "UserPoolArn": "string",
-            "UserPoolName": "string",
-            "AppClientIDWeb": "string",
-            "AppClientID": "string",
-            "CreatedSNSRole": "string"
-        }
-    },
     "function": {
-        "datafetcher": {
-            "Name": "string",
-            "Arn": "string",
-            "Region": "string",
-            "LambdaExecutionRole": "string"
-        },
         "queryhandler": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "test": {
+        "subnetwork": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
@@ -44,28 +24,28 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "batchdatafetcher": {
+        "layoutcalculator": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "caseexploreruidynamodbaccess": {
+        "caseexploreruiutils": {
             "Arn": "string"
         },
         "caseexploreruiopensearchaccess": {
             "Arn": "string"
         },
-        "caseexploreruiutils": {
+        "caseexploreruidynamodbaccess": {
             "Arn": "string"
         },
-        "subnetwork": {
+        "datafetcher": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
         },
-        "layoutcalculator": {
+        "batchdatafetcher": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",

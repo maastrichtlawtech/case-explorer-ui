@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"10.3.0\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -19,6 +19,9 @@
     "apicaseexploreruiGraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apicaseexploreruiGraphQLAPIIdOutput"
+    },
+    "apiCaseexploreruiGraphqlapiidoutput": {
+      "Type": "String"
     }
   },
   "Conditions": {
@@ -75,7 +78,7 @@
               "Ref": "AWS::Region"
             },
             "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
+              "Ref": "apiCaseexploreruiGraphqlapiidoutput"
             }
           }
         },

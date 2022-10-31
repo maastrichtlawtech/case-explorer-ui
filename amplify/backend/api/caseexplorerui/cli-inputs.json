@@ -1,26 +1,11 @@
 {
   "version": 1,
   "serviceConfiguration": {
+    "apiName": "caseexplorerui",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "AMAZON_COGNITO_USER_POOLS",
-      "cognitoUserPoolId": "authcaseexploreruiauth"
-    },
-    "additionalAuthTypes": [
-      {
-        "mode": "AWS_IAM"
-      },
-      {
-        "mode": "OPENID_CONNECT",
-        "openIDProviderName": "SURFconext",
-        "openIDIssuerURL": "https://connect.test.surfconext.nl/",
-        "openIDClientID": "dev.d11iy22xsphp3a.amplifyapp.com",
-        "openIDAuthTTL": "100",
-        "openIDIatTTL": "100"
-      }
-    ],
-    "conflictResolution": {},
-    "apiName": "caseexplorerui",
-    "gqlSchemaPath": "/home/maxine/Documents/Law+Tech/Comenius/case-explorer-ui/amplify/backend/api/caseexplorerui/schema.graphql"
+      "mode": "API_KEY",
+      "expirationTime": 7
+    }
   }
 }

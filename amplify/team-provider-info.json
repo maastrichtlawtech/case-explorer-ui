@@ -1,69 +1,96 @@
 {
-  "dev": {
+  "network": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-caseexplorerui-dev-133633-authRole",
-      "UnauthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-authRole",
+      "AuthRoleName": "amplify-caseexplorerui-network-130953-authRole",
+      "UnauthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-network-130953-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-network-130953-authRole",
       "Region": "eu-central-1",
-      "DeploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-      "UnauthRoleName": "amplify-caseexplorerui-dev-133633-unauthRole",
-      "StackName": "amplify-caseexplorerui-dev-133633",
-      "StackId": "arn:aws:cloudformation:eu-central-1:275192370238:stack/amplify-caseexplorerui-dev-133633/a498dfe0-1090-11ec-9f45-06c163c7e882",
-      "AmplifyAppId": "d11iy22xsphp3a",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-caseexplorerui-dev-133633-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "DeploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+      "UnauthRoleName": "amplify-caseexplorerui-network-130953-unauthRole",
+      "StackName": "amplify-caseexplorerui-network-130953",
+      "StackId": "arn:aws:cloudformation:eu-central-1:275192370238:stack/amplify-caseexplorerui-network-130953/a5d84d60-55f8-11ed-92d5-061d4058ae24",
+      "AmplifyAppId": "d11iy22xsphp3a"
     },
     "categories": {
+      "api": {
+        "caseexplorerui": {}
+      },
+      "storage": {
+        "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev": {
+          "tableName": "Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
+          "region": "eu-central-1",
+          "arn": "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
+          "streamArn": "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev/stream/2021-09-13T12:27:39.981",
+          "partitionKeyName": "ecli",
+          "partitionKeyType": "S",
+          "sortKeyName": "ItemType",
+          "sortKeyType": "S"
+        }
+      },
       "function": {
-        "datafetcher": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/datafetcher-4a6c4c6f4e3247726551-build.zip",
-          "ddbTableName": "Caselaw"
-        },
         "queryhandler": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/queryhandler-444d3036393141684966-build.zip",
-          "ddbTableName": "Caselaw",
+          "ddbTableName": "CaseLaw",
           "osIndexName": "caselawexplorer_rechtspraak",
-          "osEndpoint": "search-caselawexplorer-j72amls6ucledpopoyyxzyujqi.eu-central-1.es.amazonaws.com"
-        },
-        "test": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/test-6d766d356950304b7373-build.zip",
-          "ddbTableName": "Caselaw"
-        },
-        "networkstatistics": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/networkstatistics-4b4d573271746c79474e-build.zip"
-        },
-        "batchdatafetcher": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/batchdatafetcher-6e365654393466503763-build.zip",
-          "ddbTableName": "Caselaw"
-        },
-        "caseexploreruidynamodbaccess": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/caseexploreruidynamodbaccess-LambdaLayerVersion810a35f9-build.zip"
-        },
-        "caseexploreruiopensearchaccess": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/caseexploreruiopensearchaccess-LambdaLayerVersion15150228-build.zip"
-        },
-        "caseexploreruiutils": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/caseexploreruiutils-LambdaLayerVersion69b5927f-build.zip"
+          "osEndpoint": "search-caselawexplorer-j72amls6ucledpopoyyxzyujqi.eu-central-1.es.amazonaws.com",
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/queryhandler-52553658444a7a696a65-build.zip"
         },
         "subnetwork": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/subnetwork-7a5343717a626d2f7672-build.zip"
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/subnetwork-7342756a706742694267-build.zip"
+        },
+        "networkstatistics": {
+          "apiCaseexploreruiGraphqlapiidoutput": "apicaseexploreruiGraphQLAPIIdOutput",
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/networkstatistics-672f2f766b42742b306f-build.zip"
         },
         "layoutcalculator": {
-          "deploymentBucketName": "amplify-caseexplorerui-dev-133633-deployment",
-          "s3Key": "amplify-builds/layoutcalculator-5442777354424a507442-build.zip"
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/layoutcalculator-505876465362355a4149-build.zip"
+        },
+        "caseexploreruiutils": {
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/caseexploreruiutils-LambdaLayerVersion77bd9fa6-build.zip"
+        },
+        "caseexploreruiopensearchaccess": {
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/caseexploreruiopensearchaccess-LambdaLayerVersionb5c87ea9-build.zip"
+        },
+        "caseexploreruidynamodbaccess": {
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/caseexploreruidynamodbaccess-LambdaLayerVersiond7c0405f-build.zip"
+        },
+        "datafetcher": {
+          "ddbTableName": "Caselaw",
+          "apiCaseexploreruiGraphqlapiidoutput": "avqb7mqbcfgurbeqbfsmuwxjqq",
+          "apiCaseexploreruiCaselawtableName": "Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
+          "apiCaseexploreruiCaselawtableArn": "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/datafetcher-6256336453764b576e58-build.zip"
+        },
+        "batchdatafetcher": {
+          "ddbTableName": "CaseLaw",
+          "apiCaseexploreruiCaselawtableArn": "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
+          "apiCaseexploreruiCaselawtableName": "Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
+          "apiCaseexploreruiGraphqlapiidoutput": "avqb7mqbcfgurbeqbfsmuwxjqq",
+          "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
+          "s3Key": "amplify-builds/batchdatafetcher-6a2f6f503961416a4a6b-build.zip"
         }
       },
       "auth": {
-        "caseexploreruiauth": {},
-        "true": {}
+        "caseexplorerui51c73e78": {
+          "userPoolId": "eu-central-1_Iia5Ube9G",
+          "userPoolName": "case-law-explorer_user-pool-dev",
+          "webClientId": "529do26g6icslepgrvcelapu8v",
+          "nativeClientId": "13r9jnqv4fk4ibentlifbk4dsg",
+          "identityPoolId": "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
+          "identityPoolName": "caseexploreruiauth_identitypool_d4d8cb48__dev",
+          "allowUnauthenticatedIdentities": false,
+          "authRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-authRole",
+          "authRoleName": "amplify-caseexplorerui-dev-133633-authRole",
+          "unauthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-unauthRole",
+          "unauthRoleName": "amplify-caseexplorerui-dev-133633-unauthRole"
+        }
       }
     }
   }
