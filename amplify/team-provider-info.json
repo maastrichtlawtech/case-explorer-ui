@@ -12,8 +12,20 @@
       "AmplifyAppId": "d11iy22xsphp3a"
     },
     "categories": {
-      "api": {
-        "caseexplorerui": {}
+      "auth": {
+        "caseexplorerui51c73e78": {
+          "userPoolId": "eu-central-1_Iia5Ube9G",
+          "userPoolName": "case-law-explorer_user-pool-dev",
+          "webClientId": "529do26g6icslepgrvcelapu8v",
+          "nativeClientId": "13r9jnqv4fk4ibentlifbk4dsg",
+          "identityPoolId": "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
+          "identityPoolName": "caseexploreruiauth_identitypool_d4d8cb48__dev",
+          "allowUnauthenticatedIdentities": false,
+          "authRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-authRole",
+          "authRoleName": "amplify-caseexplorerui-dev-133633-authRole",
+          "unauthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-unauthRole",
+          "unauthRoleName": "amplify-caseexplorerui-dev-133633-unauthRole"
+        }
       },
       "storage": {
         "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev": {
@@ -29,9 +41,6 @@
       },
       "function": {
         "queryhandler": {
-          "ddbTableName": "CaseLaw",
-          "osIndexName": "caselawexplorer_rechtspraak",
-          "osEndpoint": "search-caselawexplorer-j72amls6ucledpopoyyxzyujqi.eu-central-1.es.amazonaws.com",
           "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
           "s3Key": "amplify-builds/queryhandler-52553658444a7a696a65-build.zip"
         },
@@ -40,7 +49,6 @@
           "s3Key": "amplify-builds/subnetwork-7342756a706742694267-build.zip"
         },
         "networkstatistics": {
-          "apiCaseexploreruiGraphqlapiidoutput": "apicaseexploreruiGraphQLAPIIdOutput",
           "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
           "s3Key": "amplify-builds/networkstatistics-672f2f766b42742b306f-build.zip"
         },
@@ -61,35 +69,12 @@
           "s3Key": "amplify-builds/caseexploreruidynamodbaccess-LambdaLayerVersiond7c0405f-build.zip"
         },
         "datafetcher": {
-          "ddbTableName": "Caselaw",
-          "apiCaseexploreruiGraphqlapiidoutput": "avqb7mqbcfgurbeqbfsmuwxjqq",
-          "apiCaseexploreruiCaselawtableName": "Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
-          "apiCaseexploreruiCaselawtableArn": "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
           "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
           "s3Key": "amplify-builds/datafetcher-6256336453764b576e58-build.zip"
         },
         "batchdatafetcher": {
-          "ddbTableName": "CaseLaw",
-          "apiCaseexploreruiCaselawtableArn": "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
-          "apiCaseexploreruiCaselawtableName": "Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
-          "apiCaseexploreruiGraphqlapiidoutput": "avqb7mqbcfgurbeqbfsmuwxjqq",
           "deploymentBucketName": "amplify-caseexplorerui-network-130953-deployment",
           "s3Key": "amplify-builds/batchdatafetcher-6a2f6f503961416a4a6b-build.zip"
-        }
-      },
-      "auth": {
-        "caseexplorerui51c73e78": {
-          "userPoolId": "eu-central-1_Iia5Ube9G",
-          "userPoolName": "case-law-explorer_user-pool-dev",
-          "webClientId": "529do26g6icslepgrvcelapu8v",
-          "nativeClientId": "13r9jnqv4fk4ibentlifbk4dsg",
-          "identityPoolId": "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
-          "identityPoolName": "caseexploreruiauth_identitypool_d4d8cb48__dev",
-          "allowUnauthenticatedIdentities": false,
-          "authRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-authRole",
-          "authRoleName": "amplify-caseexplorerui-dev-133633-authRole",
-          "unauthRoleArn": "arn:aws:iam::275192370238:role/amplify-caseexplorerui-dev-133633-unauthRole",
-          "unauthRoleName": "amplify-caseexplorerui-dev-133633-unauthRole"
         }
       }
     }
