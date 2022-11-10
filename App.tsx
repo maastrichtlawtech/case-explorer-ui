@@ -22,7 +22,6 @@ cytoscape.use(dagre)
 cytoscape.use(euler)
 cytoscape.use(cola)
 
-
 function getUser() {
   return Auth.currentAuthenticatedUser()
     .then(userData => userData)
@@ -42,14 +41,14 @@ const App = () => {
       case ACTIONS.TEST_API:
         runQuery()
         break;
-    
+
       default:
         break;
     }
   }, [])
   const [containerRef, { width, height, initialized }] = useMeasure()
   return (
-    <View 
+    <View
       ref={containerRef}
       style={{
         width: '100%', height: '100%'
@@ -90,7 +89,7 @@ const AppContainer = () => {
           });
           break;
         }
-          
+
         case 'signOut':
           setState({
             ...state,
@@ -130,7 +129,7 @@ const AppContainer = () => {
     state.user ? (
         state.user?.attributes?.['custom:isOldUser'] !== 'yes'
         ? (
-          <TermsOfService 
+          <TermsOfService
           user={state.user}
           onAgree={async () => {
             await Auth.updateUserAttributes(state.user, {
@@ -158,7 +157,7 @@ const AppContainer = () => {
         onSignin={async () => {
           await Auth.federatedSignIn(
             // undefined,
-            // { 
+            // {
             //   expires_at: new Date().getTime() + 1000 * 60 * 60 * 12 * 3 ,
 
             // }
@@ -196,7 +195,7 @@ const AppContainer = () => {
       //   />
   )
   }
-  
+
   </>
 }
 
@@ -209,7 +208,7 @@ const AppContainer = () => {
 //           const authUser = await Auth.currentAuthenticatedUser()
 //           console.log('auth', authUser)
 //         } catch (error) {
-//           console.log( 'er', error)  
+//           console.log( 'er', error)
 //           try {
 //             const el1 = document.getElementsByTagName('amplify-authenticator')[0]
 //             .shadowRoot?.children
@@ -228,10 +227,10 @@ const AppContainer = () => {
 //             // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
 //             // // .click()
 //           } catch (error) {
-            
+
 //           }
 //         }
-        
+
 //       }
 //       call()
 //     }, 500 )
@@ -258,7 +257,7 @@ export default AppContainer // App
 //   return <View></View>
 // }
 
-function detectBrowser() { 
+function detectBrowser() {
   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ) {
       return 'Opera';
   } else if(navigator.userAgent.indexOf("Chrome") != -1 ) {
@@ -272,4 +271,4 @@ function detectBrowser() {
   } else {
       return 'Unknown';
   }
-} 
+}
