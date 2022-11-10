@@ -2,10 +2,15 @@ import { AuthState,onAuthUIStateChange,  } from '@aws-amplify/ui-components';
 import { Button, CircularProgress } from "@mui/material";
 import Amplify, { Auth,  Hub,  }  from "aws-amplify";
 import React from 'react';
+// @ts-ignore
 import cytoscape from 'cytoscape'
+// @ts-ignore
 import euler from 'cytoscape-euler'
+// @ts-ignore
 import cola from 'cytoscape-cola'
+// @ts-ignore
 import dagre from 'cytoscape-dagre'
+// @ts-ignore
 import spread from 'cytoscape-spread'
 import GraphEditor, {
   ACTIONS
