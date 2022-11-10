@@ -204,63 +204,7 @@ const AppContainer = () => {
   </>
 }
 
-// const AppContainer = () => {
-//   React.useEffect(() => {
-//     const index = detectBrowser() === 'Firefox' ? 1 : 0
-//     setTimeout(()=>{
-//       const call = async ()=> {
-//         try {
-//           const authUser = await Auth.currentAuthenticatedUser()
-//           console.log('auth', authUser)
-//         } catch (error) {
-//           console.log( 'er', error)
-//           try {
-//             const el1 = document.getElementsByTagName('amplify-authenticator')[0]
-//             .shadowRoot?.children
-//             const el2 = [...el1].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-sign-in')[0]
-//             .shadowRoot?.children
-//             const el3 = [...el2].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-federated-buttons')[0]
-//             .shadowRoot?.children
-//             const el4 = [...el3].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-oauth-button')[0]
-//             .shadowRoot?.children
-//             const button = [...el4].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('button')[0]
-//             button.click()
-//             //   const button = document.getElementsByTagName('amplify-authenticator')[0]
-//             // .shadowRoot?.lastChild.getElementsByTagName('amplify-sign-in')[0]
-//             // .shadowRoot?.lastChild.getElementsByTagName('amplify-federated-buttons')[0]
-//             // ?.shadowRoot//?.lastChild//.getElementsByTagName('amplify-oauth-button')[0]
-//             // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
-//             // // .click()
-//           } catch (error) {
-
-//           }
-//         }
-
-//       }
-//       call()
-//     }, 500 )
-//   }, [])
-//   return (
-//     <AppContent />
-//   )
-// }
-
-export default AppContainer // App
-// export default () => {
-//   const xStateRef = React.useRef({
-//     nodes: [{ name: '2' }],
-//     edges: [{ source: '1', target: '2' }, { source: '2', target: '3' }],
-//   })
-//   const [xstate, updateXstate] = useImmer(xStateRef.current)
-//   console.log('xstate', xstate.nodes === xStateRef.current.nodes)
-//   React.useEffect(() => {
-//     updateXstate(draft => {
-//       // draft.nodes
-//       draft.nodes.push({ name: '3' })
-//     })
-//   }, [])
-//   return <View></View>
-// }
+export default AppContainer
 
 function detectBrowser() {
   if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ) {
