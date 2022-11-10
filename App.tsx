@@ -1,4 +1,5 @@
-import { AuthState,onAuthUIStateChange,  } from '@aws-amplify/ui-components';
+import { AuthState, onAuthUIStateChange,  } from '@aws-amplify/ui-components';
+import { CognitoUser } from '@aws-amplify/auth';
 import { Button, CircularProgress } from "@mui/material";
 import Amplify, { Auth,  Hub,  }  from "aws-amplify";
 import React from 'react';
@@ -27,7 +28,23 @@ cytoscape.use(dagre)
 cytoscape.use(euler)
 cytoscape.use(cola)
 
-function getUser() {
+export interface UserAttributes {
+    sub : string;
+    email : string;
+    email_verified : boolean;
+    'custom:isOldUser' : "yes" | null;
+}
+
+// 2022-11-10
+// The aws-auth library is exporting incorrect type signatures for CognitoUser
+// (missing an attributes member), leading to type errors. Manually extend it
+// here and use the extended type to eliminate the errors until aws-auth is
+// fixed.
+interface CognitoUserExt extends CognitoUser {
+    attributes: UserAttributes;
+}
+
+function getUser() : Promise<CognitoUserExt> {
   return Auth.currentAuthenticatedUser()
     .catch(() => console.log('Not signed in'));
 }
@@ -73,7 +90,7 @@ const App = () => {
 const AppContainer = () => {
   const [authState, setAuthState] = React.useState();
   const [state, setState] = React.useState({
-    user: null,
+    user: null as CognitoUserExt | null,
     isLoading: true
   })
   const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
@@ -131,23 +148,21 @@ const AppContainer = () => {
   return  <>
   {
     state.user ? (
-        state.user?.attributes?.['custom:isOldUser'] !== 'yes'
+        state.user.attributes['custom:isOldUser'] !== 'yes'
         ? (
           <TermsOfService
           user={state.user}
           onAgree={async () => {
             await Auth.updateUserAttributes(state.user, {
               'custom:isOldUser': 'yes'
-            })
+            });
+            // Due to being in an async, the type checker complains that user
+            // might be null, despite the null check above. Using state.user!
+            // to silence this warning.
+            state.user!.attributes['custom:isOldUser'] = 'yes';
             setState({
               ...state,
-              user: {
-                ...state.user,
-                attributes: {
-                  ...(state.user?.attributes ?? {}),
-                  'custom:isOldUser': 'yes'
-                }
-              },
+              user: state.user
             })
           }}
           onDisagree={() => {
