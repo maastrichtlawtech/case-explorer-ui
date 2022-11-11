@@ -10,6 +10,7 @@ import { NODE_LIMIT } from '..'
 import { QueryTabs } from './QueryTabs'
 import {useImmer } from 'colay-ui/hooks/useImmer'
 import * as R from 'colay/ramda'
+import { AlertContent } from '../components/AlertContent'
 
 export type QueryBuilderProps = {
   query: any;
@@ -50,6 +51,8 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     onClose,
     onNetworkStatisticsCalculated,
   } = props
+  const alertRef= React.useRef(null)
+
   const createFormChangeHandler = (tabId) => (e) => {
     updateState((draft) => {
       const tab = draft.tabs.find((item) => item.id === tabId)
@@ -103,13 +106,75 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
   const onSubmit = React.useCallback(async e => {
     onStart()
     console.log('START', state)
+    var invalid_query = false;
     const casesDataList = await Promise.all(
       state.tabs.map(async (tab, index) => {
         try {
-          let casesData = await API.listCases(transformData(tab.formData))
-          // let casesData = prepareData(cases)
-          return casesData
-          console.log(`RESULT-tab: ${index}`, casesData)
+
+          var all_required_fields = true;
+          var error = `The following error(s) were found in Query-${index}:\n`
+          
+          // validating Data Sources
+          if(tab.formData.DataSources.length === 0) {
+            error += "* One or more Data Sources required\n"
+            highlightInputError('root_DataSources');
+            all_required_fields = false;
+          }
+
+          // validating Documents Types
+          if(tab.formData.Doctypes.length === 0) {
+            error += "* One or more Document Types required\n"
+            highlightInputError('root_Doctypes');
+            all_required_fields = false;
+          }
+
+          // validating Date Start
+          if(Number.isNaN(Date.parse(tab.formData.DateStart))) {
+            error += `* Date Start required\n`
+            highlightInputError('root_DateStart');
+            all_required_fields = false;
+          }
+
+          // validating Date End
+          if(Number.isNaN(Date.parse(tab.formData.DateEnd))) {
+            error += `* Date End required\n`
+            highlightInputError('root_DateEnd');
+            all_required_fields = false;
+          }
+
+          // validating Degrees Sources
+          if(!Number.isFinite(tab.formData.DegreesSources)) {
+            error += `* One or more Degree Sources required\n`
+            highlightInputError('root_DegreesSources');
+            all_required_fields = false;
+          }
+
+          // validating Degrees Target
+          if(!Number.isFinite(tab.formData.DegreesTargets)) {
+            error += `* One or more Degree Targets required\n`
+            highlightInputError('root_DegreesTargets');
+            all_required_fields = false;
+          }
+
+          const at_least_one_of = tab.formData.Eclis?.length > 0 || tab.formData.Keywords?.length > 0 || tab.formData.Articles?.length > 0 || tab.formData.Domains?.length > 0 || tab.formData.Instances?.length > 0;
+
+          if(!at_least_one_of) {
+            error += `* At least one of these parameters required\n`
+            highlightInputError('root_Eclis');
+            highlightInputError('root_Keywords');
+            highlightInputError('root_Articles');
+            highlightInputError('root_Domains');
+            highlightInputError('root_Instances');
+          } 
+          
+          if(all_required_fields && at_least_one_of) {
+            let casesData = await API.listCases(transformData(tab.formData))
+            // let casesData = prepareData(cases)
+            return casesData
+          } else {
+            onError(new Error(error));
+            invalid_query = true;
+          }
         } catch (e) {
           console.log(e)
           // onError(e)
@@ -117,6 +182,9 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         }
       })
     )
+    if(invalid_query) {
+      return;
+    }
     console.log(casesDataList)
     const casesDataMap = {
       nodes: {},
@@ -201,6 +269,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
   //   onSubmit()
   // }, [])
   return (
+    <>
     <Modal
       open={isOpen}
       // onClose={onClose}
@@ -270,7 +339,19 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         </Box>
       </Paper>
     </Modal>
+
+   
+    <AlertContent 
+          ref={alertRef}
+        />
+    </>
   )
 }
 
-
+function highlightInputError(elem_id) {
+  const elem = document.getElementById(elem_id)?.parentNode?.lastChild;
+  elem.setAttribute('style','border:red solid 1px !important;');
+  setTimeout(() => {
+    elem.setAttribute('style','')
+  }, 3500);
+}
