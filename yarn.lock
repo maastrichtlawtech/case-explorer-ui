@@ -8067,6 +8067,11 @@ cytoscape-euler@1.2.2:
   resolved "https://registry.yarnpkg.com/cytoscape-euler/-/cytoscape-euler-1.2.2.tgz#d599aa0656c022216f93a5c3ac8fce1ad69ef9b4"
   integrity sha512-A24ZGrFpqCOutTIlGoXA5kmjFj68iy7HvqXuhcZUL1a7Z8bL59Bl2bB7hkSvFcCZBVCNcArxKr+YlB8bJo9Ftw==
 
+cytoscape-expand-collapse@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/cytoscape-expand-collapse/-/cytoscape-expand-collapse-4.1.0.tgz#bfcd57692fae4585a112d94843790da38c3301a8"
+  integrity sha512-RJsoSDAC0ui6U6CeM7z2tiFzsk4Z2aPG8PgNIwKeFVykFmMr5S+5aT1YceQZ5XnwGFGH0uteZ96XyAfUAVb/fw==
+
 cytoscape-fcose@2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cytoscape-fcose/-/cytoscape-fcose-2.1.0.tgz#04c3093776ea6b71787009de641607db7d4edf55"
@@ -8080,6 +8085,11 @@ cytoscape-spread@3.0.0:
   integrity sha512-ekuo4ByFRTZ4TOJylE2bPOMcVVyi8rD+qjvEjMWS2BHcyan40pmhlA4ramz/nTxZR+EtlxEa1asnmfiN8R5HyQ==
   dependencies:
     weaverjs "^1.2.0"
+
+cytoscape-undo-redo@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/cytoscape-undo-redo/-/cytoscape-undo-redo-1.3.3.tgz#63431a0b22f639f3bb594c6060b4ab641eea0a05"
+  integrity sha512-BjTXe0Oiytj4+UtYkkwYHG3BILi6MZD1MuZ+06kopgEtiyumcMEqX53zHMhY90kqJMPwLfpcrlmKmJtNAa2v2Q==
 
 cytoscape@3.20.0:
   version "3.20.0"

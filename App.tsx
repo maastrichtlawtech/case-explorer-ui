@@ -3,6 +3,10 @@ import { Button, CircularProgress } from "@mui/material";
 import Amplify, { Auth,  Hub,  }  from "aws-amplify";
 import React from 'react';
 import cytoscape from 'cytoscape'
+import expandCollapse from 'cytoscape-expand-collapse';
+import undoRedo from 'cytoscape-undo-redo';
+expandCollapse(cytoscape);
+undoRedo(cytoscape);
 import euler from 'cytoscape-euler'
 import cola from 'cytoscape-cola'
 import dagre from 'cytoscape-dagre'

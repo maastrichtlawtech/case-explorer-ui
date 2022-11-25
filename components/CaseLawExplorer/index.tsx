@@ -702,9 +702,10 @@ const AppContainer = ({
     edgeIdsRef.current = edgeIds
     const call  = async () => {
       let networkStatistics = await API.getNetworkStatistics({
-        nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
+        nodes: controllerProps.nodes.map((node) => ({id: node.id, parent: node.id, data: JSON.stringify(node.data)})),
         edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
       })
+
       const {
         nodeSizeRangeMap,
         communityStats,
@@ -716,6 +717,7 @@ const AppContainer = ({
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
         draft.networkStatistics.local  = networkStatistics
+        console.log('xxxxx', networkStatistics)
         const filterSchema  = draft.settingsBar.forms[2].schema
         const filterFormData  = draft.settingsBar.forms[2].formData
         filterSchema.properties.community = {
