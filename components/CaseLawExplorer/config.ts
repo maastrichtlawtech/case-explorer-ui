@@ -19,7 +19,7 @@ const AWS_PROD_CONFIG = {
     "aws_user_pools_id": "eu-central-1_Iia5Ube9G",
     "aws_user_pools_web_client_id": "529do26g6icslepgrvcelapu8v",
     "oauth": {
-        "domain": "case-law-explorer-dev.eu-central-1.amazoncognito.com",
+        "domain": "case-law-explorer-dev.auth.eu-central-1.amazoncognito.com",
         "scope": [
             "phone",
             "email",
