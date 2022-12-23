@@ -123,7 +123,7 @@ The metadata are computed on the backend network (all result nodes with or witho
 ## Videos
 
 ### In Dutch
-Instruction videos will follow.
+- [What is Case Law Explorer? (Wat is Case Law Explorer?)](https://zuyd.mediasite.com/Mediasite/Play/db6594fc00df4412a44f53b9f45c4bd91d) (in Dutch)
 
 ### In English
 Instruction videos will follow.
