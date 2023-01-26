@@ -7,6 +7,8 @@ verify_ssl = true
 
 [packages]
 #src = {editable = true, path = "./src"}
+python-louvain = "*"
+networkx = "<2.7"
 
 [requires]
 python_version = "3.8"
