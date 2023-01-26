@@ -16,6 +16,10 @@
     "s3Key": {
       "Type": "String"
     },
+    "functioncaseexploreruiutilsArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruiutilsArn"
+    },
     "region": {
       "Type": "String"
     }
@@ -191,6 +195,14 @@
     "LambdaExecutionRole": {
       "Value": {
         "Ref": "LambdaExecutionRole"
+      }
+    },
+    "LambdaExecutionRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaExecutionRole",
+          "Arn"
+        ]
       }
     }
   }
