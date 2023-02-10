@@ -58,12 +58,6 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "networkstatistics": {
-      "build": true,
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "queryhandler": {
       "build": true,
       "dependsOn": [
@@ -331,22 +325,6 @@
         {
           "category": "function",
           "resourceName": "layoutcalculator"
-        }
-      ]
-    },
-    "AMPLIFY_function_networkstatistics_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "networkstatistics"
-        }
-      ]
-    },
-    "AMPLIFY_function_networkstatistics_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "networkstatistics"
         }
       ]
     },
