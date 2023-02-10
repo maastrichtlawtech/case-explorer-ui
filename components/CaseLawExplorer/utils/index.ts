@@ -61,7 +61,9 @@ export const calculateNetworkStatisticsRange  = (
     }
     Object.keys(nodeStatistics).forEach((key) => {
       const statisticValue = nodeStatistics[key]; // the value of the statistic
-      if (index === 0) {
+      if (!(key in nodeSizeRangeMap)) {
+          nodeSizeRangeMap[key] = [statisticValue, statisticValue]
+      } else if (index === 0) {
         nodeSizeRangeMap[key][0] = statisticValue
         nodeSizeRangeMap[key][1] = statisticValue
       } else {
