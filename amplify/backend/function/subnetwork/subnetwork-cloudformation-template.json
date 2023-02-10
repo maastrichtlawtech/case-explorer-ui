@@ -16,6 +16,10 @@
     "s3Key": {
       "Type": "String"
     },
+    "functioncaseexploreruiutilsArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruiutilsArn"
+    },
     "region": {
       "Type": "String"
     }
@@ -82,7 +86,9 @@
           ]
         },
         "Runtime": "python3.8",
-        "Layers": [],
+        "Layers": [
+          "arn:aws:lambda:eu-central-1:336392948345:layer:AWSSDKPandas-Python38:3"
+        ],
         "Timeout": 25
       }
     },
@@ -191,6 +197,14 @@
     "LambdaExecutionRole": {
       "Value": {
         "Ref": "LambdaExecutionRole"
+      }
+    },
+    "LambdaExecutionRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaExecutionRole",
+          "Arn"
+        ]
       }
     }
   }
