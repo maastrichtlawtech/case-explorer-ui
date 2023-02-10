@@ -92,20 +92,11 @@ const MUILightTheme = overrideTheme(
 )
 
 
-// PIXI.settings.ROUND_PIXELS = false// true
-// // @ts-ignore
-// PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.LOW
-// PIXI.settings.RESOLUTION = 1// 32// 64// window.devicePixelRatio
-// PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
-// PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
-
 const COUNT  = 700
 const data = {
   nodes: [],
   edges: [],
 }
-// prepareData(defaultData)
-// const data = createMockData(COUNT, COUNT)
 type Props = Partial<GraphEditorProps>
 
 
@@ -461,11 +452,6 @@ const AppContainer = ({
                 }
                 }
               })
-            } else {
-              // alertRef.current.alert({
-              //   type: 'warning',
-              //   text: 'Data is not available!'
-              // })
             }
           }
           call()
@@ -497,12 +483,7 @@ const AppContainer = ({
                    R.inBetween(degree[0], degree[1])(stats.degree)
                   && R.inBetween(indegree[0], indegree[1])(stats['in-degree'])
                   && R.inBetween(outdegree[0], outdegree[1])(stats['out-degree'])
-                  // && !(isResult && !(item.data.isResult === "True"))
                   && !(R.isNotNil(community) && !R.isEmpty(community) && !community.includes(`${stats.community}`))
-              // R.inBetween(year[0], year[1])(graphEditorContext.networkStatistics?.local?.[item.id]?.year)
-              // && R.inBetween(degree[0], degree[1])(element.degree())
-              // && R.inBetween(indegree[0], indegree[1])(element.indegree())
-              // && R.inBetween(outdegree[0], outdegree[1])(element.outdegree())
 
             )
           }).map((item) => item.id)
@@ -627,34 +608,6 @@ const AppContainer = ({
               }).catch((err) => {
                   console.log('layout err', err)
                 })
-              // const body = {
-              //   nodes,
-              //   edges,
-              //   layoutName,
-              //   boundingBox,
-              // }
-              // fetch('http://localhost:8080/layout', {
-              //   method: 'POST',
-              //   body: JSON.stringify(body),
-              //   headers: {
-              //     'Content-Type': 'application/json',
-              //   },
-              // }).then(res => res.json()).then(res => {
-              //   console.log('layout res', res)
-              //   Object.keys(res).forEach((key) => {
-              //     const {
-              //       x,
-              //       y,
-              //     } = res[key]
-              //     const element = cy.$id(key)
-              //     element.position({
-              //       x,
-              //       y,
-              //     })
-              //   })
-              // }).catch((err) => {
-              //   console.log('layout err', err)
-              // })
             }, 200)
           return false
         }
@@ -824,68 +777,6 @@ const AppContainer = ({
           })
           console.log('All', allNodes, allEdges)
         }}
-        // onNetworkStatisticsCalculated={({
-        //   networkStatistics,
-        //   allNodes,
-        //   allEdges,
-        //   subNetwork,
-        // }) => {
-        //   const {
-        //     nodeSizeRangeMap,
-        //     communityStats,
-        //   } = calculateNetworkStatisticsRange(networkStatistics, subNetwork)
-        //   console.log('communityStats', communityStats)
-        //   configRef.current.visualizationRangeMap = nodeSizeRangeMap
-        //   controller.update((draft) => {
-        //     draft.networkStatistics.local  = networkStatistics
-        //     draft.allNodes  = allNodes
-        //     draft.allEdges  = allEdges
-        //     const filterSchema  = draft.settingsBar.forms[2].schema
-        //     const filterFormData  = draft.settingsBar.forms[2].formData
-        //     filterSchema.properties.community = {
-        //       type: 'array',
-        //       uniqueItems: true,
-        //       items: {
-        //         enum: communityStats.map((item) => item.key),
-        //         enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-        //         type: 'string'
-        //       },
-        //       default: []
-        //     }
-        //     filterSchema.properties.year.items.minimum = nodeSizeRangeMap.year[0]
-        //     filterSchema.properties.year.items.maximum = nodeSizeRangeMap.year[1]
-        //     filterSchema.properties.degree.items.minimum = nodeSizeRangeMap.degree[0]
-        //     filterSchema.properties.degree.items.maximum = nodeSizeRangeMap.degree[1]
-        //     filterSchema.properties.indegree.items.minimum = nodeSizeRangeMap['in-degree'][0]
-        //     filterSchema.properties.indegree.items.maximum = nodeSizeRangeMap['in-degree'][1]
-        //     filterSchema.properties.outdegree.items.minimum = nodeSizeRangeMap['out-degree'][0]
-        //     filterSchema.properties.outdegree.items.maximum = nodeSizeRangeMap['out-degree'][1]
-        //     filterFormData.year = nodeSizeRangeMap.year
-        //     filterFormData.degree = nodeSizeRangeMap.degree
-        //     filterFormData.indegree = nodeSizeRangeMap['in-degree']
-        //     filterFormData.outdegree = nodeSizeRangeMap['out-degree']
-
-        //     const createClusterForm = draft.settingsBar?.createClusterForm!
-        //     createClusterForm.schema.properties.community = filterSchema.properties.community
-        //     // createClusterForm?.schema.properties.community = filterSchema.properties.community
-        //     // draft.settingsBar.forms[2].schema = {
-        //     //   ...filterSchema,
-        //     //   properties: {
-        //     //     ...filterSchema.properties,
-        //         // community: {
-        //         //   enum: communityStats.map((item) => item.key),
-        //         //   enumNames: communityStats.map((item) => `Community: ${item.key}: ${item.value} nodes`),
-        //         //   type: 'number'
-        //         // },
-        //     //   }
-        //     // }
-        //   })
-        //   console.log('All', allNodes, allEdges)
-        //   alertRef.current.alert({
-        //     type: 'success',
-        //     text: `Network Statistics Calculated!`
-        //   })
-        // }}
         onFinish={({
           nodes: nodes_ = [],
           edges= [],
