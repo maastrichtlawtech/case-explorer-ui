@@ -162,7 +162,7 @@ const AppContainer = ({
   const [state, updateState] = useImmer({
     queryBuilder: {
       visible: true,
-      query: 
+      query:
       {
         "DataSources": [
             "RS"
@@ -220,7 +220,7 @@ const AppContainer = ({
       //   "DegreesTargets": 1,
       //   "Keywords": "werkgever* + aansprake* + BW"
       // }
-      
+
     },
     helpModal: {
       isOpen: false,
@@ -274,7 +274,7 @@ const AppContainer = ({
               console.log('testAuthResult',testResult)
               break;
             }
-          
+
             default:
               break;
           }
@@ -328,12 +328,12 @@ const AppContainer = ({
           labelVisible: false
         }
       },
-     
+
     },
     preferencesModal: {
       // isOpen: true,
         sidebar: [
-          ...DefaultSidebarData, 
+          ...DefaultSidebarData,
           {
             id:  'Developer',
             icon: null,
@@ -448,7 +448,7 @@ const AppContainer = ({
               })
               console.error(error)
             }
-            
+
             if (elementData && !R.isEmpty(elementData)) {
               controller.update((draft, { graphEditorRef }) =>{
                 const {
@@ -575,7 +575,7 @@ const AppContainer = ({
         }
         case EVENT.LAYOUT_CHANGED: {
           // break
-          if (payload.value.expansion)  { 
+          if (payload.value.expansion)  {
             graphEditor.viewport.setZoom(payload.value.expansion, true)
           }
           const layoutName = payload.value.name
@@ -605,7 +605,7 @@ const AppContainer = ({
               w: hitArea.width,
               h: hitArea.height,
             }
-             
+
               API.calculateLayout({
                 nodes,
                 edges,
@@ -664,7 +664,7 @@ const AppContainer = ({
       return null
     }
   })
-  
+
   React.useEffect(() => {
     setTimeout(() => {
       controller.update((draft, { graphEditorRef }) => {
@@ -682,7 +682,7 @@ const AppContainer = ({
               ...layout,
               animationDuration: 0,
               boundingBox,
-            } 
+            }
         } catch (error) {
           console.log('error',error)
         }
@@ -751,7 +751,7 @@ const AppContainer = ({
     }
     call()
   }, [controllerProps.nodes, controllerProps.edges])
- 
+
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
@@ -800,7 +800,7 @@ const AppContainer = ({
           updateState((draft) => {
             draft.queryBuilder.visible = false
           })
-          
+
         }}
         onError={(error) => {
           controller.update((draft) => {
@@ -927,15 +927,15 @@ const AppContainer = ({
           }
         }}
       />
-      <HelpModal 
+      <HelpModal
         isOpen={state.helpModal.isOpen}
         onClose={() => updateState((draft) => {
           draft.helpModal.isOpen = false
         })}
         videoId={HELP_VIDEO_ID}
       />
-      
-        <AlertContent 
+
+        <AlertContent
           ref={alertRef}
         />
       <Backdrop
