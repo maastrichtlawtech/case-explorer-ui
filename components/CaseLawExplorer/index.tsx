@@ -273,9 +273,10 @@ const AppContainer = ({
       />
       )}, [dispatch])
   const [controllerProps, controller] = useController({
-    ...data,
-    // nodes: [],
-    // edges: [],
+    nodes: [],
+    real_nodes: [],
+    edges: [],
+    real_edges: [],
     // events: RECORDED_EVENTS,
     graph_updated: false,
     display_updated: false,
@@ -646,24 +647,26 @@ const AppContainer = ({
 }, [])
 
   React.useEffect(() => {
-    if (!controllerProps.graph_updated || controllerProps.nodes.length === 0) {
+    if (!controllerProps.graph_updated || controllerProps.real_nodes.length === 0) {
       return () => {}
     }
     console.log('There is a new update!!!')
-    const graph_update = controllerProps.graph_updated
+
     controllerProps.graph_updated = false
 
     const call = async () => {
       let networkStatistics = await API.getNetworkStatistics({
-        nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
-        edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
+        nodes: controllerProps.real_nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
+        edges: controllerProps.real_edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
       })
 
+      const [new_nodes, new_edges] = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
       controller.update((draft) => {
-        draft.networkStatistics.local = networkStatistics
+        draft.networkStatistics.global = networkStatistics
+        draft.nodes = new_nodes
+        draft.edges = new_edges
         draft.display_updated = true
       })
-
       alertRef.current.alert({
         type: 'success',
         text: `Network Statistics Calculated!`
@@ -680,8 +683,13 @@ const AppContainer = ({
 
     controllerProps.display_updated = false
 
-    const networkStatistics = controllerProps.networkStatistics.local
+    const networkStatistics = controllerProps.networkStatistics.global
     const call = async () => {
+      const localStatistics = await API.getNetworkStatistics({
+        nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
+        edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
+      })
+
       const {
         nodeSizeRangeMap,
         communityStats,
@@ -692,6 +700,7 @@ const AppContainer = ({
       console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
+        draft.networkStatistics.local = localStatistics
         const filterSchema  = draft.settingsBar.forms[2].schema
         const filterFormData  = draft.settingsBar.forms[2].formData
         filterSchema.properties.community = {
@@ -819,11 +828,10 @@ const AppContainer = ({
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
           controller.update((draft) => {
-            const nodes = R.take(NODE_LIMIT, nodes_)
-            draft.nodes = nodes
-            draft.edges = filterEdges(nodes)(edges)
             draft.networkStatistics.local = networkStatistics
             draft.isLoading = false
+            draft.real_nodes = nodes_
+            draft.real_edges = edges
             draft.graph_updated = true
           })
           if (message) {
@@ -853,6 +861,25 @@ const AppContainer = ({
       </Backdrop>
     </View>
   )
+}
+
+function make_edge({source, target}) {
+    return JSON.stringify({source: source, dest: dest})
+}
+
+function clusterGraph(networkStats, nodes, edges) {
+    const node_clusters = nodes.map((item) => networkStats[item.id].parent)
+    const new_nodes = Array.from(new Set<number>(node_clusters)).map((item) => ({ id: item.toString(), data: {}}))
+
+    const make_edge = ({source, target}) => {
+        const edge = {source: networkStats[source].parent, target: networkStats[target].parent}
+        return JSON.stringify(edge)
+    }
+
+    const new_edges = Array.from(new Set<string>(edges.map(make_edge))).map(JSON.parse)
+    const new_new_edges = new_edges.map(({source, target}, idx) => ({source: source, target: target, id: "edge" + idx.toString()}))
+
+    return [new_nodes, new_new_edges]
 }
 
 const MUI_THEMES = {
