@@ -278,6 +278,7 @@ const AppContainer = ({
     // edges: [],
     // events: RECORDED_EVENTS,
     graph_updated: false,
+    display_updated: false,
     networkStatistics: {
       local: {},
       global: {},
@@ -643,6 +644,7 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
+
   React.useEffect(() => {
     if (!controllerProps.graph_updated || controllerProps.nodes.length === 0) {
       return () => {}
@@ -650,11 +652,36 @@ const AppContainer = ({
     console.log('There is a new update!!!')
     const graph_update = controllerProps.graph_updated
     controllerProps.graph_updated = false
-    const call  = async () => {
+
+    const call = async () => {
       let networkStatistics = await API.getNetworkStatistics({
         nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
         edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
       })
+
+      controller.update((draft) => {
+        draft.networkStatistics.local = networkStatistics
+        draft.display_updated = true
+      })
+
+      alertRef.current.alert({
+        type: 'success',
+        text: `Network Statistics Calculated!`
+      })
+    }
+    call()
+  }, [controllerProps.graph_updated])
+
+  React.useEffect(() => {
+    if (!controllerProps.display_updated) {
+      return () => {}
+    }
+    console.log('There is a display update!!!')
+
+    controllerProps.display_updated = false
+
+    const networkStatistics = controllerProps.networkStatistics.local
+    const call = async () => {
       const {
         nodeSizeRangeMap,
         communityStats,
@@ -665,7 +692,6 @@ const AppContainer = ({
       console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
-        draft.networkStatistics.local  = networkStatistics
         const filterSchema  = draft.settingsBar.forms[2].schema
         const filterFormData  = draft.settingsBar.forms[2].formData
         filterSchema.properties.community = {
@@ -696,11 +722,11 @@ const AppContainer = ({
       })
       alertRef.current.alert({
         type: 'success',
-        text: `Network Statistics Calculated!`
+        text: `Display updated!`
       })
     }
     call()
-  }, [controllerProps.graph_updated])
+  }, [controllerProps.display_updated])
 
   return (
     <View
