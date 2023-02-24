@@ -720,6 +720,12 @@ const AppContainer = ({
         const createClusterForm = draft.settingsBar?.createClusterForm!
         createClusterForm.schema.properties.community = filterSchema.properties.community
       })
+      controller.onEvent({
+        type: EVENT.LAYOUT_CHANGED,
+        payload: {
+          value: {...DEFAULT_LAYOUT,}
+        }
+      })
       alertRef.current.alert({
         type: 'success',
         text: `Display updated!`
@@ -820,20 +826,6 @@ const AppContainer = ({
             draft.isLoading = false
             draft.graph_updated = true
           })
-          setTimeout(() => {
-            // controller.update((draft) => {
-            // draft.graphConfig!.layout = {
-            //   ...DEFAULT_LAYOUT,
-            //   componentSpacing: 80
-            //   }
-            // })
-            controller.onEvent({
-              type: EVENT.LAYOUT_CHANGED,
-              payload: {
-                value: {...DEFAULT_LAYOUT,}
-              }
-            })
-          },250)
           if (message) {
             alertRef.current.alert({
               type: 'warning',
