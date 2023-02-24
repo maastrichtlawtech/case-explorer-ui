@@ -277,6 +277,7 @@ const AppContainer = ({
     // nodes: [],
     // edges: [],
     // events: RECORDED_EVENTS,
+    graph_updated: false,
     networkStatistics: {
       local: {},
       global: {},
@@ -642,17 +643,13 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
-  const nodeIdsRef = React.useRef<any>()
-  const edgeIdsRef = React.useRef<any>()
   React.useEffect(() => {
-    const nodeIds = controllerProps.nodes.map((item) => item.id).sort().join('.')
-    const edgeIds = controllerProps.edges.map((item) => item.id).sort().join('.')
-    if ((nodeIdsRef.current === nodeIds && edgeIds === edgeIdsRef.current) || controllerProps.nodes.length === 0) {
+    if (!controllerProps.graph_updated || controllerProps.nodes.length === 0) {
       return () => {}
     }
     console.log('There is a new update!!!')
-    nodeIdsRef.current = nodeIds
-    edgeIdsRef.current = edgeIds
+    const graph_update = controllerProps.graph_updated
+    controllerProps.graph_updated = false
     const call  = async () => {
       let networkStatistics = await API.getNetworkStatistics({
         nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
@@ -703,7 +700,7 @@ const AppContainer = ({
       })
     }
     call()
-  }, [controllerProps.nodes, controllerProps.edges])
+  }, [controllerProps.graph_updated])
 
   return (
     <View
@@ -795,6 +792,7 @@ const AppContainer = ({
             draft.edges = filterEdges(nodes)(edges)
             draft.networkStatistics.local = networkStatistics
             draft.isLoading = false
+            draft.graph_updated = true
           })
           setTimeout(() => {
             // controller.update((draft) => {
