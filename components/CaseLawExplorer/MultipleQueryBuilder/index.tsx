@@ -21,20 +21,6 @@ export type QueryBuilderProps = {
   isOpen: boolean;
 }
 
-const transformData = (data) => {
-  // console.log(data)
-
-  // const date = data.Date;
-  // console.log(date)
-  // return {
-  //   "DateStart": `${date[0]}-01-01`,
-  //   "DateEnd": `${date[1]}-12-31`,
-  //   ...data
-  // }
-
-  return data;
-}
-
 const {
   schema,
   uiSchema
@@ -106,7 +92,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     const casesDataList = await Promise.all(
       state.tabs.map(async (tab, index) => {
         try {
-          let casesData = await API.listCases(transformData(tab.formData))
+          let casesData = await API.listCases(tab.formData)
           return casesData
           console.log(`RESULT-tab: ${index}`, casesData)
         } catch (e) {
