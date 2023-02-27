@@ -60,7 +60,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     const id = R.uuid()
     const tab = {
       id,
-      name: 'Query-0', 
+      name: 'Query-0',
       schema,
       uiSchema,
       formData: query,
@@ -148,12 +148,12 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       id: node.id,
       data: JSON.stringify(node.data)
     }))
-    const allEdges = casesData?.edges.map((edge)=> ({ 
+    const allEdges = casesData?.edges.map((edge)=> ({
       id: edge.id,
       source: edge.source,
       target: edge.target
     }))
-    
+
     let subNetwork = await API.getSubnetwork({
       nodes: allNodes,
       edges: allEdges,
@@ -188,13 +188,13 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       allEdges,
       subNetwork,
     })
-  }, 
+  },
   [
       onNetworkStatisticsCalculated,
       onFinish,
       onStart,
       onError,
-      state, 
+      state,
     ]
   )
   // React.useEffect(() => {
@@ -227,7 +227,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         overflow: 'scroll'
       }}
       >
-        
+
         <Box
           style={{
             display: 'flex',
@@ -237,7 +237,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
           }}
         >
           <Typography variant="h6">Query Builder</Typography>
-          <IconButton 
+          <IconButton
             aria-label="Example"
             onClick={onClose}
             // style={{
@@ -272,5 +272,3 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     </Modal>
   )
 }
-
-
