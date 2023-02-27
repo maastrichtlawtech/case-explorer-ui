@@ -107,7 +107,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       state.tabs.map(async (tab, index) => {
         try {
           let casesData = await API.listCases(transformData(tab.formData))
-          // let casesData = prepareData(cases)
           return casesData
           console.log(`RESULT-tab: ${index}`, casesData)
         } catch (e) {
@@ -174,15 +173,10 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       id: node.id,
       data: JSON.stringify(node.data)
     }))
-    // let networkStatistics = await API.getNetworkStatistics({
-    //   nodes: allNodesData,
-    //   edges: allEdges
-    // })
-    // console.log('RESULT getNetworkStatistics', networkStatistics)
+
     console.log('All', allNodes, allEdges)
 
     onNetworkStatisticsCalculated({
-      // networkStatistics: networkStatistics,
       message,
       allNodes: allNodesData,
       allEdges,
@@ -197,9 +191,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       state,
     ]
   )
-  // React.useEffect(() => {
-  //   onSubmit()
-  // }, [])
   return (
     <Modal
       open={isOpen}
@@ -240,11 +231,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
           <IconButton
             aria-label="Example"
             onClick={onClose}
-            // style={{
-            //   position: 'absolute',
-            //   right: 24,
-            //   top: 24
-            // }}
           >
             <CloseIcon  />
           </IconButton>
