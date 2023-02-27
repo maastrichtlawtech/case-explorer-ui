@@ -132,8 +132,10 @@ def create_response(clusters, communities, nodes, degrees, in_degrees, out_degre
             'betweenness centrality': betweenness_centralities[i],
             'closeness centrality': closeness_centralities[i],
             'community': partition[i],
-            'year': int(node['id'].split(':')[3])
         }
+        id_components = node['id'].split(':')
+        if len(id_components) >= 4:
+            statistics[node_id]['year'] = int(id_components[3])
     return statistics
 
 # main

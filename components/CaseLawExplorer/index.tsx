@@ -273,10 +273,13 @@ const AppContainer = ({
       />
       )}, [dispatch])
   const [controllerProps, controller] = useController({
-    ...data,
-    // nodes: [],
-    // edges: [],
+    nodes: [],
+    real_nodes: [],
+    edges: [],
+    real_edges: [],
     // events: RECORDED_EVENTS,
+    graph_updated: false,
+    display_updated: false,
     networkStatistics: {
       local: {},
       global: {},
@@ -642,22 +645,51 @@ const AppContainer = ({
       })
     }, 1000)
 }, [])
-  const nodeIdsRef = React.useRef<any>()
-  const edgeIdsRef = React.useRef<any>()
+
   React.useEffect(() => {
-    const nodeIds = controllerProps.nodes.map((item) => item.id).sort().join('.')
-    const edgeIds = controllerProps.edges.map((item) => item.id).sort().join('.')
-    if ((nodeIdsRef.current === nodeIds && edgeIds === edgeIdsRef.current) || controllerProps.nodes.length === 0) {
+    if (!controllerProps.graph_updated || controllerProps.real_nodes.length === 0) {
       return () => {}
     }
     console.log('There is a new update!!!')
-    nodeIdsRef.current = nodeIds
-    edgeIdsRef.current = edgeIds
-    const call  = async () => {
+
+    controllerProps.graph_updated = false
+
+    const call = async () => {
       let networkStatistics = await API.getNetworkStatistics({
+        nodes: controllerProps.real_nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
+        edges: controllerProps.real_edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
+      })
+
+      const [new_nodes, new_edges] = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
+      controller.update((draft) => {
+        draft.networkStatistics.global = networkStatistics
+        draft.nodes = new_nodes
+        draft.edges = new_edges
+        draft.display_updated = true
+      })
+      alertRef.current.alert({
+        type: 'success',
+        text: `Network Statistics Calculated!`
+      })
+    }
+    call()
+  }, [controllerProps.graph_updated])
+
+  React.useEffect(() => {
+    if (!controllerProps.display_updated) {
+      return () => {}
+    }
+    console.log('There is a display update!!!')
+
+    controllerProps.display_updated = false
+
+    const networkStatistics = controllerProps.networkStatistics.global
+    const call = async () => {
+      const localStatistics = await API.getNetworkStatistics({
         nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
         edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
       })
+
       const {
         nodeSizeRangeMap,
         communityStats,
@@ -668,7 +700,7 @@ const AppContainer = ({
       console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
-        draft.networkStatistics.local  = networkStatistics
+        draft.networkStatistics.local = localStatistics
         const filterSchema  = draft.settingsBar.forms[2].schema
         const filterFormData  = draft.settingsBar.forms[2].formData
         filterSchema.properties.community = {
@@ -697,13 +729,19 @@ const AppContainer = ({
         const createClusterForm = draft.settingsBar?.createClusterForm!
         createClusterForm.schema.properties.community = filterSchema.properties.community
       })
+      controller.onEvent({
+        type: EVENT.LAYOUT_CHANGED,
+        payload: {
+          value: {...DEFAULT_LAYOUT,}
+        }
+      })
       alertRef.current.alert({
         type: 'success',
-        text: `Network Statistics Calculated!`
+        text: `Display updated!`
       })
     }
     call()
-  }, [controllerProps.nodes, controllerProps.edges])
+  }, [controllerProps.display_updated])
 
   return (
     <View
@@ -790,26 +828,12 @@ const AppContainer = ({
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
           controller.update((draft) => {
-            const nodes = R.take(NODE_LIMIT, nodes_)
-            draft.nodes = nodes
-            draft.edges = filterEdges(nodes)(edges)
             draft.networkStatistics.local = networkStatistics
             draft.isLoading = false
+            draft.real_nodes = nodes_
+            draft.real_edges = edges
+            draft.graph_updated = true
           })
-          setTimeout(() => {
-            // controller.update((draft) => {
-            // draft.graphConfig!.layout = {
-            //   ...DEFAULT_LAYOUT,
-            //   componentSpacing: 80
-            //   }
-            // })
-            controller.onEvent({
-              type: EVENT.LAYOUT_CHANGED,
-              payload: {
-                value: {...DEFAULT_LAYOUT,}
-              }
-            })
-          },250)
           if (message) {
             alertRef.current.alert({
               type: 'warning',
@@ -837,6 +861,25 @@ const AppContainer = ({
       </Backdrop>
     </View>
   )
+}
+
+function make_edge({source, target}) {
+    return JSON.stringify({source: source, dest: dest})
+}
+
+function clusterGraph(networkStats, nodes, edges) {
+    const node_clusters = nodes.map((item) => networkStats[item.id].parent)
+    const new_nodes = Array.from(new Set<number>(node_clusters)).map((item) => ({ id: item.toString(), data: {}}))
+
+    const make_edge = ({source, target}) => {
+        const edge = {source: networkStats[source].parent, target: networkStats[target].parent}
+        return JSON.stringify(edge)
+    }
+
+    const new_edges = Array.from(new Set<string>(edges.map(make_edge))).map(JSON.parse)
+    const new_new_edges = new_edges.map(({source, target}, idx) => ({source: source, target: target, id: "edge" + idx.toString()}))
+
+    return [new_nodes, new_new_edges]
 }
 
 const MUI_THEMES = {
