@@ -16,7 +16,6 @@ export type QueryBuilderProps = {
   onStart: () => void;
   onError: (e: Error) => void;
   onFinish: (data: any) => void;
-  onNetworkStatisticsCalculated: (data: any) => void;
   onClose: () => void;
   isOpen: boolean;
 }
@@ -34,7 +33,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     onFinish,
     query,
     onClose,
-    onNetworkStatisticsCalculated,
   } = props
   const createFormChangeHandler = (tabId) => (e) => {
     updateState((draft) => {
@@ -161,16 +159,8 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     }))
 
     console.log('All', allNodes, allEdges)
-
-    onNetworkStatisticsCalculated({
-      message,
-      allNodes: allNodesData,
-      allEdges,
-      subNetwork,
-    })
   },
   [
-      onNetworkStatisticsCalculated,
       onFinish,
       onStart,
       onError,

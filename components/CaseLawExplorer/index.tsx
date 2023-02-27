@@ -796,16 +796,6 @@ const AppContainer = ({
             text: error.message
           })
         }}
-        onNetworkStatisticsCalculated={({
-          allNodes,
-          allEdges,
-        }) => {
-          controller.update((draft) => {
-            draft.allNodes  = allNodes
-            draft.allEdges  = allEdges
-          })
-          console.log('All', allNodes, allEdges)
-        }}
         onFinish={({
           nodes: nodes_ = [],
           edges= [],
