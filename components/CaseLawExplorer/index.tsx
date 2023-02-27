@@ -797,9 +797,8 @@ const AppContainer = ({
           })
         }}
         onFinish={({
-          nodes: nodes_ = [],
+          nodes= [],
           edges= [],
-          networkStatistics,
           message
         } = {}) => {
           PIXI.settings.ROUND_PIXELS = false// true
@@ -812,7 +811,6 @@ const AppContainer = ({
             const nodes = R.take(NODE_LIMIT, nodes_)
             draft.nodes = nodes
             draft.edges = filterEdges(nodes)(edges)
-            draft.networkStatistics.local = networkStatistics
             draft.isLoading = false
             draft.graph_updated = true
           })
