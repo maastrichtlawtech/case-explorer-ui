@@ -148,16 +148,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       edges: subNetwork.edges,
       message,
     })
-    let allNodesWithData = await API.batchGetElementData({
-      attributesToFetch: NodeAttributes.NETWORKSTATS,
-      nodes: allNodes
-    })
-    console.log('RESULT batchFetchData', allNodesWithData)
-    const allNodesData = allNodesWithData?.map((node)=> ({
-      id: node.id,
-      data: JSON.stringify(node.data)
-    }))
-
     console.log('All', allNodes, allEdges)
   },
   [
