@@ -805,20 +805,9 @@ const AppContainer = ({
             text: error.message
           })
         }}
-        onNetworkStatisticsCalculated={({
-          allNodes,
-          allEdges,
-        }) => {
-          controller.update((draft) => {
-            draft.allNodes  = allNodes
-            draft.allEdges  = allEdges
-          })
-          console.log('All', allNodes, allEdges)
-        }}
         onFinish={({
-          nodes: nodes_ = [],
+          nodes= [],
           edges= [],
-          networkStatistics,
           message
         } = {}) => {
           PIXI.settings.ROUND_PIXELS = false// true
@@ -828,9 +817,8 @@ const AppContainer = ({
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
           controller.update((draft) => {
-            draft.networkStatistics.local = networkStatistics
             draft.isLoading = false
-            draft.real_nodes = nodes_
+            draft.real_nodes = nodes
             draft.real_edges = edges
             draft.graph_updated = true
           })
