@@ -808,9 +808,9 @@ const AppContainer = ({
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
           controller.update((draft) => {
-            const nodes = R.take(NODE_LIMIT, nodes_)
-            draft.nodes = nodes
-            draft.edges = filterEdges(nodes)(edges)
+            const nodes_ = R.take(NODE_LIMIT, nodes)
+            draft.nodes = nodes_
+            draft.edges = filterEdges(nodes_)(edges)
             draft.isLoading = false
             draft.graph_updated = true
           })
