@@ -673,7 +673,7 @@ const AppContainer = ({
       })
     }
     call()
-  }, [controllerProps.graph_updated])
+  }, [controllerProps.real_nodes, controllerProps.real_edges, controllerProps.graph_updated])
 
   React.useEffect(() => {
     if (!controllerProps.display_updated) {
@@ -741,7 +741,7 @@ const AppContainer = ({
       })
     }
     call()
-  }, [controllerProps.display_updated])
+  }, [controllerProps.nodes, controllerProps.edges, controllerProps.display_updated])
 
   return (
     <View
