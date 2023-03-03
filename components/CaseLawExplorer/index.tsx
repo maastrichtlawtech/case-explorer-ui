@@ -660,11 +660,11 @@ const AppContainer = ({
         edges: controllerProps.real_edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
       })
 
-      const [new_nodes, new_edges] = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
+      const {nodes, edges} = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
       controller.update((draft) => {
         draft.networkStatistics.global = networkStatistics
-        draft.nodes = new_nodes
-        draft.edges = new_edges
+        draft.nodes = nodes
+        draft.edges = edges
         draft.display_updated = true
       })
       alertRef.current.alert({
@@ -851,23 +851,46 @@ const AppContainer = ({
   )
 }
 
-function make_edge({source, target}) {
-    return JSON.stringify({source: source, dest: dest})
+function showCluster(networkStats, nodes, edges, activeClusters) {
+    const clusters = new Set(activeClusters)
+    const new_nodes = nodes.filter((node) => clusters.has(networkStats[node.id].parent))
+    const new_edges = new Array()
+    edges.forEach((edge) => {
+        const sourceCluster = networkStats[edge.source].parent
+        const targetCluster = networkStats[edge.target].parent
+        if (clusters.has(sourceCluster) && clusters.has(targetCluster)) {
+            new_edges.push(edge)
+        }
+    })
+
+    return { nodes: new_nodes
+           , edges: new_edges
+           }
 }
 
 function clusterGraph(networkStats, nodes, edges) {
-    const node_clusters = nodes.map((item) => networkStats[item.id].parent)
-    const new_nodes = Array.from(new Set<number>(node_clusters)).map((item) => ({ id: item.toString(), data: {}}))
+    const new_nodes = new Set(nodes.map((node) => networkStats[node.id].parent))
+    const new_edges = new Set()
 
-    const make_edge = ({source, target}) => {
-        const edge = {source: networkStats[source].parent, target: networkStats[target].parent}
-        return JSON.stringify(edge)
+    edges.forEach(({source, target}) => {
+        const sourceCluster = networkStats[source].parent
+        const targetCluster = networkStats[target].parent
+        if (sourceCluster != targetCluster) {
+            if (new_nodes.has(sourceCluster) && new_nodes.has(targetCluster)) {
+                const new_edge = {source: sourceCluster, target: targetCluster}
+                new_edges.add(JSON.stringify(new_edge))
+            }
+        }
+    })
+
+    const make_node = (cluster) => ({id: cluster.toString(), data: {}})
+    const make_edge = (str, idx) => {
+        const edge = JSON.parse(str)
+        return {...edge, id: "edge" + idx.toString()}
     }
-
-    const new_edges = Array.from(new Set<string>(edges.map(make_edge))).map(JSON.parse)
-    const new_new_edges = new_edges.map(({source, target}, idx) => ({source: source, target: target, id: "edge" + idx.toString()}))
-
-    return [new_nodes, new_new_edges]
+    return { nodes: Array.from(new_nodes).map(make_node)
+           , edges: Array.from(new_edges).map(make_edge)
+           }
 }
 
 const MUI_THEMES = {
