@@ -3,7 +3,8 @@
 import {
   Backdrop, CircularProgress,
   createTheme as createMuiTheme,
-  ThemeProvider as MuiThemeProvider
+  ThemeProvider as MuiThemeProvider,
+  Button
 } from '@mui/material'
 import { View } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
@@ -743,10 +744,39 @@ const AppContainer = ({
     call()
   }, [controllerProps.nodes, controllerProps.edges, controllerProps.display_updated])
 
+  const [cluster, setCluster] = React.useState('');
+  const handleChange = (event) => {
+    setCluster(event.target.value)
+  }
+
+  const SwapGraph = () => {
+    return (<div>
+            <input
+                type="number"
+                id="cluster"
+                name="cluster"
+                onChange={handleChange}
+                value={cluster}
+            /><Button onClick={() => {
+                const networkStatistics = controllerProps.networkStatistics.global
+                const {nodes, edges} = cluster == ''
+                    ? clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
+                    : showCluster(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges, [Number(cluster)])
+
+                controller.update((draft) => {
+                    draft.nodes = nodes
+                    draft.edges = edges
+                    draft.display_updated = true
+                })
+              }} color="primary">
+              Swap Graph
+            </Button></div>)
+              }
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
     >
+      <SwapGraph />
       <GraphEditor
         {...controllerProps}
         extraData={[
