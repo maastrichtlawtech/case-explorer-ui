@@ -653,7 +653,7 @@ const AppContainer = ({
     }
     console.log('There is a new update!!!')
 
-    controllerProps.graph_updated = false
+    controller.update((draft) => draft.graph_updated = false)
 
     const call = async () => {
       let networkStatistics = await API.getNetworkStatistics({
@@ -682,7 +682,7 @@ const AppContainer = ({
     }
     console.log('There is a display update!!!')
 
-    controllerProps.display_updated = false
+    controller.update((draft) => draft.display_updated = false)
 
     const networkStatistics = controllerProps.networkStatistics.global
     const call = async () => {
