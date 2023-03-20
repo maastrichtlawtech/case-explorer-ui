@@ -1,7 +1,7 @@
 # User Guide
 
 ## Case Law Explorer
-The [Case Law Explorer software](https://dev.d11iy22xsphp3a.amplifyapp.com/) has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students). 
+[Case Law Explorer](https://dev.d11iy22xsphp3a.amplifyapp.com/) can be accessed [HERE](https://dev.d11iy22xsphp3a.amplifyapp.com/). The tool has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/). You will need to create an account in order to use the software (the SurfConext option is under construction and will only work for Maastricht University staff and students). 
 
 A handbook on legal network analysis is under development and will be released soon.
 
@@ -126,7 +126,8 @@ The metadata are computed on the backend network (all result nodes with or witho
 - [What is Case Law Explorer? (Wat is Case Law Explorer?)](https://zuyd.mediasite.com/Mediasite/Play/db6594fc00df4412a44f53b9f45c4bd91d) (in Dutch)
 
 ### In English
-Instruction videos will follow.
+- [Network Analysis and the Law](https://play.umu.se/media/t/0_xvu5g1bd). Introduction to the purposes of network analysis in law.
+More videos will follow.
 
 ## Examples
 
