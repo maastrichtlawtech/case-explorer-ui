@@ -121,13 +121,14 @@ Under ***Preferences***, color schemes may be adjusted. Here, it is also possibl
 The metadata are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until limit reached). The network statistics are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until the limit is reached). The computation might take longer t)han the first display of network. A success message notifies the user about the completion of the network.
 
 ## Videos
+Instructional videos on legal network analysis can be found [here](https://maastrichtlawtech.github.io/LegalNetworkAnalysis/#/?id=videos). Videos that specifically apply to Case Law Explorer are:
 
 ### In Dutch
 - [What is Case Law Explorer? (Wat is Case Law Explorer?)](https://zuyd.mediasite.com/Mediasite/Play/db6594fc00df4412a44f53b9f45c4bd91d) (in Dutch)
 
 ### In English
-- [Network Analysis and the Law](https://play.umu.se/media/t/0_xvu5g1bd). Introduction to the purposes of network analysis in law.
-More videos will follow.
+(Videos will be added.)
+
 
 ## Examples
 
@@ -142,3 +143,6 @@ More information will be added once the case law is added to Case Law Explorer.
 
 ### CJEU Case Law
 More information will be added once the case law is added to Case Law Explorer.
+
+## Resources
+Everything you need to know about LNA can be found on the [Legal Network Analysis website](https://maastrichtlawtech.github.io/LegalNetworkAnalysis/#/).
