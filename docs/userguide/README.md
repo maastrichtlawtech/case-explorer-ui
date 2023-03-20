@@ -124,7 +124,7 @@ The metadata are computed on the backend network (all result nodes with or witho
 Instructional videos on legal network analysis can be found [here](https://maastrichtlawtech.github.io/LegalNetworkAnalysis/#/?id=videos). Videos that specifically apply to Case Law Explorer are:
 
 ### In Dutch
-- [What is Case Law Explorer? (Wat is Case Law Explorer?)](https://zuyd.mediasite.com/Mediasite/Play/db6594fc00df4412a44f53b9f45c4bd91d) (in Dutch)
+- [What is Case Law Explorer? (Wat is Case Law Explorer?)](https://zuyd.mediasite.com/Mediasite/Play/4989e864f96745a4a0003b8dc78228861d) (in Dutch)
 
 ### In English
 (Videos will be added.)
