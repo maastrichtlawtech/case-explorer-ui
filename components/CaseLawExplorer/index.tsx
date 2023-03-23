@@ -41,6 +41,7 @@ import { RenderNode } from './RenderNode'
 import {
   calculateNetworkStatisticsRange
 } from './utils'
+import { clusterGraph } from './cluster_graph'
 
 export const ACTIONS = {
   TEST_API: 'TEST_API',
@@ -273,11 +274,14 @@ const AppContainer = ({
         }}
       />
       )}, [dispatch])
+
+  const controllerRef = React.useRef(null)
   const [controllerProps, controller] = useController({
     nodes: [],
     real_nodes: [],
     edges: [],
     real_edges: [],
+    showing_clusters: false,
     // events: RECORDED_EVENTS,
     graph_updated: false,
     display_updated: false,
@@ -363,7 +367,7 @@ const AppContainer = ({
     dataBar: {
       // isOpen: true,
       editable: false,
-      header: DataBarHeader,
+      header: DataBarHeader(controllerRef),
       sort: (a, b) => {
         const prioritizeKeys = ['ecli_opinion', 'cited_by','summary', 'url_publication']
         const aIndex = prioritizeKeys.findIndex((val) => val ===a.key)
@@ -623,6 +627,10 @@ const AppContainer = ({
   })
 
   React.useEffect(() => {
+    controllerRef.current = {controller, controllerProps}
+  }, [controller, controllerProps])
+
+  React.useEffect(() => {
     setTimeout(() => {
       controller.update((draft, { graphEditorRef }) => {
         try {
@@ -666,6 +674,7 @@ const AppContainer = ({
         draft.networkStatistics.global = networkStatistics
         draft.nodes = nodes
         draft.edges = edges
+        draft.showing_clusters = true
         draft.display_updated = true
       })
       alertRef.current.alert({
@@ -744,39 +753,10 @@ const AppContainer = ({
     call()
   }, [controllerProps.nodes, controllerProps.edges, controllerProps.display_updated])
 
-  const [cluster, setCluster] = React.useState('');
-  const handleChange = (event) => {
-    setCluster(event.target.value)
-  }
-
-  const SwapGraph = () => {
-    return (<div>
-            <input
-                type="number"
-                id="cluster"
-                name="cluster"
-                onChange={handleChange}
-                value={cluster}
-            /><Button onClick={() => {
-                const networkStatistics = controllerProps.networkStatistics.global
-                const {nodes, edges} = cluster == ''
-                    ? clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
-                    : showCluster(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges, [Number(cluster)])
-
-                controller.update((draft) => {
-                    draft.nodes = nodes
-                    draft.edges = edges
-                    draft.display_updated = true
-                })
-              }} color="primary">
-              Swap Graph
-            </Button></div>)
-              }
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
     >
-      <SwapGraph />
       <GraphEditor
         {...controllerProps}
         extraData={[
@@ -879,48 +859,6 @@ const AppContainer = ({
       </Backdrop>
     </View>
   )
-}
-
-function showCluster(networkStats, nodes, edges, activeClusters) {
-    const clusters = new Set(activeClusters)
-    const new_nodes = nodes.filter((node) => clusters.has(networkStats[node.id].parent))
-    const new_edges = new Array()
-    edges.forEach((edge) => {
-        const sourceCluster = networkStats[edge.source].parent
-        const targetCluster = networkStats[edge.target].parent
-        if (clusters.has(sourceCluster) && clusters.has(targetCluster)) {
-            new_edges.push(edge)
-        }
-    })
-
-    return { nodes: new_nodes
-           , edges: new_edges
-           }
-}
-
-function clusterGraph(networkStats, nodes, edges) {
-    const new_nodes = new Set(nodes.map((node) => networkStats[node.id].parent))
-    const new_edges = new Set()
-
-    edges.forEach(({source, target}) => {
-        const sourceCluster = networkStats[source].parent
-        const targetCluster = networkStats[target].parent
-        if (sourceCluster != targetCluster) {
-            if (new_nodes.has(sourceCluster) && new_nodes.has(targetCluster)) {
-                const new_edge = {source: sourceCluster, target: targetCluster}
-                new_edges.add(JSON.stringify(new_edge))
-            }
-        }
-    })
-
-    const make_node = (cluster) => ({id: cluster.toString(), data: {}})
-    const make_edge = (str, idx) => {
-        const edge = JSON.parse(str)
-        return {...edge, id: "edge" + idx.toString()}
-    }
-    return { nodes: Array.from(new_nodes).map(make_node)
-           , edges: Array.from(new_edges).map(make_edge)
-           }
 }
 
 const MUI_THEMES = {
