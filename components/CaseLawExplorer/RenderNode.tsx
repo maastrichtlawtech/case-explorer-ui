@@ -28,6 +28,7 @@ export const RenderNode = (props: RenderNodeProps) => {
     label,
    graphRef ,
    graphEditorRef,
+   controllerRef,
    config,
  } = props
  
@@ -105,7 +106,15 @@ export const RenderNode = (props: RenderNodeProps) => {
         )
     )
   )
-  const sizePerc = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
+
+  let sizePerc = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
+
+  let ref_props = controllerRef.current.controllerProps;
+  if (ref_props.showing_clusters) {
+    let sum = ref_props.real_nodes.filter(n => ref_props.networkStatistics.global[n.id].parent == item.id).length
+    sizePerc += sum/ref_props.nodes.length
+  }
+
   const calcWidth = width + (width * sizePerc * SIZE_MULTIPLIER)
   const calcHeight = height + (height * sizePerc * SIZE_MULTIPLIER)
   const calcRadius = radius + (radius * sizePerc * SIZE_MULTIPLIER)
