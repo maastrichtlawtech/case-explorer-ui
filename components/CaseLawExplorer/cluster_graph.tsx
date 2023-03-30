@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Button, Typography, Divider } from '@mui/material'
 import React, { RefObject } from 'react'
 
 type NodeId = string
@@ -30,6 +30,10 @@ function selectClusters
     return { nodes: new_nodes
            , edges: new_edges
            }
+}
+
+function memberNodes(networkStats: NetworkStats, real_nodes: Node[], selectedClusterId: number) {
+    return real_nodes.filter(n => networkStats[n.id].parent == selectedClusterId)
 }
 
 export function clusterGraph
@@ -72,7 +76,14 @@ export function GraphClusterButton
 
     if (controllerProps.showing_clusters && !itemId) return null
 
-    return (<Button onClick={() => {
+    let members: Node[] = []
+    if (itemId) {
+       members = memberNodes(controllerProps.networkStatistics.global, controllerProps.real_nodes, Number(itemId))
+    }
+
+    return (
+        <div>
+            <Button onClick={() => {
             const {controller, controllerProps} = controllerRef.current
             const zoomIn = controllerProps.showing_clusters && itemId
             const networkStatistics = controllerProps.networkStatistics.global
@@ -86,8 +97,18 @@ export function GraphClusterButton
                 draft.display_updated = true
                 draft.showing_clusters = !zoomIn
             })
-              }} color="primary">
-              {controllerProps.showing_clusters && itemId ? "Zoom In" : "Zoom Out"}
-            </Button>
+            }} color="primary">
+            {controllerProps.showing_clusters && itemId ? "Zoom In" : "Zoom Out"}
+            </Button>
+            {   (itemId && members.length > 0 ) &&
+                <div>
+                    <Divider />
+                    <Typography>{`Nodes Inside this cluster: ${members.length}`}</Typography>
+                    <Divider />
+                    {members.map(n => { return <div style={{fontSize: "small"}}>{n.id}</div>})}
+                    <Divider />
+                </div>
+            }
+        </div>
         )
 }

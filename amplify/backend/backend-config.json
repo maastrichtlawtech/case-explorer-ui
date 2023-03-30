@@ -168,38 +168,6 @@
         }
       ]
     },
-    "AMPLIFY_function_batchdatafetcher_apiCaseexploreruiCaselawtableArn": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "batchdatafetcher"
-        }
-      ]
-    },
-    "AMPLIFY_function_batchdatafetcher_apiCaseexploreruiCaselawtableName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "batchdatafetcher"
-        }
-      ]
-    },
-    "AMPLIFY_function_batchdatafetcher_apiCaseexploreruiGraphqlapiidoutput": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "batchdatafetcher"
-        }
-      ]
-    },
-    "AMPLIFY_function_batchdatafetcher_ddbTableName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "batchdatafetcher"
-        }
-      ]
-    },
     "AMPLIFY_function_batchdatafetcher_deploymentBucketName": {
       "usedBy": [
         {
@@ -264,38 +232,6 @@
         }
       ]
     },
-    "AMPLIFY_function_datafetcher_apiCaseexploreruiCaselawtableArn": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "datafetcher"
-        }
-      ]
-    },
-    "AMPLIFY_function_datafetcher_apiCaseexploreruiCaselawtableName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "datafetcher"
-        }
-      ]
-    },
-    "AMPLIFY_function_datafetcher_apiCaseexploreruiGraphqlapiidoutput": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "datafetcher"
-        }
-      ]
-    },
-    "AMPLIFY_function_datafetcher_ddbTableName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "datafetcher"
-        }
-      ]
-    },
     "AMPLIFY_function_datafetcher_deploymentBucketName": {
       "usedBy": [
         {
@@ -328,31 +264,23 @@
         }
       ]
     },
-    "AMPLIFY_function_queryhandler_ddbTableName": {
+    "AMPLIFY_function_networkstatistics_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "queryhandler"
+          "resourceName": "networkstatistics"
+        }
+      ]
+    },
+    "AMPLIFY_function_networkstatistics_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "networkstatistics"
         }
       ]
     },
     "AMPLIFY_function_queryhandler_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "queryhandler"
-        }
-      ]
-    },
-    "AMPLIFY_function_queryhandler_osEndpoint": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "queryhandler"
-        }
-      ]
-    },
-    "AMPLIFY_function_queryhandler_osIndexName": {
       "usedBy": [
         {
           "category": "function",
@@ -369,14 +297,6 @@
       ]
     },
     "AMPLIFY_function_subnetwork_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "subnetwork"
-        }
-      ]
-    },
-    "AMPLIFY_function_subnetwork_region": {
       "usedBy": [
         {
           "category": "function",
