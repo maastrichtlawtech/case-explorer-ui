@@ -113,6 +113,7 @@ export const RenderNode = (props: RenderNodeProps) => {
   if (ref_props.showing_clusters) {
     let sum = ref_props.real_nodes.filter(n => ref_props.networkStatistics.global[n.id].parent == item.id).length
     sizePerc += sum/ref_props.nodes.length
+    text = `cluster-${item.id}`
   }
 
   const calcWidth = width + (width * sizePerc * SIZE_MULTIPLIER)
