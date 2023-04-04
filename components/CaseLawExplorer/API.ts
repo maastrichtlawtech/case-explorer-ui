@@ -19,8 +19,8 @@ import {
 } from '../../src/API';
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import gql from 'graphql-tag';
-import { AWS_CONFIG } from './config';
-import { 
+import AWS_CONFIG from  '../../src/aws-exports'
+import {
   AsyncStorage
 } from 'react-native'
 
