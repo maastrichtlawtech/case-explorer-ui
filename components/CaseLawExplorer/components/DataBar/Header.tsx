@@ -4,24 +4,32 @@ import { View } from 'colay-ui'
 import React from 'react'
 import { useUser } from '../../useUser'
 import { useGraphEditor } from 'perfect-graph/hooks/useGraphEditor'
+import { GraphClusterButton } from '../../cluster_graph'
 
-
-export const DataBarHeader = () => {
+export const DataBarHeader = (controllerRef) => (props) => {
   const [user] = useUser()
   const [
     {
       nodes,
-      edges
+      edges,
+      targetPath,
+      selectedItemId
     },
   ] = useGraphEditor(
     (editor) => {
       const {
+        selectedElement,
+        selectedItem,
         nodes,
         edges
       } = editor
+      const targetPath = selectedElement?.isNode() ? 'nodes' : 'edges'
+      const selectedItemId = selectedItem?.id!
       return {
         nodes,
-        edges
+        edges,
+        targetPath,
+        selectedItemId
       }
     }
   )
@@ -45,6 +53,8 @@ export const DataBarHeader = () => {
         <Typography>{`Node Count: ${nodes.length}`}</Typography>
         <Typography>{`Edge Count: ${edges.length}`}</Typography>
       </View>
+      <Divider />
+      <GraphClusterButton controllerRef={controllerRef} itemId={selectedItemId} />
     </View>
   )
 }

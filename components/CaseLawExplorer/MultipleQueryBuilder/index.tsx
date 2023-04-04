@@ -16,23 +16,8 @@ export type QueryBuilderProps = {
   onStart: () => void;
   onError: (e: Error) => void;
   onFinish: (data: any) => void;
-  onNetworkStatisticsCalculated: (data: any) => void;
   onClose: () => void;
   isOpen: boolean;
-}
-
-const transformData = (data) => {
-  // console.log(data)
-
-  // const date = data.Date;
-  // console.log(date)
-  // return {
-  //   "DateStart": `${date[0]}-01-01`,
-  //   "DateEnd": `${date[1]}-12-31`,
-  //   ...data
-  // }
-
-  return data;
 }
 
 const {
@@ -48,7 +33,6 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     onFinish,
     query,
     onClose,
-    onNetworkStatisticsCalculated,
   } = props
   const createFormChangeHandler = (tabId) => (e) => {
     updateState((draft) => {
@@ -60,7 +44,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     const id = R.uuid()
     const tab = {
       id,
-      name: 'Query-0', 
+      name: 'Query-0',
       schema,
       uiSchema,
       formData: query,
@@ -106,8 +90,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     const casesDataList = await Promise.all(
       state.tabs.map(async (tab, index) => {
         try {
-          let casesData = await API.listCases(transformData(tab.formData))
-          // let casesData = prepareData(cases)
+          let casesData = await API.listCases(tab.formData)
           return casesData
           console.log(`RESULT-tab: ${index}`, casesData)
         } catch (e) {
@@ -148,12 +131,12 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       id: node.id,
       data: JSON.stringify(node.data)
     }))
-    const allEdges = casesData?.edges.map((edge)=> ({ 
+    const allEdges = casesData?.edges.map((edge)=> ({
       id: edge.id,
       source: edge.source,
       target: edge.target
     }))
-    
+
     let subNetwork = await API.getSubnetwork({
       nodes: allNodes,
       edges: allEdges,
@@ -165,41 +148,15 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       edges: subNetwork.edges,
       message,
     })
-    let allNodesWithData = await API.batchGetElementData({
-      attributesToFetch: NodeAttributes.NETWORKSTATS,
-      nodes: allNodes
-    })
-    console.log('RESULT batchFetchData', allNodesWithData)
-    const allNodesData = allNodesWithData?.map((node)=> ({
-      id: node.id,
-      data: JSON.stringify(node.data)
-    }))
-    // let networkStatistics = await API.getNetworkStatistics({
-    //   nodes: allNodesData,
-    //   edges: allEdges
-    // })
-    // console.log('RESULT getNetworkStatistics', networkStatistics)
     console.log('All', allNodes, allEdges)
-
-    onNetworkStatisticsCalculated({
-      // networkStatistics: networkStatistics,
-      message,
-      allNodes: allNodesData,
-      allEdges,
-      subNetwork,
-    })
-  }, 
+  },
   [
-      onNetworkStatisticsCalculated,
       onFinish,
       onStart,
       onError,
-      state, 
+      state,
     ]
   )
-  // React.useEffect(() => {
-  //   onSubmit()
-  // }, [])
   return (
     <Modal
       open={isOpen}
@@ -227,7 +184,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
         overflow: 'scroll'
       }}
       >
-        
+
         <Box
           style={{
             display: 'flex',
@@ -237,14 +194,9 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
           }}
         >
           <Typography variant="h6">Query Builder</Typography>
-          <IconButton 
+          <IconButton
             aria-label="Example"
             onClick={onClose}
-            // style={{
-            //   position: 'absolute',
-            //   right: 24,
-            //   top: 24
-            // }}
           >
             <CloseIcon  />
           </IconButton>
@@ -272,5 +224,3 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     </Modal>
   )
 }
-
-

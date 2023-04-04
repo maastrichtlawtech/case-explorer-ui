@@ -3,7 +3,8 @@
 import {
   Backdrop, CircularProgress,
   createTheme as createMuiTheme,
-  ThemeProvider as MuiThemeProvider
+  ThemeProvider as MuiThemeProvider,
+  Button
 } from '@mui/material'
 import { View } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
@@ -40,6 +41,7 @@ import { RenderNode } from './RenderNode'
 import {
   calculateNetworkStatisticsRange
 } from './utils'
+import { clusterGraph } from './cluster_graph'
 
 export const ACTIONS = {
   TEST_API: 'TEST_API',
@@ -272,11 +274,14 @@ const AppContainer = ({
         }}
       />
       )}, [dispatch])
+
+  const controllerRef = React.useRef(null)
   const [controllerProps, controller] = useController({
     nodes: [],
     real_nodes: [],
     edges: [],
     real_edges: [],
+    showing_clusters: false,
     // events: RECORDED_EVENTS,
     graph_updated: false,
     display_updated: false,
@@ -362,7 +367,7 @@ const AppContainer = ({
     dataBar: {
       // isOpen: true,
       editable: false,
-      header: DataBarHeader,
+      header: DataBarHeader(controllerRef),
       sort: (a, b) => {
         const prioritizeKeys = ['ecli_opinion', 'cited_by','summary', 'url_publication']
         const aIndex = prioritizeKeys.findIndex((val) => val ===a.key)
@@ -622,6 +627,10 @@ const AppContainer = ({
   })
 
   React.useEffect(() => {
+    controllerRef.current = {controller, controllerProps}
+  }, [controller, controllerProps])
+
+  React.useEffect(() => {
     setTimeout(() => {
       controller.update((draft, { graphEditorRef }) => {
         try {
@@ -652,7 +661,7 @@ const AppContainer = ({
     }
     console.log('There is a new update!!!')
 
-    controllerProps.graph_updated = false
+    controller.update((draft) => draft.graph_updated = false)
 
     const call = async () => {
       let networkStatistics = await API.getNetworkStatistics({
@@ -660,11 +669,12 @@ const AppContainer = ({
         edges: controllerProps.real_edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
       })
 
-      const [new_nodes, new_edges] = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
+      const {nodes, edges} = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
       controller.update((draft) => {
         draft.networkStatistics.global = networkStatistics
-        draft.nodes = new_nodes
-        draft.edges = new_edges
+        draft.nodes = nodes
+        draft.edges = edges
+        draft.showing_clusters = true
         draft.display_updated = true
       })
       alertRef.current.alert({
@@ -673,7 +683,7 @@ const AppContainer = ({
       })
     }
     call()
-  }, [controllerProps.graph_updated])
+  }, [controllerProps.real_nodes, controllerProps.real_edges, controllerProps.graph_updated])
 
   React.useEffect(() => {
     if (!controllerProps.display_updated) {
@@ -681,7 +691,7 @@ const AppContainer = ({
     }
     console.log('There is a display update!!!')
 
-    controllerProps.display_updated = false
+    controller.update((draft) => draft.display_updated = false)
 
     const networkStatistics = controllerProps.networkStatistics.global
     const call = async () => {
@@ -741,7 +751,7 @@ const AppContainer = ({
       })
     }
     call()
-  }, [controllerProps.display_updated])
+  }, [controllerProps.nodes, controllerProps.edges, controllerProps.display_updated])
 
   return (
     <View
@@ -805,20 +815,9 @@ const AppContainer = ({
             text: error.message
           })
         }}
-        onNetworkStatisticsCalculated={({
-          allNodes,
-          allEdges,
-        }) => {
-          controller.update((draft) => {
-            draft.allNodes  = allNodes
-            draft.allEdges  = allEdges
-          })
-          console.log('All', allNodes, allEdges)
-        }}
         onFinish={({
-          nodes: nodes_ = [],
+          nodes= [],
           edges= [],
-          networkStatistics,
           message
         } = {}) => {
           PIXI.settings.ROUND_PIXELS = false// true
@@ -828,9 +827,8 @@ const AppContainer = ({
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
           controller.update((draft) => {
-            draft.networkStatistics.local = networkStatistics
             draft.isLoading = false
-            draft.real_nodes = nodes_
+            draft.real_nodes = nodes
             draft.real_edges = edges
             draft.graph_updated = true
           })
@@ -861,25 +859,6 @@ const AppContainer = ({
       </Backdrop>
     </View>
   )
-}
-
-function make_edge({source, target}) {
-    return JSON.stringify({source: source, dest: dest})
-}
-
-function clusterGraph(networkStats, nodes, edges) {
-    const node_clusters = nodes.map((item) => networkStats[item.id].parent)
-    const new_nodes = Array.from(new Set<number>(node_clusters)).map((item) => ({ id: item.toString(), data: {}}))
-
-    const make_edge = ({source, target}) => {
-        const edge = {source: networkStats[source].parent, target: networkStats[target].parent}
-        return JSON.stringify(edge)
-    }
-
-    const new_edges = Array.from(new Set<string>(edges.map(make_edge))).map(JSON.parse)
-    const new_new_edges = new_edges.map(({source, target}, idx) => ({source: source, target: target, id: "edge" + idx.toString()}))
-
-    return [new_nodes, new_new_edges]
 }
 
 const MUI_THEMES = {

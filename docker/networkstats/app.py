@@ -61,8 +61,9 @@ def get_closeness_centrality(G):
 
 @timer
 def get_pagerank_centrality(G):
-    return nk.centrality.ranking(
-        G, algorithm=nk.centrality.PageRank, normalized=True)
+    pagerank = nk.centrality.PageRank(G,distributeSinks=nk.centrality.SinkHandling.DistributeSinks, normalized=True)
+    pagerank.run()
+    return pagerank.ranking()
 
 
 @timer
