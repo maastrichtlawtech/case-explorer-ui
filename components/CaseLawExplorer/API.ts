@@ -1,4 +1,4 @@
-import Amplify, { API, Auth } from "aws-amplify";
+import { Amplify, API, Auth } from "aws-amplify";
 import { 
   queryNetworkByUserInput, 
   fetchNodeData, 
@@ -24,7 +24,14 @@ import {
   AsyncStorage
 } from 'react-native'
 
-Amplify.configure(AWS_CONFIG);
+const CaseLawIdentityPoolConfig = {
+    identityPoolId: "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
+    region: "eu-central-1",
+    userPoolId: "eu-central-1_Iia5Ube9G",
+    userPoolWebClientId: "529do26g6icslepgrvcelapu8v"
+}
+
+Amplify.configure({ ...AWS_CONFIG, Auth: CaseLawIdentityPoolConfig })
 
 const graphqlClient = new AWSAppSyncClient({
   url: AWS_CONFIG.aws_appsync_graphqlEndpoint,
