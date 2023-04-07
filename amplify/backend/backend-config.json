@@ -1,15 +1,23 @@
 {
   "api": {
     "caseexplorerui": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 7
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authcaseexploreruib94ade50"
+            }
           }
         }
       },
@@ -32,21 +40,6 @@
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    },
-    "caseexploreruidynamodbaccess": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer"
-    },
-    "caseexploreruiopensearchaccess": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer"
-    },
-    "caseexploreruiutils": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer"
     },
     "datafetcher": {
       "build": true,
@@ -213,54 +206,6 @@
         {
           "category": "function",
           "resourceName": "batchdatafetcher"
-        }
-      ]
-    },
-    "AMPLIFY_function_caseexploreruidynamodbaccess_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "caseexploreruidynamodbaccess"
-        }
-      ]
-    },
-    "AMPLIFY_function_caseexploreruidynamodbaccess_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "caseexploreruidynamodbaccess"
-        }
-      ]
-    },
-    "AMPLIFY_function_caseexploreruiopensearchaccess_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "caseexploreruiopensearchaccess"
-        }
-      ]
-    },
-    "AMPLIFY_function_caseexploreruiopensearchaccess_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "caseexploreruiopensearchaccess"
-        }
-      ]
-    },
-    "AMPLIFY_function_caseexploreruiutils_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "caseexploreruiutils"
-        }
-      ]
-    },
-    "AMPLIFY_function_caseexploreruiutils_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "caseexploreruiutils"
         }
       ]
     },
