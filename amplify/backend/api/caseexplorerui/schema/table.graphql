@@ -1,4 +1,4 @@
-type Caselaw @model
+type Caselaw @model @auth(rules: [{ allow: private, operations: [read] }])
   @key(fields: ["ecli", "ItemType"])
   @key(name: "GSI-ItemType", fields: ["ItemType", "SourceDocDate"], queryField: "queryByItemType")
   @key(name: "GSI-instance", fields: ["instance", "SourceDocDate"], queryField: "queryByInstance")
