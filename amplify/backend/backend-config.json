@@ -177,35 +177,51 @@
         }
       ]
     },
-    "AMPLIFY_function_datafetcher_apiCaseexploreruiCaselawtableArn": {
+    "AMPLIFY_function_caseexploreruidynamodbaccess_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "datafetcher"
+          "resourceName": "caseexploreruidynamodbaccess"
         }
       ]
     },
-    "AMPLIFY_function_datafetcher_apiCaseexploreruiCaselawtableName": {
+    "AMPLIFY_function_caseexploreruidynamodbaccess_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "datafetcher"
+          "resourceName": "caseexploreruidynamodbaccess"
         }
       ]
     },
-    "AMPLIFY_function_datafetcher_apiCaseexploreruiGraphqlapiidoutput": {
+    "AMPLIFY_function_caseexploreruiopensearchaccess_deploymentBucketName": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "datafetcher"
+          "resourceName": "caseexploreruiopensearchaccess"
         }
       ]
     },
-    "AMPLIFY_function_datafetcher_ddbTableName": {
+    "AMPLIFY_function_caseexploreruiopensearchaccess_s3Key": {
       "usedBy": [
         {
           "category": "function",
-          "resourceName": "datafetcher"
+          "resourceName": "caseexploreruiopensearchaccess"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruiutils_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiutils"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruiutils_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiutils"
         }
       ]
     },

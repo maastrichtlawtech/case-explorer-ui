@@ -87,7 +87,7 @@
         },
         "Runtime": "python3.8",
         "Layers": [
-          "arn:aws:lambda:eu-central-1:292169987271:layer:AWSLambda-Python38-SciPy1x:107"
+          "arn:aws:lambda:eu-central-1:336392948345:layer:AWSSDKPandas-Python38:3"
         ],
         "Timeout": 25
       }
