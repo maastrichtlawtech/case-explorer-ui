@@ -13,15 +13,6 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
-    "caseexploreruidynamodbaccess": {
-      "Arn": "string"
-    },
-    "caseexploreruiopensearchaccess": {
-      "Arn": "string"
-    },
-    "caseexploreruiutils": {
-      "Arn": "string"
-    },
     "datafetcher": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

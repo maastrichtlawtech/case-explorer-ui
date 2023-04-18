@@ -1,6 +1,9 @@
 [
   {
-    "Action": [],
-    "Resource": []
+    "Effect": "Allow",
+    "Action": [
+        "es:*"
+    ],
+    "Resource": ["*"]
   }
 ]
