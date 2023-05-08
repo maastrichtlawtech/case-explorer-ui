@@ -28,7 +28,22 @@ const CaseLawIdentityPoolConfig = {
     identityPoolId: "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
     region: "eu-central-1",
     userPoolId: "eu-central-1_Iia5Ube9G",
-    userPoolWebClientId: "529do26g6icslepgrvcelapu8v"
+    userPoolWebClientId: "529do26g6icslepgrvcelapu8v",
+};
+
+/* Frontend does not automatically handle multiple redirect URLs. Select
+ * between development (localhost) and production (https) based on __DEV__ */
+const findRedirect = (redirectUrls: string[]) => __DEV__
+   ? redirectUrls.find((s: string) => s.includes('localhost'))
+   : redirectUrls.find((s: string) => s.startsWith('https'));
+
+const redirectSignIn = findRedirect(AWS_CONFIG.oauth.redirectSignIn.split(','));
+if (redirectSignIn) {
+    AWS_CONFIG.oauth.redirectSignIn = redirectSignIn;
+}
+const redirectSignOut = findRedirect(AWS_CONFIG.oauth.redirectSignOut.split(','));
+if (redirectSignOut) {
+    AWS_CONFIG.oauth.redirectSignOut = redirectSignOut;
 }
 
 Amplify.configure({ ...AWS_CONFIG, Auth: CaseLawIdentityPoolConfig })
