@@ -24,6 +24,13 @@ import {
   AsyncStorage
 } from 'react-native'
 
+function hasOwnProperty<X extends {}, Y extends PropertyKey>
+  (obj: X, prop: Y): obj is X & Record<Y, any> {
+  return obj.hasOwnProperty(prop)
+}
+
+//When using external Cognito user pools instead of Amplify, we need to
+//explicitly specify the pool's information to Amplify.
 const CaseLawIdentityPoolConfig = {
     identityPoolId: "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
     region: "eu-central-1",
@@ -31,19 +38,43 @@ const CaseLawIdentityPoolConfig = {
     userPoolWebClientId: "529do26g6icslepgrvcelapu8v",
 };
 
-/* Frontend does not automatically handle multiple redirect URLs. Select
- * between development (localhost) and production (https) based on __DEV__ */
-const findRedirect = (redirectUrls: string[]) => __DEV__
-   ? redirectUrls.find((s: string) => s.includes('localhost'))
-   : redirectUrls.find((s: string) => s.startsWith('https'));
+// The OAuth configuration for the CaseLaw Cognito user pool
+const OAuthConfig = {
+    domain: "case-law-explorer-dev.auth.eu-central-1.amazoncognito.com",
+    scope: [
+        "aws.cognito.signin.user.admin",
+        "email",
+        "openid",
+        "phone",
+        "profile"
+    ],
+    redirectSignIn: __DEV__ ? "http://localhost:19006/" : "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+    redirectSignOut: __DEV__ ? "http://localhost:19006/" : "https://dev.d11iy22xsphp3a.amplifyapp.com/",
+    responseType: "code"
+};
 
-const redirectSignIn = findRedirect(AWS_CONFIG.oauth.redirectSignIn.split(','));
-if (redirectSignIn) {
-    AWS_CONFIG.oauth.redirectSignIn = redirectSignIn;
-}
-const redirectSignOut = findRedirect(AWS_CONFIG.oauth.redirectSignOut.split(','));
-if (redirectSignOut) {
-    AWS_CONFIG.oauth.redirectSignOut = redirectSignOut;
+// Check if Amplify's AWS exports already specify the OAuth configuration
+// If it does, we fix the sign-in/sign-out redirects depending on if we're
+// running in development or production.
+//
+// If OAuth configuration is missing, use the above one.
+if (hasOwnProperty(AWS_CONFIG, 'oauth')) {
+    /* Frontend does not automatically handle multiple redirect URLs. Select
+    * between development (localhost) and production (https) based on __DEV__ */
+    const findRedirect = (redirectUrls: string[]) => __DEV__
+    ? redirectUrls.find((s: string) => s.includes('localhost'))
+    : redirectUrls.find((s: string) => s.startsWith('https'));
+
+    const redirectSignIn = findRedirect(AWS_CONFIG.oauth.redirectSignIn.split(','));
+    if (redirectSignIn) {
+        AWS_CONFIG.oauth.redirectSignIn = redirectSignIn;
+    }
+    const redirectSignOut = findRedirect(AWS_CONFIG.oauth.redirectSignOut.split(','));
+    if (redirectSignOut) {
+        AWS_CONFIG.oauth.redirectSignOut = redirectSignOut;
+    }
+} else {
+    AWS_CONFIG.oauth = OAuthConfig;
 }
 
 Amplify.configure({ ...AWS_CONFIG, Auth: CaseLawIdentityPoolConfig })
