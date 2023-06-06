@@ -18,15 +18,23 @@ def timer(fn):
 
     return inner
 
-# return the same network in 2 different formats (networkx and networkit)
-
-
+# return the network and node id information
 @timer
 def get_networks(nodes, edges):
-    nxG = nx.readwrite.json_graph.node_link_graph(
-        {'nodes': nodes, 'links': edges}, directed=True, multigraph=False)
-    nkG = nk.nxadapter.nx2nk(nxG)
-    return nxG, nkG
+    nkG = nk.graph.Graph(len(nodes), directed=True)
+    ids = nkG.attachNodeAttribute('id', str)
+
+    nodeIdxs = {}
+    for i, val in enumerate(nodes):
+        ids[i] = val['id']
+        nodeIdxs[val['id']] = i
+
+    for edge in edges:
+        src = edge['source']
+        target = edge['target']
+        nkG.addEdge(nodeIdxs[src], nodeIdxs[target])
+
+    return nkG, ids
 
 # networkit centralities
 
@@ -139,15 +147,26 @@ def handler(event, context):
     edges = network['edges']
 
     if len(nodes) == 0 or len(edges) == 0:
-        return dict()
+        return {}
 
-    nxG, nkG = get_networks(nodes, edges)
+    nkG, ids = get_networks(nodes, edges)
 
     # compute networx centralities
-    degrees = get_degree(nxG)
-    in_degrees = get_indegree(nxG)
-    out_degrees = get_outdegree(nxG)
-    degree_centralities = get_degree_centrality(nxG)
+    degrees = {}
+    in_degrees = {}
+    out_degrees = {}
+    degree_centralities = {}
+
+    size = nkG.numberOfNodes()
+
+    def computeDegrees(G, x):
+        nid = ids[x]
+        in_degrees[nid] = G.degreeIn(x)
+        out_degrees[nid] = G.degreeOut(x)
+        degrees[nid] = in_degrees[nid] + out_degrees[nid]
+        degree_centralities[nid] = degrees[nid]/(size -1)
+
+    nkG.forNodes(lambda x: computeDegrees(nkG, x))
 
     # compute networkit centralities
     partition = get_communities_centrality(nkG)
