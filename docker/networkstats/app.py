@@ -11,8 +11,7 @@ def timer(fn):
         to_execute = fn(*args, **kwargs)
         end_time = perf_counter()
         execution_time = end_time - start_time
-        print('{0} took {1:.8f}s to execute'.format(
-            fn.__name__, execution_time))
+        print(f'{fn.__name__} took {execution_time:.8f}s to execute')
         return to_execute
 
     return inner
@@ -81,8 +80,10 @@ def get_communities_centrality(G):
 
 @timer
 def sort_by_date(nodes):
-    def derive_date(
-        k): return k['data']['date_decision'] if 'date_decision' in k['data'] and k['data']['date_decision'] != '' else '1900-01-01'
+    def derive_date(k):
+        if 'date_decision' in k['data'] and k['data']['date_decision'] != '':
+            return k['data']['date_decision']
+        return '1900-01-01'
     nodes.sort(key=derive_date, reverse=True)
 
 # this one includes the computation of the relative indegree centrality
@@ -91,7 +92,7 @@ def sort_by_date(nodes):
 @timer
 def create_response(clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
                     out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition):
-    statistics = dict()
+    statistics = {}
     for i, node in enumerate(nodes):
         node_id = node['id']
         statistics[node_id] = {
@@ -118,10 +119,8 @@ def create_response(clusters, communities, nodes, degrees, in_degrees, out_degre
 
 @timer
 def handler(event, context):
-
-    network = event['arguments'].copy()
-    nodes = network['nodes']
-    edges = network['edges']
+    nodes = event['arguments']['nodes']
+    edges = event['arguments']['edges']
 
     if len(nodes) == 0 or len(edges) == 0:
         return {}
