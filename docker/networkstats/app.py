@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import networkit as nk
 import networkx as nx
-import graph_tools as gt
 
 # timer decorator
 
@@ -19,7 +18,7 @@ def timer(fn):
 
     return inner
 
-# return the same network in 3 different formats (networkx, networkit and graph_tools)
+# return the same network in 2 different formats (networkx and networkit)
 
 
 @timer
@@ -27,8 +26,7 @@ def get_networks(nodes, edges):
     nxG = nx.readwrite.json_graph.node_link_graph(
         {'nodes': nodes, 'links': edges}, directed=True, multigraph=False)
     nkG = nk.nxadapter.nx2nk(nxG)
-    gtG = ()
-    return nxG, nkG, gtG
+    return nxG, nkG
 
 # networkit centralities
 
@@ -93,13 +91,6 @@ def get_indegree(G):
 def get_outdegree(G):
     return G.out_degree()
 
-# graph-tools centralities
-
-
-@timer
-def get_hits_centrality(G):
-    return [0], [0]
-
 # other computations
 
 
@@ -114,7 +105,7 @@ def sort_by_date(nodes):
 
 @timer
 def create_response(clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
-                    out_degree_centralities, page_ranks, authorities, hubs, betweenness_centralities, closeness_centralities, partition):
+                    out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition):
     statistics = dict()
     for i, node in enumerate(nodes):
         node_id = node['id']
@@ -128,8 +119,6 @@ def create_response(clusters, communities, nodes, degrees, in_degrees, out_degre
             'out-degree centrality': out_degree_centralities[i],
             'relative in-degree': in_degrees[node_id] / float(max(i, 1)),
             'pageRank': page_ranks[i],
-            'authorities': authorities[0],
-            'hubs': hubs[0],
             'betweenness centrality': betweenness_centralities[i],
             'closeness centrality': closeness_centralities[i],
             'community': partition[i],
@@ -152,7 +141,7 @@ def handler(event, context):
     if len(nodes) == 0 or len(edges) == 0:
         return dict()
 
-    nxG, nkG, gtG = get_networks(nodes, edges)
+    nxG, nkG = get_networks(nodes, edges)
 
     # compute networx centralities
     degrees = get_degree(nxG)
@@ -178,12 +167,9 @@ def handler(event, context):
 
     nkG.forNodes(iternodes)
 
-    # compute graph-tools centralities
-    hubs, authorities = get_hits_centrality(gtG)
-
     # for relative in-degree we sort on date
     sort_by_date(nodes)
 
     statistics = create_response(clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
-                                 out_degree_centralities, page_ranks, authorities, hubs, betweenness_centralities, closeness_centralities, partition)
+                                 out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition)
     return statistics
