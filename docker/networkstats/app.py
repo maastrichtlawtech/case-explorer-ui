@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import networkit as nk
-import networkx as nx
 
 # timer decorator
 
@@ -76,28 +75,6 @@ def get_pagerank_centrality(G):
 def get_communities_centrality(G):
     uG = nk.graphtools.toUndirected(G)
     return nk.community.detectCommunities(G, algo=nk.community.PLM(uG, True))
-
-# networkx centralities and other info
-
-
-@timer
-def get_degree_centrality(G):
-    return nx.degree_centrality(G)
-
-
-@timer
-def get_degree(G):
-    return nx.degree(G)
-
-
-@timer
-def get_indegree(G):
-    return G.in_degree()
-
-
-@timer
-def get_outdegree(G):
-    return G.out_degree()
 
 # other computations
 
