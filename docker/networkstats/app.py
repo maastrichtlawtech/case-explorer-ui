@@ -124,11 +124,11 @@ def relative_network_size(nodes):
 
 
 @timer
-def create_response(graph, clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
+def create_response(graph, clusters, communities, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
                     out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition):
     statistics = {}
-    for i, node in enumerate(nodes):
-        node_id = node['id']
+    def node_stats(i):
+        node_id = graph.ids[i]
         statistics[node_id] = {
             'parent': clusters[communities[i]],
             'degree': degrees[node_id],
@@ -143,9 +143,11 @@ def create_response(graph, clusters, communities, nodes, degrees, in_degrees, ou
             'closeness centrality': closeness_centralities[i],
             'community': partition[i],
         }
-        id_components = node['id'].split(':')
+        id_components = node_id.split(':')
         if len(id_components) >= 4:
             statistics[node_id]['year'] = int(id_components[3])
+
+    graph.forNodes(node_stats)
     return statistics
 
 # main
@@ -205,6 +207,6 @@ def handler(event, context):
 
     graph.forNodes(iternodes)
 
-    statistics = create_response(graph, clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
+    statistics = create_response(graph, clusters, communities, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
                                  out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition)
     return statistics
