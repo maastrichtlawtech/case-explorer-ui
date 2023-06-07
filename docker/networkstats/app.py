@@ -71,23 +71,51 @@ def get_communities_centrality(G):
     uG = nk.graphtools.toUndirected(G)
     return nk.community.detectCommunities(G, algo=nk.community.PLM(uG, True))
 
-# other computations
+# relative in-degree centrality
 
+def derive_date(k):
+    "Return the date of a node, if present else 1900-01-01."
 
-@timer
-def sort_by_date(nodes):
-    def derive_date(k):
-        if 'date_decision' in k['data'] and k['data']['date_decision'] != '':
-            return k['data']['date_decision']
-        return '1900-01-01'
-    nodes.sort(key=derive_date, reverse=True)
+    if 'date_decision' in k['data'] and k['data']['date_decision'] != '':
+        return k['data']['date_decision']
+
+    return '1900-01-01'
+
+def relative_network_size(nodes):
+    """Compute the relative network size for every node.
+
+    That is, the number of nodes in the network with a date smaller than the
+    node's date. This let's easily compute the relative in-degree of each node.
+    """
+
+    sorted_nodes = sorted(nodes, key=derive_date, reverse=True)
+
+    first_node = sorted_nodes[0]
+    sorted_nodes = sorted_nodes[1:]
+    current_size = 1
+    current_date = derive_date(first_node)
+
+    relative_sizes = { first_node['id'] : current_size }
+
+    # If at node N the date increases, that means there are N-1 nodes before
+    # that date. As we start from the second node (chronologically), this means
+    # we should start the count at 1.
+    for i, node in enumerate(sorted_nodes, start=1):
+        node_date = derive_date(node)
+        if node_date < current_date:
+            current_size = i
+            current_date = node_date
+
+        relative_sizes[node['id']] = current_size
+
+    return relative_sizes
 
 # this one includes the computation of the relative indegree centrality
 
 
 @timer
 def create_response(clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
-                    out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition):
+                    out_degree_centralities, relative_in_degree, page_ranks, betweenness_centralities, closeness_centralities, partition):
     statistics = {}
     for i, node in enumerate(nodes):
         node_id = node['id']
@@ -99,7 +127,7 @@ def create_response(clusters, communities, nodes, degrees, in_degrees, out_degre
             'degree centrality': degree_centralities[node_id],
             'in-degree centrality': in_degree_centralities[i],
             'out-degree centrality': out_degree_centralities[i],
-            'relative in-degree': in_degrees[node_id] / float(max(i, 1)),
+            'relative in-degree': relative_in_degree[i],
             'pageRank': page_ranks[i],
             'betweenness centrality': betweenness_centralities[i],
             'closeness centrality': closeness_centralities[i],
@@ -123,7 +151,6 @@ def handler(event, context):
 
     nkG, ids = get_networks(nodes, edges)
 
-    # compute networx centralities
     degrees = {}
     in_degrees = {}
     out_degrees = {}
@@ -131,14 +158,24 @@ def handler(event, context):
 
     size = nkG.numberOfNodes()
 
-    def computeDegrees(G, x):
-        nid = ids[x]
-        in_degrees[nid] = G.degreeIn(x)
-        out_degrees[nid] = G.degreeOut(x)
+    def compute_degrees(n, nid):
+        in_degrees[nid] = nkG.degreeIn(n)
+        out_degrees[nid] = nkG.degreeOut(n)
         degrees[nid] = in_degrees[nid] + out_degrees[nid]
-        degree_centralities[nid] = degrees[nid]/(size -1)
+        degree_centralities[nid] = degrees[nid]/(size - 1)
 
-    nkG.forNodes(lambda x: computeDegrees(nkG, x))
+    relative_sizes = relative_network_size(nodes)
+    relative_in_degree = nkG.attachNodeAttribute('relativeInDegree', float)
+
+    def compute_relative(n, nid):
+        relative_in_degree[n] = nkG.degreeIn(n) / relative_sizes[nid]
+
+    def compute_node_stats(n):
+        nid = ids[n]
+        compute_degrees(n, nid)
+        compute_relative(n, nid)
+
+    nkG.forNodes(compute_node_stats)
 
     # compute networkit centralities
     partition = get_communities_centrality(nkG)
@@ -158,9 +195,6 @@ def handler(event, context):
 
     nkG.forNodes(iternodes)
 
-    # for relative in-degree we sort on date
-    sort_by_date(nodes)
-
     statistics = create_response(clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
-                                 out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition)
+                                 out_degree_centralities, relative_in_degree, page_ranks, betweenness_centralities, closeness_centralities, partition)
     return statistics
