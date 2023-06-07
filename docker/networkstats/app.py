@@ -124,17 +124,19 @@ def relative_network_size(nodes):
 
 
 @timer
-def create_response(graph, clusters, communities, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
+def create_response(graph, clusters, communities, in_degree_centralities,
                     out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition):
     statistics = {}
+    size = graph.numberOfNodes()
     def node_stats(i):
         node_id = graph.ids[i]
+        degree = graph.degreeIn(i) + graph.degreeOut(i)
         statistics[node_id] = {
             'parent': clusters[communities[i]],
-            'degree': degrees[node_id],
-            'in-degree': in_degrees[node_id],
-            'out-degree': out_degrees[node_id],
-            'degree centrality': degree_centralities[node_id],
+            'degree': degree,
+            'in-degree': graph.degreeIn(i),
+            'out-degree': graph.degreeOut(i),
+            'degree centrality': degree / (size - 1),
             'in-degree centrality': in_degree_centralities[i],
             'out-degree centrality': out_degree_centralities[i],
             'relative in-degree': graph.relative_in_degree[i],
@@ -163,31 +165,14 @@ def handler(event, context):
 
     graph = Graph(nodes, edges)
 
-    degrees = {}
-    in_degrees = {}
-    out_degrees = {}
-    degree_centralities = {}
-
-    size = graph.numberOfNodes()
-
-    def compute_degrees(n, nid):
-        in_degrees[nid] = graph.degreeIn(n)
-        out_degrees[nid] = graph.degreeOut(n)
-        degrees[nid] = in_degrees[nid] + out_degrees[nid]
-        degree_centralities[nid] = degrees[nid]/(size - 1)
-
     relative_sizes = relative_network_size(nodes)
     graph.addNodeAttribute('relative_in_degree', float)
 
-    def compute_relative(n, nid):
+    def compute_relative(n):
+        nid = graph.ids[n]
         graph.relative_in_degree[n] = graph.degreeIn(n) / relative_sizes[nid]
 
-    def compute_node_stats(n):
-        nid = graph.ids[n]
-        compute_degrees(n, nid)
-        compute_relative(n, nid)
-
-    graph.forNodes(compute_node_stats)
+    graph.forNodes(compute_relative)
 
     # compute networkit centralities
     partition = get_communities_centrality(graph.nk_graph)
@@ -207,6 +192,6 @@ def handler(event, context):
 
     graph.forNodes(iternodes)
 
-    statistics = create_response(graph, clusters, communities, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
+    statistics = create_response(graph, clusters, communities, in_degree_centralities,
                                  out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition)
     return statistics
