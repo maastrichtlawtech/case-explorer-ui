@@ -15,23 +15,33 @@ def timer(fn):
 
     return inner
 
-# return the network and node id information
-@timer
-def get_networks(nodes, edges):
-    nkG = nk.graph.Graph(len(nodes), directed=True)
-    ids = nkG.attachNodeAttribute('id', str)
+class Graph:
+    @timer
+    def __init__(self, nodes, edges):
+        "Create graph with node labels from list of nodes and edges."
+        self.nk_graph = nk.graph.Graph(len(nodes), directed=True)
+        self.addNodeAttribute('ids', str)
 
-    nodeIdxs = {}
-    for i, val in enumerate(nodes):
-        ids[i] = val['id']
-        nodeIdxs[val['id']] = i
+        nodeIdxs = {}
+        for i, val in enumerate(nodes):
+            self.ids[i] = val['id']
+            nodeIdxs[val['id']] = i
 
-    for edge in edges:
-        src = edge['source']
-        target = edge['target']
-        nkG.addEdge(nodeIdxs[src], nodeIdxs[target])
+        for edge in edges:
+            src = edge['source']
+            target = edge['target']
+            self.nk_graph.addEdge(nodeIdxs[src], nodeIdxs[target])
 
-    return nkG, ids
+    def __getattr__(self, attr):
+        "Forward any missing methods to the underlying NetworKit graph."
+        return getattr(self.nk_graph, attr)
+
+    def addNodeAttribute(self, name, type_):
+        "Add a node attribute on the graph class."
+        val = self.nk_graph.attachNodeAttribute(name, type_)
+        setattr(self, name, val)
+
+
 
 # networkit centralities
 @timer
@@ -114,8 +124,8 @@ def relative_network_size(nodes):
 
 
 @timer
-def create_response(clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
-                    out_degree_centralities, relative_in_degree, page_ranks, betweenness_centralities, closeness_centralities, partition):
+def create_response(graph, clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
+                    out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition):
     statistics = {}
     for i, node in enumerate(nodes):
         node_id = node['id']
@@ -127,7 +137,7 @@ def create_response(clusters, communities, nodes, degrees, in_degrees, out_degre
             'degree centrality': degree_centralities[node_id],
             'in-degree centrality': in_degree_centralities[i],
             'out-degree centrality': out_degree_centralities[i],
-            'relative in-degree': relative_in_degree[i],
+            'relative in-degree': graph.relative_in_degree[i],
             'pageRank': page_ranks[i],
             'betweenness centrality': betweenness_centralities[i],
             'closeness centrality': closeness_centralities[i],
@@ -149,41 +159,41 @@ def handler(event, context):
     if len(nodes) == 0 or len(edges) == 0:
         return {}
 
-    nkG, ids = get_networks(nodes, edges)
+    graph = Graph(nodes, edges)
 
     degrees = {}
     in_degrees = {}
     out_degrees = {}
     degree_centralities = {}
 
-    size = nkG.numberOfNodes()
+    size = graph.numberOfNodes()
 
     def compute_degrees(n, nid):
-        in_degrees[nid] = nkG.degreeIn(n)
-        out_degrees[nid] = nkG.degreeOut(n)
+        in_degrees[nid] = graph.degreeIn(n)
+        out_degrees[nid] = graph.degreeOut(n)
         degrees[nid] = in_degrees[nid] + out_degrees[nid]
         degree_centralities[nid] = degrees[nid]/(size - 1)
 
     relative_sizes = relative_network_size(nodes)
-    relative_in_degree = nkG.attachNodeAttribute('relativeInDegree', float)
+    graph.addNodeAttribute('relative_in_degree', float)
 
     def compute_relative(n, nid):
-        relative_in_degree[n] = nkG.degreeIn(n) / relative_sizes[nid]
+        graph.relative_in_degree[n] = graph.degreeIn(n) / relative_sizes[nid]
 
     def compute_node_stats(n):
-        nid = ids[n]
+        nid = graph.ids[n]
         compute_degrees(n, nid)
         compute_relative(n, nid)
 
-    nkG.forNodes(compute_node_stats)
+    graph.forNodes(compute_node_stats)
 
     # compute networkit centralities
-    partition = get_communities_centrality(nkG)
-    in_degree_centralities = get_indegree_centrality(nkG)
-    out_degree_centralities = get_outdegree_centrality(nkG)
-    betweenness_centralities = get_betweenness_centrality(nkG)
-    closeness_centralities = get_closeness_centrality(nkG)
-    page_ranks = get_pagerank_centrality(nkG)
+    partition = get_communities_centrality(graph.nk_graph)
+    in_degree_centralities = get_indegree_centrality(graph.nk_graph)
+    out_degree_centralities = get_outdegree_centrality(graph.nk_graph)
+    betweenness_centralities = get_betweenness_centrality(graph.nk_graph)
+    closeness_centralities = get_closeness_centrality(graph.nk_graph)
+    page_ranks = get_pagerank_centrality(graph.nk_graph)
 
     communities = partition.getVector()
 
@@ -193,8 +203,8 @@ def handler(event, context):
         if communities[x] not in clusters:
             clusters[communities[x]] = x
 
-    nkG.forNodes(iternodes)
+    graph.forNodes(iternodes)
 
-    statistics = create_response(clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
-                                 out_degree_centralities, relative_in_degree, page_ranks, betweenness_centralities, closeness_centralities, partition)
+    statistics = create_response(graph, clusters, communities, nodes, degrees, in_degrees, out_degrees, degree_centralities, in_degree_centralities,
+                                 out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition)
     return statistics
