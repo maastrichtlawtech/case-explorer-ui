@@ -34,39 +34,36 @@ def get_networks(nodes, edges):
     return nkG, ids
 
 # networkit centralities
-
-
 @timer
 def get_outdegree_centrality(G):
-    return nk.centrality.ranking(
+    return nk.centrality.scores(
         G, algorithm=nk.centrality.DegreeCentrality, normalized=True)
-
 
 @timer
 def get_indegree_centrality(G):
     idg_centrality = nk.centrality.DegreeCentrality(
         G, outDeg=False, normalized=True)
     idg_centrality.run()
-    return idg_centrality.ranking()
+    return idg_centrality.scores()
 
 
 @timer
 def get_betweenness_centrality(G):
-    return nk.centrality.ranking(
+    return nk.centrality.scores(
         G, algorithm=nk.centrality.ApproxBetweenness, normalized=True)
 
 
 @timer
 def get_closeness_centrality(G):
-    return nk.centrality.ranking(
-        G, algorithm=nk.centrality.ApproxCloseness, normalized=True)
-
+    cls_centrality = nk.centrality.ApproxCloseness(G, 100, normalized=True)
+    cls_centrality.run()
+    return cls_centrality.scores()
 
 @timer
 def get_pagerank_centrality(G):
     pagerank = nk.centrality.PageRank(G,distributeSinks=nk.centrality.SinkHandling.DistributeSinks, normalized=True)
     pagerank.run()
-    return pagerank.ranking()
+    return pagerank.scores()
 
 
 @timer
