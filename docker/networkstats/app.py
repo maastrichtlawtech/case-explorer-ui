@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
+from time import perf_counter
 import networkit as nk
 
 # timer decorator
 
 def timer(fn):
-    from time import perf_counter
-
     def inner(*args, **kwargs):
         start_time = perf_counter()
         to_execute = fn(*args, **kwargs)
