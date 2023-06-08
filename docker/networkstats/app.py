@@ -3,7 +3,6 @@ from time import perf_counter
 import networkit as nk
 
 # timer decorator
-
 def timer(fn):
     def inner(*args, **kwargs):
         start_time = perf_counter()
@@ -15,6 +14,7 @@ def timer(fn):
 
     return inner
 
+# Wrapper class for NetworkIt graphs to keep track of node attributes
 class Graph:
     @timer
     def __init__(self, nodes, edges):
@@ -40,41 +40,15 @@ class Graph:
         "Add a node attribute on the graph class."
         val = self.nk_graph.attachNodeAttribute(name, type_)
         setattr(self, name, val)
+        return val
 
-
-
-# networkit centralities
-@timer
-def get_outdegree_centrality(G):
-    return nk.centrality.scores(
-        G, algorithm=nk.centrality.DegreeCentrality, normalized=True)
-
-@timer
-def get_indegree_centrality(G):
-    idg_centrality = nk.centrality.DegreeCentrality(
-        G, outDeg=False, normalized=True)
-    idg_centrality.run()
-    return idg_centrality.scores()
-
-
-@timer
-def get_betweenness_centrality(G):
-    return nk.centrality.scores(
-        G, algorithm=nk.centrality.ApproxBetweenness, normalized=True)
-
-
-@timer
-def get_closeness_centrality(G):
-    cls_centrality = nk.centrality.ApproxCloseness(G, 100, normalized=True)
-    cls_centrality.run()
-    return cls_centrality.scores()
-
-@timer
-def get_pagerank_centrality(G):
-    pagerank = nk.centrality.PageRank(G,distributeSinks=nk.centrality.SinkHandling.DistributeSinks, normalized=True)
-    pagerank.run()
-    return pagerank.scores()
-
+    def addNodeCentralityMetric(self, name, centrality, *args, **kwargs):
+        attr = self.addNodeAttribute(name, float)
+        algorithm = centrality(self.nk_graph, *args, **kwargs)
+        algorithm.run()
+        result = algorithm.scores()
+        for i, val in enumerate(result):
+            attr[i] = val
 
 @timer
 def get_communities_centrality(G):
@@ -120,12 +94,8 @@ def relative_network_size(nodes):
 
     return relative_sizes
 
-# this one includes the computation of the relative indegree centrality
-
-
 @timer
-def create_response(graph, clusters, communities, in_degree_centralities,
-                    out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition):
+def create_response(graph, clusters, communities, partition):
     statistics = {}
     size = graph.numberOfNodes()
     def node_stats(i):
@@ -137,12 +107,12 @@ def create_response(graph, clusters, communities, in_degree_centralities,
             'in-degree': graph.degreeIn(i),
             'out-degree': graph.degreeOut(i),
             'degree centrality': degree / (size - 1),
-            'in-degree centrality': in_degree_centralities[i],
-            'out-degree centrality': out_degree_centralities[i],
+            'in-degree centrality': graph.in_degree_centralities[i],
+            'out-degree centrality': graph.out_degree_centralities[i],
             'relative in-degree': graph.relative_in_degree[i],
-            'pageRank': page_ranks[i],
-            'betweenness centrality': betweenness_centralities[i],
-            'closeness centrality': closeness_centralities[i],
+            'pageRank': graph.page_ranks[i],
+            'betweenness centrality': graph.betweenness_centralities[i],
+            'closeness centrality': graph.closeness_centralities[i],
             'community': partition[i],
         }
         id_components = node_id.split(':')
@@ -152,9 +122,9 @@ def create_response(graph, clusters, communities, in_degree_centralities,
     graph.forNodes(node_stats)
     return statistics
 
+
+
 # main
-
-
 @timer
 def handler(event, context):
     nodes = event['arguments']['nodes']
@@ -174,24 +144,31 @@ def handler(event, context):
 
     graph.forNodes(compute_relative)
 
+    graph.addNodeCentralityMetric("in_degree_centralities",
+            nk.centrality.DegreeCentrality, outDeg=False, normalized=True)
+
+    graph.addNodeCentralityMetric("out_degree_centralities",
+            nk.centrality.DegreeCentrality, normalized=True)
+
+    graph.addNodeCentralityMetric("betweenness_centralities",
+            nk.centrality.ApproxBetweenness)
+
+    graph.addNodeCentralityMetric("closeness_centralities",
+            nk.centrality.ApproxCloseness, 100, normalized=True)
+
+    distSinks = nk.centrality.SinkHandling.DistributeSinks
+    graph.addNodeCentralityMetric("page_ranks",
+            nk.centrality.PageRank, distributeSinks=distSinks, normalized=True)
+
     # compute networkit centralities
     partition = get_communities_centrality(graph.nk_graph)
-    in_degree_centralities = get_indegree_centrality(graph.nk_graph)
-    out_degree_centralities = get_outdegree_centrality(graph.nk_graph)
-    betweenness_centralities = get_betweenness_centrality(graph.nk_graph)
-    closeness_centralities = get_closeness_centrality(graph.nk_graph)
-    page_ranks = get_pagerank_centrality(graph.nk_graph)
-
     communities = partition.getVector()
-
     clusters = {}
-
     def iternodes(x):
         if communities[x] not in clusters:
             clusters[communities[x]] = x
 
     graph.forNodes(iternodes)
 
-    statistics = create_response(graph, clusters, communities, in_degree_centralities,
-                                 out_degree_centralities, page_ranks, betweenness_centralities, closeness_centralities, partition)
+    statistics = create_response(graph, clusters, communities, partition)
     return statistics
