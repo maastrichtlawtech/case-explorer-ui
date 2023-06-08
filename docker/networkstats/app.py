@@ -16,21 +16,33 @@ def timer(fn):
 
 # Wrapper class for NetworkIt graphs to keep track of node attributes
 class Graph:
+    @classmethod
     @timer
-    def __init__(self, nodes, edges):
+    def from_lists(cls, nodes, edges):
         "Create graph with node labels from list of nodes and edges."
-        self.nk_graph = nk.graph.Graph(len(nodes), directed=True)
-        self.addNodeAttribute('ids', str)
+        nk_graph = nk.graph.Graph(len(nodes), directed=True)
+        ids = {}
 
         nodeIdxs = {}
         for i, val in enumerate(nodes):
-            self.ids[i] = val['id']
+            ids[i] = val['id']
             nodeIdxs[val['id']] = i
 
         for edge in edges:
             src = edge['source']
             target = edge['target']
-            self.nk_graph.addEdge(nodeIdxs[src], nodeIdxs[target])
+            nk_graph.addEdge(nodeIdxs[src], nodeIdxs[target])
+
+        return cls(nk_graph, ids)
+
+    def __init__(self, nk_graph, ids):
+        self.nk_graph = nk_graph
+        self.addNodeAttribute('ids', str)
+
+        def set_id(n):
+            self.ids[n] = ids[n]
+
+        self.nk_graph.forNodes(set_id)
 
     def __getattr__(self, attr):
         "Forward any missing methods to the underlying NetworKit graph."
@@ -133,7 +145,7 @@ def handler(event, context):
     if len(nodes) == 0 or len(edges) == 0:
         return {}
 
-    graph = Graph(nodes, edges)
+    graph = Graph.from_lists(nodes, edges)
 
     relative_sizes = relative_network_size(nodes)
     graph.addNodeAttribute('relative_in_degree', float)
