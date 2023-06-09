@@ -67,6 +67,11 @@ class Graph:
         for i, val in enumerate(result):
             attr[i] = val
 
+    def undirected(self):
+        "Return a new Graph that is an undirected version of this one."
+        undirectedGraph = nk.graphtools.toUndirected(self.nk_graph)
+        return Graph(undirectedGraph, self.ids)
+
     def subGraphFromNodes(self, nodes):
         "Return a new subgraph that consists of the specified nodes."
         newGraph = nk.graphtools.subgraphFromNodes(self.nk_graph, nodes)
