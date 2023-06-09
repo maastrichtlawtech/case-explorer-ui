@@ -184,14 +184,15 @@ def relative_network_size(nodes):
     return relative_sizes
 
 @timer
-def create_response(graph, partition):
+def create_response(graph, representative_nodes):
     statistics = {}
     size = graph.numberOfNodes()
     def node_stats(i):
         node_id = graph.ids[i]
         degree = graph.degreeIn(i) + graph.degreeOut(i)
+        community = graph.plm_community[i]
         statistics[node_id] = {
-            'parent': min(partition.getMembers(graph.plm_community[i])),
+            'parent': representative_nodes[community],
             'degree': degree,
             'in-degree': graph.degreeIn(i),
             'out-degree': graph.degreeOut(i),
@@ -202,7 +203,7 @@ def create_response(graph, partition):
             'pageRank': graph.page_ranks[i],
             'betweenness centrality': graph.betweenness_centralities[i],
             'closeness centrality': graph.closeness_centralities[i],
-            'community': graph.plm_community[i],
+            'community': community,
         }
         id_components = node_id.split(':')
         if len(id_components) >= 4:
@@ -248,6 +249,24 @@ def handler(event, context):
     graph.addNodeCentralityMetric("page_ranks",
             nk.centrality.PageRank, distributeSinks=distSinks, normalized=True)
 
-    partition = graph.addCommunitiesUndirected("plm_community", nk.community.PLM)
-    statistics = create_response(graph, partition)
+    stripped = graph.subGraphFromPredicate(lambda G, n: not G.isIsolated(n))
+    partition = stripped.addCommunitiesUndirected("plm_community",
+            nk.community.PLM)
+
+    representative_nodes = {}
+    newCommunity = max(partition.getSubsetIds()) + 1
+    communities = graph.addNodeAttribute("plm_community", int)
+    def set_community(n):
+        if stripped.hasNode(n):
+            communities[n] = stripped.plm_community[n]
+        else:
+            partition.addToSubset(newCommunity, n)
+            communities[n] = newCommunity
+
+        if communities[n] not in representative_nodes:
+            representative_nodes[communities[n]] = n
+
+    graph.forNodes(set_community)
+
+    statistics = create_response(graph, representative_nodes)
     return statistics
