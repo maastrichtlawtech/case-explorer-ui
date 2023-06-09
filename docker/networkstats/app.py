@@ -73,22 +73,38 @@ class Graph:
         setattr(self, name, val)
         return val
 
-    def addNodeCentralityMetric(self, name, centrality, *args, **kwargs):
-        "Compute a centrality metric and store the results as node attributes."
+    def _addNodeCentralityMetric(self, name, nk_graph, centrality, *args,
+            **kwargs):
+        "Internal method for computing directed and undirected metrics."
         attr = self.addNodeAttribute(name, float)
         with Timer(f"Centrality: {name}"):
-            algorithm = centrality(self.nk_graph, *args, **kwargs)
+            algorithm = centrality(nk_graph, *args, **kwargs)
             algorithm.run()
             result = algorithm.scores()
             for i, val in enumerate(result):
                 attr[i] = val
 
-    def addCommunities(self, name, algo, *args, **kwargs):
-        "Compute and stores communities for each node."
+    def addNodeCentralityMetric(self, name, centrality, *args, **kwargs):
+        "Compute a centrality metric and store the results as node attributes."
+        return self._addNodeCentralityMetric(name, self.nk_graph, centrality,
+                *args, **kwargs)
+
+    def addNodeCentralityMetricUndirected(self, name, centrality, *args,
+            **kwargs):
+        """Compute a centrality metric on undirected version of the graph and
+        store the results as node attributes."""
+        undirected_graph = nk.graphtools.toUndirected(self.nk_graph)
+        return self._addNodeCentralityMetric(name, undirected_graph,
+                centrality, *args, **kwargs)
+
+    def _addCommunities(self, name, nk_graph, algo, *args, **kwargs):
+        "Internal method for computing directed and undirected communities."
         attr = self.addNodeAttribute(name, int)
         with Timer(f"Community: {name}"):
-            algorithm = algo(self.nk_graph, *args, **kwargs)
-            partitioning = nk.community.detectCommunities(self.nk_graph, algo=algorithm)
+            algorithm = algo(nk_graph, *args, **kwargs)
+            partitioning = nk.community.detectCommunities(nk_graph,
+                    algo=algorithm)
+
             partitioning.compact()
             node_clusters = partitioning.getVector()
 
@@ -97,6 +113,16 @@ class Graph:
 
             self.nk_graph.forNodes(store_node)
             return partitioning
+
+    def addCommunities(self, name, algo, *args, **kwargs):
+        "Compute and stores communities for each node."
+        return self._addCommunities(name, self.nk_graph, algo, *args, **kwargs)
+
+    def addCommunitiesUndirected(self, name, algo, *args, **kwargs):
+        "Compute communities on undirected graph and store for each node."
+        undirected_graph = nk.graphtools.toUndirected(self.nk_graph)
+        return self._addCommunities(name, undirected_graph, algo, *args,
+                **kwargs)
 
     def undirected(self):
         "Return a new Graph that is an undirected version of this one."
