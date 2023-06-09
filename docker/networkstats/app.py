@@ -67,6 +67,20 @@ class Graph:
         for i, val in enumerate(result):
             attr[i] = val
 
+    def addCommunities(self, name, algo, *args, **kwargs):
+        "Compute and stores communities for each node."
+        attr = self.addNodeAttribute(name, int)
+        algorithm = algo(self.nk_graph, *args, **kwargs)
+        partitioning = nk.community.detectCommunities(self.nk_graph, algo=algorithm)
+        partitioning.compact()
+        node_clusters = partitioning.getVector()
+
+        def store_node(n):
+            attr[n] = node_clusters[n]
+
+        self.nk_graph.forNodes(store_node)
+        return partitioning
+
     def undirected(self):
         "Return a new Graph that is an undirected version of this one."
         undirectedGraph = nk.graphtools.toUndirected(self.nk_graph)
