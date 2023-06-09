@@ -145,13 +145,7 @@ class Graph:
         self.nk_graph.forNodes(select_node)
         return self.subGraphFromNodes(nodes)
 
-@timer
-def get_communities_centrality(G):
-    uG = nk.graphtools.toUndirected(G)
-    return nk.community.detectCommunities(G, algo=nk.community.PLM(uG, True))
-
 # relative in-degree centrality
-
 def derive_date(k):
     "Return the date of a node, if present else 1900-01-01."
 
@@ -190,14 +184,14 @@ def relative_network_size(nodes):
     return relative_sizes
 
 @timer
-def create_response(graph, clusters, communities, partition):
+def create_response(graph, partition):
     statistics = {}
     size = graph.numberOfNodes()
     def node_stats(i):
         node_id = graph.ids[i]
         degree = graph.degreeIn(i) + graph.degreeOut(i)
         statistics[node_id] = {
-            'parent': clusters[communities[i]],
+            'parent': min(partition.getMembers(graph.plm_community[i])),
             'degree': degree,
             'in-degree': graph.degreeIn(i),
             'out-degree': graph.degreeOut(i),
@@ -208,7 +202,7 @@ def create_response(graph, clusters, communities, partition):
             'pageRank': graph.page_ranks[i],
             'betweenness centrality': graph.betweenness_centralities[i],
             'closeness centrality': graph.closeness_centralities[i],
-            'community': partition[i],
+            'community': graph.plm_community[i],
         }
         id_components = node_id.split(':')
         if len(id_components) >= 4:
@@ -216,7 +210,6 @@ def create_response(graph, clusters, communities, partition):
 
     graph.forNodes(node_stats)
     return statistics
-
 
 
 # main
@@ -255,15 +248,6 @@ def handler(event, context):
     graph.addNodeCentralityMetric("page_ranks",
             nk.centrality.PageRank, distributeSinks=distSinks, normalized=True)
 
-    # compute networkit centralities
-    partition = get_communities_centrality(graph.nk_graph)
-    communities = partition.getVector()
-    clusters = {}
-    def iternodes(x):
-        if communities[x] not in clusters:
-            clusters[communities[x]] = x
-
-    graph.forNodes(iternodes)
-
-    statistics = create_response(graph, clusters, communities, partition)
+    partition = graph.addCommunitiesUndirected("plm_community", nk.community.PLM)
+    statistics = create_response(graph, partition)
     return statistics
