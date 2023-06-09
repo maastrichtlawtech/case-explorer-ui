@@ -67,6 +67,22 @@ class Graph:
         for i, val in enumerate(result):
             attr[i] = val
 
+    def subGraphFromNodes(self, nodes):
+        "Return a new subgraph that consists of the specified nodes."
+        newGraph = nk.graphtools.subgraphFromNodes(self.nk_graph, nodes)
+        return Graph(newGraph, self.ids)
+
+    def subGraphFromPredicate(self, filterPredicate):
+        """Return a new subgraph that consists of the nodes for which the
+        predicate is True."""
+        nodes = []
+        def select_node(n):
+            if filterPredicate(self.nk_graph, n):
+                nodes.append(n)
+
+        self.nk_graph.forNodes(select_node)
+        return self.subGraphFromNodes(nodes)
+
 @timer
 def get_communities_centrality(G):
     uG = nk.graphtools.toUndirected(G)
