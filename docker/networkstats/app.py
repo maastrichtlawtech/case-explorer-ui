@@ -16,10 +16,13 @@ def timer(fn):
 
 # Wrapper class for NetworkIt graphs to keep track of node attributes
 class Graph:
+    """Thin wrapper class around a NetworkIt graph, forwards all missing
+    methods to the wrapped NetworkIt graph."""
+
     @classmethod
     @timer
     def from_lists(cls, nodes, edges):
-        "Create graph with node labels from list of nodes and edges."
+        "Create graph with node labels from lists of nodes and edges."
         nk_graph = nk.graph.Graph(len(nodes), directed=True)
         ids = {}
 
@@ -36,6 +39,7 @@ class Graph:
         return cls(nk_graph, ids)
 
     def __init__(self, nk_graph, ids):
+        "Takes a NetworkIt graph and an indexable type holding the ids."
         self.nk_graph = nk_graph
         self.addNodeAttribute('ids', str)
 
@@ -55,6 +59,7 @@ class Graph:
         return val
 
     def addNodeCentralityMetric(self, name, centrality, *args, **kwargs):
+        "Compute a centrality metric and store the results as node attributes."
         attr = self.addNodeAttribute(name, float)
         algorithm = centrality(self.nk_graph, *args, **kwargs)
         algorithm.run()
