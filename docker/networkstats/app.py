@@ -23,12 +23,8 @@ class Timer:
 def timer(fn):
     "Decorator for wrapping function calls with a Timer."
     def inner(*args, **kwargs):
-        start_time = perf_counter()
-        to_execute = fn(*args, **kwargs)
-        end_time = perf_counter()
-        execution_time = end_time - start_time
-        print(f'{fn.__name__} took {execution_time:.8f}s to execute')
-        return to_execute
+        with Timer(fn.__name__):
+            return fn(*args, **kwargs)
 
     return inner
 
@@ -38,23 +34,24 @@ class Graph:
     methods to the wrapped NetworkIt graph."""
 
     @classmethod
-    @timer
     def from_lists(cls, nodes, edges):
         "Create graph with node labels from lists of nodes and edges."
-        nk_graph = nk.graph.Graph(len(nodes), directed=True)
-        ids = {}
 
-        nodeIdxs = {}
-        for i, val in enumerate(nodes):
-            ids[i] = val['id']
-            nodeIdxs[val['id']] = i
+        with Timer("Graph creation"):
+            nk_graph = nk.graph.Graph(len(nodes), directed=True)
+            ids = {}
 
-        for edge in edges:
-            src = edge['source']
-            target = edge['target']
-            nk_graph.addEdge(nodeIdxs[src], nodeIdxs[target])
+            nodeIdxs = {}
+            for i, val in enumerate(nodes):
+                ids[i] = val['id']
+                nodeIdxs[val['id']] = i
 
-        return cls(nk_graph, ids)
+            for edge in edges:
+                src = edge['source']
+                target = edge['target']
+                nk_graph.addEdge(nodeIdxs[src], nodeIdxs[target])
+
+            return cls(nk_graph, ids)
 
     def __init__(self, nk_graph, ids):
         "Takes a NetworkIt graph and an indexable type holding the ids."
@@ -79,25 +76,27 @@ class Graph:
     def addNodeCentralityMetric(self, name, centrality, *args, **kwargs):
         "Compute a centrality metric and store the results as node attributes."
         attr = self.addNodeAttribute(name, float)
-        algorithm = centrality(self.nk_graph, *args, **kwargs)
-        algorithm.run()
-        result = algorithm.scores()
-        for i, val in enumerate(result):
-            attr[i] = val
+        with Timer(f"Centrality: {name}"):
+            algorithm = centrality(self.nk_graph, *args, **kwargs)
+            algorithm.run()
+            result = algorithm.scores()
+            for i, val in enumerate(result):
+                attr[i] = val
 
     def addCommunities(self, name, algo, *args, **kwargs):
         "Compute and stores communities for each node."
         attr = self.addNodeAttribute(name, int)
-        algorithm = algo(self.nk_graph, *args, **kwargs)
-        partitioning = nk.community.detectCommunities(self.nk_graph, algo=algorithm)
-        partitioning.compact()
-        node_clusters = partitioning.getVector()
+        with Timer(f"Community: {name}"):
+            algorithm = algo(self.nk_graph, *args, **kwargs)
+            partitioning = nk.community.detectCommunities(self.nk_graph, algo=algorithm)
+            partitioning.compact()
+            node_clusters = partitioning.getVector()
 
-        def store_node(n):
-            attr[n] = node_clusters[n]
+            def store_node(n):
+                attr[n] = node_clusters[n]
 
-        self.nk_graph.forNodes(store_node)
-        return partitioning
+            self.nk_graph.forNodes(store_node)
+            return partitioning
 
     def undirected(self):
         "Return a new Graph that is an undirected version of this one."
