@@ -770,7 +770,7 @@ const AppContainer = ({
             {...props}
             {...configRef.current}
             graphEditorRef={controllerProps.ref}
-            controllerRef={controllerRef}
+            controllerProps={controllerProps}
           />
         )}
         renderEdge={(props) => (
