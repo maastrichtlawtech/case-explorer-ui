@@ -105,7 +105,7 @@ export function GraphClusterButton
                     <Divider />
                     <Typography>{`Nodes Inside this cluster: ${members.length}`}</Typography>
                     <Divider />
-                    {members.map(n => { return <div style={{fontSize: "small"}}>{n.id}</div>})}
+                    {members.map((n, idx) => { return <div key={idx} style={{fontSize: "small"}}>{n.id}</div>})}
                     <Divider />
                 </div>
             }
