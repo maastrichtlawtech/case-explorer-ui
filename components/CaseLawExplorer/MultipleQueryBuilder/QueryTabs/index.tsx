@@ -2,17 +2,16 @@ import React from 'react'
 import {
   Tabs,
   Tab,
-  Typography,
   IconButton,
   Button,
 } from '@mui/material'
 import { Close } from '@mui/icons-material'
-import { useImmer } from 'colay-ui/hooks/useImmer'
 import { FormProps } from '@rjsf/core'
 import Form from '@rjsf/material-ui'
 import { TabPanel } from './TabPanel'
 import { View } from 'colay-ui'
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 type QueryTab = FormProps<any>
 
 export type QueryTabsProps = {
@@ -51,7 +50,7 @@ export const QueryTabs = (props: QueryTabsProps) => {
               icon={
                 <IconButton
                 component="div"
-                onClick={(e) => {
+                onClick={(e : React.MouseEvent<HTMLInputElement>) => {
                   e.stopPropagation()
                   onDeleteTab(index)
                 }}
