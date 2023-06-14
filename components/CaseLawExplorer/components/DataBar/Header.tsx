@@ -6,7 +6,7 @@ import { useUser } from '../../useUser'
 import { useGraphEditor } from 'perfect-graph/hooks/useGraphEditor'
 import { GraphClusterButton } from '../../cluster_graph'
 
-export const DataBarHeader = (controllerRef) => (props) => {
+export const DataBarHeader = (props) => {
   const [user] = useUser()
   const [
     {
@@ -54,7 +54,7 @@ export const DataBarHeader = (controllerRef) => (props) => {
         <Typography>{`Edge Count: ${edges.length}`}</Typography>
       </View>
       <Divider />
-      <GraphClusterButton controllerRef={controllerRef} itemId={selectedItemId} />
+      <GraphClusterButton itemId={selectedItemId} />
     </View>
   )
 }
