@@ -50,8 +50,8 @@ export const QueryTabs = (props: QueryTabsProps) => {
              key={index}
               icon={
                 <IconButton
+                component="div"
                 onClick={(e) => {
-                  console.log('Clicked')
                   e.stopPropagation()
                   onDeleteTab(index)
                 }}
