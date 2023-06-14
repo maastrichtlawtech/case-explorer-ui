@@ -103,6 +103,12 @@ dist
 # TernJS port file
 .tern-port
 
+# macOS DS_Store files
+.DS_Store
+
+# Ignore vim swap files
+.*.swp
+
 .expo
 
 yarn.lock
