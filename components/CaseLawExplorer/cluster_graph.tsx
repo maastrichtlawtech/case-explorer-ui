@@ -1,5 +1,5 @@
 import { Button, Typography, Divider } from '@mui/material'
-import React, { RefObject } from 'react'
+import React from 'react'
 import { ControllerContext } from './ControllerContext'
 
 type NodeId = string
@@ -19,7 +19,7 @@ function selectClusters
     const new_nodes = nodes.filter((node) =>
         clusters.has(networkStats[node.id].parent)
     )
-    const new_edges = new Array()
+    const new_edges : Edge[] = []
     edges.forEach((edge: Edge) => {
         const sourceCluster = networkStats[edge.source].parent
         const targetCluster = networkStats[edge.target].parent
