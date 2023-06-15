@@ -34,14 +34,17 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       nodes {
         id
         data
+        __typename
       }
       edges {
         id
         source
         target
         data
+        __typename
       }
       message
+      __typename
     }
   }
 `;
@@ -55,14 +58,17 @@ export const computeSubnetwork = /* GraphQL */ `
       nodes {
         id
         data
+        __typename
       }
       edges {
         id
         source
         target
         data
+        __typename
       }
       message
+      __typename
     }
   }
 `;
@@ -76,6 +82,7 @@ export const fetchNodeData = /* GraphQL */ `
     fetchNodeData(node: $node, attributesToFetch: $attributesToFetch) {
       id
       data
+      __typename
     }
   }
 `;
@@ -87,6 +94,7 @@ export const batchFetchNodeData = /* GraphQL */ `
     batchFetchNodeData(nodes: $nodes, attributesToFetch: $attributesToFetch) {
       id
       data
+      __typename
     }
   }
 `;
@@ -110,6 +118,7 @@ export const test = /* GraphQL */ `
     test(ecli: $ecli) {
       id
       data
+      __typename
     }
   }
 `;
@@ -123,6 +132,7 @@ export const getCaselaw = /* GraphQL */ `
       instance_li
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -151,8 +161,10 @@ export const listCaselaws = /* GraphQL */ `
         instance_li
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -181,8 +193,10 @@ export const queryByItemType = /* GraphQL */ `
         instance_li
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -211,8 +225,10 @@ export const queryByInstance = /* GraphQL */ `
         instance_li
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
@@ -241,8 +257,10 @@ export const queryByInstanceLi = /* GraphQL */ `
         instance_li
         createdAt
         updatedAt
+        __typename
       }
       nextToken
+      __typename
     }
   }
 `;
