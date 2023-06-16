@@ -365,7 +365,7 @@ const AppContainer = ({
       }
     },
     dataBar: {
-      // isOpen: true,
+      isOpen: true,
       editable: false,
       header: DataBarHeader,
       sort: (a, b) => {
