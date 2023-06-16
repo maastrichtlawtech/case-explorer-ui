@@ -71,23 +71,23 @@ export function clusterGraph
 export function GraphClusterButton
 ( { itemId } : {itemId: any})
 {
-    const {controllerProps, controller} = React.useContext(ControllerContext)
+    const {controllerProps, controller, fullGraph} = React.useContext(ControllerContext)
 
     if (controllerProps.showing_clusters && !itemId) return null
 
     let members: Node[] = []
     if (itemId) {
-       members = memberNodes(controllerProps.networkStatistics.global, controllerProps.real_nodes, Number(itemId))
+       members = memberNodes(fullGraph.networkStatistics, fullGraph.nodes, Number(itemId))
     }
 
     return (
         <div>
             <Button onClick={() => {
             const zoomIn = controllerProps.showing_clusters && itemId
-            const networkStatistics = controllerProps.networkStatistics.global
+            const networkStatistics = fullGraph.networkStatistics
             const {nodes, edges} = zoomIn
-                ? selectClusters(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges, [Number(itemId)])
-                : clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
+                ? selectClusters(networkStatistics, fullGraph.nodes, fullGraph.edges, [Number(itemId)])
+                : clusterGraph(networkStatistics, fullGraph.nodes, fullGraph.edges)
 
             controller.update((draft: any) => {
                 draft.nodes = nodes

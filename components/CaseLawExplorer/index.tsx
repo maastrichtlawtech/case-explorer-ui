@@ -276,14 +276,18 @@ const AppContainer = ({
       />
       )}, [dispatch])
 
+  /* Stores data of the full unclustered graph */
+  const [fullGraph, updateFullGraph] = useImmer({
+    nodes: [],
+    edges: [],
+    networkStatistics: [],
+  })
+
   const [controllerProps, controller] = useController({
     nodes: [],
-    real_nodes: [],
     edges: [],
-    real_edges: [],
     showing_clusters: false,
     // events: RECORDED_EVENTS,
-    graph_updated: false,
     display_updated: false,
     networkStatistics: {
       local: {},
@@ -650,34 +654,21 @@ const AppContainer = ({
   }, [])
 
   React.useEffect(() => {
-    if (!controllerProps.graph_updated || controllerProps.real_nodes.length === 0) {
+    if (fullGraph.nodes.length === 0) {
       return () => {}
     }
-    console.log('There is a new update!!!')
 
-    controller.update((draft) => draft.graph_updated = false)
+    console.log('There is a new graph update!!!')
 
-    const call = async () => {
-      let networkStatistics = await API.getNetworkStatistics({
-        nodes: controllerProps.real_nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
-        edges: controllerProps.real_edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
-      })
-
-      const {nodes, edges} = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
-      controller.update((draft) => {
-        draft.networkStatistics.global = networkStatistics
-        draft.nodes = nodes
-        draft.edges = edges
-        draft.showing_clusters = true
-        draft.display_updated = true
-      })
-      alertRef.current.alert({
-        type: 'success',
-        text: `Network Statistics Calculated!`
-      })
-    }
-    call()
-  }, [controllerProps.real_nodes, controllerProps.real_edges, controllerProps.graph_updated])
+    const {nodes, edges} = clusterGraph(fullGraph.networkStatistics, fullGraph.nodes, fullGraph.edges)
+    controller.update((draft) => {
+      draft.isLoading = false
+      draft.nodes = nodes
+      draft.edges = edges
+      draft.showing_clusters = true
+      draft.display_updated = true
+    })
+  }, [fullGraph])
 
   React.useEffect(() => {
     if (!controllerProps.display_updated) {
@@ -685,15 +676,8 @@ const AppContainer = ({
     }
     console.log('There is a display update!!!')
 
-    controller.update((draft) => draft.display_updated = false)
-
     const networkStatistics = controllerProps.networkStatistics.global
     const call = async () => {
-      const localStatistics = await API.getNetworkStatistics({
-        nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
-        edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
-      })
-
       const {
         nodeSizeRangeMap,
         communityStats,
@@ -704,7 +688,7 @@ const AppContainer = ({
       console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
-        draft.networkStatistics.local = localStatistics
+        draft.display_updated = false
         const filterSchema  = draft.settingsBar.forms[2].schema
         const filterFormData  = draft.settingsBar.forms[2].formData
         filterSchema.properties.community = {
@@ -745,13 +729,13 @@ const AppContainer = ({
       })
     }
     call()
-  }, [controllerProps.nodes, controllerProps.edges, controllerProps.display_updated])
+  }, [controllerProps])
 
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
     >
-      <ControllerContext.Provider value={{controllerProps, controller}}>
+      <ControllerContext.Provider value={{controllerProps, controller, fullGraph}}>
         <GraphEditor
           {...controllerProps}
           extraData={[
@@ -766,6 +750,7 @@ const AppContainer = ({
               {...configRef.current}
               graphEditorRef={controllerProps.ref}
               controllerProps={controllerProps}
+              fullGraph={fullGraph}
             />
           )}
           renderEdge={(props) => (
@@ -812,27 +797,28 @@ const AppContainer = ({
             text: error.message
           })
         }}
-        onFinish={({
-          nodes= [],
-          edges= [],
-          message
-        } = {}) => {
+        onFinish={({ nodes, edges, stats, message }) => {
           PIXI.settings.ROUND_PIXELS = false// true
           // @ts-ignore
           PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.LOW
           PIXI.settings.RESOLUTION = 1// 32// 64// window.devicePixelRatio
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
-          controller.update((draft) => {
-            draft.isLoading = false
-            draft.real_nodes = nodes
-            draft.real_edges = edges
-            draft.graph_updated = true
+
+          updateFullGraph((draft) => {
+            draft.nodes = nodes
+            draft.edges = edges
+            draft.networkStatistics = stats
           })
           if (message) {
             alertRef.current.alert({
               type: 'warning',
               text: message
+            })
+          } else {
+            alertRef.current.alert({
+              type: 'success',
+              text: `Network Statistics Calculated!`
             })
           }
         }}
