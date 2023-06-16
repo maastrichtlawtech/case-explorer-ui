@@ -627,29 +627,27 @@ const AppContainer = ({
   })
 
   React.useEffect(() => {
-    setTimeout(() => {
-      controller.update((draft, { graphEditorRef }) => {
-        try {
-          const { hitArea } = graphEditorRef.current.viewport
-          const margin = 500
-          const boundingBox = {
-            x1: hitArea.x + margin,
-            y1: hitArea.y + margin,
-            w: hitArea.width - 2*margin,
-            h: hitArea.height - 2*margin,
-          }
-          const layout = DEFAULT_LAYOUT
-            draft.graphConfig!.layout = {
-              ...layout,
-              animationDuration: 0,
-              boundingBox,
-            }
-        } catch (error) {
-          console.log('error',error)
+    controller.update((draft, { graphEditorRef }) => {
+      try {
+        const { hitArea } = graphEditorRef.current.viewport
+        const margin = 500
+        const boundingBox = {
+          x1: hitArea.x + margin,
+          y1: hitArea.y + margin,
+          w: hitArea.width - 2*margin,
+          h: hitArea.height - 2*margin,
         }
-      })
-    }, 1000)
-}, [])
+        const layout = DEFAULT_LAYOUT
+        draft.graphConfig!.layout = {
+          ...layout,
+          animationDuration: 0,
+          boundingBox,
+        }
+      } catch (error) {
+        console.log('error',error)
+      }
+    })
+  }, [])
 
   React.useEffect(() => {
     if (!controllerProps.graph_updated || controllerProps.real_nodes.length === 0) {
