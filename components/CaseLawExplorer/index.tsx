@@ -619,6 +619,24 @@ const AppContainer = ({
           })
           return false
         }
+        case "REDRAW_EVENT": {
+          const layout = current(draft.graphConfig!.layout) ?? DEFAULT_LAYOUT;
+          // Create a copy of nodes with the data part removed, as it is
+          // unexpected by the layout calculator GraphQL query
+          const nodes = draft.nodes.map((item) => ({
+            id: item.id,
+          }))
+          const edges = current(draft.edges)
+
+          setTimeout(() => {
+            updateLayout(layout, graphEditor, nodes, edges, cy)
+          })
+          alertRef.current.alert({
+              type: 'success',
+              text: `Display updated!`
+          })
+           return false
+         }
         default:
           break;
       }
@@ -713,16 +731,7 @@ const AppContainer = ({
         const createClusterForm = draft.settingsBar?.createClusterForm!
         createClusterForm.schema.properties.community = filterSchema.properties.community
       })
-      controller.onEvent({
-        type: EVENT.LAYOUT_CHANGED,
-        payload: {
-          value: {...DEFAULT_LAYOUT,}
-        }
-      })
-      alertRef.current.alert({
-        type: 'success',
-        text: `Display updated!`
-      })
+      controller.onEvent({ type: "REDRAW_EVENT" })
     }
     call()
   }, [controllerProps])
