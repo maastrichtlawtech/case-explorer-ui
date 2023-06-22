@@ -15,12 +15,12 @@ function selectClusters
     }
 
     const new_nodes = nodes.filter((node) =>
-        networkStatistics[node.id].parent == activeCluster
+        networkStatistics[node.id].community == activeCluster
     )
     const new_edges : Edge[] = []
     edges.forEach((edge: Edge) => {
-        const sourceCluster = networkStatistics[edge.source].parent
-        const targetCluster = networkStatistics[edge.target].parent
+        const sourceCluster = networkStatistics[edge.source].community
+        const targetCluster = networkStatistics[edge.target].community
         if (activeCluster == sourceCluster && activeCluster == targetCluster) {
             new_edges.push(edge)
         }
@@ -35,7 +35,7 @@ function selectClusters
 }
 
 function memberNodes(networkStats: NetworkStats, real_nodes: Node[], selectedClusterId: number) {
-    return real_nodes.filter(n => networkStats[n.id].parent == selectedClusterId)
+    return real_nodes.filter(n => networkStats[n.id].community == selectedClusterId)
 }
 
 export function clusterGraph
@@ -47,12 +47,12 @@ export function clusterGraph
       return {nodes: cachedResult.nodes, edges: cachedResult.edges}
     }
 
-    const new_nodes = new Set(nodes.map((node) => networkStatistics[node.id].parent))
+    const new_nodes = new Set(nodes.map((node) => networkStatistics[node.id].community))
     const new_edges: Set<string> = new Set()
 
     edges.forEach(({source, target}) => {
-        const sourceCluster = networkStatistics[source].parent
-        const targetCluster = networkStatistics[target].parent
+        const sourceCluster = networkStatistics[source].community
+        const targetCluster = networkStatistics[target].community
         if (sourceCluster != targetCluster) {
             if (new_nodes.has(sourceCluster) && new_nodes.has(targetCluster)) {
                 const new_edge = {source: sourceCluster, target: targetCluster}
