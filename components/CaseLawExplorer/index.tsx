@@ -122,6 +122,15 @@ const DEFAULT_VISUALIZATION = {
   nodeColor: 'community',
 }
 
+function updateCachedNodePosition(cluster, layout, cy, nodeId, position) {
+  const clusterInfo = ClusterCache.get(cluster)
+  if (clusterInfo && clusterInfo?.locations && clusterInfo.lastLayout) {
+    if (clusterInfo.lastLayout === JSON.stringify(layout)) {
+      clusterInfo.locations[nodeId] = position
+    }
+  }
+}
+
 async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
   const layoutName = layout.name
   const { hitArea } = graphEditor.viewport
@@ -478,6 +487,10 @@ const AppContainer = ({
             id: selectedItem.id,
             data: JSON.stringify(selectedItem.data)
           }
+          const layout = current(draft.graphConfig!.layout) ?? DEFAULT_LAYOUT;
+          const nodeId = selectedItem.id
+          const position = cy.$id(nodeId).position()
+          updateCachedNodePosition(draft.activeCluster, layout, cy, nodeId, position)
           const call = async () => {
             let elementData = null
             try {
