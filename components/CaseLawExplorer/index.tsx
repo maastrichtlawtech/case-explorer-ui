@@ -8,6 +8,7 @@ import {
 } from '@mui/material'
 import { View } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
+import { current } from 'immer'
 import * as R from 'colay/ramda'
 import { Graph } from 'perfect-graph/components'
 import { GraphEditor, GraphEditorProps } from 'perfect-graph/components/GraphEditor'
@@ -118,6 +119,31 @@ const DEFAULT_FILTERING = {
 const DEFAULT_VISUALIZATION = {
   nodeSize: 'in-degree',
   nodeColor: 'community',
+}
+
+async function updateLayout(layout, graphEditor, nodes, edges, cy) {
+  const layoutName = layout.name
+  const { hitArea } = graphEditor.viewport
+  const boundingBox = {
+    x1: hitArea.x,
+    y1: hitArea.y,
+    w: hitArea.width,
+    h: hitArea.height,
+  }
+
+  const layoutResult = await API.calculateLayout({
+        nodes,
+        edges,
+        layoutName,
+        boundingBox
+  })
+
+  console.log('layout res', layoutResult)
+  Object.keys(layoutResult).forEach((key) => {
+    const { x, y, } = layoutResult[key]
+    const element = cy.$id(key)
+    element.position({ x, y, })
+  })
 }
 
 const AppContainer = ({
@@ -572,55 +598,25 @@ const AppContainer = ({
             graphEditor.viewport.setZoom(payload.value.expansion, true)
           }
           const layoutName = payload.value.name
+          // Create a copy of nodes with the data part removed, as it is
+          // unexpected by the layout calculator GraphQL query
           const nodes = draft.nodes.map((item) => ({
             id: item.id,
           }))
-          const edges = draft.edges.map((item) => ({
-            id: item.id,
-            source: item.source,
-            target: item.target,
-          }))
+          const edges = current(draft.edges)
           let layout: any
-            if (layoutName) {
-              layout = R.pickBy((val) => R.isNotNil(val))({
-                // @ts-ignore
-                ...Graph.Layouts[layoutName],
-                ...payload.value,
-                runLayout: false,
-              })
-            }
-            draft.graphConfig!.layout = layout
+          if (layoutName) {
+            layout = R.pickBy((val) => R.isNotNil(val))({
+              // @ts-ignore
+              ...Graph.Layouts[layoutName],
+              ...payload.value,
+              runLayout: false,
+            })
+          }
+          draft.graphConfig!.layout = layout
           setTimeout(() => {
-            const { hitArea } = graphEditor.viewport
-            const boundingBox = {
-              x1: hitArea.x,
-              y1: hitArea.y,
-              w: hitArea.width,
-              h: hitArea.height,
-            }
-
-              API.calculateLayout({
-                nodes,
-                edges,
-                layoutName,
-                boundingBox//: JSON.stringify(boundingBox),
-              }).then((res) => {
-                console.log('layout res', res)
-                Object.keys(res).forEach((key) => {
-                  const {
-                    x,
-                    y,
-                  } = res[key]
-                  const element = cy.$id(key)
-                  element.position({
-                    x,
-                    y,
-                  })
-                })
-              }).catch((err) => {
-                  console.log('layout err', err)
-                })
-            }, 200)
+            updateLayout(layout, graphEditor, nodes, edges, cy)
+          })
           return false
         }
         default:
