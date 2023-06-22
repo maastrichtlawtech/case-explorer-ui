@@ -67,20 +67,21 @@ export function clusterGraph
 export function GraphClusterButton
 ( { itemId } : {itemId: any})
 {
-    const {controllerProps, controller, fullGraph} = React.useContext(ControllerContext)
+    const {controller, fullGraph, activeCluster} = React.useContext(ControllerContext)
+    const showing_clusters = activeCluster === null
 
-    if (controllerProps.showing_clusters && !itemId) return null
+    if (showing_clusters && !itemId) return null
 
     let members: Node[] = []
     if (itemId) {
-       members = memberNodes(fullGraph.networkStatistics, fullGraph.nodes, Number(itemId))
        itemId = Number(itemId)
+       members = memberNodes(fullGraph.networkStatistics, fullGraph.nodes, itemId)
     }
 
     return (
         <div>
             <Button onClick={() => {
-            const zoomIn = controllerProps.showing_clusters && itemId
+            const zoomIn = showing_clusters && itemId
             const {nodes, edges} = zoomIn
                 ? selectClusters(fullGraph, [itemId])
                 : clusterGraph(fullGraph)
@@ -88,11 +89,10 @@ export function GraphClusterButton
             controller.update((draft: any) => {
                 draft.nodes = nodes
                 draft.edges = edges
-                draft.display_updated = true
-                draft.showing_clusters = !zoomIn
+                draft.activeCluster = zoomIn ? itemId : null
             })
             }} color="primary">
-            {controllerProps.showing_clusters && itemId ? "Zoom In" : "Zoom Out"}
+            {showing_clusters && itemId ? "Zoom In" : "Zoom Out"}
             </Button>
             {   (itemId && members.length > 0 ) &&
                 <div>

@@ -121,7 +121,7 @@ const DEFAULT_VISUALIZATION = {
   nodeColor: 'community',
 }
 
-async function updateLayout(layout, graphEditor, nodes, edges, cy) {
+async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
   const layoutName = layout.name
   const { hitArea } = graphEditor.viewport
   const boundingBox = {
@@ -312,9 +312,8 @@ const AppContainer = ({
   const [controllerProps, controller] = useController({
     nodes: [],
     edges: [],
-    showing_clusters: false,
     // events: RECORDED_EVENTS,
-    display_updated: false,
+    activeCluster: null,
     networkStatistics: {
       local: {},
       global: {},
@@ -614,8 +613,9 @@ const AppContainer = ({
             })
           }
           draft.graphConfig!.layout = layout
+          const activeCluster = draft.activeCluster
           setTimeout(() => {
-            updateLayout(layout, graphEditor, nodes, edges, cy)
+            updateLayout(activeCluster, layout, graphEditor, nodes, edges, cy)
           })
           return false
         }
@@ -628,8 +628,9 @@ const AppContainer = ({
           }))
           const edges = current(draft.edges)
 
+          const activeCluster = draft.activeCluster
           setTimeout(() => {
-            updateLayout(layout, graphEditor, nodes, edges, cy)
+            updateLayout(activeCluster, layout, graphEditor, nodes, edges, cy)
           })
           alertRef.current.alert({
               type: 'success',
@@ -672,23 +673,19 @@ const AppContainer = ({
       return () => {}
     }
 
-    console.log('There is a new graph update!!!')
-
     const {nodes, edges} = clusterGraph(fullGraph)
     controller.update((draft) => {
       draft.isLoading = false
       draft.nodes = nodes
       draft.edges = edges
-      draft.showing_clusters = true
-      draft.display_updated = true
+      draft.activeCluster = null
     })
   }, [fullGraph])
 
   React.useEffect(() => {
-    if (!controllerProps.display_updated) {
+    if (controllerProps.nodes.length == 0) {
       return () => {}
     }
-    console.log('There is a display update!!!')
 
     const networkStatistics = controllerProps.networkStatistics.global
     const call = async () => {
@@ -702,7 +699,6 @@ const AppContainer = ({
       console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
-        draft.display_updated = false
         const filterSchema  = draft.settingsBar.forms[2].schema
         const filterFormData  = draft.settingsBar.forms[2].formData
         filterSchema.properties.community = {
@@ -734,13 +730,13 @@ const AppContainer = ({
       controller.onEvent({ type: "REDRAW_EVENT" })
     }
     call()
-  }, [controllerProps])
+  }, [controllerProps.activeCluster, controllerProps.nodes, controllerProps.edges])
 
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
     >
-      <ControllerContext.Provider value={{controllerProps, controller, fullGraph}}>
+      <ControllerContext.Provider value={{controller, fullGraph, activeCluster: controllerProps.activeCluster}}>
         <GraphEditor
           {...controllerProps}
           extraData={[
