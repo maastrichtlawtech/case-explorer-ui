@@ -1,13 +1,7 @@
 import { Button, Typography, Divider } from '@mui/material'
 import React from 'react'
 import { ControllerContext } from './ControllerContext'
-
-type NodeId = string
-type EdgeId = string
-type Node = {id: NodeId, data: any}
-type Edge = {id: EdgeId, source: NodeId, target: NodeId}
-type NetworkStats = { [key: NodeId]: {parent: number} }
-type Graph = { networkStatistics: NetworkStats , nodes: Node[] , edges: Edge[] }
+import { Node, Edge, NetworkStats, Graph } from './types'
 
 function selectClusters
 ( { networkStatistics, nodes, edges } : Graph
