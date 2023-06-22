@@ -660,7 +660,7 @@ const AppContainer = ({
 
     console.log('There is a new graph update!!!')
 
-    const {nodes, edges} = clusterGraph(fullGraph.networkStatistics, fullGraph.nodes, fullGraph.edges)
+    const {nodes, edges} = clusterGraph(fullGraph)
     controller.update((draft) => {
       draft.isLoading = false
       draft.nodes = nodes

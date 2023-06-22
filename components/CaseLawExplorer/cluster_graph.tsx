@@ -7,22 +7,21 @@ type EdgeId = string
 type Node = {id: NodeId, data: any}
 type Edge = {id: EdgeId, source: NodeId, target: NodeId}
 type NetworkStats = { [key: NodeId]: {parent: number} }
+type Graph = { networkStatistics: NetworkStats , nodes: Node[] , edges: Edge[] }
 
 function selectClusters
-( networkStats: NetworkStats
-, nodes: Node[]
-, edges: Edge[]
+( { networkStatistics, nodes, edges } : Graph
 , activeClusters: number[]
 ) : {nodes: Node[], edges: Edge[]}
 {
     const clusters = new Set(activeClusters)
     const new_nodes = nodes.filter((node) =>
-        clusters.has(networkStats[node.id].parent)
+        clusters.has(networkStatistics[node.id].parent)
     )
     const new_edges : Edge[] = []
     edges.forEach((edge: Edge) => {
-        const sourceCluster = networkStats[edge.source].parent
-        const targetCluster = networkStats[edge.target].parent
+        const sourceCluster = networkStatistics[edge.source].parent
+        const targetCluster = networkStatistics[edge.target].parent
         if (clusters.has(sourceCluster) && clusters.has(targetCluster)) {
             new_edges.push(edge)
         }
@@ -38,17 +37,14 @@ function memberNodes(networkStats: NetworkStats, real_nodes: Node[], selectedClu
 }
 
 export function clusterGraph
-( networkStats: NetworkStats
-, nodes: Node[]
-, edges: Edge[]
-) : {nodes: Node[], edges: Edge[]}
+({ networkStatistics , nodes , edges } : Graph) : {nodes: Node[], edges: Edge[]}
 {
-    const new_nodes = new Set(nodes.map((node) => networkStats[node.id].parent))
+    const new_nodes = new Set(nodes.map((node) => networkStatistics[node.id].parent))
     const new_edges: Set<string> = new Set()
 
     edges.forEach(({source, target}) => {
-        const sourceCluster = networkStats[source].parent
-        const targetCluster = networkStats[target].parent
+        const sourceCluster = networkStatistics[source].parent
+        const targetCluster = networkStatistics[target].parent
         if (sourceCluster != targetCluster) {
             if (new_nodes.has(sourceCluster) && new_nodes.has(targetCluster)) {
                 const new_edge = {source: sourceCluster, target: targetCluster}
@@ -78,16 +74,16 @@ export function GraphClusterButton
     let members: Node[] = []
     if (itemId) {
        members = memberNodes(fullGraph.networkStatistics, fullGraph.nodes, Number(itemId))
+       itemId = Number(itemId)
     }
 
     return (
         <div>
             <Button onClick={() => {
             const zoomIn = controllerProps.showing_clusters && itemId
-            const networkStatistics = fullGraph.networkStatistics
             const {nodes, edges} = zoomIn
-                ? selectClusters(networkStatistics, fullGraph.nodes, fullGraph.edges, [Number(itemId)])
-                : clusterGraph(networkStatistics, fullGraph.nodes, fullGraph.edges)
+                ? selectClusters(fullGraph, [itemId])
+                : clusterGraph(fullGraph)
 
             controller.update((draft: any) => {
                 draft.nodes = nodes
