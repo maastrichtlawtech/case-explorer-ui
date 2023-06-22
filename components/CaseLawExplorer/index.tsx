@@ -43,6 +43,7 @@ import {
   calculateNetworkStatisticsRange
 } from './utils'
 import { ControllerContext } from './ControllerContext'
+import ClusterCache from './ClusterCache'
 import { clusterGraph } from './cluster_graph'
 
 export const ACTIONS = {
@@ -131,12 +132,23 @@ async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
     h: hitArea.height,
   }
 
-  const layoutResult = await API.calculateLayout({
-        nodes,
-        edges,
-        layoutName,
-        boundingBox
-  })
+  var layoutResult = null
+  const clusterInfo = ClusterCache.get(cluster)
+  if (clusterInfo && clusterInfo?.locations && clusterInfo.lastLayout) {
+    if (clusterInfo.lastLayout === JSON.stringify(layout)) {
+      layoutResult = clusterInfo.locations
+    }
+  }
+  if (!layoutResult) {
+    layoutResult = await API.calculateLayout({
+            nodes,
+            edges,
+            layoutName,
+            boundingBox
+    })
+    clusterInfo.locations = layoutResult
+    clusterInfo.lastLayout = JSON.stringify(layout)
+  }
 
   console.log('layout res', layoutResult)
   Object.keys(layoutResult).forEach((key) => {
@@ -145,6 +157,7 @@ async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
     element.position({ x, y, })
   })
 }
+
 
 const AppContainer = ({
   changeMUITheme,
@@ -673,6 +686,7 @@ const AppContainer = ({
       return () => {}
     }
 
+    ClusterCache.reset()
     const {nodes, edges} = clusterGraph(fullGraph)
     controller.update((draft) => {
       draft.isLoading = false
