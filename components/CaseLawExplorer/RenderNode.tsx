@@ -110,7 +110,7 @@ export const RenderNode = (props: RenderNodeProps) => {
 
   let sizePerc = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
 
-  if (controllerProps.showing_clusters) {
+  if (controllerProps.activeCluster === null) {
     let sum = fullGraph.nodes.filter(n => fullGraph.networkStatistics[n.id].community == item.id).length
     sizePerc += sum/controllerProps.nodes.length
     text = `cluster-${item.id}`
