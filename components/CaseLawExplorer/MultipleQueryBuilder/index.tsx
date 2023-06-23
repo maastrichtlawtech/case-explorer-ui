@@ -137,19 +137,13 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       target: edge.target
     }))
 
-    const subNetwork = await API.getSubnetwork({
-      nodes: allNodes,
-      edges: allEdges,
-      maxNodes: NODE_LIMIT
-    })
     const networkStatistics = await API.getNetworkStatistics({
-        nodes: subNetwork.nodes,
-        edges: subNetwork.edges
+        nodes: allNodes,
+        edges: allEdges
     })
-    console.log('RESULT getSubnetwork', subNetwork)
     onFinish({
-      nodes: subNetwork.nodes,
-      edges: subNetwork.edges,
+      nodes: casesData?.nodes,
+      edges: allEdges,
       stats: networkStatistics,
       message,
     })
