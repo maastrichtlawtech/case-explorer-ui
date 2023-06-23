@@ -152,6 +152,13 @@ def derive_date(k):
     if 'date_decision' in k['data'] and k['data']['date_decision'] != '':
         return k['data']['date_decision']
 
+    # Use year from the ECLI if date is missing
+    node_id = k['id']
+    id_components = node_id.split(':')
+    if len(id_components) >= 4:
+        year = id_components[3]
+        return year + "-01-01"
+
     return '1900-01-01'
 
 def relative_network_size(nodes):
@@ -204,16 +211,15 @@ def create_response(graph, representative_nodes):
             'betweenness centrality': graph.betweenness_centralities[i],
             'closeness centrality': graph.closeness_centralities[i],
             'community': community,
+            'year': graph.year[i]
         }
-        id_components = node_id.split(':')
-        if len(id_components) >= 4:
-            statistics[node_id]['year'] = int(id_components[3])
 
     graph.forNodes(node_stats)
     return statistics
 
 
 # main
+# pylint: disable=unused-argument
 @timer
 def handler(event, context):
     nodes = event['arguments']['nodes']
@@ -223,6 +229,14 @@ def handler(event, context):
         return {}
 
     graph = Graph.from_lists(nodes, edges)
+    graph.addNodeAttribute('year', int)
+
+    def add_decision_year(n):
+        date = derive_date(nodes[n])
+        year = date.split('-')[0]
+        graph.year[n] = int(year)
+
+    graph.forNodes(add_decision_year)
 
     relative_sizes = relative_network_size(nodes)
     graph.addNodeAttribute('relative_in_degree', float)
