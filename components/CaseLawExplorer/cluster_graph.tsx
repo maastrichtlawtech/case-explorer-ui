@@ -4,7 +4,7 @@ import { ControllerContext, FullGraphContext } from './Contexts'
 import { Node, Edge, NetworkStats, Graph } from './types'
 import ClusterCache from './ClusterCache'
 
-function selectClusters
+export function selectCluster
 ( { networkStatistics, nodes, edges } : Graph
 , activeCluster: number
 ) : {nodes: Node[], edges: Edge[]}
@@ -32,10 +32,6 @@ function selectClusters
     }
     ClusterCache.set(activeCluster, result)
     return result
-}
-
-function memberNodes(networkStats: NetworkStats, real_nodes: Node[], selectedClusterId: number) {
-    return real_nodes.filter(n => networkStats[n.id].community == selectedClusterId)
 }
 
 export function clusterGraph
@@ -83,18 +79,13 @@ export function GraphClusterButton
 
     if (showing_clusters && !itemId) return null
 
-    let members: Node[] = []
-    if (itemId) {
-       itemId = Number(itemId)
-       members = memberNodes(fullGraph.networkStatistics, fullGraph.nodes, itemId)
-    }
 
     return (
         <div>
             <Button onClick={() => {
             const zoomIn = showing_clusters && itemId
             const {nodes, edges} = zoomIn
-                ? selectClusters(fullGraph, itemId)
+                ? selectCluster(fullGraph, itemId)
                 : clusterGraph(fullGraph)
 
             controller.update((draft: any) => {
@@ -105,15 +96,6 @@ export function GraphClusterButton
             }} color="primary">
             {showing_clusters && itemId ? "Zoom In" : "Zoom Out"}
             </Button>
-            {   (itemId && members.length > 0 ) &&
-                <div>
-                    <Divider />
-                    <Typography>{`Nodes Inside this cluster: ${members.length}`}</Typography>
-                    <Divider />
-                    {members.map((n, idx) => { return <div key={idx} style={{fontSize: "small"}}>{n.id}</div>})}
-                    <Divider />
-                </div>
-            }
         </div>
         )
 }
