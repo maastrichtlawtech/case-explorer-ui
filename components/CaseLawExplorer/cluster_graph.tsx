@@ -1,6 +1,6 @@
 import { Button, Typography, Divider } from '@mui/material'
 import React from 'react'
-import { ControllerContext } from './ControllerContext'
+import { ControllerContext, FullGraphContext } from './Contexts'
 import { Node, Edge, NetworkStats, Graph } from './types'
 import ClusterCache from './ClusterCache'
 
@@ -77,7 +77,8 @@ export function clusterGraph
 export function GraphClusterButton
 ( { itemId } : {itemId: any})
 {
-    const {controller, fullGraph, activeCluster} = React.useContext(ControllerContext)
+    const { fullGraph } = React.useContext(FullGraphContext)
+    const { controller, activeCluster } = React.useContext(ControllerContext)
     const showing_clusters = activeCluster === null
 
     if (showing_clusters && !itemId) return null

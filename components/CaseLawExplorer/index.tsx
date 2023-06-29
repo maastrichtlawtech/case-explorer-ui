@@ -42,7 +42,7 @@ import { RenderNode } from './RenderNode'
 import {
   calculateNetworkStatisticsRange
 } from './utils'
-import { ControllerContext } from './ControllerContext'
+import { FullGraphContext, ControllerContext, UIStateContext } from './Contexts'
 import ClusterCache from './ClusterCache'
 import { clusterGraph } from './cluster_graph'
 
@@ -763,7 +763,9 @@ const AppContainer = ({
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
     >
-      <ControllerContext.Provider value={{controller, fullGraph, activeCluster: controllerProps.activeCluster}}>
+      <UIStateContext.Provider value={{state, updateState}}>
+      <FullGraphContext.Provider value={{fullGraph, updateFullGraph}}>
+      <ControllerContext.Provider value={{controller, activeCluster: controllerProps.activeCluster}}>
         <GraphEditor
           {...controllerProps}
           extraData={[
@@ -790,6 +792,8 @@ const AppContainer = ({
           {...rest}
         />
       </ControllerContext.Provider>
+      </FullGraphContext.Provider>
+      </UIStateContext.Provider>
       <QueryBuilder
         isOpen={state.queryBuilder.visible}
         query={state.queryBuilder.query}
