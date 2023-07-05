@@ -699,7 +699,6 @@ const AppContainer = ({
       return () => {}
     }
 
-    ClusterCache.reset()
     const {nodes, edges} = clusterGraph(fullGraph)
     controller.update((draft) => {
       draft.isLoading = false
@@ -837,6 +836,7 @@ const AppContainer = ({
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
 
+          ClusterCache.reset()
           updateFullGraph((draft) => {
             draft.nodes = nodes
             draft.edges = edges
