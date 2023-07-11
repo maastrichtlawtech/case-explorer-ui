@@ -47,6 +47,14 @@ Materials for building a network analysis software platform for analyzing Dutch 
 </table>
 <!-- readme: contributors,gijsvd -end -->
 
+## Instructions
+
+To run the application using docker, clone this repository and execute the following command from the root of the repository:
+
+```
+docker-compose -f docker/docker-compose.yml up
+```
+
 ## License 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
