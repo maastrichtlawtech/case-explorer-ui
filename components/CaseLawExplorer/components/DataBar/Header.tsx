@@ -4,7 +4,27 @@ import { View } from 'colay-ui'
 import React from 'react'
 import { useUser } from '../../useUser'
 import { useGraphEditor } from 'perfect-graph/hooks/useGraphEditor'
-import { GraphClusterButton } from '../../cluster_graph'
+import { selectCluster, GraphClusterButton } from '../../cluster_graph'
+import { Graph } from '../../types'
+import { ControllerContext, FullGraphContext } from '../../Contexts'
+
+function ClusterInfo(props: { fullGraph: Graph, activeCluster: number|null, itemId: number|null }) {
+    const { fullGraph, activeCluster, itemId } = props
+    if (activeCluster !== null || itemId === null) return null
+
+    const { nodes } = selectCluster(fullGraph, itemId)
+
+    if (nodes.length == 0) return null
+
+    return (
+        <div>
+              <Typography>{`Nodes Inside this cluster: ${nodes.length}`}</Typography>
+              <Divider />
+              {nodes.map((n, idx) => { return <div key={idx} style={{fontSize: "small"}}>{n.id}</div>})}
+              <Divider />
+        </div>
+    )
+}
 
 export const DataBarHeader = (props) => {
   const [user] = useUser()
@@ -33,6 +53,8 @@ export const DataBarHeader = (props) => {
       }
     }
   )
+  const { fullGraph } = React.useContext(FullGraphContext)
+  const { activeCluster } = React.useContext(ControllerContext)
   return (
     <View>
       <View
@@ -55,6 +77,8 @@ export const DataBarHeader = (props) => {
       </View>
       <Divider />
       <GraphClusterButton itemId={selectedItemId} />
+      <Divider />
+      <ClusterInfo activeCluster={activeCluster} fullGraph={fullGraph} itemId={Number(selectedItemId)} />
     </View>
   )
 }

@@ -90,7 +90,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
     const casesDataList = await Promise.all(
       state.tabs.map(async (tab, index) => {
         try {
-          let casesData = await API.listCases(tab.formData)
+          const casesData = await API.listCases(tab.formData)
           return casesData
           console.log(`RESULT-tab: ${index}`, casesData)
         } catch (e) {
@@ -137,15 +137,14 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       target: edge.target
     }))
 
-    let subNetwork = await API.getSubnetwork({
-      nodes: allNodes,
-      edges: allEdges,
-      maxNodes: NODE_LIMIT
+    const networkStatistics = await API.getNetworkStatistics({
+        nodes: allNodes,
+        edges: allEdges
     })
-    console.log('RESULT getSubnetwork', subNetwork)
     onFinish({
-      nodes: subNetwork.nodes,
-      edges: subNetwork.edges,
+      nodes: casesData?.nodes,
+      edges: allEdges,
+      stats: networkStatistics,
       message,
     })
     console.log('All', allNodes, allEdges)

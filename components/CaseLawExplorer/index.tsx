@@ -8,6 +8,7 @@ import {
 } from '@mui/material'
 import { View } from 'colay-ui'
 import { useImmer } from 'colay-ui/hooks/useImmer'
+import { current } from 'immer'
 import * as R from 'colay/ramda'
 import { Graph } from 'perfect-graph/components'
 import { GraphEditor, GraphEditorProps } from 'perfect-graph/components/GraphEditor'
@@ -41,7 +42,8 @@ import { RenderNode } from './RenderNode'
 import {
   calculateNetworkStatisticsRange
 } from './utils'
-import { ControllerContext } from './ControllerContext'
+import { FullGraphContext, ControllerContext, UIStateContext } from './Contexts'
+import ClusterCache from './ClusterCache'
 import { clusterGraph } from './cluster_graph'
 
 export const ACTIONS = {
@@ -119,6 +121,52 @@ const DEFAULT_VISUALIZATION = {
   nodeSize: 'in-degree',
   nodeColor: 'community',
 }
+
+function updateCachedNodePosition(cluster, layout, cy, nodeId, position) {
+  const clusterInfo = ClusterCache.get(cluster)
+  if (clusterInfo && clusterInfo?.locations && clusterInfo.lastLayout) {
+    if (clusterInfo.lastLayout === JSON.stringify(layout)) {
+      clusterInfo.locations[nodeId] = position
+    }
+  }
+}
+
+async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
+  const layoutName = layout.name
+  const { hitArea } = graphEditor.viewport
+  const boundingBox = {
+    x1: hitArea.x,
+    y1: hitArea.y,
+    w: hitArea.width,
+    h: hitArea.height,
+  }
+
+  var layoutResult = null
+  const clusterInfo = ClusterCache.get(cluster)
+  if (clusterInfo && clusterInfo?.locations && clusterInfo.lastLayout) {
+    if (clusterInfo.lastLayout === JSON.stringify(layout)) {
+      layoutResult = clusterInfo.locations
+    }
+  }
+  if (!layoutResult) {
+    layoutResult = await API.calculateLayout({
+            nodes,
+            edges,
+            layoutName,
+            boundingBox
+    })
+    clusterInfo.locations = layoutResult
+    clusterInfo.lastLayout = JSON.stringify(layout)
+  }
+
+  console.log('layout res', layoutResult)
+  Object.keys(layoutResult).forEach((key) => {
+    const { x, y, } = layoutResult[key]
+    const element = cy.$id(key)
+    element.position({ x, y, })
+  })
+}
+
 
 const AppContainer = ({
   changeMUITheme,
@@ -276,15 +324,18 @@ const AppContainer = ({
       />
       )}, [dispatch])
 
+  /* Stores data of the full unclustered graph */
+  const [fullGraph, updateFullGraph] = useImmer({
+    nodes: [],
+    edges: [],
+    networkStatistics: [],
+  })
+
   const [controllerProps, controller] = useController({
     nodes: [],
-    real_nodes: [],
     edges: [],
-    real_edges: [],
-    showing_clusters: false,
     // events: RECORDED_EVENTS,
-    graph_updated: false,
-    display_updated: false,
+    activeCluster: null,
     networkStatistics: {
       local: {},
       global: {},
@@ -365,7 +416,7 @@ const AppContainer = ({
       }
     },
     dataBar: {
-      // isOpen: true,
+      isOpen: true,
       editable: false,
       header: DataBarHeader,
       sort: (a, b) => {
@@ -436,6 +487,10 @@ const AppContainer = ({
             id: selectedItem.id,
             data: JSON.stringify(selectedItem.data)
           }
+          const layout = current(draft.graphConfig!.layout) ?? DEFAULT_LAYOUT;
+          const nodeId = selectedItem.id
+          const position = cy.$id(nodeId).position()
+          updateCachedNodePosition(draft.activeCluster, layout, cy, nodeId, position)
           const call = async () => {
             let elementData = null
             try {
@@ -568,57 +623,47 @@ const AppContainer = ({
             graphEditor.viewport.setZoom(payload.value.expansion, true)
           }
           const layoutName = payload.value.name
+          // Create a copy of nodes with the data part removed, as it is
+          // unexpected by the layout calculator GraphQL query
           const nodes = draft.nodes.map((item) => ({
             id: item.id,
           }))
-          const edges = draft.edges.map((item) => ({
-            id: item.id,
-            source: item.source,
-            target: item.target,
-          }))
+          const edges = current(draft.edges)
           let layout: any
-            if (layoutName) {
-              layout = R.pickBy((val) => R.isNotNil(val))({
-                // @ts-ignore
-                ...Graph.Layouts[layoutName],
-                ...payload.value,
-                runLayout: false,
-              })
-            }
-            draft.graphConfig!.layout = layout
+          if (layoutName) {
+            layout = R.pickBy((val) => R.isNotNil(val))({
+              // @ts-ignore
+              ...Graph.Layouts[layoutName],
+              ...payload.value,
+              runLayout: false,
+            })
+          }
+          draft.graphConfig!.layout = layout
+          const activeCluster = draft.activeCluster
           setTimeout(() => {
-            const { hitArea } = graphEditor.viewport
-            const boundingBox = {
-              x1: hitArea.x,
-              y1: hitArea.y,
-              w: hitArea.width,
-              h: hitArea.height,
-            }
-
-              API.calculateLayout({
-                nodes,
-                edges,
-                layoutName,
-                boundingBox//: JSON.stringify(boundingBox),
-              }).then((res) => {
-                console.log('layout res', res)
-                Object.keys(res).forEach((key) => {
-                  const {
-                    x,
-                    y,
-                  } = res[key]
-                  const element = cy.$id(key)
-                  element.position({
-                    x,
-                    y,
-                  })
-                })
-              }).catch((err) => {
-                  console.log('layout err', err)
-                })
-            }, 200)
+            updateLayout(activeCluster, layout, graphEditor, nodes, edges, cy)
+          })
           return false
         }
+        case "REDRAW_EVENT": {
+          const layout = current(draft.graphConfig!.layout) ?? DEFAULT_LAYOUT;
+          // Create a copy of nodes with the data part removed, as it is
+          // unexpected by the layout calculator GraphQL query
+          const nodes = draft.nodes.map((item) => ({
+            id: item.id,
+          }))
+          const edges = current(draft.edges)
+
+          const activeCluster = draft.activeCluster
+          setTimeout(() => {
+            updateLayout(activeCluster, layout, graphEditor, nodes, edges, cy)
+          })
+          alertRef.current.alert({
+              type: 'success',
+              text: `Display updated!`
+          })
+           return false
+         }
         default:
           break;
       }
@@ -627,75 +672,50 @@ const AppContainer = ({
   })
 
   React.useEffect(() => {
-    setTimeout(() => {
-      controller.update((draft, { graphEditorRef }) => {
-        try {
-          const { hitArea } = graphEditorRef.current.viewport
-          const margin = 500
-          const boundingBox = {
-            x1: hitArea.x + margin,
-            y1: hitArea.y + margin,
-            w: hitArea.width - 2*margin,
-            h: hitArea.height - 2*margin,
-          }
-          const layout = DEFAULT_LAYOUT
-            draft.graphConfig!.layout = {
-              ...layout,
-              animationDuration: 0,
-              boundingBox,
-            }
-        } catch (error) {
-          console.log('error',error)
+    controller.update((draft, { graphEditorRef }) => {
+      try {
+        const { hitArea } = graphEditorRef.current.viewport
+        const margin = 500
+        const boundingBox = {
+          x1: hitArea.x + margin,
+          y1: hitArea.y + margin,
+          w: hitArea.width - 2*margin,
+          h: hitArea.height - 2*margin,
         }
-      })
-    }, 1000)
-}, [])
+        const layout = DEFAULT_LAYOUT
+        draft.graphConfig!.layout = {
+          ...layout,
+          animationDuration: 0,
+          boundingBox,
+        }
+      } catch (error) {
+        console.log('error',error)
+      }
+    })
+  }, [])
 
   React.useEffect(() => {
-    if (!controllerProps.graph_updated || controllerProps.real_nodes.length === 0) {
+    if (fullGraph.nodes.length === 0) {
       return () => {}
     }
-    console.log('There is a new update!!!')
 
-    controller.update((draft) => draft.graph_updated = false)
-
-    const call = async () => {
-      let networkStatistics = await API.getNetworkStatistics({
-        nodes: controllerProps.real_nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
-        edges: controllerProps.real_edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
-      })
-
-      const {nodes, edges} = clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
-      controller.update((draft) => {
-        draft.networkStatistics.global = networkStatistics
-        draft.nodes = nodes
-        draft.edges = edges
-        draft.showing_clusters = true
-        draft.display_updated = true
-      })
-      alertRef.current.alert({
-        type: 'success',
-        text: `Network Statistics Calculated!`
-      })
-    }
-    call()
-  }, [controllerProps.real_nodes, controllerProps.real_edges, controllerProps.graph_updated])
+    ClusterCache.reset()
+    const {nodes, edges} = clusterGraph(fullGraph)
+    controller.update((draft) => {
+      draft.isLoading = false
+      draft.nodes = nodes
+      draft.edges = edges
+      draft.activeCluster = null
+    })
+  }, [fullGraph])
 
   React.useEffect(() => {
-    if (!controllerProps.display_updated) {
+    if (controllerProps.nodes.length == 0) {
       return () => {}
     }
-    console.log('There is a display update!!!')
-
-    controller.update((draft) => draft.display_updated = false)
 
     const networkStatistics = controllerProps.networkStatistics.global
     const call = async () => {
-      const localStatistics = await API.getNetworkStatistics({
-        nodes: controllerProps.nodes.map((node) => ({id: node.id, data: JSON.stringify(node.data)})),
-        edges: controllerProps.edges.map((edge) => ({id: edge.id, source: edge.source, target: edge.target})),
-      })
-
       const {
         nodeSizeRangeMap,
         communityStats,
@@ -706,7 +726,6 @@ const AppContainer = ({
       console.log('communityStats', communityStats,nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
       controller.update((draft) => {
-        draft.networkStatistics.local = localStatistics
         const filterSchema  = draft.settingsBar.forms[2].schema
         const filterFormData  = draft.settingsBar.forms[2].formData
         filterSchema.properties.community = {
@@ -735,25 +754,18 @@ const AppContainer = ({
         const createClusterForm = draft.settingsBar?.createClusterForm!
         createClusterForm.schema.properties.community = filterSchema.properties.community
       })
-      controller.onEvent({
-        type: EVENT.LAYOUT_CHANGED,
-        payload: {
-          value: {...DEFAULT_LAYOUT,}
-        }
-      })
-      alertRef.current.alert({
-        type: 'success',
-        text: `Display updated!`
-      })
+      controller.onEvent({ type: "REDRAW_EVENT" })
     }
     call()
-  }, [controllerProps.nodes, controllerProps.edges, controllerProps.display_updated])
+  }, [controllerProps.activeCluster, controllerProps.nodes, controllerProps.edges])
 
   return (
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
     >
-      <ControllerContext.Provider value={{controllerProps, controller}}>
+      <UIStateContext.Provider value={{state, updateState}}>
+      <FullGraphContext.Provider value={{fullGraph, updateFullGraph}}>
+      <ControllerContext.Provider value={{controller, activeCluster: controllerProps.activeCluster}}>
         <GraphEditor
           {...controllerProps}
           extraData={[
@@ -768,6 +780,7 @@ const AppContainer = ({
               {...configRef.current}
               graphEditorRef={controllerProps.ref}
               controllerProps={controllerProps}
+              fullGraph={fullGraph}
             />
           )}
           renderEdge={(props) => (
@@ -779,6 +792,8 @@ const AppContainer = ({
           {...rest}
         />
       </ControllerContext.Provider>
+      </FullGraphContext.Provider>
+      </UIStateContext.Provider>
       <QueryBuilder
         isOpen={state.queryBuilder.visible}
         query={state.queryBuilder.query}
@@ -814,27 +829,28 @@ const AppContainer = ({
             text: error.message
           })
         }}
-        onFinish={({
-          nodes= [],
-          edges= [],
-          message
-        } = {}) => {
+        onFinish={({ nodes, edges, stats, message }) => {
           PIXI.settings.ROUND_PIXELS = false// true
           // @ts-ignore
           PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.LOW
           PIXI.settings.RESOLUTION = 1// 32// 64// window.devicePixelRatio
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
-          controller.update((draft) => {
-            draft.isLoading = false
-            draft.real_nodes = nodes
-            draft.real_edges = edges
-            draft.graph_updated = true
+
+          updateFullGraph((draft) => {
+            draft.nodes = nodes
+            draft.edges = edges
+            draft.networkStatistics = stats
           })
           if (message) {
             alertRef.current.alert({
               type: 'warning',
               text: message
+            })
+          } else {
+            alertRef.current.alert({
+              type: 'success',
+              text: `Network Statistics Calculated!`
             })
           }
         }}

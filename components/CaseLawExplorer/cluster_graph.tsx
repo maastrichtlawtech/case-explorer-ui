@@ -1,54 +1,54 @@
 import { Button, Typography, Divider } from '@mui/material'
 import React from 'react'
-import { ControllerContext } from './ControllerContext'
+import { ControllerContext, FullGraphContext } from './Contexts'
+import { Node, Edge, NetworkStats, Graph } from './types'
+import ClusterCache from './ClusterCache'
 
-type NodeId = string
-type EdgeId = string
-type Node = {id: NodeId, data: any}
-type Edge = {id: EdgeId, source: NodeId, target: NodeId}
-type NetworkStats = { [key: NodeId]: {parent: number} }
-
-function selectClusters
-( networkStats: NetworkStats
-, nodes: Node[]
-, edges: Edge[]
-, activeClusters: number[]
+export function selectCluster
+( { networkStatistics, nodes, edges } : Graph
+, activeCluster: number
 ) : {nodes: Node[], edges: Edge[]}
 {
-    const clusters = new Set(activeClusters)
+    const cachedResult = ClusterCache.get(activeCluster)
+    if (cachedResult) {
+      return {nodes: cachedResult.nodes, edges: cachedResult.edges}
+    }
+
     const new_nodes = nodes.filter((node) =>
-        clusters.has(networkStats[node.id].parent)
+        networkStatistics[node.id].community == activeCluster
     )
     const new_edges : Edge[] = []
     edges.forEach((edge: Edge) => {
-        const sourceCluster = networkStats[edge.source].parent
-        const targetCluster = networkStats[edge.target].parent
-        if (clusters.has(sourceCluster) && clusters.has(targetCluster)) {
+        const sourceCluster = networkStatistics[edge.source].community
+        const targetCluster = networkStatistics[edge.target].community
+        if (activeCluster == sourceCluster && activeCluster == targetCluster) {
             new_edges.push(edge)
         }
     })
 
-    return { nodes: new_nodes
-           , edges: new_edges
-           }
-}
-
-function memberNodes(networkStats: NetworkStats, real_nodes: Node[], selectedClusterId: number) {
-    return real_nodes.filter(n => networkStats[n.id].parent == selectedClusterId)
+    const result = {
+      nodes: new_nodes,
+      edges: new_edges
+    }
+    ClusterCache.set(activeCluster, result)
+    return result
 }
 
 export function clusterGraph
-( networkStats: NetworkStats
-, nodes: Node[]
-, edges: Edge[]
+( { networkStatistics , nodes , edges } : Graph
 ) : {nodes: Node[], edges: Edge[]}
 {
-    const new_nodes = new Set(nodes.map((node) => networkStats[node.id].parent))
+    const cachedResult = ClusterCache.get(null)
+    if (cachedResult) {
+      return {nodes: cachedResult.nodes, edges: cachedResult.edges}
+    }
+
+    const new_nodes = new Set(nodes.map((node) => networkStatistics[node.id].community))
     const new_edges: Set<string> = new Set()
 
     edges.forEach(({source, target}) => {
-        const sourceCluster = networkStats[source].parent
-        const targetCluster = networkStats[target].parent
+        const sourceCluster = networkStatistics[source].community
+        const targetCluster = networkStatistics[target].community
         if (sourceCluster != targetCluster) {
             if (new_nodes.has(sourceCluster) && new_nodes.has(targetCluster)) {
                 const new_edge = {source: sourceCluster, target: targetCluster}
@@ -62,51 +62,40 @@ export function clusterGraph
         const edge = JSON.parse(str)
         return {...edge, id: "edge" + idx.toString()}
     }
-    return { nodes: Array.from(new_nodes).map(make_node)
-           , edges: Array.from(new_edges).map(make_edge)
-           }
+    const result = {
+      nodes: Array.from(new_nodes).map(make_node),
+      edges: Array.from(new_edges).map(make_edge)
+    }
+    ClusterCache.set(null, result)
+    return result
 }
-
 
 export function GraphClusterButton
 ( { itemId } : {itemId: any})
 {
-    const {controllerProps, controller} = React.useContext(ControllerContext)
+    const { fullGraph } = React.useContext(FullGraphContext)
+    const { controller, activeCluster } = React.useContext(ControllerContext)
+    const showing_clusters = activeCluster === null
 
-    if (controllerProps.showing_clusters && !itemId) return null
+    if (showing_clusters && !itemId) return null
 
-    let members: Node[] = []
-    if (itemId) {
-       members = memberNodes(controllerProps.networkStatistics.global, controllerProps.real_nodes, Number(itemId))
-    }
 
     return (
         <div>
             <Button onClick={() => {
-            const zoomIn = controllerProps.showing_clusters && itemId
-            const networkStatistics = controllerProps.networkStatistics.global
+            const zoomIn = showing_clusters && itemId
             const {nodes, edges} = zoomIn
-                ? selectClusters(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges, [Number(itemId)])
-                : clusterGraph(networkStatistics, controllerProps.real_nodes, controllerProps.real_edges)
+                ? selectCluster(fullGraph, itemId)
+                : clusterGraph(fullGraph)
 
             controller.update((draft: any) => {
                 draft.nodes = nodes
                 draft.edges = edges
-                draft.display_updated = true
-                draft.showing_clusters = !zoomIn
+                draft.activeCluster = zoomIn ? itemId : null
             })
             }} color="primary">
-            {controllerProps.showing_clusters && itemId ? "Zoom In" : "Zoom Out"}
+            {showing_clusters && itemId ? "Zoom In" : "Zoom Out"}
             </Button>
-            {   (itemId && members.length > 0 ) &&
-                <div>
-                    <Divider />
-                    <Typography>{`Nodes Inside this cluster: ${members.length}`}</Typography>
-                    <Divider />
-                    {members.map((n, idx) => { return <div key={idx} style={{fontSize: "small"}}>{n.id}</div>})}
-                    <Divider />
-                </div>
-            }
         </div>
         )
 }
