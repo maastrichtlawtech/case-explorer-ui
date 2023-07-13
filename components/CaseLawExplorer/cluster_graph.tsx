@@ -1,5 +1,6 @@
 import { Button, Typography, Divider } from '@mui/material'
-import React, { RefObject } from 'react'
+import React from 'react'
+import { ControllerContext } from './ControllerContext'
 
 type NodeId = string
 type EdgeId = string
@@ -18,7 +19,7 @@ function selectClusters
     const new_nodes = nodes.filter((node) =>
         clusters.has(networkStats[node.id].parent)
     )
-    const new_edges = new Array()
+    const new_edges : Edge[] = []
     edges.forEach((edge: Edge) => {
         const sourceCluster = networkStats[edge.source].parent
         const targetCluster = networkStats[edge.target].parent
@@ -68,11 +69,9 @@ export function clusterGraph
 
 
 export function GraphClusterButton
-( { controllerRef, itemId } : {controllerRef: RefObject<any>, itemId: any})
+( { itemId } : {itemId: any})
 {
-    if (!controllerRef || !controllerRef.current) return null
-
-    const {controllerProps} = controllerRef.current
+    const {controllerProps, controller} = React.useContext(ControllerContext)
 
     if (controllerProps.showing_clusters && !itemId) return null
 
@@ -84,7 +83,6 @@ export function GraphClusterButton
     return (
         <div>
             <Button onClick={() => {
-            const {controller, controllerProps} = controllerRef.current
             const zoomIn = controllerProps.showing_clusters && itemId
             const networkStatistics = controllerProps.networkStatistics.global
             const {nodes, edges} = zoomIn
@@ -105,7 +103,7 @@ export function GraphClusterButton
                     <Divider />
                     <Typography>{`Nodes Inside this cluster: ${members.length}`}</Typography>
                     <Divider />
-                    {members.map(n => { return <div style={{fontSize: "small"}}>{n.id}</div>})}
+                    {members.map((n, idx) => { return <div key={idx} style={{fontSize: "small"}}>{n.id}</div>})}
                     <Divider />
                 </div>
             }

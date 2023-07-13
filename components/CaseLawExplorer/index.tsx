@@ -41,6 +41,7 @@ import { RenderNode } from './RenderNode'
 import {
   calculateNetworkStatisticsRange
 } from './utils'
+import { ControllerContext } from './ControllerContext'
 import { clusterGraph } from './cluster_graph'
 
 export const ACTIONS = {
@@ -275,7 +276,6 @@ const AppContainer = ({
       />
       )}, [dispatch])
 
-  const controllerRef = React.useRef(null)
   const [controllerProps, controller] = useController({
     nodes: [],
     real_nodes: [],
@@ -367,7 +367,7 @@ const AppContainer = ({
     dataBar: {
       // isOpen: true,
       editable: false,
-      header: DataBarHeader(controllerRef),
+      header: DataBarHeader,
       sort: (a, b) => {
         const prioritizeKeys = ['ecli_opinion', 'cited_by','summary', 'url_publication']
         const aIndex = prioritizeKeys.findIndex((val) => val ===a.key)
@@ -627,10 +627,6 @@ const AppContainer = ({
   })
 
   React.useEffect(() => {
-    controllerRef.current = {controller, controllerProps}
-  }, [controller, controllerProps])
-
-  React.useEffect(() => {
     setTimeout(() => {
       controller.update((draft, { graphEditorRef }) => {
         try {
@@ -757,30 +753,32 @@ const AppContainer = ({
     <View
       style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}
     >
-      <GraphEditor
-        {...controllerProps}
-        extraData={[
-          configRef.current,
-          configRef.current.visualizationRangeMap,
-          controllerProps.netowrkStatistics?.local
-        ]}
-        style={{ width, height }}
-        renderNode={(props) => (
-          <RenderNode
-            {...props}
-            {...configRef.current}
-            graphEditorRef={controllerProps.ref}
-            controllerRef={controllerRef}
-          />
-        )}
-        renderEdge={(props) => (
-          <RenderEdge
-            {...props}
-            graphEditorRef={controllerProps.ref}
-          />
-        )}
-        {...rest}
-      />
+      <ControllerContext.Provider value={{controllerProps, controller}}>
+        <GraphEditor
+          {...controllerProps}
+          extraData={[
+            configRef.current,
+            configRef.current.visualizationRangeMap,
+            controllerProps.netowrkStatistics?.local
+          ]}
+          style={{ width, height }}
+          renderNode={(props) => (
+            <RenderNode
+              {...props}
+              {...configRef.current}
+              graphEditorRef={controllerProps.ref}
+              controllerProps={controllerProps}
+            />
+          )}
+          renderEdge={(props) => (
+            <RenderEdge
+              {...props}
+              graphEditorRef={controllerProps.ref}
+            />
+          )}
+          {...rest}
+        />
+      </ControllerContext.Provider>
       <QueryBuilder
         isOpen={state.queryBuilder.visible}
         query={state.queryBuilder.query}

@@ -1,29 +1,5 @@
-import React from 'react'
-import { Button, Slider, Typography } from '@mui/material'
-
-const SliderUIField = ({ formData, schema, onChange, name }) => {
-  return (
-    <>
-      <Typography id={`${schema.title}-continuous-slider`} gutterBottom>
-        {schema.title ?? name}
-      </Typography>
-      <Slider
-        value={formData ?? [schema.minimum, schema.maximum]}
-        onChange={(e) => {
-          onChange(e.target.value)
-        }}
-        valueLabelDisplay="auto"
-        aria-labelledby={`${schema.title}-continuous-slider`}
-        min={schema.minimum}
-        max={schema.maximum}
-      />
-    </>
-  )
-}
-
 export const getQueryBuilderSchema = () => {
   return {
-    // children: <div></div>,
     schema: {
       type: 'object',
       required: [
@@ -64,15 +40,6 @@ export const getQueryBuilderSchema = () => {
           type: 'string',
           title: 'Articles'
         },
-        // Date: {
-        //   type: 'array',
-        //   title: 'Date',
-        //   items: {
-        //     type: 'number',
-        //   },
-        //   minimum: 1900,
-        //   maximum: 2021,
-        // },
         DateStart:{
           title: "Date start",
           type: 'string',
@@ -134,9 +101,6 @@ export const getQueryBuilderSchema = () => {
       },
     },
     uiSchema: {
-      // Date: {
-      //   'ui:field': SliderUIField,
-      // },
       Domains: {
         'ui:enumDisabled': domainsList.domains
       },
