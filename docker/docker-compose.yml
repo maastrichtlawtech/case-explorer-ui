@@ -1,0 +1,9 @@
+version: '3'
+name: container-case-explorer-ui
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 19006:19006
