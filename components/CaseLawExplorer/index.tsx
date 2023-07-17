@@ -268,61 +268,6 @@ const AppContainer = ({
       isOpen: false,
     }
   })
-  const ActionBarRightWrapped = React.useMemo(() => () => {
-    const [
-      {
-        nodes,
-      },
-    ] = useGraphEditor(
-      ({ nodes }) => ({
-        nodes,
-      }),
-    )
-    return(
-      <ActionBarRight
-        dispatch={async ({ type }) => {
-          switch (type) {
-            case 'help':
-              updateState((draft) => {
-                draft.helpModal.isOpen = true
-              })
-              break;
-            case 'downloadMetaData':{
-              console.log('downloadMetaData')
-              const nodesWithMetaData = await API.batchGetElementData({
-                nodes: nodes.map(({ id }) => ({id})),  // needs to be in the format [{id: String}, {id: String}, ...]
-              })
-              console.log('WithMetaData',nodesWithMetaData)
-              controller.update((draft) =>{
-                const nodeMap = R.indexBy(R.prop('id'), nodesWithMetaData)
-                draft.nodes = nodesWithMetaData.map(({ id, data,...rest }) => {
-                  return {
-                    id,
-                    data: {
-                      ...data,
-                      ...(nodeMap[id].data?? {})
-                    },
-                    ...rest,
-                  }
-                })
-                draft.edges = filterEdges(draft.nodes)(draft.edges)
-              })
-              break;
-            }
-            case 'testAPI':{
-              const testResult = await API.testAuth({
-                ecli: "ECLI:NL:HR:2004:AP0186"
-              })
-              console.log('testAuthResult',testResult)
-              break;
-            }
-
-            default:
-              break;
-          }
-        }}
-      />
-      )}, [dispatch])
 
   /* Stores data of the full unclustered graph */
   const [fullGraph, updateFullGraph] = useImmer({
@@ -434,7 +379,7 @@ const AppContainer = ({
     },
     actionBar: {
       // isOpen: true,
-      right: ActionBarRightWrapped,
+      right: ActionBarRight,
       // autoOpen: true,
       eventRecording: false,
       actions: {
@@ -699,7 +644,6 @@ const AppContainer = ({
       return () => {}
     }
 
-    ClusterCache.reset()
     const {nodes, edges} = clusterGraph(fullGraph)
     controller.update((draft) => {
       draft.isLoading = false
@@ -837,6 +781,7 @@ const AppContainer = ({
           PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
           PIXI.settings.SPRITE_BATCH_SIZE = 4096 * 4
 
+          ClusterCache.reset()
           updateFullGraph((draft) => {
             draft.nodes = nodes
             draft.edges = edges
