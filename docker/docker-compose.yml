@@ -8,8 +8,11 @@ services:
     ports:
       - 19006:19006
     volumes:
-      - ../components:/app/components:rw
-      - ../assets:/app/assets:rw
+      - ../components:/app/components:ro
+      - ../functions:/app/functions:ro
+      - ../src:/app/src:ro
+      - ../graphql:/app/graphql:ro
+      - ../hooks:/app/hooks:ro
     environment:
       - CHOKIDAR_USEPOLLING=true
       - CI=true
