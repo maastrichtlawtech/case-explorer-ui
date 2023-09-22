@@ -1,5 +1,5 @@
 # Use the official Node.js 16 base image
-FROM node:16
+FROM node:18
 
 # Set the working directory in the container
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY ./yarn.lock ./package.json /app/
 RUN yarn global add expo-cli@4.13
 
 # Install project dependencies using yarn
-RUN yarn --frozen-lockfile
+RUN yarn 
 
 # Copy the entire project to the container
 COPY . /app/
@@ -20,4 +20,4 @@ COPY . /app/
 EXPOSE 19006
 
 # Start the web app
-CMD ["expo", "start", "--web"]
+CMD ["npm", "start"]

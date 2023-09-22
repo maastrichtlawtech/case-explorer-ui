@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 name: container-case-explorer-ui
 services:
   app:
@@ -7,3 +7,9 @@ services:
       dockerfile: ./docker/Dockerfile
     ports:
       - 19006:19006
+    volumes:
+      - ../components:/app/components:rw
+      - ../assets:/app/assets:rw
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CI=true
