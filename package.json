@@ -1,7 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "SET NODE_OPTIONS=--openssl-legacy-provider  && npx expo-cli@4.13 start --web || export SET NODE_OPTIONS=--openssl-legacy-provider && npx expo-cli@4.13 start --web || set SET NODE_OPTIONS=--openssl-legacy-provider  && npx expo-cli@4.13 start --web ",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "EXPO_BETA=1 expo start --web",

@@ -1,11 +1,26 @@
-const createExpoWebpackConfigAsync = require('@expo/webpack-config');
+const createExpoWebpackConfigAsync = require("@expo/webpack-config");
 
 module.exports = async function (env, argv) {
-  const config = await createExpoWebpackConfigAsync({
-    ...env,
-    babel: {
-        dangerouslyAddModulePathsToTranspile: ['@rjsf/material-ui']
-    }
-}, argv);
+  const config = await createExpoWebpackConfigAsync(
+    {
+      ...env,
+      resolve: {
+        extensions: ["*", ".mjs", ".js", ".json"],
+      },
+      module: {
+        rules: [
+          {
+            test: /\.mjs$/,
+            include: /node_modules/,
+            type: "javascript/auto",
+          },
+        ],
+      },
+      babel: {
+        dangerouslyAddModulePathsToTranspile: ["@rjsf/material-ui"],
+      },
+    },
+    argv
+  );
   return config;
 };
