@@ -2,7 +2,7 @@ import { Alert, AlertTitle, Slide, Snackbar } from "@mui/material";
 import { useForwardRef } from "colay-ui";
 import * as R from "colay/ramda";
 import React from "react";
-
+import { createPortal } from "react-dom";
 export type AlertContentProps = {};
 
 export const AlertContent = React.forwardRef(
@@ -36,7 +36,7 @@ export const AlertContent = React.forwardRef(
       ),
       []
     );
-    return (
+    return createPortal(
       <Snackbar
         key={messageInfo?.key}
         anchorOrigin={{
@@ -48,13 +48,18 @@ export const AlertContent = React.forwardRef(
         TransitionComponent={TransitionUp}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity={messageInfo?.type ?? "error"}>
+        <Alert
+          onClose={handleClose}
+          severity={messageInfo?.type ?? "error"}
+          style={{ whiteSpace: "pre-wrap" }}
+        >
           <AlertTitle>
             {messageInfo ? R.upperFirst(messageInfo.type) : ""}
           </AlertTitle>
           {messageInfo?.text}
         </Alert>
-      </Snackbar>
+      </Snackbar>,
+      document.querySelector("body") ?? new Element()
     );
   }
 );

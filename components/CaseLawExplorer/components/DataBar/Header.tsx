@@ -55,9 +55,19 @@ function ClusterInfo(props: {
 
 export const DataBarHeader = (props) => {
   const [user] = useUser();
-  const [{ nodes, edges, targetPath, selectedItemId }] = useGraphEditor(
-    (editor) => {
-      const { selectedElement, selectedItem, nodes, edges } = editor;
+  const [{ nodes, edges, targetPath, selectedItemId, allNodes, allEdges }] =
+    useGraphEditor((editor) => {
+      const {
+        selectedElement,
+        selectedItem,
+        nodes,
+        edges,
+        localDataRef: {
+          current: {
+            props: { allNodes, allEdges },
+          },
+        },
+      } = editor;
       const targetPath = selectedElement?.isNode() ? "nodes" : "edges";
       const selectedItemId = selectedItem?.id!;
       return {
@@ -65,9 +75,10 @@ export const DataBarHeader = (props) => {
         edges,
         targetPath,
         selectedItemId,
+        allNodes,
+        allEdges,
       };
-    }
-  );
+    });
   const { fullGraph } = React.useContext(FullGraphContext);
   const { activeCluster } = React.useContext(ControllerContext);
   return (
@@ -86,8 +97,19 @@ export const DataBarHeader = (props) => {
           padding: 2,
         }}
       >
-        <Typography>{`Node Count: ${nodes.length}`}</Typography>
-        <Typography>{`Edge Count: ${edges.length}`}</Typography>
+        <Typography>{`Visible Nodes: ${nodes.length}`}</Typography>
+        <Typography>{`Visible Edges: ${edges.length}`}</Typography>
+      </View>
+      <Divider />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          padding: 2,
+        }}
+      >
+        <Typography>{`Retrieved Nodes: ${allNodes?.length}`}</Typography>
+        <Typography>{`Retrieved Edges: ${allEdges?.length}`}</Typography>
       </View>
       <Divider />
       <GraphClusterButton itemId={selectedItemId} />
