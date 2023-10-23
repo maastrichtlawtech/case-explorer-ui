@@ -11,3 +11,4 @@
     * [Tools](/userguide/?id=tools)
     * [Videos](/userguide/?id=videos)
     * [Examples](/userguide/?id=examples)
+    * [Resources](/userguide/?id=resources)

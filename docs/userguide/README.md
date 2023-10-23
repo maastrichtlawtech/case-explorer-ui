@@ -2,7 +2,9 @@
 
 ## Case Law Explorer
 
+
 The [Case Law Explorer software](https://dev.d11iy22xsphp3a.amplifyapp.com/) has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students).
+
 
 A handbook on legal network analysis is under development and will be released soon.
 
@@ -126,17 +128,17 @@ Under **_Preferences_**, color schemes may be adjusted. Here, it is also possibl
 The metadata are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until limit reached). The network statistics are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until the limit is reached). The computation might take longer t)han the first display of network. A success message notifies the user about the completion of the network.
 
 ## Videos
-
-### In Dutch
+Instructional videos on legal network analysis can be found [here](https://maastrichtlawtech.github.io/LegalNetworkAnalysis/#/?id=videos). Videos that specifically apply to Case Law Explorer are:
 
 ### In Dutch
 
 - [What is Case Law Explorer? (Wat is Case Law Explorer?)](https://zuyd.mediasite.com/Mediasite/Play/db6594fc00df4412a44f53b9f45c4bd91d) (in Dutch)
-  .
+  
 
 ### In English
 
 Instruction videos will follow.
+
 
 ## Examples
 
@@ -155,3 +157,6 @@ More information will be added once the case law is added to Case Law Explorer.
 ### CJEU Case Law
 
 More information will be added once the case law is added to Case Law Explorer.
+
+## Resources
+Everything you need to know about LNA can be found on the [Legal Network Analysis website](https://maastrichtlawtech.github.io/LegalNetworkAnalysis/#/).

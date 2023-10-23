@@ -57,6 +57,7 @@ export const DataBarHeader = (props) => {
   const [user] = useUser();
   const [{ nodes, edges, targetPath, selectedItemId, allNodes, allEdges }] =
     useGraphEditor((editor) => {
+
       const {
         selectedElement,
         selectedItem,
@@ -81,6 +82,7 @@ export const DataBarHeader = (props) => {
     });
   const { fullGraph } = React.useContext(FullGraphContext);
   const { activeCluster } = React.useContext(ControllerContext);
+
   return (
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -99,6 +101,7 @@ export const DataBarHeader = (props) => {
       >
         <Typography>{`Visible Nodes: ${nodes.length}`}</Typography>
         <Typography>{`Visible Edges: ${edges.length}`}</Typography>
+
       </View>
       <Divider />
       <View

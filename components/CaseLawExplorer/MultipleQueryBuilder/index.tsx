@@ -19,6 +19,7 @@ import { QueryTabs } from "./QueryTabs";
 import { useImmer } from "colay-ui/hooks/useImmer";
 import * as R from "colay/ramda";
 import { AlertContent } from "../components/AlertContent";
+
 export type QueryBuilderProps = {
   query: any;
   onStart: () => void;
@@ -43,8 +44,17 @@ const transformData = (data) => {
 const { schema, uiSchema } = getQueryBuilderSchema();
 
 export const QueryBuilder = (props: QueryBuilderProps) => {
-  const { isOpen, onStart, onError, onFinish, query, onClose } = props;
-  const alertRef = React.useRef(null);
+
+  const {
+    isOpen,
+    onStart,
+    onError,
+    onFinish,
+    query,
+    onClose,
+    onNetworkStatisticsCalculated,
+  } = props
+  const alertRef= React.useRef(null)
   const createFormChangeHandler = (tabId) => (e) => {
     updateState((draft) => {
       const tab = draft.tabs.find((item) => item.id === tabId);
@@ -211,6 +221,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
       if (casesData.nodes.length == 0) {
         onError(new Error("No cases returned"));
         return;
+
       }
       const allNodes = casesData?.nodes.map((node) => ({
         id: node.id,
@@ -238,6 +249,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
   );
   return (
     <>
+
       <Modal
         open={isOpen}
         // onClose={onClose}
@@ -256,6 +268,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
             // },
           }
         }
+
       >
         <Paper
           style={{
@@ -285,6 +298,7 @@ export const QueryBuilder = (props: QueryBuilderProps) => {
               display: "flex",
               flexDirection: "column",
             }}
+
           >
             <QueryTabs
               tabs={state.tabs}
@@ -313,3 +327,4 @@ function highlightInputError(elem_id) {
     elem.setAttribute("style", "");
   }, 3500);
 }
+

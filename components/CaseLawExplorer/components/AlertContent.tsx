@@ -5,6 +5,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 export type AlertContentProps = {};
 
+
 export const AlertContent = React.forwardRef(
   (props: AlertContentProps, forwardedRef) => {
     const [open, setOpen] = React.useState(false);
@@ -23,6 +24,7 @@ export const AlertContent = React.forwardRef(
       //   return;
       // }
       setOpen(false);
+
     };
     const TransitionUp = React.useCallback(
       (props) => (
@@ -36,6 +38,7 @@ export const AlertContent = React.forwardRef(
       ),
       []
     );
+
     return createPortal(
       <Snackbar
         key={messageInfo?.key}
@@ -50,16 +53,20 @@ export const AlertContent = React.forwardRef(
       >
         <Alert
           onClose={handleClose}
+
           severity={messageInfo?.type ?? "error"}
           style={{ whiteSpace: "pre-wrap" }}
+
         >
           <AlertTitle>
             {messageInfo ? R.upperFirst(messageInfo.type) : ""}
           </AlertTitle>
           {messageInfo?.text}
         </Alert>
+
       </Snackbar>,
       document.querySelector("body") ?? new Element()
     );
   }
 );
+

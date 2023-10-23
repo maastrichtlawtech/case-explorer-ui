@@ -111,7 +111,7 @@ dist
 
 .expo
 
-yarn.lock
+# yarn.lock
 package-lock.json
 
 .backend

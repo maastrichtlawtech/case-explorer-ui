@@ -654,6 +654,7 @@ const AppContainer = ({ changeMUITheme, dispatch, width, height, ...rest }) => {
         });
       console.log("communityStats", communityStats, nodeSizeRangeMap);
       configRef.current.visualizationRangeMap = nodeSizeRangeMap;
+
       controller.update((draft) => {
         const filterSchema = draft.settingsBar.forms[2].schema;
         const filterFormData = draft.settingsBar.forms[2].formData;

@@ -1,4 +1,6 @@
+
 version: "3"
+
 name: container-case-explorer-ui
 services:
   app:
@@ -16,3 +18,4 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
       - CI=true
+
