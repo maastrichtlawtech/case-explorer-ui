@@ -1,11 +1,17 @@
-import { AuthState,onAuthUIStateChange,  } from '@aws-amplify/ui-components';
+import { AuthState, onAuthUIStateChange,  } from '@aws-amplify/ui-components';
+import { CognitoUser } from '@aws-amplify/auth';
 import { Button, CircularProgress } from "@mui/material";
 import Amplify, { Auth,  Hub,  }  from "aws-amplify";
 import React from 'react';
+// @ts-ignore
 import cytoscape from 'cytoscape'
+// @ts-ignore
 import euler from 'cytoscape-euler'
+// @ts-ignore
 import cola from 'cytoscape-cola'
+// @ts-ignore
 import dagre from 'cytoscape-dagre'
+// @ts-ignore
 import spread from 'cytoscape-spread'
 import GraphEditor, {
   ACTIONS
@@ -22,10 +28,24 @@ cytoscape.use(dagre)
 cytoscape.use(euler)
 cytoscape.use(cola)
 
+export interface UserAttributes {
+    sub : string;
+    email : string;
+    email_verified : boolean;
+    'custom:isOldUser' : "yes" | null;
+}
 
-function getUser() {
+// 2022-11-10
+// The aws-auth library is exporting incorrect type signatures for CognitoUser
+// (missing an attributes member), leading to type errors. Manually extend it
+// here and use the extended type to eliminate the errors until aws-auth is
+// fixed.
+interface CognitoUserExt extends CognitoUser {
+    attributes: UserAttributes;
+}
+
+function getUser() : Promise<CognitoUserExt> {
   return Auth.currentAuthenticatedUser()
-    .then(userData => userData)
     .catch(() => console.log('Not signed in'));
 }
 
@@ -42,14 +62,14 @@ const App = () => {
       case ACTIONS.TEST_API:
         runQuery()
         break;
-    
+
       default:
         break;
     }
   }, [])
   const [containerRef, { width, height, initialized }] = useMeasure()
   return (
-    <View 
+    <View
       ref={containerRef}
       style={{
         width: '100%', height: '100%'
@@ -70,7 +90,7 @@ const App = () => {
 const AppContainer = () => {
   const [authState, setAuthState] = React.useState();
   const [state, setState] = React.useState({
-    user: null,
+    user: null as CognitoUserExt | null,
     isLoading: true
   })
   const [termsOfServiceUser, setTermsOfServiceUser] = React.useState(null)
@@ -90,7 +110,7 @@ const AppContainer = () => {
           });
           break;
         }
-          
+
         case 'signOut':
           setState({
             ...state,
@@ -128,23 +148,21 @@ const AppContainer = () => {
   return  <>
   {
     state.user ? (
-        state.user?.attributes?.['custom:isOldUser'] !== 'yes'
+        state.user.attributes['custom:isOldUser'] !== 'yes'
         ? (
-          <TermsOfService 
+          <TermsOfService
           user={state.user}
           onAgree={async () => {
             await Auth.updateUserAttributes(state.user, {
               'custom:isOldUser': 'yes'
-            })
+            });
+            // Due to being in an async, the type checker complains that user
+            // might be null, despite the null check above. Using state.user!
+            // to silence this warning.
+            state.user!.attributes['custom:isOldUser'] = 'yes';
             setState({
               ...state,
-              user: {
-                ...state.user,
-                attributes: {
-                  ...(state.user?.attributes ?? {}),
-                  'custom:isOldUser': 'yes'
-                }
-              },
+              user: state.user
             })
           }}
           onDisagree={() => {
@@ -158,7 +176,7 @@ const AppContainer = () => {
         onSignin={async () => {
           await Auth.federatedSignIn(
             // undefined,
-            // { 
+            // {
             //   expires_at: new Date().getTime() + 1000 * 60 * 60 * 12 * 3 ,
 
             // }
@@ -196,80 +214,8 @@ const AppContainer = () => {
       //   />
   )
   }
-  
+
   </>
 }
 
-// const AppContainer = () => {
-//   React.useEffect(() => {
-//     const index = detectBrowser() === 'Firefox' ? 1 : 0
-//     setTimeout(()=>{
-//       const call = async ()=> {
-//         try {
-//           const authUser = await Auth.currentAuthenticatedUser()
-//           console.log('auth', authUser)
-//         } catch (error) {
-//           console.log( 'er', error)  
-//           try {
-//             const el1 = document.getElementsByTagName('amplify-authenticator')[0]
-//             .shadowRoot?.children
-//             const el2 = [...el1].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-sign-in')[0]
-//             .shadowRoot?.children
-//             const el3 = [...el2].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-federated-buttons')[0]
-//             .shadowRoot?.children
-//             const el4 = [...el3].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('amplify-oauth-button')[0]
-//             .shadowRoot?.children
-//             const button = [...el4].filter(el => el.tagName !== 'STYLE')[0].getElementsByTagName('button')[0]
-//             button.click()
-//             //   const button = document.getElementsByTagName('amplify-authenticator')[0]
-//             // .shadowRoot?.lastChild.getElementsByTagName('amplify-sign-in')[0]
-//             // .shadowRoot?.lastChild.getElementsByTagName('amplify-federated-buttons')[0]
-//             // ?.shadowRoot//?.lastChild//.getElementsByTagName('amplify-oauth-button')[0]
-//             // // .shadowRoot?.lastChild.getElementsByTagName('button')[0]
-//             // // .click()
-//           } catch (error) {
-            
-//           }
-//         }
-        
-//       }
-//       call()
-//     }, 500 )
-//   }, [])
-//   return (
-//     <AppContent />
-//   )
-// }
-
-export default AppContainer // App
-// export default () => {
-//   const xStateRef = React.useRef({
-//     nodes: [{ name: '2' }],
-//     edges: [{ source: '1', target: '2' }, { source: '2', target: '3' }],
-//   })
-//   const [xstate, updateXstate] = useImmer(xStateRef.current)
-//   console.log('xstate', xstate.nodes === xStateRef.current.nodes)
-//   React.useEffect(() => {
-//     updateXstate(draft => {
-//       // draft.nodes
-//       draft.nodes.push({ name: '3' })
-//     })
-//   }, [])
-//   return <View></View>
-// }
-
-function detectBrowser() { 
-  if((navigator.userAgent.indexOf("Opera") || navigator.userAgent.indexOf('OPR')) != -1 ) {
-      return 'Opera';
-  } else if(navigator.userAgent.indexOf("Chrome") != -1 ) {
-      return 'Chrome';
-  } else if(navigator.userAgent.indexOf("Safari") != -1) {
-      return 'Safari';
-  } else if(navigator.userAgent.indexOf("Firefox") != -1 ){
-      return 'Firefox';
-  } else if((navigator.userAgent.indexOf("MSIE") != -1 ) || (!!document.documentMode == true )) {
-      return 'IE';//crap
-  } else {
-      return 'Unknown';
-  }
-} 
+export default AppContainer

@@ -1,3 +1,14 @@
 {
-  "lambdaLayers": []
+  "lambdaLayers": [
+    {
+      "type": "ExternalLayer",
+      "arn": "arn:aws:lambda:eu-central-1:336392948345:layer:AWSSDKPandas-Python38:3"
+    }
+  ],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "region",
+      "environmentVariableName": "REGION"
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.3\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -14,6 +14,13 @@
       "Type": "String"
     },
     "s3Key": {
+      "Type": "String"
+    },
+    "functioncaseexploreruiutilsArn": {
+      "Type": "String",
+      "Default": "functioncaseexploreruiutilsArn"
+    },
+    "region": {
       "Type": "String"
     }
   },
@@ -68,7 +75,7 @@
               "Ref": "env"
             },
             "REGION": {
-              "Ref": "AWS::Region"
+              "Ref": "region"
             }
           }
         },
@@ -79,9 +86,10 @@
           ]
         },
         "Runtime": "python3.8",
-        "Layers": [],
-        "Timeout": 30,
-        "MemorySize": "128"
+        "Layers": [
+          "arn:aws:lambda:eu-central-1:336392948345:layer:AWSSDKPandas-Python38:3"
+        ],
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -90,12 +98,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "caseexploreruiLambdaRole7443ea91",
+            "caseexploreruiLambdaRole7bb756f4",
             {
               "Fn::Join": [
                 "",
                 [
-                  "caseexploreruiLambdaRole7443ea91",
+                  "caseexploreruiLambdaRole7bb756f4",
                   "-",
                   {
                     "Ref": "env"
@@ -189,6 +197,14 @@
     "LambdaExecutionRole": {
       "Value": {
         "Ref": "LambdaExecutionRole"
+      }
+    },
+    "LambdaExecutionRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaExecutionRole",
+          "Arn"
+        ]
       }
     }
   }

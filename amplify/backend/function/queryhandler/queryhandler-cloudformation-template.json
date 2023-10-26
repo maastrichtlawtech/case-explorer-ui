@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Lambda Function resource stack creation using Amplify CLI",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -16,29 +16,9 @@
     "s3Key": {
       "Type": "String"
     },
-    "functioncaseexploreruidataaccesslayerArn": {
-      "Type": "String",
-      "Default": "functioncaseexploreruidataaccesslayerArn"
-    },
-    "functioncaseexploreruiglobalsettingslayerArn": {
-      "Type": "String",
-      "Default": "functioncaseexploreruiglobalsettingslayerArn"
-    },
     "apicaseexploreruiGraphQLAPIIdOutput": {
       "Type": "String",
       "Default": "apicaseexploreruiGraphQLAPIIdOutput"
-    },
-    "functioncaseexploreruidynamodbaccessArn": {
-      "Type": "String",
-      "Default": "functioncaseexploreruidynamodbaccessArn"
-    },
-    "functioncaseexploreruiopensearchaccessArn": {
-      "Type": "String",
-      "Default": "functioncaseexploreruiopensearchaccessArn"
-    },
-    "functioncaseexploreruiutilsArn": {
-      "Type": "String",
-      "Default": "functioncaseexploreruiutilsArn"
     },
     "ddbTableName": {
       "Type": "String"
@@ -151,8 +131,7 @@
         },
         "Runtime": "python3.8",
         "Layers": [],
-        "Timeout": 30,
-        "MemorySize": "512"
+        "Timeout": 25
       }
     },
     "LambdaExecutionRole": {
@@ -161,12 +140,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "caseexploreruiLambdaRolef819271e",
+            "caseexploreruiLambdaRole88ee5d63",
             {
               "Fn::Join": [
                 "",
                 [
-                  "caseexploreruiLambdaRolef819271e",
+                  "caseexploreruiLambdaRole88ee5d63",
                   "-",
                   {
                     "Ref": "env"
@@ -312,31 +291,31 @@
         }
       }
     },
-    "ElasticsearchAccessPolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
+    "CustomLambdaExecutionPolicy": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
-        "PolicyName": "elasticsearch-access-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
+        "PolicyName": "custom-lambda-execution-policy",
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
             {
+              "Effect": "Allow",
               "Action": [
                 "es:*"
               ],
-              "Effect": "Allow",
-              "Resource": "*"
+              "Resource": [
+                "*"
+              ]
             }
           ]
-        }
-      }
+        },
+        "Roles": [
+          {
+            "Ref": "LambdaExecutionRole"
+          }
+        ]
+      },
+      "DependsOn": "LambdaExecutionRole"
     }
   },
   "Outputs": {
@@ -361,6 +340,14 @@
     "LambdaExecutionRole": {
       "Value": {
         "Ref": "LambdaExecutionRole"
+      }
+    },
+    "LambdaExecutionRoleArn": {
+      "Value": {
+        "Fn::GetAtt": [
+          "LambdaExecutionRole",
+          "Arn"
+        ]
       }
     }
   }

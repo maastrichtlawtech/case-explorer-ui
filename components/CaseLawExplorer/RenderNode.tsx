@@ -28,6 +28,8 @@ export const RenderNode = (props: RenderNodeProps) => {
     label,
    graphRef ,
    graphEditorRef,
+   controllerProps,
+   fullGraph,
    config,
  } = props
  
@@ -105,7 +107,15 @@ export const RenderNode = (props: RenderNodeProps) => {
         )
     )
   )
-  const sizePerc = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
+
+  let sizePerc = calculateNodeSize(item, graphEditorRef,visualizationRangeMap, visualization.nodeSize, )
+
+  if (controllerProps.activeCluster === null) {
+    let sum = fullGraph.nodes.filter(n => fullGraph.networkStatistics[n.id].community == item.id).length
+    sizePerc += sum/controllerProps.nodes.length
+    text = `cluster-${item.id}`
+  }
+
   const calcWidth = width + (width * sizePerc * SIZE_MULTIPLIER)
   const calcHeight = height + (height * sizePerc * SIZE_MULTIPLIER)
   const calcRadius = radius + (radius * sizePerc * SIZE_MULTIPLIER)

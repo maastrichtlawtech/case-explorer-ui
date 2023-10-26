@@ -12,6 +12,7 @@ export const onCreateCaselaw = /* GraphQL */ `
       instance_li
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -25,6 +26,7 @@ export const onUpdateCaselaw = /* GraphQL */ `
       instance_li
       createdAt
       updatedAt
+      __typename
     }
   }
 `;
@@ -38,6 +40,7 @@ export const onDeleteCaselaw = /* GraphQL */ `
       instance_li
       createdAt
       updatedAt
+      __typename
     }
   }
 `;

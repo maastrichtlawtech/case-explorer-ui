@@ -1,123 +1,47 @@
 {
   "api": {
     "caseexplorerui": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ],
       "output": {
         "authConfig": {
+          "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authcaseexploreruiauth"
+              "userPoolId": "authcaseexploreruib94ade50"
             }
-          },
-          "additionalAuthenticationProviders": [
-            {
-              "authenticationType": "AWS_IAM"
-            },
-            {
-              "authenticationType": "OPENID_CONNECT",
-              "openIDConnectConfig": {
-                "name": "SURFconext",
-                "issuerUrl": "https://connect.test.surfconext.nl/",
-                "clientId": "dev.d11iy22xsphp3a.amplifyapp.com",
-                "authTTL": "100",
-                "iatTTL": "100"
-              }
-            }
-          ]
+          }
         }
-      }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
     }
   },
   "auth": {
-    "caseexploreruiauth": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
+    "caseexploreruib94ade50": {
+      "customAuth": false,
       "dependsOn": [],
-      "customAuth": false
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "serviceType": "imported"
     }
   },
-  "hosting": {},
   "function": {
-    "datafetcher": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
-    },
-    "queryhandler": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
-    },
-    "test": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
-    },
-    "networkstatistics": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": []
-    },
     "batchdatafetcher": {
       "build": true,
+      "dependsOn": [],
       "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "caseexplorerui",
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ]
-        }
-      ]
+      "service": "Lambda"
     },
-    "caseexploreruidynamodbaccess": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "caseexploreruiopensearchaccess": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "caseexploreruiutils": {
-      "providerPlugin": "awscloudformation",
-      "service": "LambdaLayer",
-      "build": true
-    },
-    "subnetwork": {
+    "datafetcher": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -126,7 +50,332 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "queryhandler": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "caseexplorerui"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "subnetwork": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
-  "storage": {}
+  "parameters": {
+    "AMPLIFY_auth_caseexploreruib94ade50_allowUnauthenticatedIdentities": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_authRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_authRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_identityPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_identityPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_nativeClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_unauthRoleArn": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_unauthRoleName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_userPoolId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_userPoolName": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_auth_caseexploreruib94ade50_webClientId": {
+      "usedBy": [
+        {
+          "category": "auth",
+          "resourceName": "caseexploreruib94ade50"
+        }
+      ]
+    },
+    "AMPLIFY_function_batchdatafetcher_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "batchdatafetcher"
+        }
+      ]
+    },
+    "AMPLIFY_function_batchdatafetcher_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "batchdatafetcher"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruidynamodbaccess_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruidynamodbaccess"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruidynamodbaccess_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruidynamodbaccess"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruiopensearchaccess_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiopensearchaccess"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruiopensearchaccess_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiopensearchaccess"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruiutils_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiutils"
+        }
+      ]
+    },
+    "AMPLIFY_function_caseexploreruiutils_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "caseexploreruiutils"
+        }
+      ]
+    },
+    "AMPLIFY_function_datafetcher_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "datafetcher"
+        }
+      ]
+    },
+    "AMPLIFY_function_datafetcher_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "datafetcher"
+        }
+      ]
+    },
+    "AMPLIFY_function_layoutcalculator_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "layoutcalculator"
+        }
+      ]
+    },
+    "AMPLIFY_function_layoutcalculator_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "layoutcalculator"
+        }
+      ]
+    },
+    "AMPLIFY_function_networkstatistics_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "networkstatistics"
+        }
+      ]
+    },
+    "AMPLIFY_function_networkstatistics_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "networkstatistics"
+        }
+      ]
+    },
+    "AMPLIFY_function_queryhandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "queryhandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_queryhandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "queryhandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_subnetwork_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "subnetwork"
+        }
+      ]
+    },
+    "AMPLIFY_function_subnetwork_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "subnetwork"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_arn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_partitionKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_partitionKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_region": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_sortKeyName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_sortKeyType": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_streamArn": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    },
+    "AMPLIFY_storage_Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev_tableName": {
+      "usedBy": [
+        {
+          "category": "storage",
+          "resourceName": "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "Caselawavqb7mqbcfgurbeqbfsmuwxjqqdev": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "DynamoDB",
+      "serviceType": "imported"
+    }
+  }
 }
