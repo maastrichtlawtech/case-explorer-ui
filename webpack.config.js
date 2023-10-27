@@ -10,6 +10,7 @@ module.exports = async function (env, argv) {
       watchOptions: {
         ignored: /node_modules/,
       },
+      watch: false,
       module: {
         rules: [
           {
