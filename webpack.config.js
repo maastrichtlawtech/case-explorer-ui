@@ -7,6 +7,9 @@ module.exports = async function (env, argv) {
       resolve: {
         extensions: ["*", ".mjs", ".js", ".json"],
       },
+      watchOptions: {
+        ignored: /node_modules/,
+      },
       module: {
         rules: [
           {
