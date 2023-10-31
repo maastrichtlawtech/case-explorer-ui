@@ -16,6 +16,9 @@ module.exports = async function (env, argv) {
           },
         ],
       },
+      watchOptions: {
+        ignored: '**/node_modules',
+      },
       babel: {
         dangerouslyAddModulePathsToTranspile: ["@rjsf/material-ui"],
       },
