@@ -1,17 +1,6 @@
 [
   {
-    "Action": [
-      "dynamodb:Get*",
-      "dynamodb:BatchGetItem",
-      "dynamodb:List*",
-      "dynamodb:Describe*",
-      "dynamodb:Scan",
-      "dynamodb:Query"
-    ],
-    "Resource": [
-      "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev",
-      "arn:aws:dynamodb:eu-central-1:275192370238:table/Caselaw-avqb7mqbcfgurbeqbfsmuwxjqq-dev/index/*"
-    ],
-    "Effect": "Allow"
+    "Action": [],
+    "Resource": []
   }
 ]
