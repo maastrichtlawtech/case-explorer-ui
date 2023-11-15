@@ -86,12 +86,24 @@ export const getQueryBuilderSchema = () => {
     },
     uiSchema: {
       Domains: {
+        'ui:widget': 'checkboxes',
+        'ui:options': {
+          inline: true,
+        },
         'ui:enumDisabled': domainsList.domains
       },
       Instances: {
+        'ui:widget': 'checkboxes',
+        'ui:options': {
+          inline: true,
+        },
         'ui:enumDisabled': instancesList.instances
       },
       DataSources: {
+        'ui:widget': 'checkboxes',
+        'ui:options': {
+          inline: true,
+        },
         'ui:enumDisabled': ['ECHR', 'Eurlex']
       }
     }
