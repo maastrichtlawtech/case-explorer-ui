@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, Slider, Typography } from '@mui/material'
+import {Button, Slider, Typography} from '@mui/material'
 
-const SliderUIField = ({ formData, schema, onChange, name }) => {
+const SliderUIField = ({formData, schema, onChange, name}) => {
   return (
     <>
       <Typography id={`${schema.title}-continuous-slider`} gutterBottom>
@@ -9,7 +9,7 @@ const SliderUIField = ({ formData, schema, onChange, name }) => {
       </Typography>
       <Slider
         value={formData ?? [schema.minimum, schema.maximum]}
-        onChange={(e) => {
+        onChange={e => {
           onChange(e.target.value)
         }}
         valueLabelDisplay="auto"
@@ -41,82 +41,80 @@ export const getFilterSchema = () => {
           items: {
             type: 'number',
             minimum: 1900,
-            maximum: 2021,
-          },
+            maximum: 2021
+          }
         },
         degree: {
           type: 'array',
           items: {
             type: 'number',
             minimum: 0,
-            maximum: 100,
-          },
+            maximum: 100
+          }
         },
         indegree: {
           type: 'array',
           items: {
             type: 'number',
             minimum: 0,
-            maximum: 100,
-          },
+            maximum: 100
+          }
         },
         outdegree: {
           type: 'array',
           items: {
             type: 'number',
             minimum: 0,
-            maximum: 100,
-          },
+            maximum: 100
+          }
         },
         isResult: {
           type: 'boolean',
-          title: 'Query Input Only',
-        },
-      },
+          title: 'Query Input Only'
+        }
+      }
     },
     uiSchema: {
       // 'year': {
       //   'ui:field': SliderUIField,
       // },
       year: {
-        "ui:options": {
-          "addable": false,
-          "orderable": false,
-          "removable": false
+        'ui:options': {
+          addable: false,
+          orderable: false,
+          removable: false
         }
       },
-      'degree': {
-        "ui:options": {
-          "addable": false,
-          "orderable": false,
-          "removable": false
-        }
-        // 'ui:field': SliderUIField,
-      },
-      'indegree': {
-        "ui:options": {
-          "addable": false,
-          "orderable": false,
-          "removable": false
+      degree: {
+        'ui:options': {
+          addable: false,
+          orderable: false,
+          removable: false
         }
         // 'ui:field': SliderUIField,
       },
-      'outdegree': {
-        "ui:options": {
-          "addable": false,
-          "orderable": false,
-          "removable": false
+      indegree: {
+        'ui:options': {
+          addable: false,
+          orderable: false,
+          removable: false
         }
         // 'ui:field': SliderUIField,
       },
+      outdegree: {
+        'ui:options': {
+          addable: false,
+          orderable: false,
+          removable: false
+        }
+        // 'ui:field': SliderUIField,
+      }
     }
   }
 }
 
-export const getFetchSchema = (props: { onPopupPress: () => void }) => {
-  const {
-    onPopupPress
-  } = props
+export const getFetchSchema = (props: {onPopupPress: () => void}) => {
+  const {onPopupPress} = props
   return {
     children: <div></div>,
     schema: {
@@ -126,13 +124,13 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
       properties: {
         popup: {
           title: 'Build Query',
-          type: 'boolean',
-        },
-      },
+          type: 'boolean'
+        }
+      }
     },
     uiSchema: {
-      'Date': {
-        'ui:field': SliderUIField,
+      Date: {
+        'ui:field': SliderUIField
       },
       // 'degreesSources': {
       //   'ui:field': SliderUIField,
@@ -146,13 +144,11 @@ export const getFetchSchema = (props: { onPopupPress: () => void }) => {
       // 'liPermission':{
       //   'ui:widget': 'select'
       // },
-      'popup': {
-        'ui:field': ({ formData, schema, onChange }) => {
-          return (
-            <Button onClick={onPopupPress}>Open Query Builder</Button>
-          )
-        },
-      },
+      popup: {
+        'ui:field': ({formData, schema, onChange}) => {
+          return <Button onClick={onPopupPress}>Open Query Builder</Button>
+        }
+      }
     }
   }
 }
@@ -165,9 +161,9 @@ export const VIEW_CONFIG_SCHEMA = {
     additionalProperties: false,
     properties: {
       nodeSize: {
-        "type": "string",
-        "title": "Node Size",
-        "enum": [
+        type: 'string',
+        title: 'Node Size',
+        enum: [
           'betweenness centrality',
           'closeness centrality',
           'degree',
@@ -178,14 +174,14 @@ export const VIEW_CONFIG_SCHEMA = {
           'out-degree centrality',
           'pageRank',
           'relative in-degree',
-          "year",
+          'year'
           // 'betweenness',
           // 'closeness',
           // 'authorities',
           // 'hubs',
           // 'community',
         ],
-        "enumNames": [
+        enumNames: [
           'Betweenness Centrality',
           'Closeness Centrality',
           'Degree',
@@ -196,7 +192,7 @@ export const VIEW_CONFIG_SCHEMA = {
           'Out-Degree Centrality',
           'PageRank',
           'Relative In-Degree',
-          "Year",
+          'Year'
           // 'Betweenness',
           // 'Closeness',
           // 'Authorities',
@@ -205,9 +201,9 @@ export const VIEW_CONFIG_SCHEMA = {
         ]
       },
       nodeColor: {
-        "type": "string",
-        "title": "Node Color",
-        "enum": [
+        type: 'string',
+        title: 'Node Color',
+        enum: [
           'betweenness centrality',
           'closeness centrality',
           'degree',
@@ -218,14 +214,14 @@ export const VIEW_CONFIG_SCHEMA = {
           'out-degree centrality',
           'pageRank',
           'relative in-degree',
-          "year",
+          'year',
           'authorities',
           'hubs',
-          'community',
+          'community'
           // 'betweenness',
           // 'closeness',
         ],
-        "enumNames": [
+        enumNames: [
           'Betweenness Centrality',
           'Closeness Centrality',
           'Degree',
@@ -236,39 +232,36 @@ export const VIEW_CONFIG_SCHEMA = {
           'Out-Degree Centrality',
           'PageRank',
           'Relative In-Degree',
-          "Year",
+          'Year',
           'Authorities',
           'Hubs',
-          'Community',
+          'Community'
           // 'Betweenness',
           // 'Closeness',
         ]
-      },
-    },
-  },
+      }
+    }
+  }
 }
 
 export const NODE_SIZE_RANGE_MAP = {
-  "size": [50, 200],
-  "betweenness": [0, 10],
-  "betweenness centrality": [0, 1],
-  "closeness": [0, 10],
-  "closeness centrality": [0, 1],
-  "degree": [0, 20],
-  "degree centrality": [0, 1],
-  "in-degree": [0, 10],
-  "in-degree centrality": [0, 1],
-  "out-degree": [0, 10],
-  "out-degree centrality": [0, 10],
-  "pageRank": [0, 1],
-  "relative in-degree": [0, 1],
-  "community": [0, 10],
-  "year": [
-    1969,
-    2015
-  ],
+  size: [50, 200],
+  betweenness: [0, 10],
+  'betweenness centrality': [0, 1],
+  closeness: [0, 10],
+  'closeness centrality': [0, 1],
+  degree: [0, 20],
+  'degree centrality': [0, 1],
+  'in-degree': [0, 10],
+  'in-degree centrality': [0, 1],
+  'out-degree': [0, 10],
+  'out-degree centrality': [0, 10],
+  pageRank: [0, 1],
+  'relative in-degree': [0, 1],
+  community: [0, 10],
+  year: [1969, 2015],
   authorities: [0, 1],
-  hubs: [0, 1],
+  hubs: [0, 1]
 }
 
 export const LAYOUT_SCHEMA = {
@@ -278,36 +271,33 @@ export const LAYOUT_SCHEMA = {
     properties: {
       name: {
         type: 'string',
-        enum: [
-          'cose', 'breadthfirst', 'circle', 'grid',
-          'euler', 'dagre', 'spread',
-        ],
+        enum: ['cose', 'breadthfirst', 'circle', 'grid', 'euler', 'dagre', 'spread']
       },
       animationDuration: {
         type: 'number',
         minimum: 0,
-        maximum: 10000,
+        maximum: 10000
       },
       refresh: {
         type: 'number',
         minimum: 0,
-        maximum: 100,
+        maximum: 100
       },
       maxIterations: {
         type: 'number',
         minimum: 0,
-        maximum: 1000,
+        maximum: 1000
       },
       maxSimulationTime: {
         type: 'number',
         minimum: 0,
-        maximum: 1000,
+        maximum: 1000
       },
       expansion: {
         type: 'number',
         minimum: 0,
-        maximum: 1,
-      },
-    },
+        maximum: 1
+      }
+    }
   }
 }

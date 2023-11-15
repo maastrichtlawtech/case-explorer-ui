@@ -47,13 +47,9 @@ export const queryNetworkByUserInput = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const computeSubnetwork = /* GraphQL */ `
-  query ComputeSubnetwork(
-    $nodes: [NodeInput!]!
-    $edges: [EdgeInput!]!
-    $maxNodes: Int
-  ) {
+  query ComputeSubnetwork($nodes: [NodeInput!]!, $edges: [EdgeInput!]!, $maxNodes: Int) {
     computeSubnetwork(nodes: $nodes, edges: $edges, maxNodes: $maxNodes) {
       nodes {
         id
@@ -71,12 +67,12 @@ export const computeSubnetwork = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const computeNetworkStatistics = /* GraphQL */ `
   query ComputeNetworkStatistics($nodes: [NodeInput!]!, $edges: [EdgeInput!]!) {
     computeNetworkStatistics(nodes: $nodes, edges: $edges)
   }
-`;
+`
 export const fetchNodeData = /* GraphQL */ `
   query FetchNodeData($node: NodeInput!, $attributesToFetch: NodeAttributes) {
     fetchNodeData(node: $node, attributesToFetch: $attributesToFetch) {
@@ -85,19 +81,16 @@ export const fetchNodeData = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const batchFetchNodeData = /* GraphQL */ `
-  query BatchFetchNodeData(
-    $nodes: [NodeInput!]!
-    $attributesToFetch: NodeAttributes
-  ) {
+  query BatchFetchNodeData($nodes: [NodeInput!]!, $attributesToFetch: NodeAttributes) {
     batchFetchNodeData(nodes: $nodes, attributesToFetch: $attributesToFetch) {
       id
       data
       __typename
     }
   }
-`;
+`
 export const calculateLayout = /* GraphQL */ `
   query CalculateLayout(
     $nodes: [NodeInput!]!
@@ -105,14 +98,9 @@ export const calculateLayout = /* GraphQL */ `
     $layoutName: String!
     $boundingBox: BoundingBoxInput
   ) {
-    calculateLayout(
-      nodes: $nodes
-      edges: $edges
-      layoutName: $layoutName
-      boundingBox: $boundingBox
-    )
+    calculateLayout(nodes: $nodes, edges: $edges, layoutName: $layoutName, boundingBox: $boundingBox)
   }
-`;
+`
 export const test = /* GraphQL */ `
   query Test($ecli: String) {
     test(ecli: $ecli) {
@@ -121,7 +109,7 @@ export const test = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const getCaselaw = /* GraphQL */ `
   query GetCaselaw($ecli: String!, $ItemType: String!) {
     getCaselaw(ecli: $ecli, ItemType: $ItemType) {
@@ -135,7 +123,7 @@ export const getCaselaw = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const listCaselaws = /* GraphQL */ `
   query ListCaselaws(
     $ecli: String
@@ -167,7 +155,7 @@ export const listCaselaws = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const queryByItemType = /* GraphQL */ `
   query QueryByItemType(
     $ItemType: String
@@ -199,7 +187,7 @@ export const queryByItemType = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const queryByInstance = /* GraphQL */ `
   query QueryByInstance(
     $instance: String
@@ -231,7 +219,7 @@ export const queryByInstance = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const queryByInstanceLi = /* GraphQL */ `
   query QueryByInstanceLi(
     $instance_li: String
@@ -263,4 +251,4 @@ export const queryByInstanceLi = /* GraphQL */ `
       __typename
     }
   }
-`;
+`

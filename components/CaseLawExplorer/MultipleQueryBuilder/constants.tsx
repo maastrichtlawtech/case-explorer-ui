@@ -15,18 +15,10 @@ export const getQueryBuilderSchema = () => {
           title: 'Data sources',
           uniqueItems: true,
           items: {
-            enum: [
-              'RS',
-              'ECHR',
-              'Eurlex'
-            ],
-            enumNames: [
-              'Rechtspraak',
-              'European Court of Human Rights',
-              'Eurlex'
-            ],
+            enum: ['RS', 'ECHR', 'Eurlex'],
+            enumNames: ['Rechtspraak', 'European Court of Human Rights', 'Eurlex'],
             type: 'string'
-          },
+          }
         },
         Eclis: {
           type: 'string',
@@ -40,13 +32,13 @@ export const getQueryBuilderSchema = () => {
           type: 'string',
           title: 'Articles'
         },
-        DateStart:{
-          title: "Date start",
+        DateStart: {
+          title: 'Date start',
           type: 'string',
           format: 'date'
         },
-        DateEnd:{
-          title: "Date end",
+        DateEnd: {
+          title: 'Date end',
           type: 'string',
           format: 'date'
         },
@@ -57,7 +49,7 @@ export const getQueryBuilderSchema = () => {
           items: {
             enum: instancesList.subinstances,
             type: 'string'
-          },
+          }
         },
         Domains: {
           type: 'array',
@@ -66,39 +58,31 @@ export const getQueryBuilderSchema = () => {
           items: {
             enum: domainsList.subdomains,
             type: 'string'
-          },
+          }
         },
         Doctypes: {
           type: 'array',
           title: 'Document types',
           uniqueItems: true,
           items: {
-            enum: [
-              '',
-              'DEC',
-              'OPI'
-            ],
-            enumNames: [
-              '',
-              'Decision',
-              'Opinion'
-            ],
+            enum: ['', 'DEC', 'OPI'],
+            enumNames: ['', 'Decision', 'Opinion'],
             type: 'string'
-          },
+          }
         },
         DegreesSources: {
           type: 'integer',
           title: 'Degrees Sources',
           minimum: 0,
-          maximum: 2,
+          maximum: 2
         },
         DegreesTargets: {
           type: 'integer',
           title: 'Degrees Targets',
           minimum: 0,
-          maximum: 2,
-        },
-      },
+          maximum: 2
+        }
+      }
     },
     uiSchema: {
       Domains: {
@@ -108,10 +92,7 @@ export const getQueryBuilderSchema = () => {
         'ui:enumDisabled': instancesList.instances
       },
       DataSources: {
-        'ui:enumDisabled': [
-          'ECHR',
-          'Eurlex'
-        ]
+        'ui:enumDisabled': ['ECHR', 'Eurlex']
       }
     }
   }
@@ -121,7 +102,7 @@ const domainsList = {
   domains: [
     'Bestuursrecht and subdomains',
     'Civielrecht and subdomains',
-    'Internationaal publiekrecht and subdomains', 
+    'Internationaal publiekrecht and subdomains',
     'Strafrecht and subdomains',
     'Uncategorized domains'
   ],
@@ -174,16 +155,12 @@ const domainsList = {
     'Algemeen/Overig/Niet-gelabeld',
     'Bank- en effectenrecht',
     'Gemeenschapsrecht EU',
-    'Buitenlands Recht/Religieus recht',
+    'Buitenlands Recht/Religieus recht'
   ]
 }
 
 const instancesList = {
-  instances: [
-    'Gerechtshoven', 
-    'Rechtbanken', 
-    'Andere instanties binnen het Koninkrijk'
-  ],
+  instances: ['Gerechtshoven', 'Rechtbanken', 'Andere instanties binnen het Koninkrijk'],
   subinstances: [
     'Hoge Raad',
     'Raad van State',
@@ -192,11 +169,11 @@ const instancesList = {
     'Gerechtshoven',
     'Gerechtshof Amsterdam',
     'Gerechtshof Arnhem-Leeuwarden',
-    'Gerechtshof \'s-Gravenhage',
-    'Gerechtshof \'s-Hertogenbosch',
+    "Gerechtshof 's-Gravenhage",
+    "Gerechtshof 's-Hertogenbosch",
     'Rechtbanken',
     'Rechtbank Amsterdam',
-    'Rechtbank \'s-Gravenhage',
+    "Rechtbank 's-Gravenhage",
     'Rechtbank Gelderland',
     'Rechtbank Limburg',
     'Rechtbank Midden-Nederland',
@@ -220,37 +197,33 @@ const instancesList = {
 }
 
 export const DEFAULT_FORM_DATA = {
-  "DataSources": [
-      "RS"
+  DataSources: ['RS'],
+  Instances: [
+    'Hoge Raad',
+    'Raad van State',
+    'Centrale Raad van Beroep',
+    'College van Beroep voor het bedrijfsleven',
+    'Gerechtshof Amsterdam',
+    'Gerechtshof Arnhem-Leeuwarden',
+    "Gerechtshof 's-Gravenhage",
+    "Gerechtshof 's-Hertogenbosch",
+    'Rechtbank Amsterdam',
+    "Rechtbank 's-Gravenhage",
+    'Rechtbank Gelderland',
+    'Rechtbank Limburg',
+    'Rechtbank Midden-Nederland',
+    'Rechtbank Noord-Holland',
+    'Rechtbank Noord-Nederland',
+    'Rechtbank Oost-Brabant',
+    'Rechtbank Overijssel',
+    'Rechtbank Rotterdam',
+    'Rechtbank Zeeland-West-Brabant'
   ],
-  "Instances": [
-      "Hoge Raad",
-      "Raad van State",
-      "Centrale Raad van Beroep",
-      "College van Beroep voor het bedrijfsleven",
-      "Gerechtshof Amsterdam",
-      "Gerechtshof Arnhem-Leeuwarden",
-      "Gerechtshof 's-Gravenhage",
-      "Gerechtshof 's-Hertogenbosch",
-      "Rechtbank Amsterdam",
-      "Rechtbank 's-Gravenhage",
-      "Rechtbank Gelderland",
-      "Rechtbank Limburg",
-      "Rechtbank Midden-Nederland",
-      "Rechtbank Noord-Holland",
-      "Rechtbank Noord-Nederland",
-      "Rechtbank Oost-Brabant",
-      "Rechtbank Overijssel",
-      "Rechtbank Rotterdam",
-      "Rechtbank Zeeland-West-Brabant"
-  ],
-  "Domains": [],
-  "Doctypes": [
-      "DEC"
-  ],
-  "DateStart": "1900-01-01",
-  "DateEnd": "2021-01-01",
-  "DegreesSources": 0,
-  "DegreesTargets": 1,
-  "Keywords": "werkgever* + aansprake* + BW"
+  Domains: [],
+  Doctypes: ['DEC'],
+  DateStart: '1900-01-01',
+  DateEnd: '2021-01-01',
+  DegreesSources: 0,
+  DegreesTargets: 1,
+  Keywords: 'werkgever* + aansprake* + BW'
 }

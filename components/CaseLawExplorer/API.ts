@@ -1,57 +1,48 @@
-import { Amplify, API, Auth } from "aws-amplify";
-import { 
-  queryNetworkByUserInput, 
-  fetchNodeData, 
+import {Amplify, API, Auth} from 'aws-amplify'
+import {
+  queryNetworkByUserInput,
+  fetchNodeData,
   batchFetchNodeData,
   computeSubnetwork,
-  computeNetworkStatistics, 
+  computeNetworkStatistics,
   test,
-  calculateLayout as calculateLayoutQuery,
-} from "../../src/graphql/queries";
-import { 
-  QueryNetworkByUserInputQueryVariables, 
-  FetchNodeDataQueryVariables, 
+  calculateLayout as calculateLayoutQuery
+} from '../../src/graphql/queries'
+import {
+  QueryNetworkByUserInputQueryVariables,
+  FetchNodeDataQueryVariables,
   BatchFetchNodeDataQueryVariables,
   ComputeSubnetworkQueryVariables,
-  ComputeNetworkStatisticsQueryVariables, 
+  ComputeNetworkStatisticsQueryVariables,
   TestQueryVariables,
-  CalculateLayoutQueryVariables,
-} from '../../src/API';
-import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
-import gql from 'graphql-tag';
-import AWS_CONFIG from  '../../src/aws-exports'
-import {
-  AsyncStorage
-} from 'react-native'
+  CalculateLayoutQueryVariables
+} from '../../src/API'
+import AWSAppSyncClient, {AUTH_TYPE} from 'aws-appsync'
+import gql from 'graphql-tag'
+import AWS_CONFIG from '../../src/aws-exports'
+import {AsyncStorage} from 'react-native'
 
-function hasOwnProperty<X extends {}, Y extends PropertyKey>
-  (obj: X, prop: Y): obj is X & Record<Y, any> {
+function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, any> {
   return obj.hasOwnProperty(prop)
 }
 
 //When using external Cognito user pools instead of Amplify, we need to
 //explicitly specify the pool's information to Amplify.
 const CaseLawIdentityPoolConfig = {
-    identityPoolId: "eu-central-1:9c996483-c659-4953-ba11-bbe145997d59",
-    region: "eu-central-1",
-    userPoolId: "eu-central-1_Iia5Ube9G",
-    userPoolWebClientId: "529do26g6icslepgrvcelapu8v",
-};
+  identityPoolId: 'eu-central-1:9c996483-c659-4953-ba11-bbe145997d59',
+  region: 'eu-central-1',
+  userPoolId: 'eu-central-1_Iia5Ube9G',
+  userPoolWebClientId: '529do26g6icslepgrvcelapu8v'
+}
 
 // The OAuth configuration for the CaseLaw Cognito user pool
 const OAuthConfig = {
-    domain: "case-law-explorer-dev.auth.eu-central-1.amazoncognito.com",
-    scope: [
-        "aws.cognito.signin.user.admin",
-        "email",
-        "openid",
-        "phone",
-        "profile"
-    ],
-    redirectSignIn: __DEV__ ? "http://localhost:19006/" : "https://dev.d11iy22xsphp3a.amplifyapp.com/",
-    redirectSignOut: __DEV__ ? "http://localhost:19006/" : "https://dev.d11iy22xsphp3a.amplifyapp.com/",
-    responseType: "code"
-};
+  domain: 'case-law-explorer-dev.auth.eu-central-1.amazoncognito.com',
+  scope: ['aws.cognito.signin.user.admin', 'email', 'openid', 'phone', 'profile'],
+  redirectSignIn: __DEV__ ? 'http://localhost:19006/' : 'https://dev.d11iy22xsphp3a.amplifyapp.com/',
+  redirectSignOut: __DEV__ ? 'http://localhost:19006/' : 'https://dev.d11iy22xsphp3a.amplifyapp.com/',
+  responseType: 'code'
+}
 
 // Check if Amplify's AWS exports already specify the OAuth configuration
 // If it does, we fix the sign-in/sign-out redirects depending on if we're
@@ -59,45 +50,46 @@ const OAuthConfig = {
 //
 // If OAuth configuration is missing, use the above one.
 if (hasOwnProperty(AWS_CONFIG, 'oauth')) {
-    /* Frontend does not automatically handle multiple redirect URLs. Select
-    * between development (localhost) and production (https) based on __DEV__ */
-    const findRedirect = (redirectUrls: string[]) => __DEV__
-    ? redirectUrls.find((s: string) => s.includes('localhost'))
-    : redirectUrls.find((s: string) => s.startsWith('https'));
+  /* Frontend does not automatically handle multiple redirect URLs. Select
+   * between development (localhost) and production (https) based on __DEV__ */
+  const findRedirect = (redirectUrls: string[]) =>
+    __DEV__
+      ? redirectUrls.find((s: string) => s.includes('localhost'))
+      : redirectUrls.find((s: string) => s.startsWith('https'))
 
-    const redirectSignIn = findRedirect(AWS_CONFIG.oauth.redirectSignIn.split(','));
-    if (redirectSignIn) {
-        AWS_CONFIG.oauth.redirectSignIn = redirectSignIn;
-    }
-    const redirectSignOut = findRedirect(AWS_CONFIG.oauth.redirectSignOut.split(','));
-    if (redirectSignOut) {
-        AWS_CONFIG.oauth.redirectSignOut = redirectSignOut;
-    }
+  const redirectSignIn = findRedirect(AWS_CONFIG.oauth.redirectSignIn.split(','))
+  if (redirectSignIn) {
+    AWS_CONFIG.oauth.redirectSignIn = redirectSignIn
+  }
+  const redirectSignOut = findRedirect(AWS_CONFIG.oauth.redirectSignOut.split(','))
+  if (redirectSignOut) {
+    AWS_CONFIG.oauth.redirectSignOut = redirectSignOut
+  }
 } else {
-    AWS_CONFIG.oauth = OAuthConfig;
+  AWS_CONFIG.oauth = OAuthConfig
 }
 
-Amplify.configure({ ...AWS_CONFIG, Auth: CaseLawIdentityPoolConfig })
+Amplify.configure({...AWS_CONFIG, Auth: CaseLawIdentityPoolConfig})
 
 const graphqlClient = new AWSAppSyncClient({
   url: AWS_CONFIG.aws_appsync_graphqlEndpoint,
   region: AWS_CONFIG.aws_appsync_region,
   auth: {
     type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
-    jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken(),
+    jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken()
   },
   offlineConfig: {
     storage: {
       setItem: async () => {},
       getItem: async () => {}
     }
-  },
-});
+  }
+})
 
-const convertJSONStringFields = (item) => {
+const convertJSONStringFields = item => {
   return {
     ...item,
-    ...(item.position ? { position: JSON.parse(item.position) } : {}),
+    ...(item.position ? {position: JSON.parse(item.position)} : {}),
     data: JSON.parse(item.data)
   }
 }
@@ -112,7 +104,7 @@ export async function listCases(variables: QueryNetworkByUserInputQueryVariables
     return {
       nodes: caseResults.nodes.map(convertJSONStringFields),
       edges: caseResults.edges.map(convertJSONStringFields),
-      message: caseResults.message,
+      message: caseResults.message
     }
 
     // return caseResults.map(project => ({
@@ -147,7 +139,7 @@ export async function batchGetElementData(variables: BatchFetchNodeDataQueryVari
   try {
     const batchElementDataResult = await API.graphql({
       query: gql(batchFetchNodeData),
-      variables,
+      variables
     })
     const result = batchElementDataResult.data.batchFetchNodeData
     return result.map(convertJSONStringFields)
@@ -165,7 +157,7 @@ export async function getSubnetwork(variables: ComputeSubnetworkQueryVariables) 
     const result = subnetworkResult.data.computeSubnetwork
     return {
       nodes: result.nodes.map(convertJSONStringFields),
-      edges: result.edges.map(convertJSONStringFields),
+      edges: result.edges.map(convertJSONStringFields)
     }
   } catch (err) {
     console.log('error getSubnetwork:', err)
@@ -187,10 +179,7 @@ export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQu
 
 export async function calculateLayout(variables: CalculateLayoutQueryVariables) {
   try {
-    console.log('calculateLayout variables:', 
-    variables,
-    gql(calculateLayoutQuery),
-    )
+    console.log('calculateLayout variables:', variables, gql(calculateLayoutQuery))
     const calculateLayoutResult = await API.graphql({
       query: gql(calculateLayoutQuery),
       variables
@@ -206,15 +195,14 @@ export async function calculateLayout(variables: CalculateLayoutQueryVariables) 
 
 export async function calculateLayoutRest(variables: CalculateLayoutQueryVariables) {
   try {
-    console.log('calculateLayout variables:',variables)
-    const response  = await fetch('http://localhost:3000/', 
-    {
+    console.log('calculateLayout variables:', variables)
+    const response = await fetch('http://localhost:3000/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: JSON.stringify(variables),
+      body: JSON.stringify(variables)
     })
     console.log('response', response)
     const result = await response.json()
@@ -235,9 +223,7 @@ export async function calculateLayoutRest(variables: CalculateLayoutQueryVariabl
     //     body: variables,
     //     // headers,
     //   })
-    console.log('calculateLayout variables:', 
-    variables,
-    )
+    console.log('calculateLayout variables:', variables)
     console.log('result', result)
     return result
   } catch (err) {
@@ -263,7 +249,7 @@ export async function calculateLayoutRest(variables: CalculateLayoutQueryVariabl
 //         body: variables,
 //         // headers,
 //       })
-//     console.log('calculateLayout variables:', 
+//     console.log('calculateLayout variables:',
 //     variables,
 //     )
 //     console.log('result', result)

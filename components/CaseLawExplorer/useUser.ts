@@ -1,5 +1,5 @@
 import React from 'react'
-import { Auth, } from 'aws-amplify';
+import {Auth} from 'aws-amplify'
 
 export const useUser = () => {
   const [user, setUser] = React.useState({})
@@ -10,5 +10,5 @@ export const useUser = () => {
     }
     call()
   }, [])
-    return [user]
+  return [user]
 }

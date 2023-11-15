@@ -3,18 +3,12 @@
   "resourceName": "caseexploreruib94ade50",
   "serviceType": "imported",
   "region": "eu-central-1",
-  "usernameAttributes": [
-    "email"
-  ],
+  "usernameAttributes": ["email"],
   "authProvidersUserPool": [],
-  "requiredAttributes": [
-    "email"
-  ],
+  "requiredAttributes": ["email"],
   "passwordPolicyMinLength": 8,
   "passwordPolicyCharacters": [],
   "mfaConfiguration": "OFF",
-  "autoVerifiedAttributes": [
-    "email"
-  ],
+  "autoVerifiedAttributes": ["email"],
   "mfaTypes": []
 }

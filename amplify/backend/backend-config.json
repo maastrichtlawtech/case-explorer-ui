@@ -3,9 +3,7 @@
     "caseexplorerui": {
       "dependsOn": [
         {
-          "attributes": [
-            "UserPoolId"
-          ],
+          "attributes": ["UserPoolId"],
           "category": "auth",
           "resourceName": "caseexploreruib94ade50"
         }
@@ -55,9 +53,7 @@
       "build": true,
       "dependsOn": [
         {
-          "attributes": [
-            "GraphQLAPIIdOutput"
-          ],
+          "attributes": ["GraphQLAPIIdOutput"],
           "category": "api",
           "resourceName": "caseexplorerui"
         }

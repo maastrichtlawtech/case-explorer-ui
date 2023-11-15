@@ -55,7 +55,7 @@ To run the application using docker, clone this repository and execute the follo
 docker-compose -f docker/docker-compose.yml up
 ```
 
-## License 
+## License
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
