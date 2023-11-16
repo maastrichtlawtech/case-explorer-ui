@@ -4,7 +4,7 @@ import {View} from 'colay-ui'
 import React from 'react'
 import {useUser} from '../../useUser'
 import {useGraphEditor} from 'perfect-graph/hooks/useGraphEditor'
-import {selectCluster, GraphClusterButton} from '../../cluster_graph'
+import {selectCluster, GraphClusterButton, ClusterToggleSwitch} from '../../cluster_graph'
 import {Graph} from '../../types'
 import {ControllerContext, FullGraphContext} from '../../Contexts'
 import {Collapsible, CollapsibleContainer, CollapsibleTitle} from 'perfect-graph/components/Collapsible'
@@ -73,11 +73,26 @@ export const DataBarHeader = props => {
 
   return (
     <View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding: 2
+        }}
+      >
         <Typography>{user?.attributes?.email}</Typography>
         <Button color="secondary" onClick={() => Auth.signOut()}>
           Signout
         </Button>
+      </View>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          padding: 2,
+          alignItems: 'center'
+        }}
+      >
+        <ClusterToggleSwitch itemId={selectedItemId} />
       </View>
       <Divider />
       <View

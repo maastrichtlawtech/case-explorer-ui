@@ -142,8 +142,13 @@ async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
       layoutName,
       boundingBox
     })
-    clusterInfo.locations = layoutResult
-    clusterInfo.lastLayout = JSON.stringify(layout)
+    if (!clusterInfo) {
+      const result = {
+        nodes: nodes,
+        edges: edges
+      }
+      ClusterCache.set(cluster, result)
+    }
   }
 
   console.log('layout res', layoutResult)
