@@ -15,7 +15,7 @@ export const onCreateCaselaw = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const onUpdateCaselaw = /* GraphQL */ `
   subscription OnUpdateCaselaw {
     onUpdateCaselaw {
@@ -29,7 +29,7 @@ export const onUpdateCaselaw = /* GraphQL */ `
       __typename
     }
   }
-`;
+`
 export const onDeleteCaselaw = /* GraphQL */ `
   subscription OnDeleteCaselaw {
     onDeleteCaselaw {
@@ -43,4 +43,4 @@ export const onDeleteCaselaw = /* GraphQL */ `
       __typename
     }
   }
-`;
+`

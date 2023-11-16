@@ -1,29 +1,29 @@
-const createExpoWebpackConfigAsync = require("@expo/webpack-config");
+const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 
 module.exports = async function (env, argv) {
   const config = await createExpoWebpackConfigAsync(
     {
       ...env,
       resolve: {
-        extensions: ["*", ".mjs", ".js", ".json"],
+        extensions: ['*', '.mjs', '.js', '.json']
       },
       module: {
         rules: [
           {
             test: /\.mjs$/,
             include: /node_modules/,
-            type: "javascript/auto",
-          },
-        ],
+            type: 'javascript/auto'
+          }
+        ]
       },
       watchOptions: {
-        ignored: '**/node_modules',
+        ignored: '**/node_modules'
       },
       babel: {
-        dangerouslyAddModulePathsToTranspile: ["@rjsf/material-ui"],
-      },
+        dangerouslyAddModulePathsToTranspile: ['@rjsf/material-ui']
+      }
     },
     argv
-  );
-  return config;
-};
+  )
+  return config
+}

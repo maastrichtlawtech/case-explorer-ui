@@ -1,28 +1,30 @@
 import React from 'react'
 import * as R from 'colay/ramda'
 import * as PIXI from 'pixi.js'
-import { Graph,  } from 'perfect-graph/components'
-import { RenderEdge as RenderEdgeType,  } from 'perfect-graph/type'
-
+import {Graph} from 'perfect-graph/components'
+import {RenderEdge as RenderEdgeType} from 'perfect-graph/type'
 
 export type RenderEdgeProps = Parameters<RenderEdgeType>[0]
 
 const DEFAULT_FONT_SIZE = 16
 
 export const RenderEdge = ({
-   item, element, cy, theme,
-   visualization, 
-   filtering,
-   label,
-   labelPath,
-  graphRef ,
-  config,
+  item,
+  element,
+  cy,
+  theme,
+  visualization,
+  filtering,
+  label,
+  labelPath,
+  graphRef,
+  config
 }: RenderEdgeProps) => {
-  let text =  R.takeLast(6, `${label}`)//item.id
- if (labelPath[0] === 'id' ) {
-  const arr =  R.reverse(label.split(':'))
-  text = `${arr[2]}:${arr[1]}`
- }
+  let text = R.takeLast(6, `${label}`) //item.id
+  if (labelPath[0] === 'id') {
+    const arr = R.reverse(label.split(':'))
+    text = `${arr[2]}:${arr[1]}`
+  }
   const textRef = React.useRef(null)
   const configRef = React.useRef({
     fontSize: DEFAULT_FONT_SIZE
@@ -30,9 +32,9 @@ export const RenderEdge = ({
   React.useEffect(() => {
     const onZoom = () => {
       if (textRef.current) {
-        const xScale = 1/graphRef.current.viewport.scale.x
-        const yScale = 1/graphRef.current.viewport.scale.y
-        if (xScale >= 1 && xScale <= 5){
+        const xScale = 1 / graphRef.current.viewport.scale.x
+        const yScale = 1 / graphRef.current.viewport.scale.y
+        if (xScale >= 1 && xScale <= 5) {
           textRef.current.scale.x = xScale
           textRef.current.scale.y = yScale
         }
@@ -49,13 +51,7 @@ export const RenderEdge = ({
     }
   }, [graphRef.current.viewport])
   const {
-    view: {
-      width,
-      height,
-      radius,
-      fill,
-      labelVisible,
-    },
+    view: {width, height, radius, fill, labelVisible}
   } = config
   return (
     <Graph.View
@@ -65,27 +61,24 @@ export const RenderEdge = ({
         element.select()
       }}
     >
-      {
-        labelVisible && (
-          <Graph.Text
-            ref={textRef}
-            text={text}
-            style={TEXT_STYLE}
-            // style={{
-            //   // position: 'absolute',
-            //   // top: -40,
-            //   // backgroundColor: DefaultTheme.palette.background.paper,
-            //   fontSize: DEFAULT_FONT_SIZE
-            // }}
-            // isSprite
-          />
-        )
-      }
+      {labelVisible && (
+        <Graph.Text
+          ref={textRef}
+          text={text}
+          style={TEXT_STYLE}
+          // style={{
+          //   // position: 'absolute',
+          //   // top: -40,
+          //   // backgroundColor: DefaultTheme.palette.background.paper,
+          //   fontSize: DEFAULT_FONT_SIZE
+          // }}
+          // isSprite
+        />
+      )}
     </Graph.View>
   )
 }
 
-
 const TEXT_STYLE = new PIXI.TextStyle({
-  fontSize: DEFAULT_FONT_SIZE,
+  fontSize: DEFAULT_FONT_SIZE
 })

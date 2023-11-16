@@ -6,9 +6,7 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-
-
-const { calculateLayout }  = require('./layoutCalculator')
+const {calculateLayout} = require('./layoutCalculator')
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
@@ -19,36 +17,32 @@ app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
 // Enable CORS for all methods
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "*")
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', '*')
   next()
-});
-
+})
 
 app.post('/calculateLayout', function (req, res) {
   console.log('event-start', req)
-  const {
-    nodes,
-    edges,
-    layoutName,
-    boundingBox,
-  } = req.body
+  const {nodes, edges, layoutName, boundingBox} = req.body
   console.log('event', req.body)
   calculateLayout({
     boundingBox,
     graph: {
       edges,
-      nodes,
+      nodes
     },
-    layoutName,
-  }).then((result) => {
-    console.log('result', result)
-    res.json(result)
-  }).catch((error) => {
-    console.log('Error', error)
+    layoutName
   })
-});
+    .then(result => {
+      console.log('result', result)
+      res.json(result)
+    })
+    .catch(error => {
+      console.log('Error', error)
+    })
+})
 
 // app.post('/calculateLayout/*', async function(req, res) {
 //   res.json({success: 200, url: req.url});
@@ -63,9 +57,9 @@ app.post('/calculateLayout', function (req, res) {
 //   res.json({success: 200, url: req.url});
 // });
 
-app.listen(3000, function() {
-    console.log("App started")
-});
+app.listen(3000, function () {
+  console.log('App started')
+})
 
 // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from

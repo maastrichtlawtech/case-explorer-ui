@@ -2,9 +2,7 @@
 
 ## Case Law Explorer
 
-
 The [Case Law Explorer software](https://dev.d11iy22xsphp3a.amplifyapp.com/) has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students).
-
 
 A handbook on legal network analysis is under development and will be released soon.
 
@@ -38,14 +36,14 @@ You may search by means of ECLI(s), keywords, and/or Articles. Important: famili
 
 **_Keyword search._** A keyword search will return results from the full texts and the summaries (if available) (data fields: _full_text, summary, predecessor_successor_cases_). The quality of the results is heavily dependent on the smart use of [operators](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html).
 
-**_Article search._** An article search looks for exact matches in the field legal_provisions. Articles must be searched in the following notation: "_Burgerlijk Wetboek Boek 8, Artikel 931_" (quotation marks and word order matter, capitalization, punctuation and misspelling don't). When conducting an Article search, we advise you to find the notation in [this overview](https://docs.google.com/spreadsheets/d/1gX48CjTw5GXWmoDaMnY_oyU4xPMjZ2poQkHV1bH7tao/edit?usp=sharing).
+**_Article search._** An article search looks for exact matches in the field legal*provisions. Articles must be searched in the following notation: "\_Burgerlijk Wetboek Boek 8, Artikel 931*" (quotation marks and word order matter, capitalization, punctuation and misspelling don't). When conducting an Article search, we advise you to find the notation in [this overview](https://docs.google.com/spreadsheets/d/1gX48CjTw5GXWmoDaMnY_oyU4xPMjZ2poQkHV1bH7tao/edit?usp=sharing).
 
 (Advice: select the tab _wetten_unique_, search for the law of your interest (with Ctrl+F), and then construct the reference.
 To search for a specific article, simply add “, Article” followed by the specific article number. For example, if you are interested in Article 162 of Book 6 of the Dutch Civil Code, you search for “Burgerlijk Wetboek”, which will point you to the reference “Burgerlijk Wetboek Boek X”. Because you are interested in Book 6, we replace the “X” with a “6”. Since we are interested in Article 162, the reference becomes “Burgerlijk Wetboek Boek 6, Artikel 162”.
 
 Another example: if you want to search for cases that refer to Article 51 of the Dutch Criminal Code, you can search for “Strafrecht”, which will point you to “Wetboek van Strafrecht”. To construct the search term, you add the article: “Wetboek van Strafrecht, Artikel 51”.
 
-Note that you can also search for specific references to articles under the articles_unique tab, but that this search can take a long time considering the many articles that need to be searched. It is therefore preferred that you use the _wetten_unique_ tab.)
+Note that you can also search for specific references to articles under the articles*unique tab, but that this search can take a long time considering the many articles that need to be searched. It is therefore preferred that you use the \_wetten_unique* tab.)
 
 **_Date (start / ned) / Instances / Domains._** You may filter the search based on the dates of the _decision_ (or opinion), _instances_, _domains_, and _document type_ (decision or Advocate-General Opinion).
 
@@ -128,17 +126,16 @@ Under **_Preferences_**, color schemes may be adjusted. Here, it is also possibl
 The metadata are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until limit reached). The network statistics are computed on the backend network (all result nodes with or without citations + all of their citation nodes, until the limit is reached). The computation might take longer t)han the first display of network. A success message notifies the user about the completion of the network.
 
 ## Videos
+
 Instructional videos on legal network analysis can be found [here](https://maastrichtlawtech.github.io/LegalNetworkAnalysis/#/?id=videos). Videos that specifically apply to Case Law Explorer are:
 
 ### In Dutch
 
 - [What is Case Law Explorer? (Wat is Case Law Explorer?)](https://zuyd.mediasite.com/Mediasite/Play/db6594fc00df4412a44f53b9f45c4bd91d) (in Dutch)
-  
 
 ### In English
 
 Instruction videos will follow.
-
 
 ## Examples
 
@@ -159,4 +156,5 @@ More information will be added once the case law is added to Case Law Explorer.
 More information will be added once the case law is added to Case Law Explorer.
 
 ## Resources
+
 Everything you need to know about LNA can be found on the [Legal Network Analysis website](https://maastrichtlawtech.github.io/LegalNetworkAnalysis/#/).
