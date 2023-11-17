@@ -20,6 +20,7 @@ function ClusterInfo(props: {fullGraph: Graph; activeCluster: number | null | bo
   return (
     <div>
       <Typography>{`Nodes Inside this cluster: ${nodes.length}`}</Typography>
+      <Divider />
       <Collapsible>
         {({isOpen, onToggle}) => (
           <>
@@ -40,6 +41,7 @@ function ClusterInfo(props: {fullGraph: Graph; activeCluster: number | null | bo
           </>
         )}
       </Collapsible>
+      <Divider />
     </div>
   )
 }
@@ -141,6 +143,7 @@ export const DataBarHeader = props => {
       <Divider />
       <ClusterInfo activeCluster={activeCluster} fullGraph={fullGraph} itemId={Number(selectedItemId)} />
       <NetworkStatisticsDisplay activeCluster={activeCluster} fullGraph={fullGraph} itemId={selectedItemId} />
+      <Divider />
     </View>
   )
 }
