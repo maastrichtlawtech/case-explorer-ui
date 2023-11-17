@@ -586,11 +586,11 @@ const AppContainer = ({changeMUITheme, dispatch, width, height, ...rest}) => {
       return () => {}
     }
 
-    const networkStatistics = controllerProps.networkStatistics.global
+    const networkStatistics = fullGraph.networkStatistics
     const call = async () => {
       const {nodeSizeRangeMap, communityStats} = calculateNetworkStatisticsRange(networkStatistics, {
-        nodes: controllerProps.nodes,
-        edges: controllerProps.edges
+        nodes: fullGraph.nodes,
+        edges: fullGraph.edges
       })
       console.log('communityStats', communityStats, nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap

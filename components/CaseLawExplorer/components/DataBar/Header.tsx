@@ -8,7 +8,8 @@ import {selectCluster, GraphClusterButton} from '../../cluster_graph'
 import {Graph} from '../../types'
 import {ControllerContext, FullGraphContext} from '../../Contexts'
 import {Collapsible, CollapsibleContainer, CollapsibleTitle} from 'perfect-graph/components/Collapsible'
-function ClusterInfo(props: {fullGraph: Graph; activeCluster: number | null; itemId: number | null}) {
+
+function ClusterInfo(props: {fullGraph: Graph; activeCluster: number | null | boolean; itemId: number | null}) {
   const {fullGraph, activeCluster, itemId} = props
   if (activeCluster !== null || itemId === null) return null
 
@@ -30,6 +31,40 @@ function ClusterInfo(props: {fullGraph: Graph; activeCluster: number | null; ite
                   return (
                     <div key={idx} style={{fontSize: 'small'}}>
                       {n.id}
+                    </div>
+                  )
+                })}
+                <Divider />
+              </CollapsibleContainer>
+            )}
+          </>
+        )}
+      </Collapsible>
+    </div>
+  )
+}
+function NetworkStatisticsDisplay(props: {
+  fullGraph: Graph
+  activeCluster: number | null | boolean
+  itemId: string | undefined
+}) {
+  const {fullGraph, activeCluster, itemId} = props
+  if (activeCluster === null || activeCluster === false || itemId === undefined) return null
+  const stats: any = fullGraph.networkStatistics?.[itemId] ?? {}
+  return (
+    <div>
+      <Collapsible>
+        {({isOpen, onToggle}) => (
+          <>
+            <CollapsibleTitle onClick={onToggle}>{`Network Statistics`}</CollapsibleTitle>
+            {isOpen && (
+              <CollapsibleContainer>
+                <Divider />
+                {Object.keys(stats).map(key => {
+                  const statisticValue = stats[key] // the value of the statistic
+                  return (
+                    <div key={key} style={{fontSize: 'small'}}>
+                      {key}: {parseFloat(statisticValue.toFixed(6))}
                     </div>
                   )
                 })}
@@ -105,6 +140,7 @@ export const DataBarHeader = props => {
       <GraphClusterButton itemId={selectedItemId} />
       <Divider />
       <ClusterInfo activeCluster={activeCluster} fullGraph={fullGraph} itemId={Number(selectedItemId)} />
+      <NetworkStatisticsDisplay activeCluster={activeCluster} fullGraph={fullGraph} itemId={selectedItemId} />
     </View>
   )
 }
