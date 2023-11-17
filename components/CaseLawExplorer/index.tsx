@@ -142,13 +142,16 @@ async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
       layoutName,
       boundingBox
     })
-    if (!clusterInfo) {
-      const result = {
-        nodes: nodes,
-        edges: edges
-      }
-      ClusterCache.set(cluster, result)
+    // Create a copy of nodes with the data part removed, as it is
+    // unexpected by the layout calculator GraphQL query
+    const make_node = ({id: number}) => ({id: number, data: {}})
+    const result = {
+      nodes: Array.from(nodes).map(make_node),
+      edges: edges,
+      locations: layoutResult,
+      lastLayout: JSON.stringify(layout)
     }
+    ClusterCache.set(cluster, result)
   }
 
   console.log('layout res', layoutResult)

@@ -27,7 +27,6 @@ export function selectCluster(
     nodes: new_nodes,
     edges: new_edges
   }
-  ClusterCache.set(activeCluster, result)
   return result
 }
 
@@ -60,7 +59,6 @@ export function clusterGraph({networkStatistics, nodes, edges}: Graph): {nodes: 
     nodes: Array.from(new_nodes).map(make_node),
     edges: Array.from(new_edges).map(make_edge)
   }
-  ClusterCache.set(null, result)
   return result
 }
 
