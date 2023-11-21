@@ -11,15 +11,15 @@ import {View} from 'colay-ui'
 import {useImmer} from 'colay-ui/hooks/useImmer'
 import {current} from 'immer'
 import * as R from 'colay/ramda'
-import {Graph} from 'perfect-graph/components'
-import {GraphEditor, GraphEditorProps} from 'perfect-graph/components/GraphEditor'
-import {DefaultComponents, DefaultSidebarData} from 'perfect-graph/components/GraphEditor/PreferencesModal'
-import {EVENT} from 'perfect-graph/constants'
-import {DarkTheme, DefaultTheme} from 'perfect-graph/core/theme'
-import {useGraphEditor} from 'perfect-graph/hooks'
-import {useController} from 'perfect-graph/plugins/controller'
-import {createSchema} from 'perfect-graph/plugins/createSchema'
-import {filterEdges, getHitAreaCenter, getSelectedElementInfo, getSelectedItemByElement} from 'perfect-graph/utils'
+import {Graph} from 'perfect-graph-new/components'
+import {GraphEditor, GraphEditorProps} from 'perfect-graph-new/components/GraphEditor'
+import {DefaultComponents, DefaultSidebarData} from 'perfect-graph-new/components/GraphEditor/PreferencesModal'
+import {EVENT} from 'perfect-graph-new/constants'
+import {DarkTheme, DefaultTheme} from 'perfect-graph-new/core/theme'
+import {useGraphEditor} from 'perfect-graph-new/hooks'
+import {useController} from 'perfect-graph-new/plugins/controller'
+import {createSchema} from 'perfect-graph-new/plugins/createSchema'
+import {filterEdges, getHitAreaCenter, getSelectedElementInfo, getSelectedItemByElement} from 'perfect-graph-new/utils'
 import * as PIXI from 'pixi.js'
 import React from 'react'
 import * as API from './API'
@@ -594,11 +594,11 @@ const AppContainer = ({changeMUITheme, dispatch, width, height, ...rest}) => {
       return () => {}
     }
 
-    const networkStatistics = controllerProps.networkStatistics.global
+    const networkStatistics = fullGraph.networkStatistics
     const call = async () => {
       const {nodeSizeRangeMap, communityStats} = calculateNetworkStatisticsRange(networkStatistics, {
-        nodes: controllerProps.nodes,
-        edges: controllerProps.edges
+        nodes: fullGraph.nodes,
+        edges: fullGraph.edges
       })
       console.log('communityStats', communityStats, nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap
