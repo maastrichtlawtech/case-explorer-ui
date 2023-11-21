@@ -110,11 +110,26 @@ export const DataBarHeader = props => {
 
   return (
     <View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          padding: 2
+        }}
+      >
         <Typography>{user?.attributes?.email}</Typography>
         <Button color="secondary" onClick={() => Auth.signOut()}>
           Signout
         </Button>
+      </View>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          padding: 2,
+          alignItems: 'center'
+        }}
+      >
+        <ClusterToggleSwitch itemId={selectedItemId} />
       </View>
       <Divider />
       <View
