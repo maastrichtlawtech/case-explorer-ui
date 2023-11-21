@@ -3,11 +3,11 @@ import {Auth} from 'aws-amplify'
 import {View} from 'colay-ui'
 import React from 'react'
 import {useUser} from '../../useUser'
-import {useGraphEditor} from 'perfect-graph/hooks/useGraphEditor'
+import {useGraphEditor} from 'perfect-graph-new/hooks/useGraphEditor'
 import {selectCluster, GraphClusterButton} from '../../cluster_graph'
 import {Graph} from '../../types'
 import {ControllerContext, FullGraphContext} from '../../Contexts'
-import {Collapsible, CollapsibleContainer, CollapsibleTitle} from 'perfect-graph/components/Collapsible'
+import {Collapsible, CollapsibleContainer, CollapsibleTitle} from 'perfect-graph-new/components/Collapsible'
 
 function ClusterInfo(props: {fullGraph: Graph; activeCluster: number | null | boolean; itemId: number | null}) {
   const {fullGraph, activeCluster, itemId} = props

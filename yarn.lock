@@ -12820,16 +12820,17 @@ penner@^0.1.3:
   resolved "https://registry.yarnpkg.com/penner/-/penner-0.1.3.tgz#0b8b482d4e9b39af2f3d7c37592229b8acc29705"
   integrity sha512-UzkaC2L6d9J1VzJAFH0TQwuKE/rerpTZkgW6aPLVeu/LdjWn6rnuY9lXcVN1AE9tZVfHrsJ2gZOBsRjpQECNHA==
 
-perfect-graph@0.0.154:
-  version "0.0.154"
-  resolved "https://registry.yarnpkg.com/perfect-graph/-/perfect-graph-0.0.154.tgz#44dd94be622c0ac3c0793e0943b6ba71f950d9cd"
-  integrity sha512-qQLg7y4StYW2eoNA8k/nfp2MBrNjhO8kUWaB/He55YqF/m7LNEbqTSi2UIFNYy4PxbOXDO2hvD2Jsmaj/KxIpw==
+perfect-graph-new@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/perfect-graph-new/-/perfect-graph-new-1.0.1.tgz#be1b6a55da1aa2ea5f548df4fbc1a12cb597a774"
+  integrity sha512-2CRYZFAB1uWfxhb9V4j0FGLDDeSf3L3VFpiPQfwvmd/nWhojVCRpiVwkWi3q5/hHwDrxLzuMhIekkjO/SuRMJg==
   dependencies:
     "@inlet/react-pixi" "6.6.5"
     cytoscape "3.20.0"
     pixi-cull "2.1.0"
     pixi-viewport "4.34.1"
     pixi.js "6.2.0"
+    typedoc-plugin-missing-exports "0.22.6"
 
 picocolors@^0.2.1:
   version "0.2.1"
@@ -15308,6 +15309,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
+
+typedoc-plugin-missing-exports@0.22.6:
+  version "0.22.6"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-missing-exports/-/typedoc-plugin-missing-exports-0.22.6.tgz#7467c60f1cd26507124103f0b9bca271d5aa8d71"
+  integrity sha512-1uguGQqa+c5f33nWS3v1mm0uAx4Ii1lw4Kx2zQksmYFKNEWTmrmMXbMNBoBg4wu0p4dFCNC7JIWPoRzpNS6pFA==
 
 typescript-eslint@^0.0.1-alpha.0:
   version "0.0.1-alpha.0"
