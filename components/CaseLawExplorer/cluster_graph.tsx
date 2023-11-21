@@ -1,4 +1,4 @@
-import {Button, Typography, Divider} from '@mui/material'
+import {Button, FormControlLabel, Switch, FormGroup} from '@mui/material'
 import React from 'react'
 import {ControllerContext, FullGraphContext} from './Contexts'
 import {Node, Edge, NetworkStats, Graph} from './types'
@@ -27,7 +27,6 @@ export function selectCluster(
     nodes: new_nodes,
     edges: new_edges
   }
-  ClusterCache.set(activeCluster, result)
   return result
 }
 
@@ -60,16 +59,15 @@ export function clusterGraph({networkStatistics, nodes, edges}: Graph): {nodes: 
     nodes: Array.from(new_nodes).map(make_node),
     edges: Array.from(new_edges).map(make_edge)
   }
-  ClusterCache.set(null, result)
   return result
 }
 
 export function GraphClusterButton({itemId}: {itemId: any}) {
   const {fullGraph} = React.useContext(FullGraphContext)
   const {controller, activeCluster} = React.useContext(ControllerContext)
-  const showing_clusters = activeCluster === null
+  const showing_clusters = activeCluster === null || activeCluster === false
 
-  if (showing_clusters && !itemId) return null
+  if ((showing_clusters && !itemId) || activeCluster === false) return null
 
   return (
     <div>
@@ -77,7 +75,6 @@ export function GraphClusterButton({itemId}: {itemId: any}) {
         onClick={() => {
           const zoomIn = showing_clusters && itemId
           const {nodes, edges} = zoomIn ? selectCluster(fullGraph, itemId) : clusterGraph(fullGraph)
-
           controller.update((draft: any) => {
             draft.nodes = nodes
             draft.edges = edges
@@ -88,6 +85,37 @@ export function GraphClusterButton({itemId}: {itemId: any}) {
       >
         {showing_clusters && itemId ? 'Zoom In' : 'Zoom Out'}
       </Button>
+    </div>
+  )
+}
+
+export function ClusterToggleSwitch({itemId}: {itemId: any}) {
+  const {fullGraph} = React.useContext(FullGraphContext)
+  const {controller, activeCluster} = React.useContext(ControllerContext)
+  const showing_clusters = activeCluster === null || activeCluster === false
+
+  if (!showing_clusters) return null
+  return (
+    <div>
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch
+              defaultChecked
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                const showClusters = event.target.checked
+                const {nodes, edges} = showClusters ? clusterGraph(fullGraph) : fullGraph
+                controller.update((draft: any) => {
+                  draft.nodes = nodes
+                  draft.edges = edges
+                  draft.activeCluster = showClusters ? null : false
+                })
+              }}
+            />
+          }
+          label="Show clusters?"
+        />
+      </FormGroup>
     </div>
   )
 }
