@@ -51,7 +51,7 @@ function NetworkStatisticsDisplay(props: {
   itemId: string | undefined
 }) {
   const {fullGraph, activeCluster, itemId} = props
-  if (activeCluster === null || activeCluster === false || itemId === undefined) return null
+  if (activeCluster === null || itemId === undefined) return null
   const stats: any = fullGraph.networkStatistics?.[itemId] ?? {}
   return (
     <div>
