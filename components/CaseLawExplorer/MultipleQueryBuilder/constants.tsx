@@ -1,3 +1,4 @@
+//import {CustomSelectComponent} from './QueryTabs/CustomWidget'
 export const getQueryBuilderSchema = () => {
   return {
     schema: {
@@ -65,8 +66,8 @@ export const getQueryBuilderSchema = () => {
           title: 'Document types',
           uniqueItems: true,
           items: {
-            enum: ['', 'DEC', 'OPI'],
-            enumNames: ['', 'Decision', 'Opinion'],
+            enum: ['DEC', 'OPI'],
+            enumNames: ['Decision', 'Opinion'],
             type: 'string'
           }
         },
@@ -88,23 +89,30 @@ export const getQueryBuilderSchema = () => {
       Domains: {
         'ui:widget': 'checkboxes',
         'ui:options': {
-          inline: true,
+          inline: true
         },
         'ui:enumDisabled': domainsList.domains
       },
       Instances: {
         'ui:widget': 'checkboxes',
         'ui:options': {
-          inline: true,
+          inline: true
         },
         'ui:enumDisabled': instancesList.instances
       },
       DataSources: {
         'ui:widget': 'checkboxes',
         'ui:options': {
-          inline: true,
+          inline: true
         },
         'ui:enumDisabled': ['ECHR', 'Eurlex']
+      },
+      Doctypes: {
+        'ui:widget': 'checkboxes',
+        'ui:options': {
+          inline: true
+        },
+        'ui:enumDisabled': domainsList.domains
       }
     }
   }
@@ -171,40 +179,40 @@ const domainsList = {
   ]
 }
 
-const instancesList = {
+export const instancesList = {
   instances: ['Gerechtshoven', 'Rechtbanken', 'Andere instanties binnen het Koninkrijk'],
   subinstances: [
-    'Hoge Raad',
-    'Raad van State',
-    'Centrale Raad van Beroep',
-    'College van Beroep voor het bedrijfsleven',
-    'Gerechtshoven',
-    'Gerechtshof Amsterdam',
-    'Gerechtshof Arnhem-Leeuwarden',
-    "Gerechtshof 's-Gravenhage",
-    "Gerechtshof 's-Hertogenbosch",
-    'Rechtbanken',
-    'Rechtbank Amsterdam',
-    "Rechtbank 's-Gravenhage",
-    'Rechtbank Gelderland',
-    'Rechtbank Limburg',
-    'Rechtbank Midden-Nederland',
-    'Rechtbank Noord-Holland',
-    'Rechtbank Noord-Nederland',
-    'Rechtbank Oost-Brabant',
-    'Rechtbank Overijssel',
-    'Rechtbank Rotterdam',
-    'Rechtbank Zeeland-West-Brabant',
-    'Andere instanties binnen het Koninkrijk',
-    'Constitutioneel Hof Sint Maarten',
-    'Gemeenschappelijk Hof van Justitie van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
-    'Gerecht in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
-    'Gerecht in Eerste Aanleg van Aruba',
-    'Gerecht in eerste aanleg van Bonaire, Sint Eustatius en Saba',
-    'Gerecht in eerste aanleg van Curaçao',
-    'Gerecht in eerste aanleg van Sint Maarten',
-    'Raad van Beroep in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba',
-    'Raad van Beroep voor Belastingzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba'
+    'Hoge Raad', //#
+    'Raad van State', //#
+    'Centrale Raad van Beroep', //#
+    'College van Beroep voor het bedrijfsleven', //#
+    'Gerechtshoven', //#
+    'Gerechtshof Amsterdam', //#
+    'Gerechtshof Arnhem-Leeuwarden', //#
+    "Gerechtshof 's-Gravenhage", //#
+    "Gerechtshof 's-Hertogenbosch", //#
+    'Rechtbanken', //#
+    'Rechtbank Amsterdam', //#
+    "Rechtbank 's-Gravenhage", //#
+    'Rechtbank Gelderland', //#
+    'Rechtbank Limburg', //#
+    'Rechtbank Midden-Nederland', //#
+    'Rechtbank Noord-Holland', //#
+    'Rechtbank Noord-Nederland', //#
+    'Rechtbank Oost-Brabant', //#
+    'Rechtbank Overijssel', //#
+    'Rechtbank Rotterdam', //#
+    'Rechtbank Zeeland-West-Brabant', //#
+    'Andere instanties binnen het Koninkrijk', //#
+    'Constitutioneel Hof Sint Maarten', //#
+    'Gemeenschappelijk Hof van Justitie van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba', //#
+    'Gerecht in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba', //#
+    'Gerecht in Eerste Aanleg van Aruba', //#
+    'Gerecht in eerste aanleg van Bonaire, Sint Eustatius en Saba', //#
+    'Gerecht in eerste aanleg van Curaçao', //#
+    'Gerecht in eerste aanleg van Sint Maarten', //#
+    'Raad van Beroep in Ambtenarenzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba', //#
+    'Raad van Beroep voor Belastingzaken van Aruba, Curaçao, Sint Maarten en van Bonaire, Sint Eustatius en Saba' //#
   ]
 }
 

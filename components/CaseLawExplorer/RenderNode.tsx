@@ -1,10 +1,10 @@
 import React from 'react'
 import * as R from 'colay/ramda'
 import * as PIXI from 'pixi.js'
-import {Graph} from 'perfect-graph/components'
-import {RenderNode as RenderNodeType, GraphEditorRef} from 'perfect-graph/type'
+import {Graph} from 'perfect-graph-new/components'
+import {RenderNode as RenderNodeType, GraphEditorRef} from 'perfect-graph-new/type'
 import {NODE_SIZE_RANGE_MAP} from './constants'
-import {useGraphEditor} from 'perfect-graph/hooks'
+import {useGraphEditor} from 'perfect-graph-new/hooks'
 import {calculateNodeSize, calculateColor, perc2color} from './utils'
 
 export type RenderNodeProps = Parameters<RenderNodeType>[0]
