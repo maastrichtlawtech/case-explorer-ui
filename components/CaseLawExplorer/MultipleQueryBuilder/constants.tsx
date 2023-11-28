@@ -1,4 +1,4 @@
-//import {CustomSelectComponent} from './QueryTabs/CustomWidget'
+import {CustomSelectComponent} from './QueryTabs/CustomWidget'
 export const getQueryBuilderSchema = () => {
   return {
     schema: {
@@ -94,7 +94,7 @@ export const getQueryBuilderSchema = () => {
         'ui:enumDisabled': domainsList.domains
       },
       Instances: {
-        'ui:widget': 'checkboxes',
+        'ui:widget': CustomSelectComponent,
         'ui:options': {
           inline: true
         },

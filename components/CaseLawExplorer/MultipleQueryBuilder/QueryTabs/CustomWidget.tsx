@@ -59,10 +59,11 @@ export const CustomSelectComponent = (props: any) => {
           aria-label="file system navigator"
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
+          key={key}
         >
-          <TreeItem nodeId={String(nodeIds++)} label={key}>
+          <TreeItem nodeId={key} label={key} key={key}>
             {subgroup.map(value => {
-              return <TreeItem nodeId={String(nodeIds++)} label={value} />
+              return <TreeItem nodeId={value} label={value} key={value} />
             })}
           </TreeItem>
         </TreeView>
@@ -73,8 +74,9 @@ export const CustomSelectComponent = (props: any) => {
           aria-label="file system navigator"
           defaultCollapseIcon={<ExpandMoreIcon />}
           defaultExpandIcon={<ChevronRightIcon />}
+          key={key}
         >
-          <TreeItem nodeId={String(nodeIds++)} label={key} />
+          <TreeItem nodeId={key} label={key}   />
         </TreeView>
       )
   })

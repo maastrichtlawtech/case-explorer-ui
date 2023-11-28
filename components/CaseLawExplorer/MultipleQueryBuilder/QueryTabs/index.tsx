@@ -67,10 +67,10 @@ export const QueryTabs = (props: QueryTabsProps) => {
         })}
       </Tabs>
       {tabs.map((tab, index) => {
-        //console.log(tab)
+        console.log(tab)
         const forms = tab.formData
         Object.keys(forms).map(key => {
-          console.log(key)
+         // console.log(key)
           const value = forms[key]
         })
         return (
