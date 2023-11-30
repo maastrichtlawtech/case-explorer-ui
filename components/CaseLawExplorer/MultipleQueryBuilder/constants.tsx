@@ -67,7 +67,7 @@ export const getQueryBuilderSchema = () => {
           uniqueItems: true,
           items: {
             enum: ['DEC', 'OPI'],
-
+            enumNames: ['Decision', 'Opinion'],
             type: 'string'
           }
         },

@@ -1,4 +1,4 @@
-import {Button, Typography, Divider, FormControlLabel, Switch, FormGroup} from '@mui/material'
+import {Button, FormControlLabel, Switch, FormGroup} from '@mui/material'
 import React from 'react'
 import {ControllerContext, FullGraphContext} from './Contexts'
 import {Node, Edge, NetworkStats, Graph} from './types'
@@ -48,6 +48,7 @@ export function clusterGraph({networkStatistics, nodes, edges}: Graph): {nodes: 
         new_edges.add(JSON.stringify(new_edge))
       }
     }
+  })
 
   const make_node = (cluster: number) => ({id: cluster.toString(), data: {}})
   const make_edge = (str: string, idx: number): Edge => {

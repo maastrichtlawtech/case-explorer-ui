@@ -66,6 +66,7 @@ export const QueryTabs = (props: QueryTabsProps) => {
           )
         })}
       </Tabs>
+      {tabs.map((tab, index) => {
         return (
           <TabPanel key={index} value={selectedTab} index={index}>
             <Form {...tab}>

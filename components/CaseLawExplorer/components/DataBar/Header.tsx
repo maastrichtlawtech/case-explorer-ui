@@ -3,6 +3,7 @@ import {Auth} from 'aws-amplify'
 import {View} from 'colay-ui'
 import React from 'react'
 import {useUser} from '../../useUser'
+import {useGraphEditor} from 'perfect-graph-new/hooks/useGraphEditor'
 import {selectCluster, GraphClusterButton, ClusterToggleSwitch} from '../../cluster_graph'
 import {Graph} from '../../types'
 import {ControllerContext, FullGraphContext} from '../../Contexts'
@@ -107,7 +108,7 @@ export const DataBarHeader = props => {
   const {activeCluster} = React.useContext(ControllerContext)
 
   return (
-
+    <View>
       <View
         style={{
           flexDirection: 'row',
