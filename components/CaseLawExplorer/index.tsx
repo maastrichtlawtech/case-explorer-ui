@@ -142,8 +142,16 @@ async function updateLayout(cluster, layout, graphEditor, nodes, edges, cy) {
       layoutName,
       boundingBox
     })
-    clusterInfo.locations = layoutResult
-    clusterInfo.lastLayout = JSON.stringify(layout)
+    // Create a copy of nodes with the data part removed, as it is
+    // unexpected by the layout calculator GraphQL query
+    const make_node = ({id: number}) => ({id: number, data: {}})
+    const result = {
+      nodes: Array.from(nodes).map(make_node),
+      edges: edges,
+      locations: layoutResult,
+      lastLayout: JSON.stringify(layout)
+    }
+    ClusterCache.set(cluster, result)
   }
 
   console.log('layout res', layoutResult)
@@ -585,12 +593,11 @@ const AppContainer = ({changeMUITheme, dispatch, width, height, ...rest}) => {
     if (controllerProps.nodes.length == 0) {
       return () => {}
     }
-
-    const networkStatistics = controllerProps.networkStatistics.global
+    const networkStatistics = fullGraph.networkStatistics
     const call = async () => {
       const {nodeSizeRangeMap, communityStats} = calculateNetworkStatisticsRange(networkStatistics, {
-        nodes: controllerProps.nodes,
-        edges: controllerProps.edges
+        nodes: fullGraph.nodes,
+        edges: fullGraph.edges
       })
       console.log('communityStats', communityStats, nodeSizeRangeMap)
       configRef.current.visualizationRangeMap = nodeSizeRangeMap

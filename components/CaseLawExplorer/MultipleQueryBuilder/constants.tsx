@@ -67,7 +67,7 @@ export const getQueryBuilderSchema = () => {
           uniqueItems: true,
           items: {
             enum: ['DEC', 'OPI'],
-            enumNames: ['Decision', 'Opinion'],
+
             type: 'string'
           }
         },
@@ -179,7 +179,7 @@ const domainsList = {
   ]
 }
 
-export const instancesList = {
+const instancesList = {
   instances: ['Gerechtshoven', 'Rechtbanken', 'Andere instanties binnen het Koninkrijk'],
   subinstances: [
     'Hoge Raad', //#
@@ -226,7 +226,6 @@ export const DEFAULT_FORM_DATA = {
     'Gerechtshof Amsterdam',
     'Gerechtshof Arnhem-Leeuwarden',
     "Gerechtshof 's-Gravenhage",
-    "Gerechtshof 's-Hertogenbosch",
     'Rechtbank Amsterdam',
     "Rechtbank 's-Gravenhage",
     'Rechtbank Gelderland',
