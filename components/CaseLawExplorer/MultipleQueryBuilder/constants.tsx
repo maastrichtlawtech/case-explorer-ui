@@ -87,7 +87,7 @@ export const getQueryBuilderSchema = () => {
     },
     uiSchema: {
       Domains: {
-        'ui:widget': 'checkboxes',
+        'ui:widget': CustomSelectComponent,
         'ui:options': {
           inline: true
         },

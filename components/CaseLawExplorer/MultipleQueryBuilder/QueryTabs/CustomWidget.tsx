@@ -44,6 +44,41 @@ const Groupings = {
       'Gerecht in eerste aanleg van Curaçao',
       'Gerecht in eerste aanleg van Sint Maarten'
     ]
+  },
+  Domains: {
+    Bestuursrecht: [
+      'Ambtenarenrecht',
+      'Belastingrecht',
+      'Bestuursprocesrecht',
+      'Bestuursstrafrecht',
+      'Europees bestuursrecht',
+      'Mededingingsrecht',
+      'Omgevingsrecht',
+      'Socialezekerheidsrecht',
+      'Vreemdelingenrecht'
+    ],
+    'Civiel recht': [
+      'Aanbestedingsrecht',
+      'Arbeidsrecht',
+      'Burgerlijk procesrecht',
+      'Europees civiel recht',
+      'Goederenrecht',
+      'Insolventierecht',
+      'Intellectueel-eigendomsrecht',
+      'Internationaal privaatrecht',
+      'Mededingingsrecht',
+      'Ondernemingsrecht',
+      'Personen- en familierecht',
+      'Verbintenissenrecht'
+    ],
+    'Internationaal publiekrecht': ['Mensenrechten', 'Volkenrecht'],
+    Strafrecht: [
+      'Europees strafrecht',
+      'Internationaal strafrecht',
+      'Materieel strafrecht',
+      'Penitentiair strafrecht',
+      'Strafprocesrecht'
+    ]
   }
 }
 
