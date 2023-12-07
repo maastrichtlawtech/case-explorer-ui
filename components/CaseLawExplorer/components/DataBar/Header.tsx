@@ -55,7 +55,7 @@ function NetworkStatisticsDisplay(props: {
   const stats: any = fullGraph.networkStatistics?.[itemId] ?? {}
   return (
     <div>
-      <Collapsible>
+      <Collapsible defaultIsOpen>
         {({isOpen, onToggle}) => (
           <>
             <CollapsibleTitle onClick={onToggle}>{`Network Statistics`}</CollapsibleTitle>

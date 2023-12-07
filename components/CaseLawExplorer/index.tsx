@@ -323,7 +323,7 @@ const AppContainer = ({changeMUITheme, dispatch, width, height, ...rest}) => {
       }
     },
     settingsBar: {
-      // isOpen: true,
+      isOpen: true,
       forms: [
         {...FETCH_SCHEMA, formData: configRef.current.fetching},
         {...VIEW_CONFIG_SCHEMA, formData: configRef.current.visualization},
@@ -358,7 +358,7 @@ const AppContainer = ({changeMUITheme, dispatch, width, height, ...rest}) => {
       }
     },
     actionBar: {
-      // isOpen: true,
+      isOpen: true,
       right: ActionBarRight,
       // autoOpen: true,
       eventRecording: false,
