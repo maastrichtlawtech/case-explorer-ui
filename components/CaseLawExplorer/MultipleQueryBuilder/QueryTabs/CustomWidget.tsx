@@ -1,3 +1,13 @@
+/*
+This is a custom implementation of a Form widget, which we are using instead of the default widgets provided from rjsf. It it used in the QueryBuilder as a select field for our Form.
+The previous version of rjsf we used for this project was 3. The package was updated to version 5+, because the older versions dont have proper documentations for custom widgets.
+This Widget was made with the help of these resources :
+
+https://mui.com/x/react-tree-view/
+https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields
+
+*/
+
 import React from 'react'
 import {Checkbox, FormControlLabel, FormLabel} from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
