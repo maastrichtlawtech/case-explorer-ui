@@ -106,7 +106,7 @@ const DEFAULT_FILTERING = {
 
 const DEFAULT_VISUALIZATION = {
   nodeSize: 'in-degree',
-  nodeColor: 'community'
+  nodeColor: 'degree centrality'
 }
 
 function updateCachedNodePosition(cluster, layout, cy, nodeId, position) {

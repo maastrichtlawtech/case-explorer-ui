@@ -109,6 +109,7 @@ export const calculateColor = (
   rangeMap: any,
   fieldName?: keyof typeof NODE_SIZE_RANGE_MAP
 ) => {
+  console.log(color, item, fieldName)
   if (!fieldName) {
     return perc2color(color, 0)
   }
@@ -117,6 +118,7 @@ export const calculateColor = (
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
   const value = getStatisticsValue(item, graphEditorRef, fieldName)
   const fieldRangeValue = (value ?? fieldRange[0]) - fieldRange[0]
+  console.log(fieldRangeValue, fieldRangeGap, value)
   if (fieldRangeGap === 0) {
     return perc2color(color, 0)
   }
