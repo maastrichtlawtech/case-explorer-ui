@@ -41,7 +41,7 @@ export const ACTIONS = {
   TEST_API: 'TEST_API'
 }
 
-const DEFAULT_LAYOUT = Graph.Layouts.cose
+const DEFAULT_LAYOUT = Graph.Layouts.euler
 export const NODE_LIMIT = 2000
 const HELP_VIDEO_ID = 'OrzMIhLpVps'
 
