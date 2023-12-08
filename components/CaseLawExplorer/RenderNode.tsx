@@ -86,10 +86,10 @@ export const RenderNode = (props: RenderNodeProps) => {
       : element.hovered()
         ? fill.hovered
         : visualization.nodeColor
-          ? calculateColor(fill.default, item, graphEditorRef, visualizationRangeMap, visualization.nodeColor)
+          ? calculateColor(fill.default, item, fullGraph, visualizationRangeMap, visualization.nodeColor)
           : fill.default
 
-  let sizePerc = calculateNodeSize(item, graphEditorRef, visualizationRangeMap, visualization.nodeSize)
+  let sizePerc = calculateNodeSize(item, fullGraph, visualizationRangeMap, visualization.nodeSize)
 
   if (controllerProps.activeCluster === null) {
     let sum = fullGraph.nodes.filter(n => fullGraph.networkStatistics[n.id].community == item.id).length
