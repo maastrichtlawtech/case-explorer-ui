@@ -8,7 +8,6 @@ import {selectCluster, GraphClusterButton, ClusterToggleSwitch} from '../../clus
 import {Graph} from '../../types'
 import {ControllerContext, FullGraphContext} from '../../Contexts'
 import {Collapsible, CollapsibleContainer, CollapsibleTitle} from 'perfect-graph-new/components/Collapsible'
-
 function ClusterInfo(props: {fullGraph: Graph; activeCluster: number | null | boolean; itemId: number | null}) {
   const {fullGraph, activeCluster, itemId} = props
   if (activeCluster !== null || itemId === null) return null

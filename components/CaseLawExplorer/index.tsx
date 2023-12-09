@@ -593,7 +593,6 @@ const AppContainer = ({changeMUITheme, dispatch, width, height, ...rest}) => {
     if (controllerProps.nodes.length == 0) {
       return () => {}
     }
-
     const networkStatistics = fullGraph.networkStatistics
     const call = async () => {
       const {nodeSizeRangeMap, communityStats} = calculateNetworkStatisticsRange(networkStatistics, {
