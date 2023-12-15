@@ -5,7 +5,7 @@ import {FormProps} from '@rjsf/core'
 import Form from '@rjsf/material-ui'
 import {TabPanel} from './TabPanel'
 import {View} from 'colay-ui'
-
+import validator from '@rjsf/validator-ajv8'
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 type QueryTab = FormProps<any>
 
@@ -69,7 +69,7 @@ export const QueryTabs = (props: QueryTabsProps) => {
       {tabs.map((tab, index) => {
         return (
           <TabPanel key={index} value={selectedTab} index={index}>
-            <Form {...tab}>
+            <Form {...tab} validator={validator}>
               <View />
             </Form>
           </TabPanel>
