@@ -3,7 +3,7 @@
 import {NODE_SIZE_RANGE_MAP} from '../constants'
 import * as R from 'colay/ramda'
 import Color from 'color'
-
+import {Graph} from '../types'
 export const filterEdges = (nodes: {id: string}[]) => (edges: {source: string; target: string}[]) => {
   const nodeMap = R.groupBy(R.prop('id'))(nodes)
   return R.filter(edge => nodeMap[edge.source] && nodeMap[edge.target])(edges)
@@ -77,20 +77,20 @@ export const calculateNetworkStatisticsRange = (
   }
 }
 
-const getStatisticsValue = (item: any, graphEditorRef: GraphEditorRef, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) =>
-  graphEditorRef.current.context.localDataRef.current.networkStatistics.local?.[item.id]?.[fieldName] ??
-  item.data[fieldName]
+const getStatisticsValue = (item: any, fullGraph: Graph, fieldName?: keyof typeof NODE_SIZE_RANGE_MAP) => {
+  return fullGraph.networkStatistics?.[item.id]?.[fieldName] ?? item.data[fieldName]
+}
 
 export const calculateNodeSize = (
   item: object,
-  graphEditorRef: GraphEditorRef,
+  fullGraph: Graph,
   rangeMap: any,
   fieldName?: keyof typeof NODE_SIZE_RANGE_MAP
 ) => {
   if (!fieldName) {
     return 0 //rangeMap.size[0]
   }
-  const value = getStatisticsValue(item, graphEditorRef, fieldName)
+  const value = getStatisticsValue(item, fullGraph, fieldName)
   const fieldRange = rangeMap[fieldName]
   const sizeRangeGap = rangeMap.size[1] - rangeMap.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
@@ -105,7 +105,7 @@ export const calculateNodeSize = (
 export const calculateColor = (
   color: number,
   item: object,
-  graphEditorRef: GraphEditorRef,
+  fullGraph: Graph,
   rangeMap: any,
   fieldName?: keyof typeof NODE_SIZE_RANGE_MAP
 ) => {
@@ -115,7 +115,7 @@ export const calculateColor = (
   const fieldRange = rangeMap[fieldName]
   const sizeRangeGap = rangeMap.size[1] - rangeMap.size[0]
   const fieldRangeGap = fieldRange[1] - fieldRange[0]
-  const value = getStatisticsValue(item, graphEditorRef, fieldName)
+  const value = getStatisticsValue(item, fullGraph, fieldName)
   const fieldRangeValue = (value ?? fieldRange[0]) - fieldRange[0]
   if (fieldRangeGap === 0) {
     return perc2color(color, 0)
