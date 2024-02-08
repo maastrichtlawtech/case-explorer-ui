@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from time import perf_counter
+from typing import List, Tuple
 import networkit as nk
+import numpy as np
 
 class Timer:
     "Simple timer class for reporting the time taken by a block of code."
@@ -27,6 +29,84 @@ def timer(fn):
             return fn(*args, **kwargs)
 
     return inner
+
+
+# TODO Disruption algorithm (from centrality analysis)
+
+
+
+# TODO Wrapper class for Disruption Centrality
+class Disruption(nk.centrality.Centrality):
+    """
+    Custom centrality class to calculate disruption centrality in a Networkit graph
+
+    Args:
+        nk_graph (nk.Graph): Networkit graph
+    """
+
+    def __init__(self, nk_graph, *args, **kwargs):
+        super(Disruption, self).__init__(nk_graph, *args, **kwargs)
+
+
+    def calculate_disruptions(self) -> List[Tuple[int, float]]: 
+        """
+        Calculate the disruption centrality for each node in the graph
+
+        Returns:
+            List[Tuple[int, float]]: List of tuples containing the node index and its disruption centrality
+        """
+        disruptions = []
+        for index, node in enumerate(self.nk_graph.iterNodes()):
+            i, j, k = 0, 0, 0
+
+            # count j
+            for in_node in self.nk_graph.iterInNeighbors(node):
+                for out_node in self.nk_graph.iterNeighbors(node):
+                    if self.nk_graph.hasEdge(in_node, out_node):
+                        j += 1
+                        break
+
+            # count i
+            i = self.nk_graph.degreeIn(node) - j
+
+            # count k
+            for out_node in self.nk_graph.iterNeighbors(node):
+                for in_out_node in self.nk_graph.iterInNeighbors(out_node):
+                    if not in_out_node == node and not self.nk_graph.hasEdge(in_out_node, node):
+                        k += 1
+
+            try:
+                disruptions.append((node, (i - j) / (i + j + k)))
+                
+            except:
+                disruptions.append((node, np.nan))
+            
+        return disruptions
+
+
+    def run(self):
+        """
+        Run the algorithm to calculate the disruption centrality
+        """
+        
+        self.ranking = self.calculate_disruptions() 
+        self.hasRun = True
+        return self
+    
+    def score(self, node):
+        """
+        Return the disruption centrality score for a single node
+        """
+        assert self.isRun(), "run() must be called before score() can be called."
+        return dict(self.ranking)[node]
+    
+    def scores(self):
+        """
+        Return ta dictionary of disruption centrality scores for all nodes
+        """
+        assert self.isRun(), "run() must be called before scores() can be called."
+        return self.ranking
+
 
 # Wrapper class for NetworkIt graphs to keep track of node attributes
 class Graph:
@@ -212,6 +292,7 @@ def create_response(graph):
             'pageRank': graph.page_ranks[i],
             'betweenness centrality': graph.betweenness_centralities[i],
             'closeness centrality': graph.closeness_centralities[i],
+            'disruption centrality': graph.disruption_centralities[i],  # TODO Implement this
             'community': community,
             'year': graph.year[i]
         }
@@ -264,6 +345,10 @@ def handler(event, context):
     distSinks = nk.centrality.SinkHandling.DistributeSinks
     graph.addNodeCentralityMetric("page_ranks",
             nk.centrality.PageRank, distributeSinks=distSinks, normalized=True)
+    
+    # TODO Add disruption metric here
+    graph.addNodeCentralityMetric("disruption_centralities", Disruption)
+
 
     stripped = graph.subGraphFromPredicate(lambda G, n: not G.isIsolated(n))
     partition = stripped.addCommunitiesUndirected("plm_community",
