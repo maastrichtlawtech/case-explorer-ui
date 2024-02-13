@@ -1,7 +1,7 @@
 import {Button, Typography, Divider, List} from '@mui/material'
 import {Auth} from 'aws-amplify'
 import {View} from 'colay-ui'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useUser} from '../../useUser'
 import {useGraphEditor} from 'perfect-graph-new/hooks/useGraphEditor'
 import {selectCluster, GraphClusterButton, ClusterToggleSwitch} from '../../cluster_graph'
@@ -52,6 +52,12 @@ function NetworkStatisticsDisplay(props: {
   const {fullGraph, activeCluster, itemId} = props
   if (activeCluster === null || itemId === undefined) return null
   const stats: any = fullGraph.networkStatistics?.[itemId] ?? {}
+
+  // TODO Remove this console.log
+  useEffect(() => {
+    console.log('NetworkStatisticsDisplay: ', stats)
+  }, [stats])
+
   return (
     <div>
       <Collapsible defaultIsOpen>

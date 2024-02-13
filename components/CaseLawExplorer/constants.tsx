@@ -166,6 +166,7 @@ export const VIEW_CONFIG_SCHEMA = {
         enum: [
           'betweenness centrality',
           'closeness centrality',
+          'disruption centrality',
           'degree',
           'degree centrality',
           'in-degree',
@@ -184,6 +185,7 @@ export const VIEW_CONFIG_SCHEMA = {
         enumNames: [
           'Betweenness Centrality',
           'Closeness Centrality',
+          'Disruption Centrality',
           'Degree',
           'Degree Centrality',
           'In-Degree',
@@ -206,6 +208,7 @@ export const VIEW_CONFIG_SCHEMA = {
         enum: [
           'betweenness centrality',
           'closeness centrality',
+          'disruption centrality',
           'degree',
           'degree centrality',
           'in-degree',
@@ -224,6 +227,7 @@ export const VIEW_CONFIG_SCHEMA = {
         enumNames: [
           'Betweenness Centrality',
           'Closeness Centrality',
+          'Disruption Centrality',
           'Degree',
           'Degree Centrality',
           'In-Degree',
@@ -250,6 +254,8 @@ export const NODE_SIZE_RANGE_MAP = {
   'betweenness centrality': [0, 1],
   closeness: [0, 10],
   'closeness centrality': [0, 1],
+  disruption: [-1, 1],
+  'disruption centrality': [-1, 1], 
   degree: [0, 20],
   'degree centrality': [0, 1],
   'in-degree': [0, 10],

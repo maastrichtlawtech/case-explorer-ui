@@ -280,6 +280,7 @@ def create_response(graph):
         node_id = graph.ids[i]
         degree = graph.degreeIn(i) + graph.degreeOut(i)
         community = graph.plm_community[i]
+        print(graph.disruption_centralities[i]) # TODO Remove this
         statistics[node_id] = {
             'parent': representative_nodes.setdefault(community, i),
             'degree': degree,

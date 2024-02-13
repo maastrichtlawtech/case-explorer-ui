@@ -171,6 +171,7 @@ export async function getNetworkStatistics(variables: ComputeNetworkStatisticsQu
       variables
     })
     const result = networkStatisticsResult.data.computeNetworkStatistics
+    console.log('API Network Statistics', result) // TODO Remove
     return JSON.parse(result)
   } catch (err) {
     console.log('error getNetworkStatistics:', err)

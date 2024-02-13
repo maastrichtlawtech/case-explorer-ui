@@ -282,6 +282,7 @@ const AppContainer = ({changeMUITheme, dispatch, width, height, ...rest}) => {
             'hubs',
             'betweenness centrality',
             'closeness centrality',
+            'disruption centrality',
             'community',
             'year'
           ]
