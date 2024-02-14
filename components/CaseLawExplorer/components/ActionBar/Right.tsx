@@ -44,7 +44,7 @@ async function downloadMetaData(fullGraph: Graph, updateFullGraph: (fun: (draft:
   updateFullGraph((draft: Graph) => {
     draft.nodes = result
   })
-  download(result, 'perfect-graph.json')
+  download(result, 'perfect-graph.json') // TODO understand where this comes from
 }
 
 export function ActionBarRight() {
