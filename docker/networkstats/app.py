@@ -30,12 +30,7 @@ def timer(fn):
 
     return inner
 
-
-# TODO Disruption algorithm (from centrality analysis)
-
-
-
-# TODO Wrapper class for Disruption Centrality
+# Wrapper class for Disruption Centrality
 class Disruption(nk.centrality.Centrality):
     """
     Custom centrality class to calculate disruption centrality in a Networkit graph
@@ -347,7 +342,7 @@ def handler(event, context):
     graph.addNodeCentralityMetric("page_ranks",
             nk.centrality.PageRank, distributeSinks=distSinks, normalized=True)
     
-    # TODO Add disruption metric here
+    # TODO Add disruption metric
     graph.addNodeCentralityMetric("disruption_centralities", Disruption)
 
 
