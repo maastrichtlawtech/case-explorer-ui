@@ -1,0 +1,54 @@
+input  BoundingBoxInput  {
+  x1: Float!
+  y1: Float!
+  w: Float!
+  h: Float!
+}
+
+type Network {
+  nodes: [Node!]!
+  edges: [Edge!]!
+  message: String
+}
+
+type Node {
+  id: String!
+  data: AWSJSON
+}
+
+input NodeInput {
+  id: String!
+  data: AWSJSON
+}
+
+type Edge {
+  id: String!
+  source: String!
+  target: String!
+  data: AWSJSON
+}
+
+input EdgeInput {
+  id: String!
+  source: String!
+  target: String!
+}
+
+enum NodeAttributes {
+  ID
+  ALL
+  QUERYHANDLER
+  NETWORKSTATS
+}
+
+enum DataSource {
+  RS
+  ECHR
+  EURLEX
+  CJEU
+}
+
+enum DocType {
+  OPI
+  DEC
+}

@@ -1,0 +1,30 @@
+{
+  "permissions": {},
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "apiCaseexploreruiCaselawtableArn",
+      "environmentVariableName": "API_CASEEXPLORERUI_CASELAWTABLE_ARN"
+    },
+    {
+      "cloudFormationParameterName": "apiCaseexploreruiCaselawtableName",
+      "environmentVariableName": "API_CASEEXPLORERUI_CASELAWTABLE_NAME"
+    },
+    {
+      "cloudFormationParameterName": "apiCaseexploreruiGraphqlapiidoutput",
+      "environmentVariableName": "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT"
+    },
+    {
+      "cloudFormationParameterName": "ddbTableName",
+      "environmentVariableName": "DDB_TABLE_NAME"
+    },
+    {
+      "cloudFormationParameterName": "osEndpoint",
+      "environmentVariableName": "OS_ENDPOINT"
+    },
+    {
+      "cloudFormationParameterName": "osIndexName",
+      "environmentVariableName": "OS_INDEX_NAME"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "arguments": {
+    "maxNodes": 1000,
+    "nodes": [
+      {"id": "ECLI:NL:GHAMS:2018:1093", "data": {}},
+      {"id": "ECLI:NL:GHSHE:2018:1512", "data": {}},
+      {"id": "ECLI:NL:RBGEL:2018:5796", "data": {}},
+      {"id": "ECLI:NL:RBAMS:2018:2489", "data": {}},
+      {"id": "ECLI:NL:RBAMS:2019:10082", "data": {}},
+      {"id": "ECLI:NL:HR:2019:1701", "data": {}},
+      {"id": "ECLI:NL:OGEAA:2019:763", "data": {}},
+      {"id": "ECLI:NL:RBAMS:2019:10188", "data": {}},
+      {"id": "ECLI:NL:OGEABES:2019:65", "data": {}},
+      {"id": "ECLI:NL:GHAMS:2019:4831", "data": {}}
+    ],
+    "edges": [
+      {
+        "id": "ECLI:NL:GHAMS:2018:1093_ECLI:NL:RBGEL:2018:5796",
+        "source": "ECLI:NL:GHAMS:2018:1093",
+        "target": "ECLI:NL:RBGEL:2018:5796"
+      },
+      {
+        "id": "ECLI:NL:GHAMS:2018:1093_ECLI:NL:HR:2019:1701",
+        "source": "ECLI:NL:GHAMS:2018:1093",
+        "target": "ECLI:NL:HR:2019:1701"
+      },
+      {
+        "id": "ECLI:NL:RBGEL:2018:5796_ECLI:NL:HR:2019:1701",
+        "source": "ECLI:NL:RBGEL:2018:5796",
+        "target": "ECLI:NL:HR:2019:1701"
+      },
+      {
+        "id": "ECLI:NL:GHAMS:2019:4831_ECLI:NL:HR:2019:1701",
+        "source": "ECLI:NL:GHAMS:2019:4831",
+        "target": "ECLI:NL:HR:2019:1701"
+      },
+      {
+        "id": "ECLI:NL:GHAMS:2019:4831_ECLI:NL:GHAMS:2018:1093",
+        "source": "ECLI:NL:GHAMS:2019:4831",
+        "target": "ECLI:NL:GHAMS:2018:1093"
+      },
+      {
+        "id": "ECLI:NL:GHSHE:2018:1512_ECLI:NL:HR:2019:1701",
+        "source": "ECLI:NL:GHSHE:2018:1512",
+        "target": "ECLI:NL:HR:2019:1701"
+      },
+      {
+        "id": "ECLI:NL:HR:2019:1701_ECLI:NL:RBAMS:2019:10188",
+        "source": "ECLI:NL:HR:2019:1701",
+        "target": "ECLI:NL:RBAMS:2019:10188"
+      },
+      {
+        "id": "ECLI:NL:OGEAA:2019:763_ECLI:NL:HR:2019:1701",
+        "source": "ECLI:NL:OGEAA:2019:763",
+        "target": "ECLI:NL:HR:2019:1701"
+      },
+      {
+        "id": "ECLI:NL:HR:2019:1701_ECLI:NL:GHAMS:2018:1093",
+        "source": "ECLI:NL:HR:2019:1701",
+        "target": "ECLI:NL:GHAMS:2018:1093"
+      },
+      {
+        "id": "ECLI:NL:GHAMS:2019:4831_ECLI:NL:HR:2019:1701",
+        "source": "ECLI:NL:GHAMS:2019:4831",
+        "target": "ECLI:NL:HR:2019:1701"
+      }
+    ]
+  }
+}
