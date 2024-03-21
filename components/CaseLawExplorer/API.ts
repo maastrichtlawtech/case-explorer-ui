@@ -29,18 +29,18 @@ function hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): o
 //When using external Cognito user pools instead of Amplify, we need to
 //explicitly specify the pool's information to Amplify.
 const CaseLawIdentityPoolConfig = {
-  identityPoolId: 'eu-central-1:9c996483-c659-4953-ba11-bbe145997d59',
+  identityPoolId: 'eu-central-1:40ad1f7b-e198-464e-8641-a581b6104b53',
   region: 'eu-central-1',
-  userPoolId: 'eu-central-1_Iia5Ube9G',
-  userPoolWebClientId: '529do26g6icslepgrvcelapu8v'
+  userPoolId: 'eu-central-1_aIMCsY84u',
+  userPoolWebClientId: '2qtd0q06jvhuqn5ulhndrp12eg'
 }
 
 // The OAuth configuration for the CaseLaw Cognito user pool
 const OAuthConfig = {
-  domain: 'case-law-explorer-dev.auth.eu-central-1.amazoncognito.com',
+  domain: 'case-law-explorer-dev-prod.auth.eu-central-1.amazoncognito.com',
   scope: ['aws.cognito.signin.user.admin', 'email', 'openid', 'phone', 'profile'],
-  redirectSignIn: __DEV__ ? 'http://localhost:19006/' : 'https://dev.d11iy22xsphp3a.amplifyapp.com/',
-  redirectSignOut: __DEV__ ? 'http://localhost:19006/' : 'https://dev.d11iy22xsphp3a.amplifyapp.com/',
+  redirectSignIn: __DEV__ ? 'http://localhost:19006/' : 'https://dev.d26mknwishfwkh.amplifyapp.com',
+  redirectSignOut: __DEV__ ? 'http://localhost:19006/' : 'https://dev.d26mknwishfwkh.amplifyapp.com',
   responseType: 'code'
 }
 
