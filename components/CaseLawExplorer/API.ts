@@ -37,7 +37,7 @@ const CaseLawIdentityPoolConfig = {
 
 // The OAuth configuration for the CaseLaw Cognito user pool
 const OAuthConfig = {
-  domain: 'case-law-explorer-dev-prodgot.auth.eu-central-1.amazoncognito.com',
+  domain: 'case-law-explorer-dev-prod.auth.eu-central-1.amazoncognito.com',
   scope: ['aws.cognito.signin.user.admin', 'email', 'openid', 'phone', 'profile'],
   redirectSignIn: __DEV__ ? 'http://localhost:19006/' : 'https://prod.d26mknwishfwkh.amplifyapp.com',
   redirectSignOut: __DEV__ ? 'http://localhost:19006/' : 'https://prod.d26mknwishfwkh.amplifyapp.com',
