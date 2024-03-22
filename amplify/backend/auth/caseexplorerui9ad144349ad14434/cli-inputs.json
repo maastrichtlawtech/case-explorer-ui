@@ -49,7 +49,7 @@
     "hostedUIDomainName": "case-law-explorer-dev",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:19006/\",\"https://dev.d11iy22xsphp3a.amplifyapp.com/\"],\"LogoutURLs\":[\"http://localhost:19006/\",\"https://dev.d11iy22xsphp3a.amplifyapp.com/\"]}",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:19006/\",\"https://prod.d26mknwishfwkh.amplifyapp.com\"],\"LogoutURLs\":[\"http://localhost:19006/\",\"https://prod.d26mknwishfwkh.amplifyapp.com\"]}",
     "userPoolGroupList": [
       "caselawexplorerprod"
     ],
