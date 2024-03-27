@@ -2,7 +2,7 @@
 
 ## Case Law Explorer
 
-The [Case Law Explorer software](https://dev.d11iy22xsphp3a.amplifyapp.com/) has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students).
+The [Case Law Explorer software](https://prod.d26mknwishfwkh.amplifyapp.com/) has been developed by the [Maastricht Law and Tech Lab](https://www.maastrichtuniversity.nl/about-um/faculties/law/research/law-and-tech-lab) and the [Brightlands Institute for Smart Society](https://www.biss-institute.com/). You will need to create an account in order to use the software (the SurfConext option currently only works for Maastricht University staff and students).
 
 A handbook on legal network analysis is under development and will be released soon.
 
