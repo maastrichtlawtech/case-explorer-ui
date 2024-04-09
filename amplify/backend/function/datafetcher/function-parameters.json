@@ -1,17 +1,7 @@
 {
-  "permissions": {
-    "storage": {
-      "Caselaw:@model(appsync)": [
-        "read"
-      ]
-    }
-  },
+  "permissions": {},
   "lambdaLayers": [],
   "environmentVariableList": [
-    {
-      "cloudFormationParameterName": "ddbTableName",
-      "environmentVariableName": "DDB_TABLE_NAME"
-    },
     {
       "cloudFormationParameterName": "apiCaseexploreruiCaselawtableArn",
       "environmentVariableName": "API_CASEEXPLORERUI_CASELAWTABLE_ARN"

@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.10.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -16,17 +16,22 @@
     "s3Key": {
       "Type": "String"
     },
-    "apicaseexploreruiGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apicaseexploreruiGraphQLAPIIdOutput"
+    "apiCaseexploreruiCaselawtableArn": {
+      "Type": "String"
+    },
+    "apiCaseexploreruiCaselawtableName": {
+      "Type": "String"
+    },
+    "apiCaseexploreruiGraphqlapiidoutput": {
+      "Type": "String"
     },
     "ddbTableName": {
       "Type": "String"
     },
-    "osIndexName": {
+    "osEndpoint": {
       "Type": "String"
     },
-    "osEndpoint": {
+    "osIndexName": {
       "Type": "String"
     }
   },
@@ -83,43 +88,23 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "API_CASEEXPLORERUI_CASELAWTABLE_NAME": {
-              "Fn::ImportValue": {
-                "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
-              }
-            },
             "API_CASEEXPLORERUI_CASELAWTABLE_ARN": {
-              "Fn::Join": [
-                "",
-                [
-                  "arn:aws:dynamodb:",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  ":",
-                  {
-                    "Ref": "AWS::AccountId"
-                  },
-                  ":table/",
-                  {
-                    "Fn::ImportValue": {
-                      "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
-                    }
-                  }
-                ]
-              ]
+              "Ref": "apiCaseexploreruiCaselawtableArn"
+            },
+            "API_CASEEXPLORERUI_CASELAWTABLE_NAME": {
+              "Ref": "apiCaseexploreruiCaselawtableName"
             },
             "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apicaseexploreruiGraphQLAPIIdOutput"
+              "Ref": "apiCaseexploreruiGraphqlapiidoutput"
             },
             "DDB_TABLE_NAME": {
               "Ref": "ddbTableName"
             },
-            "OS_INDEX_NAME": {
-              "Ref": "osIndexName"
-            },
             "OS_ENDPOINT": {
               "Ref": "osEndpoint"
+            },
+            "OS_INDEX_NAME": {
+              "Ref": "osIndexName"
             }
           }
         },
@@ -140,12 +125,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "caseexploreruiLambdaRole88ee5d63",
+            "caseexploreruiLambdaRoleab35a6b4",
             {
               "Fn::Join": [
                 "",
                 [
-                  "caseexploreruiLambdaRole88ee5d63",
+                  "caseexploreruiLambdaRoleab35a6b4",
                   "-",
                   {
                     "Ref": "env"
@@ -215,107 +200,6 @@
           ]
         }
       }
-    },
-    "AmplifyResourcesPolicy": {
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ],
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-lambda-execution-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Get*",
-                "dynamodb:BatchGetItem",
-                "dynamodb:List*",
-                "dynamodb:Describe*",
-                "dynamodb:Scan",
-                "dynamodb:Query"
-              ],
-              "Resource": [
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
-                        }
-                      }
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:dynamodb:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":table/",
-                      {
-                        "Fn::ImportValue": {
-                          "Fn::Sub": "${apicaseexploreruiGraphQLAPIIdOutput}:GetAtt:CaselawTable:Name"
-                        }
-                      },
-                      "/index/*"
-                    ]
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      }
-    },
-    "CustomLambdaExecutionPolicy": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "custom-lambda-execution-policy",
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "es:*"
-              ],
-              "Resource": [
-                "*"
-              ]
-            }
-          ]
-        },
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ]
-      },
-      "DependsOn": "LambdaExecutionRole"
     }
   },
   "Outputs": {

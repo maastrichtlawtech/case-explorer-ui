@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.10.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -14,9 +14,6 @@
       "Type": "String"
     },
     "s3Key": {
-      "Type": "String"
-    },
-    "ddbTableName": {
       "Type": "String"
     },
     "apiCaseexploreruiCaselawtableArn": {
@@ -82,9 +79,6 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "DDB_TABLE_NAME": {
-              "Ref": "ddbTableName"
-            },
             "API_CASEEXPLORERUI_CASELAWTABLE_ARN": {
               "Ref": "apiCaseexploreruiCaselawtableArn"
             },
@@ -113,12 +107,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "caseexploreruiLambdaRolefcc02dfb",
+            "caseexploreruiLambdaRole46af6ea5",
             {
               "Fn::Join": [
                 "",
                 [
-                  "caseexploreruiLambdaRolefcc02dfb",
+                  "caseexploreruiLambdaRole46af6ea5",
                   "-",
                   {
                     "Ref": "env"

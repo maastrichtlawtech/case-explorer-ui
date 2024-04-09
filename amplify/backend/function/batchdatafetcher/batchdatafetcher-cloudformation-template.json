@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"9.2.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Linux\",\"createdBy\":\"Amplify\",\"createdWith\":\"12.10.1\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -16,9 +16,6 @@
     "s3Key": {
       "Type": "String"
     },
-    "ddbTableName": {
-      "Type": "String"
-    },
     "apiCaseexploreruiCaselawtableArn": {
       "Type": "String"
     },
@@ -26,6 +23,9 @@
       "Type": "String"
     },
     "apiCaseexploreruiGraphqlapiidoutput": {
+      "Type": "String"
+    },
+    "ddbTableName": {
       "Type": "String"
     }
   },
@@ -82,9 +82,6 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "DDB_TABLE_NAME": {
-              "Ref": "ddbTableName"
-            },
             "API_CASEEXPLORERUI_CASELAWTABLE_ARN": {
               "Ref": "apiCaseexploreruiCaselawtableArn"
             },
@@ -93,6 +90,9 @@
             },
             "API_CASEEXPLORERUI_GRAPHQLAPIIDOUTPUT": {
               "Ref": "apiCaseexploreruiGraphqlapiidoutput"
+            },
+            "DDB_TABLE_NAME": {
+              "Ref": "ddbTableName"
             }
           }
         },
@@ -113,12 +113,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "caseexploreruiLambdaRole8ab7edec",
+            "caseexploreruiLambdaRole81535cf2",
             {
               "Fn::Join": [
                 "",
                 [
-                  "caseexploreruiLambdaRole8ab7edec",
+                  "caseexploreruiLambdaRole81535cf2",
                   "-",
                   {
                     "Ref": "env"
