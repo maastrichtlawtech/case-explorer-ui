@@ -36,9 +36,7 @@
     "sharedId": "9ad14434",
     "resourceName": "caseexplorerui9ad144349ad14434",
     "authSelections": "identityPoolAndUserPool",
-    "useDefault": "manual",
-    "thirdPartyAuth": true,
-    "authProviders": [],
+    "useDefault": "defaultSocial",
     "usernameAttributes": [
       "email"
     ],
@@ -46,15 +44,34 @@
     "adminQueries": false,
     "triggers": {},
     "hostedUI": true,
-    "hostedUIDomainName": "case-law-explorer-dev",
-    "authProvidersUserPool": [],
-    "hostedUIProviderMeta": "[]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:19006/\",\"https://prod.d26mknwishfwkh.amplifyapp.com\"],\"LogoutURLs\":[\"http://localhost:19006/\",\"https://prod.d26mknwishfwkh.amplifyapp.com\"]}",
     "userPoolGroupList": [
       "caselawexplorerprod"
     ],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "useEnabledMfas": true
+    "useEnabledMfas": true,
+    "authRoleArn": {
+      "Fn::GetAtt": [
+        "AuthRole",
+        "Arn"
+      ]
+    },
+    "unauthRoleArn": {
+      "Fn::GetAtt": [
+        "UnauthRole",
+        "Arn"
+      ]
+    },
+    "breakCircularDependency": true,
+    "dependsOn": [],
+    "parentStack": {
+      "Ref": "AWS::StackId"
+    },
+    "permissions": [],
+    "hostedUIDomainName": "case-law-explorer",
+    "authProvidersUserPool": [],
+    "hostedUIProviderMeta": "[]",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"https://prod.d26mknwishfwkh.amplifyapp.com/\",\"http://localhost:19006/\"],\"LogoutURLs\":[\"http://localhost:19006/\",\"https://prod.d26mknwishfwkh.amplifyapp.com/\"]}",
+    "authProviders": []
   }
 }
