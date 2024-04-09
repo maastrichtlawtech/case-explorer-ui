@@ -110,7 +110,7 @@ dist
 .*.swp
 
 .expo
-
+.vscode/**
 # yarn.lock
 package-lock.json
 
@@ -146,3 +146,7 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
+.vscode/settings.json
+install.cmd
+.vscode/settings.json
+.vscode/settings.json
