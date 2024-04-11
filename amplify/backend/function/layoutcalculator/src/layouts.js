@@ -1,8 +1,8 @@
 // @ts-nocheck
-const animationOptions = {
+const animationOptions = { 
   animateFilter: () => false,
   animate: false
-}
+ }
 const DEFAULT_REFRESH = 10
 exports.Layouts = {
   cose: {
@@ -15,7 +15,7 @@ exports.Layouts = {
     stop() {},
 
     // // Number of iterations between consecutive screen positions update
-    refresh: DEFAULT_REFRESH, //20,
+    refresh: DEFAULT_REFRESH,//20,
 
     // // Whether to fit the network view after when done
     fit: true,
@@ -36,16 +36,16 @@ exports.Layouts = {
     componentSpacing: 40,
 
     // // Node repulsion (non overlapping) multiplier
-    nodeRepulsion: node => 2048,
+    nodeRepulsion: (node) => 2048,
 
     // // Node repulsion (overlapping) multiplier
     nodeOverlap: 4,
 
     // // Ideal edge (non nested) length
-    idealEdgeLength: edge => 32,
+    idealEdgeLength: (edge) => 32,
 
     // Divisor to compute edge forces
-    edgeElasticity: edge => 32,
+    edgeElasticity: (edge) => 32,
 
     // Nesting factor (multiplier) to compute ideal edge length for nested edges
     nestingFactor: 1.2,
@@ -54,7 +54,7 @@ exports.Layouts = {
     gravity: 1,
 
     // Maximum number of iterations to perform
-    numIter: 200, //1000,
+    numIter: 200,//1000,
 
     // Initial temperature (maximum node displacement)
     initialTemp: 1000,
@@ -64,7 +64,7 @@ exports.Layouts = {
 
     // Lower temperature threshold (below this point the layout will end)
     minTemp: 1.0,
-    ...animationOptions
+    ...animationOptions,
   },
   breadthfirst: {
     name: 'breadthfirst',
@@ -83,14 +83,15 @@ exports.Layouts = {
     ready: undefined, // callback on layoutready
     stop: undefined, // callback on layoutstop
     transform: (node, position) => position, // transform a given node position. Useful for changing flow direction in discrete layouts,
-    ...animationOptions
+    ...animationOptions,
+
   },
   concentric: {
     name: 'concentric',
 
     fit: true, // whether to fit the viewport to the graph
     padding: 30, // the padding on fit
-    startAngle: (3 / 2) * Math.PI, // where nodes start in radians
+    startAngle: 3 / 2 * Math.PI, // where nodes start in radians
     sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
     clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
     equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
@@ -101,16 +102,14 @@ exports.Layouts = {
     height: undefined, // height of layout area (overrides container height)
     width: undefined, // width of layout area (overrides container width)
     spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
-    concentric: (
-      node // returns numeric value for each node, placing higher nodes in levels towards the centre
-    ) => node.degree(),
-    levelWidth: (
-      nodes // the letiation of concentric values in each level
-    ) => nodes.maxDegree() / 4,
+    concentric: (node) => // returns numeric value for each node, placing higher nodes in levels towards the centre
+      node.degree(),
+    levelWidth: (nodes) => // the letiation of concentric values in each level
+      nodes.maxDegree() / 4,
     ready: undefined, // callback on layoutready
     stop: undefined, // callback on layoutstop
     transform: (node, position) => position, // transform a given node position. Useful for changing flow direction in discrete layouts
-    ...animationOptions
+    ...animationOptions,
   },
   circle: {
     name: 'circle',
@@ -122,14 +121,14 @@ exports.Layouts = {
     nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
     spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
     radius: undefined, // the radius of the circle
-    startAngle: (3 / 2) * Math.PI, // where nodes start in radians
+    startAngle: 3 / 2 * Math.PI, // where nodes start in radians
     sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
     clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
     sort: undefined, // a sorting function to order the nodes; e.g. function(a, b){ return a.data('weight') - b.data('weight') }
     ready: undefined, // callback on layoutready
     stop: undefined, // callback on layoutstop
     transform: (node, position) => position, // transform a given node position. Useful for changing flow direction in discrete layouts,
-    ...animationOptions
+    ...animationOptions,
   },
   grid: {
     name: 'grid',
@@ -144,12 +143,12 @@ exports.Layouts = {
     condense: false, // uses all available space on false, uses minimal space on true
     rows: undefined, // force num of rows in the grid
     cols: undefined, // force num of columns in the grid
-    position: node => {}, // returns { row, col } for element
+    position: (node) => {}, // returns { row, col } for element
     sort: undefined, // a sorting function to order the nodes; e.g. function(a, b){ return a.data('weight') - b.data('weight') }
     ready: undefined, // callback on layoutready
     stop: undefined, // callback on layoutstop
     transform: (node, position) => position, // transform a given node position. Useful for changing flow direction in discrete layouts
-    ...animationOptions
+    ...animationOptions,
   },
   // preset: {
   //   name: 'preset',
@@ -176,7 +175,7 @@ exports.Layouts = {
     ready: undefined, // callback on layoutready
     stop: undefined, // callback on layoutstop
     transform: (node, position) => position, // transform a given node position. Useful for changing flow direction in discrete layouts
-    ...animationOptions
+    ...animationOptions,
   },
   euler: {
     name: 'euler',
@@ -185,18 +184,18 @@ exports.Layouts = {
     // - This acts as a hint for the edge length
     // - The edge length can be longer or shorter if the forces are set to extreme values
     // springLength: (edge) => 80,
-    springLength: edge => 400,
+    springLength: (edge) => 400,
 
     // Hooke's law coefficient
     // - The value ranges on [0, 1]
     // - Lower values give looser springs
     // - Higher values give tighter springs
-    springCoeff: edge => 0.0008,
+    springCoeff: (edge) => 0.0008,
 
     // The mass of the node in the physics simulation
     // - The mass affects the gravity node repulsion/attraction
     // mass: (node) => 4,
-    mass: node => 40,
+    mass: (node) => 40,
 
     // Coulomb's law coefficient
     // - Makes the nodes repel each other for negative values
@@ -227,7 +226,7 @@ exports.Layouts = {
     // The number of ticks per frame for animate:true
     // - A larger value reduces rendering cost but can be jerky
     // - A smaller value increases rendering cost but is smoother
-    refresh: DEFAULT_REFRESH, // 10
+    refresh: DEFAULT_REFRESH,// 10
 
     // Maximum iterations and time (in ms) before the layout will bail out
     // - A large value may allow for a better result
@@ -261,7 +260,7 @@ exports.Layouts = {
     // true : Use random positions within the bounding box
     // false : Use the current node positions as the initial positions
     randomize: true,
-    ...animationOptions
+    ...animationOptions,
   },
   cise: {
     name: 'cise',
@@ -288,7 +287,7 @@ exports.Layouts = {
     animate: false,
 
     // number of ticks per frame; higher is faster but more jerky
-    refresh: DEFAULT_REFRESH, //10,
+    refresh: DEFAULT_REFRESH,//10,
 
     // Animation duration used for animate:'end'
     animationDuration: undefined,
@@ -333,7 +332,7 @@ exports.Layouts = {
     // Layout event callbacks; equivalent to `layout.one('layoutready', callback)` for example
     ready() {}, // on layoutready
     stop() {}, // on layoutstop
-    ...animationOptions
+    ...animationOptions,
   },
   cola: {
     name: 'cola',
@@ -355,9 +354,7 @@ exports.Layouts = {
     avoidOverlap: true, // if true, prevents overlap of node bounding boxes
     handleDisconnected: true, // if true, avoids disconnected components from overlapping
     convergenceThreshold: 0.01, // when the alpha value (system energy) falls below this value, the layout stops
-    nodeSpacing(node) {
-      return 10
-    }, // extra spacing around nodes
+    nodeSpacing(node) { return 10 }, // extra spacing around nodes
     flow: undefined, // use DAG/tree flow layout if specified, e.g. { axis: 'y', minSeparation: 30 }
     alignment: undefined, // relative alignment constraints on nodes, e.g. {vertical: [[{node: node1, offset: 0}, {node: node2, offset: 5}]], horizontal: [[{node: node3}, {node: node4}], [{node: node5}, {node: node6}]]}
     gapInequalities: undefined, // list of inequality constraints for the gap between the nodes, e.g. [{"axis":"y", "left":node1, "right":node2, "gap":25}]
@@ -372,15 +369,17 @@ exports.Layouts = {
     unconstrIter: undefined, // unconstrained initial layout iterations
     userConstIter: undefined, // initial layout iterations with user-specified constraints
     allConstIter: undefined, // initial layout iterations with all constraints including non-overlap
-    ...animationOptions
+    ...animationOptions,
   },
   avsdf: {
     name: 'avsdf',
-    ready() {},
+    ready() {
+    },
     // Called on `layoutstop`
-    stop() {},
+    stop() {
+    },
     // number of ticks per frame; higher is faster but more jerky
-    refresh: DEFAULT_REFRESH, //30,
+    refresh: DEFAULT_REFRESH,//30,
     // Whether to fit the network view after when done
     fit: true,
     // Padding on fit
@@ -393,7 +392,7 @@ exports.Layouts = {
     animationDuration: 500,
     // How apart the nodes are
     nodeSeparation: 60,
-    ...animationOptions
+    ...animationOptions,
   },
   dagre: {
     name: 'dagre',
@@ -402,12 +401,8 @@ exports.Layouts = {
     rankSep: undefined, // the separation between each rank in the layout
     rankDir: undefined, // 'TB' for top to bottom flow, 'LR' for left to right,
     ranker: undefined, // Type of algorithm to assign a rank to each node in the input graph. Possible values: 'network-simplex', 'tight-tree' or 'longest-path'
-    minLen(edge) {
-      return 1
-    }, // number of ranks to keep between the source and target of the edge
-    edgeWeight(edge) {
-      return 1
-    }, // higher weight edges are generally made shorter and straighter than lower weight edges
+    minLen(edge) { return 1 }, // number of ranks to keep between the source and target of the edge
+    edgeWeight(edge) { return 1 }, // higher weight edges are generally made shorter and straighter than lower weight edges
 
     // general layout options
     fit: true, // whether to fit to viewport
@@ -415,18 +410,14 @@ exports.Layouts = {
     spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
     nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
     animate: false, // whether to transition the node positions
-    animateFilter(node, i) {
-      return true
-    }, // whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
+    animateFilter(node, i) { return true }, // whether to animate specific nodes when animation is on; non-animated nodes immediately go to their final positions
     animationDuration: 500, // duration of animation in ms if enabled
     animationEasing: undefined, // easing of animation if enabled
     // boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-    transform(node, pos) {
-      return pos
-    }, // a function that applies a transform to the final node position
+    transform(node, pos) { return pos }, // a function that applies a transform to the final node position
     ready() {}, // on layoutready
     stop() {}, // on layoutstop
-    ...animationOptions
+    ...animationOptions,
   },
   spread: {
     name: 'spread',
@@ -441,10 +432,10 @@ exports.Layouts = {
     // If it is set to -1.0 the amount of expansion is automatically
     // calculated based on the minDist, the aspect ratio and the
     // number of nodes
-    prelayout: {name: 'cose'}, // Layout options for the first phase
+    prelayout: { name: 'cose' }, // Layout options for the first phase
     maxExpandIterations: 4, // Maximum number of expanding iterations
     // boundingBox: undefined, // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     randomize: false, // Uses random initial node positions on true
-    ...animationOptions
-  }
+    ...animationOptions,
+  },
 }
