@@ -15,6 +15,7 @@ from time import time
 # @TODO: remove imported local modules to make function dependent on lambda layers (not suitable for testing)
 from opensearch_client import OpenSearchClient
 from dynamodb_client import DynamodbClient
+from elasticsearch_client import ElasticsearchClient
 from queryhelper import QueryHelper
 from utils import get_key, format_node_data, verify_input_string_list, verify_eclis, verify_input_string, \
     verify_date_start, verify_date_end, verify_degrees, is_authorized, verify_data_sources, verify_doc_types
@@ -23,6 +24,7 @@ from definitions import ARTICLES, DATA_SOURCES, DATE_START, DATE_END, \
 
 TEST = False                        # returns number of nodes instead of nodes
 HARD_LIMIT = 10000
+ES_ENDPOINT=getenv('ES_ENDPOINT')
 
 # set up DynamoDB client
 ddb_client = DynamodbClient(
@@ -33,13 +35,21 @@ ddb_client = DynamodbClient(
 )
 
 # set up Elasticsearch client
-es_client = OpenSearchClient(
-    endpoint=getenv('OS_ENDPOINT'),
+# es_client = OpenSearchClient(
+#     endpoint=getenv('OS_ENDPOINT'),
+#     index=getenv('OS_INDEX_NAME'),
+#     max_hits=1000,             # max number of hits (matching items) per query (page)
+#     page_limit=HARD_LIMIT/1000,                    # max number of queries (pages)
+#     #timeout= 5                    # request timeout in s
+# )
+es_client = ElasticsearchClient(
+    endpoint=ES_ENDPOINT,
     index=getenv('OS_INDEX_NAME'),
     max_hits=1000,             # max number of hits (matching items) per query (page)
     page_limit=HARD_LIMIT/1000,                    # max number of queries (pages)
     #timeout= 5                    # request timeout in s
 )
+
 
 def handler(event, context):
     """
@@ -231,6 +241,7 @@ def query_nodes(helper):
     if helper.search_params[KEYWORDS] or helper.search_params[ARTICLES]:
         print('in ES')
         es_query = helper.get_elasticsearch_query()
+        print(f'Accessing ES_Endpoint: {ES_ENDPOINT}')
         result, limit_reached = es_client.execute(es_query, helper.return_attributes)
         nodes = [item['_source'] for item in result]
         return nodes[:HARD_LIMIT], limit_reached
