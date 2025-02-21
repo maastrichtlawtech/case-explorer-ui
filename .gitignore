@@ -110,7 +110,7 @@ dist
 .*.swp
 
 .expo
-.vscode/**
+.vscode
 # yarn.lock
 package-lock.json
 
@@ -124,6 +124,11 @@ amplify copy/
 
 functions/layout-calculator-express
 amplify/team-provider-info.json
+
+.vscode/settings.json
+install.cmd
+.vscode/settings.json
+.vscode/settings.json
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
@@ -146,7 +151,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-.vscode/settings.json
-install.cmd
-.vscode/settings.json
-.vscode/settings.json
